@@ -1,0 +1,25 @@
+{
+  "name": "rock-clean",
+  "description": "Roca con el sombreado en grupos (clusters) limpios: luz arriba a la izquierda.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "clusters"
+  ],
+  "palette": {
+    "1": "#4a4560",
+    "2": "#7d7896",
+    "3": "#b9b4cc",
+    "o": "#1b1030"
+  },
+  "rows": [
+    "...oooo...",
+    "..o3333o..",
+    ".o333322o.",
+    "o33332222o",
+    "o33222221o",
+    "o22222111o",
+    ".o211111o.",
+    "..oooooo.."
+  ]
+}

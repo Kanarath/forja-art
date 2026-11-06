@@ -11,5 +11,9 @@ import Sprite from "./Sprite.astro";
 import Mistake from "./Mistake.astro";
 import Checklist from "./Checklist.astro";
 import Quiz from "./Quiz.astro";
+import Inspector from "../labs/SpriteInspector.astro";
+import VoxViewer from "../labs/VoxViewer.astro";
+import RampLab from "../labs/RampLab.astro";
+import Animator from "../labs/Animator.astro";
 
-export const lessonComponents = { Block, Step, Keys, Why, Tip, Warn, ToolNote, Sprite, Mistake, Checklist, Quiz };
+export const lessonComponents = { Block, Step, Keys, Why, Tip, Warn, ToolNote, Sprite, Mistake, Checklist, Quiz, Inspector, VoxViewer, RampLab, Animator };

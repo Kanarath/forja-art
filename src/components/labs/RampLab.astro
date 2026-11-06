@@ -1,0 +1,120 @@
+---
+// LAB · Paletas y rampas.
+// Uso en MDX:  <RampLab />   o   <RampLab base="#3fbf7f" steps={4} />
+// Construye una rampa desde un color medio, compara con y sin hue shifting, comprueba el
+// VALOR en escala de grises y la aplica en vivo a un sprite. Exporta .gpl/.hex para Aseprite.
+import { getSprite } from "../../data/sprites";
+interface Props { base?: string; steps?: number; sprite?: string }
+const { base = "#c2186b", steps = 5, sprite = "gem" } = Astro.props;
+const s = getSprite(sprite);
+---
+
+<section class="lab ramp" data-lab="ramp" data-sprite={JSON.stringify({ palette: s.palette, rows: s.rows })}>
+  <header class="lab-head"><span class="tag">LAB · RAMPAS</span><b>Construye una rampa de color</b></header>
+  <div class="controls">
+    <label>Color base <input type="color" name="base" value={base} /></label>
+    <label>Tonos <input type="range" name="steps" min="3" max="8" value={steps} /> <span class="mono" data-out="steps"></span></label>
+    <label>Hue shifting <input type="range" name="shift" min="0" max="100" value="40" /> <span class="mono" data-out="shift"></span></label>
+    <label>Contraste <input type="range" name="spread" min="20" max="95" value="70" /> <span class="mono" data-out="spread"></span></label>
+  </div>
+  <div class="rows">
+    <div class="row"><span class="lbl">Con hue shifting</span><div class="sw" data-ramp="shift"></div></div>
+    <div class="row"><span class="lbl">En grises (valor)</span><div class="sw" data-ramp="gray"></div></div>
+    <div class="row dim"><span class="lbl">Sin hue shifting</span><div class="sw" data-ramp="flat"></div></div>
+  </div>
+  <div class="preview">
+    <figure><canvas data-prev="shift"></canvas><figcaption>Con hue shifting</figcaption></figure>
+    <figure><canvas data-prev="flat"></canvas><figcaption>Sin hue shifting</figcaption></figure>
+    <figure><canvas data-prev="gray"></canvas><figcaption>Valor</figcaption></figure>
+  </div>
+  <div class="export">
+    <button type="button" data-export="gpl">Descargar .gpl (Aseprite)</button>
+    <button type="button" data-export="hex">Descargar .hex</button>
+    <code data-codes></code>
+  </div>
+</section>
+
+<script>
+  import { buildRamp, toGpl, toHex } from "../../lib/pixel/ramp.mjs";
+  import { luma } from "../../lib/pixel/analyze.mjs";
+
+  type Sprite = { palette: Record<string, string>; rows: string[] };
+  const gray = (hex: string) => { const y = Math.round(luma(hex)).toString(16).padStart(2, "0"); return `#${y}${y}${y}`; };
+
+  for (const root of document.querySelectorAll<HTMLElement>("[data-lab=ramp]")) {
+    const sprite: Sprite = JSON.parse(root.dataset.sprite!);
+    // ordenamos los colores del sprite por valor: el más oscuro es el contorno
+    const keys = Object.keys(sprite.palette).sort((a, b) => luma(sprite.palette[a]) - luma(sprite.palette[b]));
+    const val = (n: string) => root.querySelector<HTMLInputElement>(`input[name=${n}]`)!.value;
+    let current: string[] = [];
+
+    function paint(c: HTMLCanvasElement, ramp: string[]) {
+      const k = 10, w = sprite.rows[0].length, h = sprite.rows.length;
+      c.width = w * k; c.height = h * k;
+      const g = c.getContext("2d")!;
+      // cada color del sprite se sustituye por el tono de la rampa en su misma posición relativa
+      const map = Object.fromEntries(keys.map((key, i) => [key, ramp[Math.round((i / Math.max(1, keys.length - 1)) * (ramp.length - 1))]]));
+      sprite.rows.forEach((row, y) => [...row].forEach((ch, x) => {
+        if (ch === ".") return;
+        g.fillStyle = map[ch];
+        g.fillRect(x * k, y * k, k, k);
+      }));
+    }
+    const swatches = (el: Element, ramp: string[]) => (el.innerHTML = ramp.map((c) => `<i style="background:${c}" title="${c}"></i>`).join(""));
+
+    function update() {
+      const steps = Number(val("steps")), shift = Number(val("shift")) / 100, spread = Number(val("spread")) / 100;
+      const withShift = buildRamp(val("base"), steps, shift, spread);
+      const flat = buildRamp(val("base"), steps, 0, spread);
+      current = withShift;
+      swatches(root.querySelector("[data-ramp=shift]")!, withShift);
+      swatches(root.querySelector("[data-ramp=gray]")!, withShift.map(gray));
+      swatches(root.querySelector("[data-ramp=flat]")!, flat);
+      paint(root.querySelector("[data-prev=shift]")!, withShift);
+      paint(root.querySelector("[data-prev=flat]")!, flat);
+      paint(root.querySelector("[data-prev=gray]")!, withShift.map(gray));
+      root.querySelector("[data-out=steps]")!.textContent = String(steps);
+      root.querySelector("[data-out=shift]")!.textContent = `${Math.round(shift * 100)} %`;
+      root.querySelector("[data-out=spread]")!.textContent = `${Math.round(spread * 100)} %`;
+      root.querySelector("[data-codes]")!.textContent = withShift.join(" ");
+    }
+
+    root.querySelectorAll<HTMLButtonElement>("[data-export]").forEach((b) =>
+      b.addEventListener("click", () => {
+        const gpl = b.dataset.export === "gpl";
+        const blob = new Blob([gpl ? toGpl(current, "Rampa FORJA//ART") : toHex(current)], { type: "text/plain" });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = gpl ? "rampa-forja.gpl" : "rampa-forja.hex";
+        a.click();
+        setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+      }),
+    );
+    root.addEventListener("input", update);
+    update();
+  }
+</script>
+
+<style>
+  .lab { border: 1px solid var(--line); background: var(--panel); margin: 18px 0; }
+  .lab-head { display: flex; gap: 12px; align-items: baseline; padding: 10px 14px; border-bottom: 1px solid var(--line); }
+  .tag { font: 600 .7rem var(--font-mono); color: #0e0f14; background: var(--accent); padding: 2px 8px; }
+  .controls { display: flex; flex-wrap: wrap; gap: 10px 22px; padding: 12px 14px; font-size: .85rem; }
+  .controls label { display: flex; gap: 8px; align-items: center; }
+  .controls input[type=range] { accent-color: var(--accent); width: 110px; }
+  .controls input[type=color] { width: 40px; height: 28px; border: 1px solid var(--line); background: none; padding: 0; }
+  .rows { padding: 0 14px; display: grid; gap: 6px; }
+  .row { display: grid; grid-template-columns: 130px 1fr; gap: 10px; align-items: center; font-size: .8rem; color: var(--muted); }
+  .row.dim { opacity: .75; }
+  .sw { display: flex; height: 34px; border: 1px solid #000; }
+  .sw :global(i) { flex: 1; }
+  .preview { display: flex; gap: 18px; padding: 14px; flex-wrap: wrap; }
+  .preview figure { margin: 0; text-align: center; }
+  .preview canvas { image-rendering: pixelated; background: conic-gradient(#5a5e6e 25%, #4a4d5b 0 50%, #5a5e6e 0 75%, #4a4d5b 0) 0 0 / 16px 16px; padding: 8px; }
+  .preview figcaption { font: .72rem var(--font-mono); color: var(--muted); }
+  .export { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; padding: 0 14px 14px; }
+  .export button { background: var(--panel-2); border: 1px solid var(--line); color: var(--text); padding: 6px 12px; cursor: pointer; font: 500 .82rem var(--font-head); }
+  .export button:hover { border-color: var(--accent); }
+  .export code { font: .72rem var(--font-mono); color: var(--muted); word-break: break-all; }
+  @media (max-width: 520px) { .row { grid-template-columns: 1fr; } }
+</style>

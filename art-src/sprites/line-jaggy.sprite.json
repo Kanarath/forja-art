@@ -1,0 +1,22 @@
+{
+  "name": "line-jaggy",
+  "description": "Línea con jaggies: tramos irregulares (1, 3, 1, 2, 4, 1, 2). El ojo ve escalones.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "línea",
+    "error"
+  ],
+  "palette": {
+    "o": "#1b1030"
+  },
+  "rows": [
+    "o.............",
+    ".ooo..........",
+    "....o.........",
+    ".....oo.......",
+    ".......oooo...",
+    "...........o..",
+    "............oo"
+  ]
+}

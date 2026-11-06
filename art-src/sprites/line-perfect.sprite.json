@@ -1,0 +1,22 @@
+{
+  "name": "line-perfect",
+  "description": "La misma línea 1:1 con pixel-perfect: un píxel por paso.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "línea"
+  ],
+  "palette": {
+    "o": "#1b1030"
+  },
+  "rows": [
+    "o.......",
+    ".o......",
+    "..o.....",
+    "...o....",
+    "....o...",
+    ".....o..",
+    "......o.",
+    ".......o"
+  ]
+}

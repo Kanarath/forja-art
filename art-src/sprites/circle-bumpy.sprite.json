@@ -1,0 +1,27 @@
+{
+  "name": "circle-bumpy",
+  "description": "Círculo de 12×12 con tramos desordenados: bultos y esquinas. Se lee abollado.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "curva",
+    "error"
+  ],
+  "palette": {
+    "o": "#1b1030"
+  },
+  "rows": [
+    "...ooooo....",
+    "..o.....oo..",
+    ".o........o.",
+    "o.........o.",
+    "o..........o",
+    "o..........o",
+    ".o.........o",
+    "o..........o",
+    ".o........o.",
+    "..o......o..",
+    "..oo...oo...",
+    "....ooo....."
+  ]
+}

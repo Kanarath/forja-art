@@ -1,0 +1,25 @@
+{
+  "name": "gem-samevalue",
+  "description": "La gema con tres colores de tono distinto pero el MISMO valor: en color se distinguen, en grises es una mancha plana.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "valor",
+    "error"
+  ],
+  "palette": {
+    "1": "#1b1030",
+    "2": "#e64fe6",
+    "3": "#e06427",
+    "4": "#1d8fc9"
+  },
+  "rows": [
+    "..11111..",
+    ".1343321.",
+    "133332221",
+    ".1332221.",
+    "..13221..",
+    "...121...",
+    "....1...."
+  ]
+}

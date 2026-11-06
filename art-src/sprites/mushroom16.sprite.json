@@ -1,0 +1,34 @@
+{
+  "name": "mushroom16",
+  "description": "La misma seta a 16×16: hay sitio para sombra, motas con forma y volumen en el pie.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "resolución"
+  ],
+  "palette": {
+    "o": "#2a1020",
+    "r": "#d8343f",
+    "d": "#8e1f35",
+    "w": "#f4e6c8",
+    "c": "#c9b08a"
+  },
+  "rows": [
+    ".....oooooo.....",
+    "...oorrrrrroo...",
+    "..orrwwrrrrrro..",
+    ".orrwwwwrrrwwro.",
+    ".orrrwwrrrrwwro.",
+    "orrrrrrrrrrrrrdo",
+    "orrwwrrrrrrrrddo",
+    "odddrrrrrrrddddo",
+    ".oooooooooooooo.",
+    ".....owwwwo.....",
+    ".....owwwco.....",
+    ".....owwwco.....",
+    ".....owwwco.....",
+    "....owwwwwco....",
+    "....oooooooo....",
+    "................"
+  ]
+}

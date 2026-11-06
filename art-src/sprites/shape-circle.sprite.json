@@ -1,0 +1,27 @@
+{
+  "name": "shape-circle",
+  "description": "Círculo: forma amable, blanda, segura.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "formas"
+  ],
+  "palette": {
+    "o": "#1b1030",
+    "f": "#6ee59f"
+  },
+  "rows": [
+    ".....oo.....",
+    "...ooffoo...",
+    "..offffffo..",
+    ".offffffffo.",
+    ".offffffffo.",
+    "offffffffffo",
+    "offffffffffo",
+    ".offffffffo.",
+    ".offffffffo.",
+    "..offffffo..",
+    "...ooffoo...",
+    ".....oo....."
+  ]
+}

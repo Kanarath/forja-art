@@ -1,0 +1,22 @@
+{
+  "name": "line-1-1",
+  "description": "Línea 1:1 (45°): un píxel por paso. Perfectamente limpia.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "línea"
+  ],
+  "palette": {
+    "o": "#1b1030"
+  },
+  "rows": [
+    "o.......",
+    ".o......",
+    "..o.....",
+    "...o....",
+    "....o...",
+    ".....o..",
+    "......o.",
+    ".......o"
+  ]
+}

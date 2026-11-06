@@ -1,0 +1,27 @@
+{
+  "name": "shape-triangle",
+  "description": "Triángulo: forma dinámica, peligrosa, agresiva.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "formas"
+  ],
+  "palette": {
+    "o": "#1b1030",
+    "f": "#ff6b4a"
+  },
+  "rows": [
+    "............",
+    ".....oo.....",
+    ".....oo.....",
+    "....offo....",
+    "....offo....",
+    "...offffo...",
+    "...offffo...",
+    "..offffffo..",
+    "..offffffo..",
+    ".offffffffo.",
+    ".offffffffo.",
+    "oooooooooooo"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "name": "line-doubled",
+  "description": "Línea 1:1 trazada a mano sin pixel-perfect: cada paso deja un píxel de más (forma de L) y engorda la línea.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "línea",
+    "error"
+  ],
+  "palette": {
+    "o": "#1b1030"
+  },
+  "rows": [
+    "oo......",
+    ".oo.....",
+    "..oo....",
+    "...oo...",
+    "....oo..",
+    ".....oo.",
+    "......o."
+  ]
+}

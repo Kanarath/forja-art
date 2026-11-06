@@ -1,0 +1,19 @@
+{
+  "name": "line-3-1",
+  "description": "Línea 3:1: tramos de 3 píxeles. Limpia.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "línea"
+  ],
+  "palette": {
+    "o": "#1b1030"
+  },
+  "rows": [
+    "ooo............",
+    "...ooo.........",
+    "......ooo......",
+    ".........ooo...",
+    "............ooo"
+  ]
+}

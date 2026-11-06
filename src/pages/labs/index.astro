@@ -1,18 +1,42 @@
 ---
+// LABS — laboratorios para entender un concepto practicándolo.
+// No sustituyen a Aseprite ni a MagicaVoxel: te preparan para usarlos mejor.
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import PlannedPage from "../../components/PlannedPage.astro";
+import Inspector from "../../components/labs/SpriteInspector.astro";
+import VoxViewer from "../../components/labs/VoxViewer.astro";
+import RampLab from "../../components/labs/RampLab.astro";
+import Animator from "../../components/labs/Animator.astro";
 ---
 
 <BaseLayout title="Labs" description="Laboratorios interactivos para entender conceptos de Pixel Art y Voxel Art.">
-  <PlannedPage
-    eyebrow="Laboratorios"
-    title="Labs"
-    lead="Pequeñas herramientas para entender un concepto practicándolo. No sustituyen a Aseprite ni a MagicaVoxel: te preparan para usarlos mejor."
-    items={[
-      { name: "Inspector de sprites", text: "Zoom, rejilla, índice de color, píxeles huérfanos, clusters, silueta y escala de grises. Carga tus propios PNG.", when: "tarea 2.1" },
-      { name: "Visor voxel por etapas", text: "Modelos .vox reales paso a paso: girar, zoom, cortar por capas y ver la paleta.", when: "tarea 2.2" },
-      { name: "Paletas y rampas", text: "Construye rampas con hue shifting, comprueba el contraste en grises y expórtalas a Aseprite.", when: "tarea 2.3" },
-      { name: "Mini-animador", text: "Hasta 8 frames, onion skinning y timing por frame para entender ciclos.", when: "tarea 2.7" },
-    ]}
-  />
+  <p class="eyebrow">Laboratorios</p>
+  <h1>Labs</h1>
+  <p class="lead">Pequeñas herramientas para entender un concepto practicándolo. No sustituyen a Aseprite ni a MagicaVoxel: te preparan para usarlos mejor.</p>
+
+  <nav class="jump" aria-label="Laboratorios">
+    <a href="#inspector">Inspector de sprites</a><a href="#vox">Visor voxel</a><a href="#rampas">Paletas y rampas</a><a href="#animacion">Mini-animador</a>
+  </nav>
+
+  <h2 class="section-title" id="inspector">Inspector de sprites</h2>
+  <p class="muted">Sube un PNG exportado a 1× desde Aseprite y busca huérfanos, píxeles sueltos y problemas de silueta o de valor.</p>
+  <div data-discipline="pixel"><Inspector upload sprite="rock-noisy" title="Prueba con la roca ruidosa o sube tu sprite" /></div>
+
+  <h2 class="section-title" id="vox">Visor voxel por etapas</h2>
+  <p class="muted">Modelos .vox reales, paso a paso. Usa «Capas» para ver por dentro y descárgalos para abrirlos en MagicaVoxel.</p>
+  <div data-discipline="voxel"><VoxViewer model="cofre" /></div>
+
+  <h2 class="section-title" id="rampas">Paletas y rampas</h2>
+  <p class="muted">Construye la rampa de un material, comprueba su valor en grises y llévatela a Aseprite.</p>
+  <div data-discipline="pixel"><RampLab /></div>
+
+  <h2 class="section-title" id="animacion">Mini-animador</h2>
+  <p class="muted">Un idle de 4 frames: fíjate en cómo cambia la sensación al tocar la duración de cada frame.</p>
+  <div data-discipline="pixel"><Animator preset="slime-idle" /></div>
 </BaseLayout>
+
+<style>
+  h1 { font-size: clamp(2rem, 4.5vw, 3rem); }
+  .jump { display: flex; gap: 8px; flex-wrap: wrap; margin: 16px 0; }
+  .jump a { border: 1px solid var(--line); padding: 6px 12px; text-decoration: none; font: 500 .85rem var(--font-head); }
+  .jump a:hover { border-color: var(--fund); }
+</style>

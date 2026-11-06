@@ -1,0 +1,26 @@
+{
+  "name": "flask-bad",
+  "description": "Frasco sin cuello: en silueta parece una pelota, no una poción.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "silueta",
+    "error"
+  ],
+  "palette": {
+    "o": "#1b1030",
+    "r": "#e0245e",
+    "d": "#8a1040",
+    "h": "#ffffff"
+  },
+  "rows": [
+    "...oooo...",
+    ".oorrrroo.",
+    "orhrrrrrdo",
+    "orhrrrrrdo",
+    "orrrrrrrdo",
+    "orrrrrrddo",
+    ".orrrrddo.",
+    "..oooooo.."
+  ]
+}

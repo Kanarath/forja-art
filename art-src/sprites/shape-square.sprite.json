@@ -1,0 +1,27 @@
+{
+  "name": "shape-square",
+  "description": "Cuadrado: forma estable, sólida, fiable.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "formas"
+  ],
+  "palette": {
+    "o": "#1b1030",
+    "f": "#38b6ff"
+  },
+  "rows": [
+    "............",
+    ".oooooooooo.",
+    ".offffffffo.",
+    ".offffffffo.",
+    ".offffffffo.",
+    ".offffffffo.",
+    ".offffffffo.",
+    ".offffffffo.",
+    ".offffffffo.",
+    ".offffffffo.",
+    ".oooooooooo.",
+    "............"
+  ]
+}

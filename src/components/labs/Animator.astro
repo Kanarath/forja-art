@@ -1,0 +1,221 @@
+---
+// LAB · Mini-animador. NO es un editor: sirve para entender frames, timing y onion skin.
+// Uso en MDX:  <Animator preset="slime-idle" />   o   <Animator />  (lienzo vacío de 16×16)
+// Clic para pintar, clic derecho (o el color «goma») para borrar.
+import { getSprite } from "../../data/sprites";
+interface Props { preset?: "slime-idle" | "gem-shine" | "blank" }
+const { preset = "slime-idle" } = Astro.props;
+
+// Construimos los frames del ejemplo A PARTIR de sprites reales, transformándolos.
+type S = { palette: Record<string, string>; rows: string[] };
+const squash = (s: S): string[] => {
+  // aplasta 1 fila: se quita la segunda fila (la parte alta se hunde) y se añade aire arriba
+  const r = [...s.rows];
+  r.splice(1, 1);
+  return [".".repeat(r[0].length), ...r];
+};
+let frames: string[][], palette: Record<string, string>, durations: number[];
+if (preset === "slime-idle") {
+  const sl = getSprite("slime");
+  const pad = (rows: string[]) => [".".repeat(rows[0].length), ".".repeat(rows[0].length), ...rows];
+  const blink = sl.rows.map((r) => r.replace(/e/g, "g"));
+  frames = [pad(sl.rows), pad(squash(sl)), pad(sl.rows), pad(blink)];
+  palette = sl.palette;
+  durations = [240, 160, 400, 120];
+} else if (preset === "gem-shine") {
+  const gm = getSprite("gem");
+  const shine = (x: number) => gm.rows.map((r, y) => (y === 1 || y === 2 ? r.slice(0, x) + (r[x] && r[x] !== "." && r[x] !== "1" ? "4" : r[x] ?? "") + r.slice(x + 1) : r));
+  frames = [gm.rows, shine(4), shine(5), shine(6)];
+  palette = gm.palette;
+  durations = [500, 90, 90, 90];
+} else {
+  frames = [Array(16).fill(".".repeat(16))];
+  palette = { a: "#1b1030", b: "#4ade80", c: "#1f8a4c", d: "#d8ffe6" };
+  durations = [150];
+}
+---
+
+<section class="lab anim" data-lab="anim" data-init={JSON.stringify({ frames, palette, durations })}>
+  <header class="lab-head"><span class="tag">LAB · ANIMACIÓN</span><b>Frames, timing y onion skin</b></header>
+  <div class="body">
+    <div class="edit">
+      <canvas class="paint" aria-label="Lienzo del frame actual: clic para pintar, clic derecho para borrar"></canvas>
+      <div class="pal" role="radiogroup" aria-label="Color"></div>
+    </div>
+    <div class="side">
+      <div class="play"><canvas class="preview" aria-label="Vista previa de la animación"></canvas></div>
+      <div class="btns">
+        <button type="button" data-act="play">▶ Reproducir</button>
+        <label><input type="checkbox" name="onion" checked /> Onion skin</label>
+      </div>
+      <label class="dur">Duración del frame <input type="range" name="dur" min="40" max="800" step="10" /> <span class="mono" data-dur></span></label>
+      <button type="button" data-act="sheet">Descargar spritesheet .png</button>
+    </div>
+  </div>
+  <div class="strip" aria-label="Frames"></div>
+  <div class="frame-btns">
+    <button type="button" data-act="dup">+ Duplicar frame</button>
+    <button type="button" data-act="del">Borrar frame</button>
+    <span class="mono" data-total></span>
+  </div>
+</section>
+
+<script>
+  type Init = { frames: string[][]; palette: Record<string, string>; durations: number[] };
+  const K = 18; // tamaño de cada píxel en el lienzo de edición
+
+  for (const root of document.querySelectorAll<HTMLElement>("[data-lab=anim]")) {
+    const init: Init = JSON.parse(root.dataset.init!);
+    const frames = init.frames.map((f) => f.map((r) => [...r]));
+    const durations = [...init.durations];
+    const pal = init.palette;
+    const W = frames[0][0].length, H = frames[0].length;
+    let cur = 0, color = Object.keys(pal)[0], playing = false, timer = 0, playFrame = 0;
+    const paintC = root.querySelector<HTMLCanvasElement>("canvas.paint")!;
+    const prevC = root.querySelector<HTMLCanvasElement>("canvas.preview")!;
+    const strip = root.querySelector<HTMLElement>(".strip")!;
+    const onion = root.querySelector<HTMLInputElement>("input[name=onion]")!;
+    const dur = root.querySelector<HTMLInputElement>("input[name=dur]")!;
+
+    // paleta (incluye la goma)
+    const palBox = root.querySelector<HTMLElement>(".pal")!;
+    for (const [k, c] of [...Object.entries(pal), [".", ""]]) {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.dataset.k = k;
+      b.title = k === "." ? "Goma" : c;
+      b.setAttribute("aria-label", k === "." ? "Goma" : `Color ${c}`);
+      b.style.background = k === "." ? "repeating-linear-gradient(45deg,#fff3 0 3px,transparent 3px 6px)" : c;
+      b.addEventListener("click", () => { color = k; sync(); });
+      palBox.append(b);
+    }
+
+    function drawFrame(c: HTMLCanvasElement, f: string[][], k: number, ghost?: string[][]) {
+      c.width = W * k; c.height = H * k;
+      const g = c.getContext("2d")!;
+      g.clearRect(0, 0, c.width, c.height);
+      if (ghost) {
+        g.globalAlpha = 0.28;
+        ghost.forEach((row, y) => row.forEach((ch, x) => { if (ch !== ".") { g.fillStyle = pal[ch]; g.fillRect(x * k, y * k, k, k); } }));
+        g.globalAlpha = 1;
+      }
+      f.forEach((row, y) => row.forEach((ch, x) => { if (ch !== ".") { g.fillStyle = pal[ch]; g.fillRect(x * k, y * k, k, k); } }));
+      if (k >= 8) {
+        g.strokeStyle = "rgba(0,0,0,.25)";
+        g.beginPath();
+        for (let x = 0; x <= W; x++) { g.moveTo(x * k + 0.5, 0); g.lineTo(x * k + 0.5, H * k); }
+        for (let y = 0; y <= H; y++) { g.moveTo(0, y * k + 0.5); g.lineTo(W * k, y * k + 0.5); }
+        g.stroke();
+      }
+    }
+
+    function sync() {
+      drawFrame(paintC, frames[cur], K, onion.checked && cur > 0 ? frames[cur - 1] : undefined);
+      if (!playing) drawFrame(prevC, frames[cur], 6);
+      palBox.querySelectorAll<HTMLButtonElement>("button").forEach((b) => b.classList.toggle("on", b.dataset.k === color));
+      dur.value = String(durations[cur]);
+      root.querySelector("[data-dur]")!.textContent = `${durations[cur]} ms`;
+      const total = durations.reduce((a, b) => a + b, 0);
+      root.querySelector("[data-total]")!.textContent = `${frames.length} frames · ${total} ms por ciclo · ${(1000 / (total / frames.length)).toFixed(1)} fps de media`;
+      strip.replaceChildren(...frames.map((f, i) => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = i === cur ? "on" : "";
+        b.setAttribute("aria-label", `Frame ${i + 1}`);
+        const c = document.createElement("canvas");
+        drawFrame(c, f, 3);
+        const s = document.createElement("span");
+        s.textContent = `${i + 1} · ${durations[i]}ms`;
+        b.append(c, s);
+        b.addEventListener("click", () => { cur = i; sync(); });
+        return b;
+      }));
+    }
+
+    // pintar con el ratón (arrastrar también pinta)
+    let down = false, erase = false;
+    const put = (e: PointerEvent) => {
+      const r = paintC.getBoundingClientRect();
+      const x = Math.floor(((e.clientX - r.left) / r.width) * W), y = Math.floor(((e.clientY - r.top) / r.height) * H);
+      if (x < 0 || y < 0 || x >= W || y >= H) return;
+      frames[cur][y][x] = erase ? "." : color;
+      sync();
+    };
+    paintC.addEventListener("contextmenu", (e) => e.preventDefault());
+    paintC.addEventListener("pointerdown", (e) => { down = true; erase = e.button === 2; paintC.setPointerCapture(e.pointerId); put(e); });
+    paintC.addEventListener("pointermove", (e) => down && put(e));
+    paintC.addEventListener("pointerup", () => (down = false));
+
+    dur.addEventListener("input", () => { durations[cur] = Number(dur.value); sync(); });
+    onion.addEventListener("change", sync);
+
+    const tick = () => {
+      drawFrame(prevC, frames[playFrame], 6);
+      const d = durations[playFrame];
+      playFrame = (playFrame + 1) % frames.length;
+      timer = window.setTimeout(tick, d);
+    };
+    root.querySelector('[data-act="play"]')!.addEventListener("click", (e) => {
+      playing = !playing;
+      (e.target as HTMLElement).textContent = playing ? "■ Parar" : "▶ Reproducir";
+      clearTimeout(timer);
+      if (playing) { playFrame = 0; tick(); } else sync();
+    });
+    root.querySelector('[data-act="dup"]')!.addEventListener("click", () => {
+      if (frames.length >= 8) return;
+      frames.splice(cur + 1, 0, frames[cur].map((r) => [...r]));
+      durations.splice(cur + 1, 0, durations[cur]);
+      cur++;
+      sync();
+    });
+    root.querySelector('[data-act="del"]')!.addEventListener("click", () => {
+      if (frames.length <= 1) return;
+      frames.splice(cur, 1);
+      durations.splice(cur, 1);
+      cur = Math.max(0, cur - 1);
+      sync();
+    });
+    root.querySelector('[data-act="sheet"]')!.addEventListener("click", () => {
+      // spritesheet horizontal a 1×: el formato que importan Godot y Aseprite
+      const c = document.createElement("canvas");
+      c.width = W * frames.length; c.height = H;
+      const g = c.getContext("2d")!;
+      frames.forEach((f, i) => f.forEach((row, y) => row.forEach((ch, x) => { if (ch !== ".") { g.fillStyle = pal[ch]; g.fillRect(i * W + x, y, 1, 1); } })));
+      c.toBlob((b) => {
+        if (!b) return;
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(b);
+        a.download = `spritesheet-${frames.length}x${W}x${H}.png`;
+        a.click();
+        setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+      });
+    });
+    sync();
+  }
+</script>
+
+<style>
+  .lab { border: 1px solid var(--line); background: var(--panel); margin: 18px 0; }
+  .lab-head { display: flex; gap: 12px; align-items: baseline; padding: 10px 14px; border-bottom: 1px solid var(--line); }
+  .tag { font: 600 .7rem var(--font-mono); color: #0e0f14; background: var(--accent); padding: 2px 8px; }
+  .body { display: flex; gap: 18px; padding: 14px; flex-wrap: wrap; }
+  .edit { display: flex; gap: 10px; }
+  canvas { image-rendering: pixelated; }
+  .paint { background: conic-gradient(#5a5e6e 25%, #4a4d5b 0 50%, #5a5e6e 0 75%, #4a4d5b 0) 0 0 / 18px 18px; cursor: crosshair; touch-action: none; max-width: 70vw; }
+  .pal { display: flex; flex-direction: column; gap: 4px; }
+  .pal :global(button) { width: 28px; height: 28px; border: 2px solid var(--line); cursor: pointer; }
+  .pal :global(button.on) { border-color: #fff; outline: 2px solid var(--accent); }
+  .side { display: grid; gap: 10px; align-content: start; font-size: .85rem; }
+  .play { background: conic-gradient(#5a5e6e 25%, #4a4d5b 0 50%, #5a5e6e 0 75%, #4a4d5b 0) 0 0 / 12px 12px; padding: 10px; display: grid; place-items: center; }
+  .btns { display: flex; gap: 12px; align-items: center; }
+  button { background: var(--panel-2); border: 1px solid var(--line); color: var(--text); padding: 6px 12px; cursor: pointer; font: 500 .82rem var(--font-head); }
+  button:hover { border-color: var(--accent); }
+  .dur { display: grid; gap: 4px; }
+  input { accent-color: var(--accent); }
+  .strip { display: flex; gap: 6px; padding: 0 14px; overflow-x: auto; }
+  .strip :global(button) { display: grid; gap: 2px; justify-items: center; padding: 6px; }
+  .strip :global(button.on) { border-color: var(--accent); }
+  .strip :global(span) { font: .65rem var(--font-mono); color: var(--muted); }
+  .frame-btns { display: flex; gap: 10px; align-items: center; padding: 10px 14px 14px; flex-wrap: wrap; }
+  .frame-btns span { font-size: .72rem; color: var(--muted); }
+</style>

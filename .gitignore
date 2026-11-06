@@ -10,3 +10,4 @@ Thumbs.db
 # Derivados: se generan desde art-src/ con npm run sprites
 public/assets/sprites/
 .validate-dist/
+public/assets/vox/

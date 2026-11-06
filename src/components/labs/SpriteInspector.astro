@@ -1,0 +1,181 @@
+---
+// LAB · Inspector de sprites.
+// Uso en MDX:  <Inspector sprite="rock-noisy" />   ·   <Inspector upload />  (para tus PNG)
+// Muestra el sprite ampliado con rejilla, tres vistas (normal / silueta / grises), marca los
+// píxeles huérfanos y sueltos, y enseña el sprite a tamaño REAL (1×) para comprobar si se lee.
+import { getSprite } from "../../data/sprites";
+
+interface Props { sprite?: string; upload?: boolean; title?: string }
+const { sprite, upload = false, title } = Astro.props;
+const data = sprite ? getSprite(sprite) : null;
+---
+
+<section class="lab inspector" data-lab="inspector" data-sprite={data ? JSON.stringify({ palette: data.palette, rows: data.rows }) : ""}>
+  <header class="lab-head">
+    <span class="tag">LAB · INSPECTOR</span>
+    <b>{title ?? (data ? data.description : "Analiza tu sprite")}</b>
+  </header>
+  <div class="body">
+    <div class="stage">
+      <canvas aria-label="Sprite ampliado. Pasa el ratón para ver cada píxel."></canvas>
+      <p class="empty" hidden={!!data}>Sube un PNG exportado a 1× (sin ampliar) para analizarlo.</p>
+    </div>
+    <aside class="side">
+      <div class="real"><span>Tamaño real (1×)</span><canvas class="one" aria-hidden="true"></canvas><canvas class="two" aria-hidden="true"></canvas></div>
+      <fieldset>
+        <legend>Vista</legend>
+        <label><input type="radio" name="view" value="normal" checked /> Normal</label>
+        <label><input type="radio" name="view" value="silhouette" /> Silueta</label>
+        <label><input type="radio" name="view" value="gray" /> Grises</label>
+      </fieldset>
+      <fieldset>
+        <legend>Marcar</legend>
+        <label><input type="checkbox" name="grid" checked /> Rejilla</label>
+        <label><input type="checkbox" name="orphans" /> <i class="dot o"></i>Huérfanos</label>
+        <label><input type="checkbox" name="loose" /> <i class="dot l"></i>Sueltos</label>
+      </fieldset>
+      <label class="zoom">Zoom <input type="range" name="zoom" min="2" max="40" value="16" /></label>
+      {upload && <label class="upload">Tu PNG <input type="file" accept="image/png,image/gif,image/webp" /></label>}
+      <dl class="stats" aria-live="polite"></dl>
+      <p class="hover mono" aria-live="off">Pasa el ratón por un píxel</p>
+    </aside>
+  </div>
+</section>
+
+<script>
+  import { analyzeSprite, rgbaToSprite, luma } from "../../lib/pixel/analyze.mjs";
+
+  type Sprite = { palette: Record<string, string>; rows: string[] };
+  const gray = (hex: string) => { const y = Math.round(luma(hex)).toString(16).padStart(2, "0"); return `#${y}${y}${y}`; };
+
+  for (const root of document.querySelectorAll<HTMLElement>("[data-lab=inspector]")) {
+    const canvas = root.querySelector<HTMLCanvasElement>(".stage canvas")!;
+    const one = root.querySelector<HTMLCanvasElement>("canvas.one")!;
+    const two = root.querySelector<HTMLCanvasElement>("canvas.two")!;
+    const form = root.querySelector<HTMLElement>(".side")!;
+    const stats = root.querySelector<HTMLElement>(".stats")!;
+    const hover = root.querySelector<HTMLElement>(".hover")!;
+    let sprite: Sprite | null = root.dataset.sprite ? JSON.parse(root.dataset.sprite) : null;
+    let info = sprite ? analyzeSprite(sprite) : null;
+
+    const opt = () => ({
+      view: (form.querySelector<HTMLInputElement>("input[name=view]:checked")?.value ?? "normal") as "normal" | "silhouette" | "gray",
+      grid: form.querySelector<HTMLInputElement>("input[name=grid]")!.checked,
+      orphans: form.querySelector<HTMLInputElement>("input[name=orphans]")!.checked,
+      loose: form.querySelector<HTMLInputElement>("input[name=loose]")!.checked,
+      zoom: Number(form.querySelector<HTMLInputElement>("input[name=zoom]")!.value),
+    });
+    const colorAt = (s: Sprite, ch: string, view: string) => (view === "silhouette" ? "#e8e6f0" : view === "gray" ? gray(s.palette[ch]) : s.palette[ch]);
+
+    function paint(c: HTMLCanvasElement, s: Sprite, k: number, view: string) {
+      const w = s.rows[0].length, h = s.rows.length;
+      c.width = w * k; c.height = h * k;
+      const g = c.getContext("2d")!;
+      g.clearRect(0, 0, c.width, c.height);
+      s.rows.forEach((row, y) => [...row].forEach((ch, x) => {
+        if (ch === ".") return;
+        g.fillStyle = colorAt(s, ch, view);
+        g.fillRect(x * k, y * k, k, k);
+      }));
+      return g;
+    }
+
+    function draw() {
+      if (!sprite || !info) return;
+      const o = opt();
+      // que quepa en el escenario: limitamos el zoom al ancho disponible
+      const maxK = Math.max(2, Math.floor((root.querySelector(".stage")!.clientWidth - 24) / sprite.rows[0].length));
+      const k = Math.min(o.zoom, maxK);
+      const g = paint(canvas, sprite, k, o.view);
+      if (o.grid && k >= 6) {
+        g.strokeStyle = "rgba(0,0,0,.35)";
+        g.lineWidth = 1;
+        g.beginPath();
+        for (let x = 0; x <= sprite.rows[0].length; x++) { g.moveTo(x * k + 0.5, 0); g.lineTo(x * k + 0.5, canvas.height); }
+        for (let y = 0; y <= sprite.rows.length; y++) { g.moveTo(0, y * k + 0.5); g.lineTo(canvas.width, y * k + 0.5); }
+        g.stroke();
+      }
+      const mark = (list: { x: number; y: number }[], color: string) => {
+        g.strokeStyle = color;
+        g.lineWidth = Math.max(2, k / 6);
+        for (const p of list) g.strokeRect(p.x * k + g.lineWidth / 2, p.y * k + g.lineWidth / 2, k - g.lineWidth, k - g.lineWidth);
+      };
+      if (o.orphans) mark(info.orphans, "#ff3b3b");
+      if (o.loose) mark(info.loose, "#ffd23b");
+      paint(one, sprite, 1, o.view);
+      paint(two, sprite, 2, o.view);
+      stats.innerHTML = `
+        <dt>Tamaño</dt><dd>${info.width}×${info.height} px</dd>
+        <dt>Colores</dt><dd>${info.colors}</dd>
+        <dt>Huérfanos</dt><dd>${info.orphans.length}</dd>
+        <dt>Sueltos</dt><dd>${info.loose.length}</dd>
+        <dt>Clusters</dt><dd>${info.clusters} <small>(${info.tinyClusters} de 1–2 px)</small></dd>`;
+    }
+
+    canvas.addEventListener("mousemove", (e) => {
+      if (!sprite) return;
+      const r = canvas.getBoundingClientRect();
+      const x = Math.floor(((e.clientX - r.left) / r.width) * sprite.rows[0].length);
+      const y = Math.floor(((e.clientY - r.top) / r.height) * sprite.rows.length);
+      const ch = sprite.rows[y]?.[x];
+      if (ch === undefined) return;
+      hover.textContent = ch === "." ? `(${x}, ${y}) · transparente` : `(${x}, ${y}) · ${sprite.palette[ch]} · valor ${Math.round((luma(sprite.palette[ch]) / 255) * 100)} %`;
+    });
+    canvas.addEventListener("mouseleave", () => (hover.textContent = "Pasa el ratón por un píxel"));
+    form.addEventListener("input", draw);
+    new ResizeObserver(draw).observe(root.querySelector(".stage")!);
+
+    root.querySelector<HTMLInputElement>(".upload input")?.addEventListener("change", async (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (!file) return;
+      try {
+        const bmp = await createImageBitmap(file);
+        if (bmp.width > 256 || bmp.height > 256) throw new Error("Máximo 256×256 px. Exporta tu sprite a 1× (sin ampliar).");
+        const c = new OffscreenCanvas(bmp.width, bmp.height);
+        const g = c.getContext("2d")!;
+        g.drawImage(bmp, 0, 0);
+        const s = rgbaToSprite(bmp.width, bmp.height, g.getImageData(0, 0, bmp.width, bmp.height).data);
+        if (!s) throw new Error("La imagen tiene demasiados colores para ser pixel art (máx. 79). ¿Está ampliada con suavizado o es un JPG?");
+        sprite = s;
+        info = analyzeSprite(s);
+        root.querySelector<HTMLElement>(".empty")!.hidden = true;
+        draw();
+      } catch (err) {
+        hover.textContent = (err as Error).message;
+      }
+    });
+    draw();
+  }
+</script>
+
+<style>
+  .lab { border: 1px solid var(--line); background: var(--panel); margin: 18px 0; }
+  .lab-head { display: flex; gap: 12px; align-items: baseline; padding: 10px 14px; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+  .tag { font: 600 .7rem var(--font-mono); color: #0e0f14; background: var(--accent); padding: 2px 8px; }
+  .lab-head b { font: 600 .95rem var(--font-head); }
+  .body { display: grid; grid-template-columns: 1fr 230px; }
+  .stage { min-height: 260px; display: grid; place-items: center; padding: 12px; overflow: auto; background: conic-gradient(#5a5e6e 25%, #4a4d5b 0 50%, #5a5e6e 0 75%, #4a4d5b 0) 0 0 / 16px 16px; }
+  .stage canvas { image-rendering: pixelated; cursor: crosshair; max-width: 100%; }
+  .empty { color: #fff; background: #0008; padding: 10px 14px; }
+  .side { padding: 12px 14px; border-left: 1px solid var(--line); display: grid; gap: 10px; align-content: start; font-size: .85rem; }
+  .real { display: flex; gap: 8px; align-items: end; flex-wrap: wrap; }
+  .real span { width: 100%; font: .7rem var(--font-mono); color: var(--muted); text-transform: uppercase; }
+  .real canvas { image-rendering: pixelated; background: #4a4d5b; padding: 4px; }
+  fieldset { border: 1px solid var(--line); padding: 6px 10px; display: grid; gap: 2px; margin: 0; }
+  legend { font: .7rem var(--font-mono); color: var(--muted); text-transform: uppercase; padding: 0 4px; }
+  input { accent-color: var(--accent); }
+  .dot { display: inline-block; width: 10px; height: 10px; border: 2px solid; margin-right: 4px; vertical-align: -1px; }
+  .dot.o { border-color: #ff3b3b; }
+  .dot.l { border-color: #ffd23b; }
+  .zoom, .upload { display: grid; gap: 4px; }
+  .upload input { font-size: .8rem; max-width: 100%; }
+  .stats { display: grid; grid-template-columns: auto 1fr; gap: 2px 10px; margin: 0; }
+  .stats :global(dt) { color: var(--muted); }
+  .stats :global(dd) { margin: 0; font-family: var(--font-mono); }
+  .stats :global(small) { color: var(--muted); }
+  .hover { font-size: .75rem; color: var(--muted); min-height: 2.4em; margin: 0; }
+  @media (max-width: 640px) {
+    .body { grid-template-columns: 1fr; }
+    .side { border-left: 0; border-top: 1px solid var(--line); }
+  }
+</style>

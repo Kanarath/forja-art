@@ -1,0 +1,24 @@
+{
+  "name": "mushroom8",
+  "description": "Seta a 8×8: solo cabe lo esencial (sombrero, motas, pie).",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "resolución"
+  ],
+  "palette": {
+    "o": "#2a1020",
+    "r": "#d8343f",
+    "w": "#f4e6c8"
+  },
+  "rows": [
+    "..oooo..",
+    ".orrwro.",
+    "orwrrrro",
+    "oooooooo",
+    "..owwo..",
+    "..owwo..",
+    "..owwo..",
+    "..oooo.."
+  ]
+}
