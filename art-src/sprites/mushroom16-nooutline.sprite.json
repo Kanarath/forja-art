@@ -1,0 +1,34 @@
+{
+  "name": "mushroom16-nooutline",
+  "description": "La seta sin contorno: sobre fondos de colores parecidos se pierde la forma.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "contorno",
+    "error"
+  ],
+  "palette": {
+    "r": "#d8343f",
+    "d": "#8e1f35",
+    "w": "#f4e6c8",
+    "c": "#c9b08a"
+  },
+  "rows": [
+    ".....rrrrrr.....",
+    "...rrrrrrrrrr...",
+    "..rrrwwrrrrrrr..",
+    ".rrrwwwwrrrwwrr.",
+    ".rrrrwwrrrrwwrd.",
+    "rrrrrrrrrrrrrrdd",
+    "rrrwwrrrrrrrrddd",
+    "ddddrrrrrrrddddd",
+    ".dddrrwwwwrdddd.",
+    ".....wwwwww.....",
+    ".....wwwwcc.....",
+    ".....wwwwcc.....",
+    ".....wwwwcc.....",
+    "....wwwwwwcc....",
+    "....wwwwwwcc....",
+    "................"
+  ]
+}

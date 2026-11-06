@@ -97,7 +97,31 @@ function mushroomHalf() {
 const half = mushroomHalf();
 const full = [...half, ...half.filter((v) => v.x > 0).map((v) => ({ ...v, x: -v.x }))];
 
+// ---------- TORRE: blockout → muros con ventanas → tejado escalonado
+const STONE = { light: "#9aa3b5", dark: "#7d8698" };
+const ROOF = { light: "#c2413b", dark: "#9c2f2c" };
+const tower1 = [...box(0, 0, 0, 3, 3, 6, STONE.light), ...box(-1, -1, 7, 4, 4, 9, ROOF.light)];
+const towerWalls = box(0, 0, 0, 3, 3, 6, STONE.light)
+  .filter((v) => v.x === 0 || v.y === 0 || v.x === 3 || v.y === 3)
+  .map((v) => ({ ...v, c: (v.x + v.y + v.z) % 3 === 0 ? STONE.dark : STONE.light }))
+  .map((v) => ((v.z === 4 && ((v.x === 3 && v.y === 1) || (v.y === 0 && v.x === 2))) ? { ...v, c: "#ffd36e" } : v));
+const tower2 = [...towerWalls, ...box(-1, -1, 7, 4, 4, 9, ROOF.light)];
+const steppedRoof = [];
+for (let z = 7; z < 10; z++) {
+  const r = z - 7; // cada capa se estrecha un vóxel por lado: así se «curva» un tejado en vóxels
+  for (let x = -1 + r; x <= 4 - r; x++) for (let y = -1 + r; y <= 4 - r; y++) steppedRoof.push({ x, y, z, c: z % 2 ? ROOF.light : ROOF.dark });
+}
+const tower3 = [...towerWalls, ...steppedRoof];
+
 export const MODELS = {
+  torre: {
+    description: "Torre de piedra: del blockout al tejado escalonado",
+    stages: [
+      { label: "Blockout", note: "Dos bloques: el cuerpo y el tejado. Ya se lee «torre» por proporción, sin un solo detalle.", voxels: tower1 },
+      { label: "Muros y ventanas", note: "Dos tonos de piedra y dos ventanas iluminadas: detalle sobre una forma que ya funcionaba.", voxels: tower2 },
+      { label: "Tejado escalonado", note: "Cada capa del tejado se estrecha un vóxel por lado: el escalonado es la forma de hacer inclinaciones y curvas con vóxels.", voxels: tower3 },
+    ],
+  },
   barril: {
     description: "Barril de duelas con aros metálicos",
     stages: [

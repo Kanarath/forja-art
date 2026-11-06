@@ -1,0 +1,35 @@
+{
+  "name": "ball-pillow",
+  "description": "La misma bola con pillow shading: anillos concéntricos oscuros hacia el borde, como si la luz viniera del espectador. Se ve plana e hinchada.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "luz",
+    "error"
+  ],
+  "palette": {
+    "1": "#2b1a3d",
+    "2": "#5b2a6e",
+    "3": "#a4407e",
+    "4": "#e8789a",
+    "o": "#140c1c"
+  },
+  "rows": [
+    "................",
+    "....oooooooo....",
+    "...o12222221o...",
+    "..o1222222221o..",
+    ".o122333333221o.",
+    ".o223334433322o.",
+    ".o223344443322o.",
+    ".o223444444322o.",
+    ".o223444444322o.",
+    ".o223344443322o.",
+    ".o223334433322o.",
+    ".o122333333221o.",
+    "..o1222222221o..",
+    "...o12222221o...",
+    "....oooooooo....",
+    "................"
+  ]
+}

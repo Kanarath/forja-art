@@ -60,6 +60,14 @@
   - Distancia mínima de la cámara en modelos pequeños.
 - **Página 404 propia y CREDITS.md** con las licencias.
 
+**Contenido · segundo bloque: 7 lecciones más (16 en total).**
+- **Pixel nivel 2:** P2-02 Clusters y huérfanos, P2-03 Contornos y AA selectivo.
+- **Pixel nivel 3:** P3-01 Luz y pillow shading, P3-02 Rampas con hue shifting, P3-03 Dithering.
+- **Voxel nivel 2:** V2-01 Blockout y proporción, V2-02 Escalonado y detalle por capas.
+- **Arte nuevo:** 6 sprites (bola con luz frente a pillow, seta con selout y sin contorno, disco sin y con AA) y el modelo «torre» por etapas.
+- **Ruta y logros:** 6 logros nuevos y la ruta guiada ampliada.
+- **Estado:** todas en borrador, pendientes de tu prueba.
+
 **Lecciones aprendidas durante la fase 1:**
 - **`BASE_URL` sin barra final.** Astro 7 da `BASE_URL` sin barra final, así que hay que usar siempre `src/lib/url.ts`. El validador detecta enlaces sin la base.
 - **Colecciones nuevas en local.** El servidor de desarrollo no ve colecciones de contenido nuevas: hay que reiniciarlo (`npx astro dev --force`).

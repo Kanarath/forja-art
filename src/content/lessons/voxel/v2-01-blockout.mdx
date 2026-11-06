@@ -1,0 +1,178 @@
+---
+id: v2-01
+discipline: voxel
+level: 2
+order: 1
+title: "Blockout y proporción"
+summary: "Fija silueta y proporción con bloques grandes y planos antes de cualquier detalle, y guarda ese blockout como la primera versión de tu pieza."
+duration: 40
+status: borrador
+prerequisites: [v1-02]
+fundamentals: [f02]
+objectives:
+  - "Construir un blockout con pocos bloques grandes y planos"
+  - "Reconocer un prop por su proporción: alto y estrecho frente a ancho y bajo"
+  - "Corregir la proporción en el blockout, donde cuesta segundos"
+  - "Guardar el blockout como v1 en el portfolio"
+tools: [magicavoxel]
+piece:
+  name: "Blockout de una torre o un edificio pequeño, guardado como v1"
+  canvas: "6x6x10"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [forma-primero]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Hoy forjas el **blockout de una torre**: dos bloques, un cuerpo y un tejado. Sin ventanas, sin texturas, sin escalones. Solo forma y proporción.
+
+<VoxViewer model="torre" stage={0} title="Tu pieza: el blockout de la torre (6×6×10)" />
+
+Gira el visor. Con dos bloques planos ya se lee «torre». Lo guardarás como **v1**: la primera versión de tu portfolio.
+</Block>
+
+<Block kind="concepto">
+En Blender ya lo haces: antes del bevel y los cortes, colocas cubos escalados para ver si la pieza funciona. En voxel se llama igual: **blockout**. Bloques grandes, un color plano por bloque, cero detalle.
+
+Compara el blockout con la torre terminada. Pulsa las etapas del visor:
+
+<VoxViewer model="torre" stage={2} title="La torre terminada: muros, ventanas y tejado escalonado" />
+
+<Why>
+La silueta de la etapa 1 y la de la etapa 3 son casi la misma. Las ventanas y el tejado escalonado **no cambian qué es**: solo lo enriquecen. La lectura la decidió el blockout (F02, silueta y formas).
+</Why>
+
+Un prop se reconoce por su **proporción** antes que por su detalle:
+
+- **Torre:** alta y estrecha. El cuerpo mide 4×4 de base y 7 de alto; el tejado sobresale un vóxel por lado.
+- **Cofre:** ancho y bajo. La caja mide 10 de ancho, 6 de fondo y solo 4 de alto.
+
+<VoxViewer model="cofre" stage={0} title="El cofre empieza como una caja ancha y baja" />
+
+<Why>
+Tumba la torre y tendrás algo parecido a un cofre; estira el cofre hacia arriba y parecerá un armario. Mismos cubos, **otra proporción, otro objeto**.
+</Why>
+
+La regla de oro: cambiar la proporción en el blockout cuesta **segundos** (borras una capa). En el detalle cuesta **horas** (repintas ventanas, rehaces escalones, recolocas bandas).
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Prepara un modelo de 6×6×10">
+1. Crea un modelo nuevo en MagicaVoxel.
+2. En los tres campos de **tamaño** del modelo, escribe 6, 6 y 10 (la Z es la altura).
+3. Elige en la **paleta** de la izquierda un gris piedra.
+
+<Why>
+Fijar el tamaño antes de empezar ya es una decisión de proporción: 10 de alto sobre 6 de base obliga a una pieza vertical.
+</Why>
+</Step>
+
+<Step n={2} title="Elige pincel Box en modo Attach">
+1. Selecciona el modo **Attach**.
+2. En la barra de pinceles, elige **Box**.
+3. Desactiva los botones **Mirror**: con cajas simétricas no hacen falta.
+
+<Tip>
+Con **Box** colocas un rectángulo entero de un gesto, no vóxel a vóxel. Es la herramienta del blockout.
+</Tip>
+</Step>
+
+<Step n={3} title="El cuerpo: una caja de 4×4×7">
+1. Sobre el suelo, centrado, arrastra con **Box** un rectángulo de 4×4.
+2. Sube la caja capa a capa hasta 7 de alto, arrastrando de nuevo sobre la cara superior.
+3. Gira la cámara con el botón derecho y cuenta las capas.
+
+<Why>
+Deja un vóxel libre a cada lado de la base: es el sitio donde el tejado sobresaldrá. Sin ese margen, el tejado no se distinguiría del cuerpo.
+</Why>
+</Step>
+
+<Step n={4} title="El tejado: una caja de 6×6×3">
+1. Cambia a un rojo teja en la paleta.
+2. Encima del cuerpo, con **Box**, traza un rectángulo de 6×6: ocupa todo el ancho del modelo.
+3. Súbelo hasta 3 capas. Ya tienes las 10 de altura.
+
+<Warn>
+Nada de escalonar el tejado todavía. El escalonado es detalle de forma: llegará en la v2. Hoy el tejado es un bloque.
+</Warn>
+</Step>
+
+<Step n={5} title="Prueba la proporción">
+1. Gira la torre: de frente, de lado y en diagonal.
+2. Pregúntate: ¿se lee «torre» o «caseta»? ¿El tejado pesa demasiado?
+3. Prueba un cambio: borra con **Erase** una capa del cuerpo, o añade una con **Attach**. Compara y quédate con la mejor.
+
+<Why>
+Este es el momento barato. Una capa más o menos ahora son dos clics. Con ventanas pintadas, sería rehacerlas todas.
+</Why>
+</Step>
+
+<Step n={6} title="Guarda como v1 y renderiza">
+1. Guarda el archivo como `torre_v1.vox`.
+2. Pulsa **Render** arriba y exporta una imagen para tu portfolio.
+3. A partir de aquí, cada cambio grande se guarda como v2, v3… sin pisar la v1.
+
+<Tip>
+La v1 es tu prueba de que pensaste la forma primero. Al lado de la versión final, enseña cuánto aportó cada etapa.
+</Tip>
+</Step>
+
+<Warn title="Verifica en tu versión">
+Cómo se comporta el pincel **Box** puede variar entre versiones de MagicaVoxel: en algunas el arrastre crea una losa de una capa y subes la altura repitiendo sobre la cara superior; también puedes subirla con el pincel **Face**, que añade una capa sobre toda la cara. Los nombres y la posición de los botones (**Attach**/**Erase**/**Paint**, pinceles, campos de tamaño) también pueden cambiar.
+</Warn>
+</Block>
+
+<Block kind="version">
+Forja **otro blockout tuyo** con la misma regla: pocos bloques, un color por bloque, cero detalle. Elige un reto:
+
+- **Atalaya:** más alta y más estrecha (base 3×3, cuerpo de 9). ¿Sigue en pie visualmente?
+- **Casita:** un edificio ancho y bajo con tejado. Mira cómo la proporción la acerca al cofre.
+- **Torre con anexo:** la torre de hoy y un bloque bajo pegado a un lado. Dos proporciones en una pieza.
+
+Guarda cada uno como v1. Enséñaselo a alguien en un solo color: si nombra el objeto, la proporción funciona.
+</Block>
+
+<Block kind="errores">
+<Mistake title="Detallar antes de cerrar la proporción" wrongLabel="Detalle primero" rightLabel="Forma primero">
+  <p slot="wrong">Ventanas, piedras y tejado escalonado sobre una torre achaparrada. Corregirla obliga a rehacerlo todo.</p>
+  <p slot="right">Dos bloques planos hasta que la proporción convence. Luego, el detalle encima.</p>
+
+Pintas ventanas, piedras y un tejado escalonado, y luego descubres que la torre es achaparrada. Ahora toca rehacerlo todo. Compara las etapas de la torre del bloque «El concepto»: la final funciona porque la etapa 1, Blockout, ya funcionaba. Cierra la proporción con bloques y **luego** detalla.
+</Mistake>
+
+<Mistake title="Proporción ambigua" wrongLabel="Base 6×6, 5 de alto" rightLabel="Base 4×4, 10 de alto">
+  <p slot="wrong">Tan ancha como alta: se lee caseta o cofre, no torre.</p>
+  <p slot="right">La altura dobla de sobra el ancho: se lee torre en un solo color.</p>
+
+Una torre de base 6×6 y solo 5 de alto no se lee como torre: es una caseta. Si la altura no supera claramente al ancho, la pieza pierde su identidad. Pregúntate qué proporción define al objeto (alto y estrecho, ancho y bajo) y exagérala un poco.
+</Mistake>
+
+<Warn title="Error típico: un blockout con demasiados bloques">
+Si tu blockout tiene diez piezas pequeñas, ya no es un blockout: es detalle disfrazado. Dos o tres bloques grandes bastan para decidir la silueta.
+</Warn>
+
+<Warn title="Error típico: sobrescribir la v1">
+Si guardas el detalle encima de `torre_v1.vox`, pierdes la prueba de tu proceso. Guarda cada etapa con su número.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+<Checklist items={[
+  "Mi modelo mide 6×6×10 y la torre queda centrada",
+  "El blockout tiene dos o tres bloques grandes, un color por bloque",
+  "No hay ventanas, texturas ni escalones todavía",
+  "La torre se lee alta y estrecha desde cualquier ángulo",
+  "He probado al menos un cambio de proporción antes de decidir",
+  "He guardado torre_v1.vox y un render en mi portfolio",
+]} />
+
+<Quiz q="Tu torre terminada parece achaparrada. ¿Cuándo habría sido más barato corregirlo?" options={["Al pintar las ventanas", "En el blockout, añadiendo capas al cuerpo", "Al hacer el render final"]} answer={1}>
+En el blockout, cambiar la altura son un par de clics. Con el detalle hecho, hay que rehacer ventanas, piedras y tejado.
+</Quiz>
+
+<Quiz q="¿Qué diferencia, sobre todo, a la torre del cofre?" options={["El color de los materiales", "La proporción: alta y estrecha frente a ancha y baja", "El número de detalles"]} answer={1}>
+Con bloques de un solo color ya se distinguen: la proporción decide qué objeto es antes que cualquier detalle.
+</Quiz>
+</Block>

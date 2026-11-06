@@ -1,0 +1,34 @@
+{
+  "name": "ball-lit",
+  "description": "Bola de 16×16 sombreada con UNA luz desde arriba a la izquierda: luz, terminador, sombra propia y luz rebotada abajo a la derecha.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "luz"
+  ],
+  "palette": {
+    "1": "#2b1a3d",
+    "2": "#5b2a6e",
+    "3": "#a4407e",
+    "4": "#e8789a",
+    "o": "#140c1c"
+  },
+  "rows": [
+    "................",
+    "....oooooooo....",
+    "...o44444332o...",
+    "..o4444443322o..",
+    ".o444444433221o.",
+    ".o444444333221o.",
+    ".o444444333221o.",
+    ".o444443332211o.",
+    ".o444333322211o.",
+    ".o333333222111o.",
+    ".o333332221112o.",
+    ".o222222211112o.",
+    "..o2222111112o..",
+    "...o11111122o...",
+    "....oooooooo....",
+    "................"
+  ]
+}

@@ -1,0 +1,158 @@
+---
+id: p2-02
+discipline: pixel
+level: 2
+order: 2
+title: "Clusters y píxeles huérfanos"
+summary: "Agrupa el sombreado en clusters grandes y con forma, distingue píxeles huérfanos de sueltos y limpia el ruido que se come el volumen."
+duration: 40
+status: borrador
+objectives:
+  - "Saber qué es un cluster y por qué su tamaño y forma importan"
+  - "Distinguir un píxel huérfano de un píxel suelto"
+  - "Decidir cuándo un huérfano es intencionado y cuándo es un error"
+  - "Sombrear una roca de 16×16 con clusters limpios"
+prerequisites: [p2-01]
+fundamentals: [f01]
+tools: [aseprite]
+piece:
+  name: "Roca de 16×16 sombreada con clusters limpios"
+  canvas: "16x16"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [clusters-limpios]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Vas a forjar una **roca de 16×16** con tres tonos y contorno. El reto no es el dibujo: es que cada tono forme **manchas grandes y con forma**, no confeti.
+
+<Sprite name="rock-clean" scale={12} caption="La meta, a 10×8: luz arriba a la izquierda, tres tonos en grupos limpios. La tuya tendrá más sitio" />
+</Block>
+
+<Block kind="concepto">
+Un **cluster** es un grupo de píxeles del mismo color **conectados por los lados**. Tocarse solo por la esquina no cuenta.
+
+<Mistake title="La misma roca, dos maneras de sombrear" wrongLabel="40 clusters, 31 sueltos" rightLabel="13 clusters, 6 sueltos">
+  <Sprite slot="wrong" name="rock-noisy" scale={10} />
+  <Sprite slot="right" name="rock-clean" scale={10} />
+
+Mismos colores, misma silueta, misma luz. A la derecha cada tono es una mancha que sigue la forma: arriba la cara iluminada, abajo la sombra. A la izquierda los tonos se alternan píxel a píxel y la roca se vuelve gris plano y sucio.
+</Mistake>
+
+<Why>
+El ojo no lee píxeles: lee **manchas**. Una mancha grande de luz con una frontera clara contra la sombra se interpreta como un plano que gira, como una arista en hard surface. Muchos clusters de 1–2 píxeles no forman planos: son **ruido**, y a 1× se mezclan en un tono medio sin volumen.
+</Why>
+
+**Huérfanos y sueltos.** Mira los vecinos de un píxel:
+
+- **Huérfano:** no tiene ningún vecino de su color, **ni por los lados ni en diagonal**. Está solo.
+- **Suelto:** no tiene vecino de su color por los lados, pero **sí en diagonal**.
+
+Un suelto es normal en una línea diagonal: los 6 sueltos de `rock-clean` son las esquinas del contorno, los escalones 1:1 que ya viste en la lección anterior. Dentro de un relleno, en cambio, un suelto suele ser ruido.
+
+Abre la roca ruidosa en el inspector. Activa *Sueltos* y fíjate dónde caen: por dentro, en el sombreado.
+
+<Inspector sprite="rock-noisy" title="Encuentra el ruido de la roca" />
+
+**¿Siempre es un error un huérfano?** Casi siempre. La excepción es un detalle que **quieres** que salte a la vista.
+
+<Sprite name="gem" scale={12} caption="Gema: el brillo es un único píxel claro. Huérfano a propósito: es el punto más brillante" />
+
+<Sprite name="slime" scale={12} caption="Slime: cada ojo es un píxel huérfano. El brillo son dos píxeles en diagonal: sueltos, no huérfanos" />
+
+<Why>
+Un píxel aislado atrae la mirada porque rompe el patrón. Por eso funciona en un ojo o en un brillo: es lo que quieres que se mire. Si el huérfano está en mitad de un relleno, roba esa atención para nada.
+</Why>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Lienzo y cuatro colores">
+1. <Keys k="Ctrl+N" />: 16×16, fondo transparente. Activa *View → Grid*.
+2. Prepara cuatro colores: contorno casi negro, sombra, medio y luz. Sirven los de la roca de ejemplo: `#1b1030`, `#4a4560`, `#7d7896` y `#b9b4cc`.
+
+<Why>
+Con tres tonos de relleno es imposible esconder el ruido detrás de mil colores. Cada píxel tiene que ganarse su sitio.
+</Why>
+</Step>
+
+<Step n={2} title="Silueta y relleno medio">
+Lápiz (<Keys k="B" />) con **Pixel-perfect**. Dibuja el contorno de la roca: una forma ancha y achatada, más pesada abajo, con dos o tres caras planas. Las curvas, con tramos ordenados como en P2-01. Rellena el interior con el tono medio usando el cubo (<Keys k="G" />).
+</Step>
+
+<Step n={3} title="La sombra: una sola mancha">
+La luz viene de arriba a la izquierda. Pinta la sombra en la parte de abajo y la derecha como **una mancha continua** que abrace la forma. Empieza por su frontera y luego rellena por dentro.
+
+<Tip>
+Piensa en planos, como en un blockout de Blender: la cara que mira al suelo es un plano en sombra. Un plano es un cluster, no veinte.
+</Tip>
+</Step>
+
+<Step n={4} title="La luz: otra mancha">
+Pinta la cara iluminada arriba a la izquierda, también como un solo cluster. Deja el tono medio como franja entre luz y sombra. Si quieres una grieta, que sea una línea de sombra limpia, no puntos.
+
+<Warn>
+No alternes tonos en la frontera para «suavizar». Eso es ruido, no un degradado. La frontera entre dos clusters puede ser un escalón limpio.
+</Warn>
+</Step>
+
+<Step n={5} title="Caza de ruido">
+Exporta una copia **a 1×** con *File → Export → Export As* y súbela al inspector del bloque Calidad. Activa *Huérfanos* y *Sueltos*.
+
+1. Cada píxel marcado dentro del relleno: elige el color del cluster vecino más grande con el cuentagotas (<Keys k="I" />) y píntalo encima.
+2. Los sueltos del contorno en diagonal se quedan: son escalones de la línea.
+3. Repite hasta que no quede ningún cluster de 1–2 píxeles que no hayas elegido tú.
+</Step>
+
+<Step n={6} title="Guarda y exporta">
+Guarda con <Keys k="Ctrl+S" /> y exporta el PNG con **Resize** 800 %.
+</Step>
+</Block>
+
+<Block kind="version">
+Ahora a tu manera. Elige uno:
+
+- **Roca con musgo:** añade un cuarto color verde en la cara de arriba, como un solo cluster con forma.
+- **Roca con brillo mojado:** un único píxel huérfano de luz, a propósito, como el de la gema. Solo uno.
+- **Montón de dos rocas:** una delante de otra. Cada roca con sus propios clusters de luz y sombra.
+</Block>
+
+<Block kind="errores">
+<Mistake title="Sombrear a puntos" wrongLabel="Tonos alternados" rightLabel="Manchas con forma">
+  <Sprite slot="wrong" name="rock-noisy" scale={8} />
+  <Sprite slot="right" name="rock-clean" scale={8} />
+
+Si al sombrear pones un píxel aquí y otro allá, acabas con decenas de clusters diminutos. Arréglalo agrupando: decide dónde acaba la luz y pinta todo ese lado del mismo tono.
+</Mistake>
+
+<Tip title="Destello o trazo: una decisión, no un error">
+<Sprite name="slime" scale={8} caption="Slime: brillo de dos píxeles en diagonal (un reflejo alargado)" />
+<Sprite name="gem" scale={8} caption="Gema: brillo de un solo píxel (un destello nítido)" />
+
+Las dos son correctas. En el slime el brillo son dos píxeles que solo se tocan en diagonal: se lee como un reflejo alargado, adecuado para una superficie blanda. En la gema es un único píxel: un punto de luz nítido, adecuado para una superficie dura. Decide cuál quieres. Lo que nunca quieres es un huérfano **sin motivo** en mitad del relleno.
+</Tip>
+</Block>
+
+<Block kind="calidad">
+Sube tu roca **a 1×** y revisa huérfanos, sueltos y la vista en grises.
+
+<Inspector upload title="Revisa los clusters de tu roca" />
+
+<Checklist items={[
+  "Mi lienzo es de 16×16 y el fondo es transparente",
+  "Uso tres tonos de relleno y un contorno",
+  "La luz y la sombra son cada una un cluster grande con forma",
+  "No hay huérfanos, salvo los que elegí a propósito",
+  "Los únicos sueltos están en las diagonales del contorno",
+  "En grises se lee el volumen: claro arriba a la izquierda, oscuro abajo",
+]} />
+
+<Quiz q="Un píxel tiene un vecino de su color en diagonal, pero ninguno por los lados. ¿Qué es?" options={["Un huérfano", "Un suelto", "Un cluster de 2"]} answer={1}>
+Es un suelto. El huérfano no tiene vecino de su color ni en diagonal. Y tocarse en diagonal no une dos píxeles en un cluster.
+</Quiz>
+
+<Quiz q="¿Cuándo tiene sentido un píxel huérfano?" options={["Para suavizar la frontera entre luz y sombra", "Nunca", "En un detalle que quieres que salte, como un ojo o un brillo"]} answer={2}>
+Un píxel aislado atrae la mirada. Úsalo solo donde quieras que se mire.
+</Quiz>
+</Block>

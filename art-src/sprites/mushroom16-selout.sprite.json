@@ -1,0 +1,37 @@
+{
+  "name": "mushroom16-selout",
+  "description": "La seta con selout: el contorno usa una versión oscura del color de cada zona, en vez de negro. Más suave e integrada.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "contorno"
+  ],
+  "palette": {
+    "r": "#d8343f",
+    "d": "#8e1f35",
+    "w": "#f4e6c8",
+    "c": "#c9b08a",
+    "R": "#5c1426",
+    "D": "#4a1020",
+    "W": "#8a6d4a",
+    "C": "#6e5636"
+  },
+  "rows": [
+    ".....RRRRRR.....",
+    "...RRrrrrrrRR...",
+    "..RrrwwrrrrrrR..",
+    ".RrrwwwwrrrwwrR.",
+    ".RrrrwwrrrrwwrD.",
+    "RrrrrrrrrrrrrrdD",
+    "RrrwwrrrrrrrrddD",
+    "DdddrrrrrrrddddD",
+    ".DDDRRWWWWRDDDD.",
+    ".....WwwwwW.....",
+    ".....WwwwcC.....",
+    ".....WwwwcC.....",
+    ".....WwwwcC.....",
+    "....WwwwwwcC....",
+    "....WWWWWWCC....",
+    "................"
+  ]
+}

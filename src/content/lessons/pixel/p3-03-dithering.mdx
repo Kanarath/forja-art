@@ -1,0 +1,174 @@
+---
+id: p3-03
+discipline: pixel
+level: 3
+order: 3
+title: "Dithering: cuándo sí y cuándo no"
+summary: "Mezcla dos colores con un patrón para sugerir un tono intermedio, y aprende cuándo ayuda (cielos, zonas grandes) y cuándo solo ensucia (sprites pequeños)."
+duration: 40
+status: borrador
+objectives:
+  - "Entender el dithering como una mezcla óptica de dos colores"
+  - "Distinguir damero, Bayer y ruido, y saber por qué el ruido casi nunca funciona"
+  - "Decidir entre dithering y añadir un tono a la rampa"
+  - "Pintar un cielo de 32×16 con una transición con dithering limpia"
+prerequisites: [p3-02]
+fundamentals: [f01]
+tools: [aseprite]
+piece:
+  name: "Un cielo o fondo de 32×16 con una transición con dithering limpia"
+  canvas: "32x16"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [dither-justo]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Vas a forjar un **cielo de 32×16**: arriba, un color de noche; abajo, el del horizonte. En medio, **una franja de transición** hecha con dithering. Limpia, regular y sin ruido.
+
+Mira la segunda fila del laboratorio, «Damero 50 %»: tu cielo será así, pero con tus colores y en vertical.
+
+<DitherLab />
+</Block>
+
+<Block kind="concepto">
+**Dithering** es alternar píxeles de dos colores con un patrón. A 1× el ojo los mezcla y ve un **tono intermedio** que no está en la paleta.
+
+<Why>
+Es mezcla óptica, como la trama de un periódico. Funciona porque, desde lejos, el ojo promedia el valor de píxeles vecinos. Ampliado, es un patrón; a tamaño real, es un color.
+</Why>
+
+**Tres familias de patrón:**
+
+- **Damero 50 %:** un píxel sí, uno no, solo en la franja donde se cruzan los colores. El más limpio para una transición.
+- **Bayer (2×2, 4×4):** patrones ordenados con varios niveles de mezcla. Degradados suaves en zonas grandes, pero la trama se nota.
+- **Ruido:** píxeles al azar. El ojo busca orden y aquí no lo encuentra: se lee como **suciedad**.
+
+**Cuándo sí:** zonas grandes, cielos, agua, fondos, transiciones suaves y paletas muy limitadas (2–4 colores).
+
+**Cuándo no:** sprites pequeños. En 10×8 no hay sitio para que el patrón se funda; cada píxel cuenta y el damero rompe los clusters.
+
+<Mistake title="Dithering en una roca de 10×8" wrongLabel="Damero de tonos 2 y 3" rightLabel="Clusters limpios">
+  <Sprite slot="wrong" name="rock-noisy" scale={10} />
+  <Sprite slot="right" name="rock-clean" scale={10} />
+
+Misma paleta, mismos cuatro colores. A la izquierda, los tonos medio y claro alternan en damero por toda la cara: no hay zona de luz ni de sombra, solo una textura. A la derecha, la luz es un bloque arriba a la izquierda y la sombra otro abajo a la derecha: se lee el **volumen**.
+</Mistake>
+
+<Why title="Antes de ditherear, añade un tono">
+Si la transición entre dos colores se ve brusca, la solución suele ser **un tono intermedio más en la rampa** (lo viste en P3-02). Es más limpio que un patrón. El dithering es para cuando la paleta no admite más colores o la zona es tan grande que un tono plano se vería como una banda.
+</Why>
+
+Prueba ahora con colores de cielo: un azul noche y un naranja de atardecer. Compara cada fila a 1×.
+
+<DitherLab a="#1b2a4a" b="#e8875a" />
+
+<Tip>
+Fíjate en la fila de ruido: incluso a 1× se ve granulado. La de damero, a 1×, casi parece un tercer color.
+</Tip>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Lienzo y dos colores">
+1. <Keys k="Ctrl+N" />: 32×16.
+2. Activa la rejilla en *View → Grid*.
+3. Elige dos colores con **valor bien distinto**: uno oscuro de noche y uno claro de horizonte.
+
+<Why>
+El dithering mezcla valores. Si los dos colores tienen casi el mismo valor, la mezcla no se nota y solo queda la trama.
+</Why>
+</Step>
+
+<Step n={2} title="Dos zonas planas">
+Con <Keys k="M" /> selecciona las filas 0–6 y rellénalas con el color oscuro usando el cubo (<Keys k="G" />). Haz lo mismo con las filas 9–15 y el color claro. Deja las filas 7 y 8 vacías.
+
+<Tip>
+Míralo ahora a 1×. Si el corte duro ya te gusta, quizá no necesitas dithering. Es una opción válida.
+</Tip>
+</Step>
+
+<Step n={3} title="La franja de damero">
+Lápiz con <Keys k="B" />, tamaño 1. En las filas 7 y 8 pinta un damero: en la fila 7, oscuro en columnas pares y claro en impares; en la fila 8, al revés.
+
+<Why>
+Dos filas al 50 % bastan para que el ojo lea un tono medio. Una franja estrecha y regular suaviza el paso sin llenar el cielo de trama.
+</Why>
+</Step>
+
+<Step n={4} title="Suaviza los bordes de la franja (opcional)">
+Si el salto de la zona plana al damero se nota, añade una fila al 25 %: en la fila 6, un píxel claro cada cuatro columnas; en la fila 9, un píxel oscuro cada cuatro, desplazados dos columnas respecto a los de arriba.
+
+<Warn>
+Mantén el patrón **regular**. En cuanto mueves un píxel «para que quede natural», el ojo lo lee como ruido.
+</Warn>
+</Step>
+
+<Step n={5} title="Un detalle, sin dithering">
+Añade dos o tres estrellas de 1 píxel arriba, o una luna pequeña. Píxeles sólidos, sin trama: el contraste con el cielo dithereado ayuda a leer ambos.
+</Step>
+
+<Step n={6} title="Guarda y exporta">
+Guarda con <Keys k="Ctrl+S" /> y exporta con *File → Export → Export As*, PNG, **Resize** 800 %. Exporta también una copia al 100 % para revisarla abajo.
+
+<Warn title="Verifica en tu versión">
+Aseprite tiene opciones de dithering en algunas herramientas de degradado; sus nombres y su sitio pueden variar entre versiones. En esta lección pinta el patrón **a mano**: así entiendes lo que hace la máquina.
+</Warn>
+</Step>
+</Block>
+
+<Block kind="version">
+Ahora a tu manera. Elige uno:
+
+- **Atardecer de tres colores:** dos franjas de damero, noche → violeta → naranja.
+- **Paleta de 2 colores:** solo dos colores en todo el lienzo; usa Bayer 2×2 en una zona más ancha para sugerir más niveles.
+- **Mar bajo el cielo:** un horizonte con agua abajo y una franja de damero en el reflejo.
+</Block>
+
+<Block kind="errores">
+<Mistake title="Dithering en un sprite pequeño" wrongLabel="Damero que ensucia" rightLabel="Clusters con volumen">
+  <Sprite slot="wrong" name="rock-noisy" scale={8} />
+  <Sprite slot="right" name="rock-clean" scale={8} />
+
+En 10×8 el damero no se funde: se ve como textura y borra la luz. Agrupa cada tono en un bloque y, si falta suavidad, añade un tono a la rampa en lugar de alternar píxeles.
+</Mistake>
+
+<Mistake title="Se pierde el valor" wrongLabel="Damero: una mancha gris" rightLabel="Zonas de luz y sombra">
+  <Sprite slot="wrong" name="rock-noisy" scale={8} view="gray" />
+  <Sprite slot="right" name="rock-clean" scale={8} view="gray" />
+
+En grises se ve mejor: la mezcla alternada no forma zonas de valor, y sin zonas de valor no hay volumen. Revisa tu cielo también en grises.
+</Mistake>
+
+<Warn title="Ruido en vez de patrón">
+Píxeles al azar «para que parezca natural» casi nunca funcionan. Compara las filas «Ruido» y «Damero 50 %» del laboratorio a 1×: el damero se lee como un tono; el ruido, como polvo.
+</Warn>
+
+<Warn title="Dithering por todas partes">
+Si cada transición de tu pieza lleva trama, el ojo no sabe dónde mirar. Reserva el dithering para **una o dos** zonas grandes.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+Sube tu cielo **a 1×** y revísalo con la rejilla y la vista de grises.
+
+<Inspector upload title="Revisa la transición de tu cielo" />
+
+<Checklist items={[
+  "Mi lienzo es de 32×16",
+  "Los dos colores tienen valores bien distintos en la vista de grises",
+  "El dithering está solo en la franja de transición, no por todo el cielo",
+  "El patrón es regular: ningún píxel fuera de sitio",
+  "A 1× la franja se lee como un tono intermedio, no como ruido",
+  "Exporté el PNG a ×8 y guardé el .aseprite",
+]} />
+
+<Quiz q="Tu sprite de 12×12 tiene un salto brusco entre la luz y la sombra. ¿Qué pruebas primero?" options={["Un damero entre los dos tonos", "Añadir un tono intermedio a la rampa", "Ruido para que parezca natural"]} answer={1}>
+En sprites pequeños el dithering ensucia. Un tono más en la rampa suaviza el paso y mantiene los clusters limpios.
+</Quiz>
+
+<Quiz q="¿Dónde tiene más sentido el dithering?" options={["En los ojos de un personaje de 16×16", "En un cielo grande con una paleta de pocos colores", "En el contorno de un sprite"]} answer={1}>
+Zonas grandes y paletas limitadas: el patrón tiene sitio para fundirse y sugiere tonos que la paleta no tiene.
+</Quiz>
+</Block>

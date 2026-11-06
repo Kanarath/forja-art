@@ -1,0 +1,172 @@
+---
+id: p3-01
+discipline: pixel
+level: 3
+order: 1
+title: "Fuente de luz y pillow shading"
+summary: "Decide una sola fuente de luz antes de sombrear, reconoce sus zonas (luz, medio tono, terminador, sombra propia, rebote y sombra proyectada) y evita el pillow shading."
+duration: 45
+status: borrador
+objectives:
+  - "Elegir una única fuente de luz antes de sombrear"
+  - "Nombrar y colocar luz, medio tono, terminador, sombra propia, luz rebotada y sombra proyectada"
+  - "Reconocer y corregir el pillow shading"
+  - "Sombrear con pocos tonos bien separados en valor"
+prerequisites: [p2-03]
+fundamentals: [f01]
+tools: [aseprite]
+piece:
+  name: "Una bola y una gema de 16×16 sombreadas con una sola luz"
+  canvas: "16x16"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [luz-con-direccion]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Vas a forjar **dos sprites de 16×16**: una bola y una gema. Las dos con la **misma luz**, desde arriba a la izquierda. Si la luz es coherente, parecerán del mismo mundo.
+
+<Sprite name="ball-lit" scale={12} caption="La meta: una bola con una sola luz. Clara arriba a la izquierda, oscura abajo a la derecha, con un poco de rebote en el borde" />
+</Block>
+
+<Block kind="concepto">
+**Primero la luz, luego el color.** Antes de poner un solo tono de sombra, decide de dónde viene la luz. Lo habitual en juegos es **arriba a la izquierda**. Una sola fuente, y no la cambies a mitad del sprite.
+
+Las zonas de un objeto iluminado, de la más clara a la más oscura:
+
+- **Luz:** la cara que mira a la fuente.
+- **Medio tono:** la zona que gira y recibe la luz de lado.
+- **Terminador:** la frontera donde la luz deja de llegar. Es el borde más importante: define el volumen.
+- **Sombra propia:** la parte del objeto que da la espalda a la luz.
+- **Luz rebotada:** un aclarado suave en el borde de la sombra, por la luz que devuelve el suelo. Siempre **más oscura que el medio tono**.
+- **Sombra proyectada:** la sombra que el objeto deja en el suelo, en el lado contrario a la luz.
+
+<Sprite name="ball-lit" scale={10} caption="Rosa claro: luz. Rosa medio: medio tono. El paso a morado es el terminador. Morado oscuro: sombra propia. El morado más claro pegado al borde, abajo a la derecha: luz rebotada" />
+
+<Why>
+Tu cerebro deduce la forma por **cómo cambia la luz** sobre ella. Si la luz tiene una dirección, el terminador se curva y lees una esfera. Es lo mismo que haces en Blender con una sola luz direccional para revisar el modelado.
+</Why>
+
+**El error estrella: pillow shading.** Oscurecer todos los bordes por igual y dejar el centro claro. Es como si la luz saliera de tus ojos. El objeto se ve **plano e hinchado**, como un cojín.
+
+<Mistake title="Pillow shading frente a una luz con dirección" wrongLabel="Anillos concéntricos" rightLabel="Una luz, arriba a la izquierda">
+  <Sprite slot="wrong" name="ball-pillow" scale={8} />
+  <Sprite slot="right" name="ball-lit" scale={8} />
+
+Los mismos cuatro tonos y la misma silueta. A la izquierda el claro está en el centro y los anillos bajan por igual hacia todos los bordes: no hay terminador. A la derecha el claro se desplaza hacia la luz y la sombra se acumula en el lado contrario.
+</Mistake>
+
+Míralas ahora **solo en valor**. El problema se ve aún más claro:
+
+<Mistake title="El mismo error, en grises" wrongLabel="Pillow en grises" rightLabel="Luz con dirección en grises">
+  <Sprite slot="wrong" name="ball-pillow" scale={8} view="gray" />
+  <Sprite slot="right" name="ball-lit" scale={8} view="gray" />
+
+En grises, la bola con pillow es una diana. La bola bien iluminada es un degradado con dirección.
+</Mistake>
+
+**Pocos tonos, bien separados.** Con 3 o 4 tonos que se distingan en grises tienes de sobra a 16×16. Más tonos parecidos solo crean ruido.
+
+Ahora juega con la luz. **Mueve la dirección** y fíjate en cómo se desplaza el terminador. Después **baja a 3 tonos** y activa *Ver valor (grises)*: sigue leyéndose como una esfera.
+
+<LightLab base="#c2186b" tones={4} />
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Lienzo, rejilla y paleta de 4 tonos">
+1. <Keys k="Ctrl+N" />: 16×16, fondo transparente. Activa *View → Grid*.
+2. Prepara 4 tonos de un color (del más claro al más oscuro) y un contorno casi negro.
+3. Antes de pintar, dibuja una flecha mental: **la luz llega desde arriba a la izquierda**.
+
+<Tip>
+Elige los tonos con saltos de valor claros. Si dudas, compruébalos luego en la vista de grises del inspector.
+</Tip>
+</Step>
+
+<Step n={2} title="Silueta de la bola">
+Con el lápiz (<Keys k="B" />, *Pixel-perfect* activado) traza un círculo limpio, como en P2-01. Rellénalo con el tono medio usando el cubo (<Keys k="G" />).
+</Step>
+
+<Step n={3} title="Coloca el terminador primero">
+Con el tono de sombra, pinta una curva que vaya de arriba a la derecha hasta abajo a la izquierda, separando la mitad de abajo a la derecha. Rellena esa zona.
+
+<Why>
+El terminador es la línea que da volumen. Si lo colocas bien, el resto es afinar. Debe ser **curvo**, siguiendo la forma de la esfera, no una diagonal recta.
+</Why>
+</Step>
+
+<Step n={4} title="Luz, sombra profunda y rebote">
+1. Con el tono más claro, pinta una mancha arriba a la izquierda, dentro del medio tono.
+2. Con el tono más oscuro, refuerza la sombra **justo detrás del terminador**, no en el borde.
+3. Deja una franja de 1 píxel del tono de sombra pegada al borde, abajo a la derecha: es la luz rebotada.
+
+<Warn>
+El rebote nunca puede ser tan claro como el medio tono. Si lo es, la bola parece iluminada por dos luces.
+</Warn>
+</Step>
+
+<Step n={5} title="Sombra proyectada">
+Si quieres apoyar la bola en el suelo, añade debajo, desplazada hacia la derecha, una elipse plana y oscura de 1–2 filas. Va en el lado contrario a la luz.
+</Step>
+
+<Step n={6} title="La gema, con la misma luz">
+Haz un segundo archivo de 16×16 con una gema facetada. Cada faceta es un plano: **un solo tono por faceta**. Las que miran arriba a la izquierda, claras; las de abajo a la derecha, oscuras. Guarda con <Keys k="Ctrl+S" /> y exporta las dos con *File → Export → Export As*, PNG, **Resize** 800 %, más una copia al 100 %.
+
+<Why>
+En la bola el tono cambia poco a poco porque la superficie es curva. En la gema cambia de golpe en cada arista porque las caras son planas. Es la diferencia entre un smooth y un hard surface con aristas vivas.
+</Why>
+</Step>
+</Block>
+
+<Block kind="version">
+Ahora a tu manera. Mantén siempre **una sola luz**. Elige uno:
+
+- **Luz desde la derecha:** repite la bola con la luz arriba a la derecha. Todo el sombreado se invierte en espejo.
+- **Tres tonos:** rehaz la gema con solo 3 tonos. ¿Se sigue leyendo?
+- **Otro objeto curvo:** una manzana, un huevo o una seta de 16×16 con la misma luz.
+</Block>
+
+<Block kind="errores">
+<Mistake title="Pillow shading" wrongLabel="Bordes oscuros por igual" rightLabel="Sombra en el lado contrario a la luz">
+  <Sprite slot="wrong" name="ball-pillow" scale={8} />
+  <Sprite slot="right" name="ball-lit" scale={8} />
+
+Busca la fuente de luz en tu sprite. Si no puedes señalarla, es pillow. Corrígelo: aclara el borde que mira a la luz y lleva la sombra solo al lado contrario.
+</Mistake>
+
+<Mistake title="Juzgar la luz solo en color" wrongLabel="En grises: una diana" rightLabel="En grises: un degradado con dirección">
+  <Sprite slot="wrong" name="ball-pillow" scale={8} view="gray" />
+  <Sprite slot="right" name="ball-lit" scale={8} view="gray" />
+
+El color distrae; el valor no miente. Pasa siempre tu sprite a grises. Si ves una diana, es pillow. Si dos tonos se confunden, sepáralos en valor o quita uno.
+</Mistake>
+
+<Warn title="Dos luces sin querer">
+Rebote demasiado claro, o la gema con la luz en otro lado que la bola: el ojo nota la incoherencia aunque no sepa explicarla. Una luz, siempre la misma.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+Sube tus sprites **a 1×** y revísalos en la vista de grises.
+
+<Inspector upload title="Comprueba la luz de tu bola y tu gema" />
+
+<Checklist items={[
+  "Puedo señalar de dónde viene la luz en los dos sprites",
+  "La luz viene del mismo lado en la bola y en la gema",
+  "El terminador de la bola es curvo",
+  "No hay anillos concéntricos oscuros: no es pillow shading",
+  "En grises distingo cada tono",
+  "El rebote es más oscuro que el medio tono",
+]} />
+
+<Quiz q="¿Qué es el pillow shading?" options={["Sombrear con muchos tonos", "Oscurecer todos los bordes por igual, como si la luz viniera del espectador", "Dejar la sombra proyectada en el suelo"]} answer={1}>
+Sin una dirección de luz no hay terminador y el objeto se ve plano e hinchado.
+</Quiz>
+
+<Quiz q="La luz viene de arriba a la izquierda. ¿Dónde va la sombra proyectada?" options={["Abajo a la derecha del objeto", "Arriba a la izquierda", "Alrededor de todo el objeto"]} answer={0}>
+La sombra proyectada cae en el lado contrario a la luz.
+</Quiz>
+</Block>

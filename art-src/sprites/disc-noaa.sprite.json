@@ -1,0 +1,27 @@
+{
+  "name": "disc-noaa",
+  "description": "Disco de 12×12 sin antialiasing: los escalones del borde se ven duros.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "antialiasing"
+  ],
+  "palette": {
+    "b": "#e8dcc8",
+    "f": "#3b2a5a"
+  },
+  "rows": [
+    "bbbbbbbbbbbb",
+    "bbbbffffbbbb",
+    "bbffffffffbb",
+    "bbffffffffbb",
+    "bffffffffffb",
+    "bffffffffffb",
+    "bffffffffffb",
+    "bffffffffffb",
+    "bbffffffffbb",
+    "bbffffffffbb",
+    "bbbbffffbbbb",
+    "bbbbbbbbbbbb"
+  ]
+}

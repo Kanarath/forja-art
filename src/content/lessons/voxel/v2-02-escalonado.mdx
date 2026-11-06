@@ -1,0 +1,188 @@
+---
+id: v2-02
+discipline: voxel
+level: 2
+order: 2
+title: "Escalonado y detalle por capas"
+summary: "En vóxels no hay diagonales: las inclinaciones y las curvas se escalonan. Remata tu blockout con un tejado o una tapa y detalla de lo grande a lo pequeño."
+duration: 40
+status: borrador
+prerequisites: [v2-01]
+fundamentals: [f02]
+objectives:
+  - "Hacer inclinaciones y curvas escalonando capas, como las pendientes del pixel art"
+  - "Distinguir escalones regulares (rampa recta) de escalones que cambian con orden (curva)"
+  - "Evitar escalones irregulares que se leen como bultos"
+  - "Detallar por capas: forma, luego materiales, luego detalle fino"
+tools: [magicavoxel]
+piece:
+  name: "Tejado o tapa escalonada sobre tu blockout"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: []
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Hoy rematas tu blockout de V2-01 con **un tejado o una tapa curva escalonada**. Nada de bloques planos encima: capas que se estrechan con orden.
+
+<VoxViewer model="torre" stage={2} title="Tu pieza: un tejado que sube por escalones" />
+
+Mueve el deslizador **Capas** del visor. Verás el tejado capa a capa: 6×6, luego 4×4, luego 2×2. Cada capa pierde **un vóxel por lado**.
+</Block>
+
+<Block kind="concepto">
+En Blender inclinas una cara y listo. En vóxels **no hay diagonales**: solo cubos alineados a la rejilla. Una inclinación es una **escalera**.
+
+Ya conoces esto del pixel art. Una pendiente limpia se hace con tramos iguales:
+
+<Sprite name="line-2-1" scale={8} caption="Pendiente 2:1: tramos de 2. Limpia." />
+
+<Sprite name="line-3-1" scale={8} caption="Pendiente 3:1: tramos de 3. Más tendida." />
+
+En vóxels, el «tramo» es **cuántos vóxeles entras por capa**. El tejado de la torre entra 1 por capa: es una pendiente 1:1, a 45°. Si entras 1 cada dos capas, el tejado sale más empinado; si entras 2 por capa, más tendido.
+
+<Why>
+El ojo lee el **ritmo** de los escalones, no cada cubo. Si el ritmo es constante, ve una rampa recta. Es el mismo principio de silueta (F02): la forma grande manda y el escalón queda como textura.
+</Why>
+
+La tapa del cofre usa la misma idea en un solo eje: **tres capas cada vez más estrechas** (6, 4 y 2 vóxeles de fondo) a lo largo de todo el cofre.
+
+<VoxViewer model="cofre" stage={1} title="Cofre, etapa Tapa: tres capas que se estrechan" />
+
+Gíralo de lado y mira el perfil: es un tejado a dos aguas pequeño. A este tamaño, tres escalones ya se leen como **tapa redondeada**.
+
+**Regulares o irregulares.** Hay tres tipos de escalonado:
+
+- **Regular** (1, 1, 1…): rampa recta. Tejados, pirámides, taludes.
+- **Que cambia con orden** (por ejemplo 2, 1, 1 de fondo a cima, o al revés): **curva**. Cúpulas, tapas redondas.
+- **Irregular** (1, 3, 1, 2…): bultos. Se lee abollado y descuidado.
+
+<Sprite name="circle-clean" scale={8} caption="Tramos que crecen y decrecen con orden: se lee redondo." />
+
+<Sprite name="circle-bumpy" scale={8} caption="Tramos desordenados: bultos. En vóxels pasa lo mismo capa a capa." />
+
+<Why>
+Una curva es una pendiente que **cambia poco a poco**. Si el cambio salta sin orden, el ojo deja de ver la curva y ve cada escalón por separado.
+</Why>
+
+**Detalle por capas.** Trabaja de lo grande a lo pequeño, como en la torre:
+
+1. **Forma:** volúmenes en un solo color (etapa Blockout).
+2. **Materiales:** tonos de piedra, de tejado, de madera (etapa Muros y ventanas).
+3. **Detalle fino:** escalones del tejado, ventanas, cerraduras.
+
+Cada paso se apoya en el anterior. Si la forma falla, el detalle no la salva.
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Abre tu blockout y mide la cima">
+1. Abre en MagicaVoxel el `.vox` de tu blockout de V2-01.
+2. Gira la cámara con el botón derecho y mira la cara superior.
+3. Cuenta su ancho y su fondo en vóxeles. Es la base de tu tejado.
+
+<Tip>
+Si quieres que el tejado sobresalga como alero, súmale 1 vóxel por lado. La torre lo hace: muros de 4×4 y tejado de 6×6.
+</Tip>
+</Step>
+
+<Step n={2} title="Primera capa del tejado">
+1. Elige en la **paleta** de la izquierda el color del tejado.
+2. En modo **Attach**, con el pincel **Box**, arrastra un rectángulo que cubra toda la cima (con alero, si lo quieres).
+3. Comprueba desde arriba que no queda ningún hueco.
+
+<Why>
+La capa de abajo fija el tamaño de todo el tejado. Si está torcida, cada capa de encima hereda el error.
+</Why>
+</Step>
+
+<Step n={3} title="Escalona: un vóxel menos por lado">
+1. Encima, dibuja otra capa con **Box**, entrando **1 vóxel por cada lado**.
+2. Repite hasta que la capa mida 1 o 2 vóxeles de ancho.
+3. Para una tapa de cofre, entra solo en un eje (el fondo) y deja el largo completo.
+
+Compara con el visor de la torre: mueve **Capas** y cuenta 6, 4, 2.
+
+<Tip>
+Si tu cima tiene ancho impar, acabarás en una cresta de 1 vóxel. Si es par, en una de 2. Las dos valen.
+</Tip>
+</Step>
+
+<Step n={4} title="Ajusta el ritmo: recta o curva">
+1. Gira de lado y mira el perfil.
+2. ¿Quieres una **rampa recta**? Deja todos los escalones iguales.
+3. ¿Quieres una **curva**? Haz que cambien con orden: entra 1 en las capas de abajo y 2 en la última, o al revés para una cúpula más llena.
+4. Para quitar vóxeles sobrantes, usa el modo **Erase** con el pincel **Voxel**.
+
+<Warn>
+No mezcles al azar: 1, 3, 1, 2 se leerá como un tejado abollado.
+</Warn>
+</Step>
+
+<Step n={5} title="Materiales, luego detalle fino">
+1. Cambia al modo **Paint**.
+2. Pinta las capas del tejado en **dos tonos alternos**, como la torre: marca cada escalón sin añadir vóxeles.
+3. Solo al final, el detalle fino: una chimenea, una veleta, una cerradura.
+
+<Why>
+Alternar tonos subraya el ritmo del escalonado. Y como Paint no toca la forma, puedes cambiar de idea sin reconstruir.
+</Why>
+</Step>
+
+<Step n={6} title="Revisa y renderiza">
+1. Mira la pieza de frente, de lado y desde abajo, a la altura de los ojos.
+2. Guarda el `.vox` con un nombre nuevo para conservar el blockout.
+3. Pulsa **Render** arriba y exporta una imagen para tu portfolio.
+</Step>
+
+<Warn title="Verifica en tu versión">
+Los nombres y la posición de los modos (**Attach**, **Erase**, **Paint**) y de los pinceles (**Box**, **Voxel**) pueden variar entre versiones de MagicaVoxel. Si el pincel **Box** no se comporta como esperas en tu versión, construye cada capa con **Voxel**, vóxel a vóxel: el resultado es el mismo.
+</Warn>
+</Block>
+
+<Block kind="version">
+Escalona **a tu manera**. Elige un reto:
+
+- **Tejado empinado:** entra 1 vóxel cada **dos** capas. Un torreón de cuento.
+- **Cúpula:** escalones que cambian con orden (1, 1, 2) sobre una base cuadrada o redonda.
+- **Tapa de baúl:** solo en un eje, como el cofre, con bandas pintadas con **Paint** al final.
+
+Antes de pintar, mira el perfil en un solo color. Si se lee la inclinación o la curva, sigue.
+</Block>
+
+<Block kind="errores">
+<Mistake title="Un bloque plano por tejado" wrongLabel="Tejado en bloque" rightLabel="Tejado escalonado">
+  <VoxViewer slot="wrong" model="torre" stage={0} title="Un bloque de 6×6×3" />
+  <VoxViewer slot="right" model="torre" stage={2} title="Capas de 6, 4 y 2" />
+
+Un bloque encima se lee como una caja o un sombrero de copa, no como un tejado. El bloque está bien **para el blockout**, pero hay que escalonarlo. Corrígelo con **Erase**: quita un anillo de 1 vóxel en la segunda capa y dos anillos en la tercera.
+</Mistake>
+
+<Warn title="Error típico: escalones irregulares">
+Si entras 1, luego 3, luego 1, el perfil hace dientes de sierra. Pasa lo mismo que en el círculo abollado del bloque «El concepto». Decide el ritmo (recto o curva con orden) y repásalo capa a capa desde el lateral.
+</Warn>
+
+<Warn title="Error típico: detallar antes de escalonar">
+Si pintas tejas o pones la chimenea antes de cerrar la forma, tendrás que rehacerlo al corregir los escalones. Primero la forma, luego los materiales, al final el detalle fino.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+<Checklist items={[
+  "El tejado o la tapa se apoya entero sobre mi blockout, sin huecos",
+  "Cada escalón sigue un ritmo: recto (constante) o curva (cambia con orden)",
+  "No hay escalones al azar que se lean como bultos",
+  "En un solo color, el perfil ya se lee como tejado o tapa",
+  "Los materiales los he pintado con Paint después de cerrar la forma",
+  "He guardado el .vox y un render en mi portfolio",
+]} />
+
+<Quiz q="¿Cómo haces una inclinación en vóxels?" options={["Girando los vóxeles 45°", "Escalonando: cada capa entra un número fijo de vóxeles", "Con un vóxel más grande arriba"]} answer={1}>
+Los vóxeles siempre están alineados a la rejilla. La inclinación sale de escalonar capas, igual que una pendiente 1:1 o 2:1 en pixel art.
+</Quiz>
+
+<Quiz q="Escalones de 1, 1, 1 frente a 1, 1, 2. ¿Qué lee el ojo?" options={["Lo mismo en los dos casos", "El primero una rampa recta; el segundo una curva", "El primero una curva; el segundo una rampa recta"]} answer={1}>
+Un ritmo constante es una recta. Un ritmo que cambia con orden es una curva.
+</Quiz>
+</Block>

@@ -18,4 +18,10 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   { id: "valor-3", name: "Valor en 3 tonos", description: "Una pieza que se lee en escala de grises (F01).", color: "#cfcfcf" },
   { id: "linea-limpia", name: "Línea limpia", description: "Líneas pixel-perfect sin jaggies (P2-01).", color: "#ff6fb8" },
   { id: "prop-coherente", name: "Prop coherente", description: "Un prop voxel con escala y paleta coherentes.", color: "#2ec4a6" },
+  { id: "clusters-limpios", name: "Clusters limpios", description: "Un sprite sombreado con grupos de color limpios, sin ruido (P2-02).", color: "#b9b4cc" },
+  { id: "selout", name: "Contorno con intención", description: "Un sprite con selout y antialiasing selectivo (P2-03).", color: "#e8789a" },
+  { id: "luz-con-direccion", name: "Luz con dirección", description: "Sombreado con una sola fuente de luz, sin pillow shading (P3-01).", color: "#ffe58a" },
+  { id: "rampa-hue", name: "Rampa con hue shifting", description: "Una rampa propia con las sombras frías y las luces cálidas (P3-02).", color: "#ffb84d" },
+  { id: "dither-justo", name: "Dithering justo", description: "Un dithering que se lee como un tono a 1× y no como ruido (P3-03).", color: "#8f7bff" },
+  { id: "forma-primero", name: "Forma antes que detalle", description: "Un modelo voxel con su blockout guardado como primera versión (V2-01).", color: "#38e1ff" },
 ];

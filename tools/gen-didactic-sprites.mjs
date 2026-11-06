@@ -172,6 +172,79 @@ const target = lum("#ff4fa3"); // el valor del tono medio de la gema original
 add("gem-samevalue", "La gema con tres colores de tono distinto pero el MISMO valor: en color se distinguen, en grises es una mancha plana.", ["valor", "error"],
   { "1": "#1b1030", "2": colorWithLuma(300, target), "3": colorWithLuma(20, target), "4": colorWithLuma(200, target) }, gemRows);
 
+// ---------- luz: pillow shading frente a una luz con dirección (16×16)
+import { shadeSphere } from "../src/lib/pixel/shade.mjs";
+const BALL = ["#2b1a3d", "#5b2a6e", "#a4407e", "#e8789a"]; // de sombra a luz
+const ballKeys = ["1", "2", "3", "4"];
+function ballRows(grid) {
+  return grid.map((row) => row.map((v) => (v === -1 ? "." : v === -2 ? "o" : ballKeys[v])).join(""));
+}
+const lit = shadeSphere({ size: 16, angle: 135, elevation: 40, tones: 4, outline: true, bounce: true });
+add("ball-lit", "Bola de 16×16 sombreada con UNA luz desde arriba a la izquierda: luz, terminador, sombra propia y luz rebotada abajo a la derecha.", ["luz"],
+  { o: "#140c1c", "1": BALL[0], "2": BALL[1], "3": BALL[2], "4": BALL[3] }, ballRows(lit));
+// pillow shading: los tonos dependen solo de la distancia al centro (anillos), no de una luz
+const pillow = lit.map((row, y) => row.map((v, x) => {
+  if (v < 0) return v;
+  const d = Math.hypot(x - 7.5, y - 7.5) / 7.5;
+  return d < 0.35 ? 3 : d < 0.6 ? 2 : d < 0.82 ? 1 : 0;
+}));
+add("ball-pillow", "La misma bola con pillow shading: anillos concéntricos oscuros hacia el borde, como si la luz viniera del espectador. Se ve plana e hinchada.", ["luz", "error"],
+  { o: "#140c1c", "1": BALL[0], "2": BALL[1], "3": BALL[2], "4": BALL[3] }, ballRows(pillow));
+
+// ---------- contornos: negro, selout (contorno del color de su zona, más oscuro) y sin contorno
+const mush = out.find((s) => s.name === "mushroom16");
+const darker = { r: "#5c1426", d: "#4a1020", w: "#8a6d4a", c: "#6e5636" }; // versión oscura de cada relleno
+function outlineVariant(mode) {
+  const rows = mush.rows.map((r) => [...r]);
+  const H = rows.length, W = rows[0].length;
+  const fillNear = (x, y) => {
+    for (const [dx, dy] of [[0, 1], [0, -1], [1, 0], [-1, 0], [1, 1], [-1, 1], [1, -1], [-1, -1]]) {
+      const c = mush.rows[y + dy]?.[x + dx];
+      if (c && c !== "." && c !== "o") return c;
+    }
+    return "r";
+  };
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    if (mush.rows[y][x] !== "o") continue;
+    if (mode === "none") rows[y][x] = fillNear(x, y);
+    else if (mode === "selout") rows[y][x] = fillNear(x, y).toUpperCase(); // R, D, W, C = versiones oscuras
+  }
+  return rows.map((r) => r.join(""));
+}
+const seloutPal = { ...SETA };
+for (const [k, v] of Object.entries(darker)) seloutPal[k.toUpperCase()] = v;
+{
+  const rows = outlineVariant("selout");
+  const used = new Set(rows.join(""));
+  add("mushroom16-selout", "La seta con selout: el contorno usa una versión oscura del color de cada zona, en vez de negro. Más suave e integrada.", ["contorno"],
+    Object.fromEntries(Object.entries(seloutPal).filter(([k]) => used.has(k))), rows);
+}
+{
+  const rows = outlineVariant("none");
+  const used = new Set(rows.join(""));
+  add("mushroom16-nooutline", "La seta sin contorno: sobre fondos de colores parecidos se pierde la forma.", ["contorno", "error"],
+    Object.fromEntries(Object.entries(SETA).filter(([k]) => used.has(k))), rows);
+}
+
+// ---------- antialiasing selectivo: disco oscuro sobre fondo claro, sin y con AA (12×12)
+function disc(aa) {
+  const N = 12, rows = [];
+  for (let y = 0; y < N; y++) {
+    let r = "";
+    for (let x = 0; x < N; x++) {
+      // cobertura: cuántos de 4×4 subpíxeles caen dentro del círculo
+      let inside = 0;
+      for (let sy = 0; sy < 4; sy++) for (let sx = 0; sx < 4; sx++) if (Math.hypot(x + (sx + 0.5) / 4 - 6, y + (sy + 0.5) / 4 - 6) <= 5) inside++;
+      const cov = inside / 16;
+      r += cov >= 0.5 ? (aa && cov < 0.8 ? "m" : "f") : aa && cov >= 0.25 ? "m" : "b";
+    }
+    rows.push(r);
+  }
+  return rows;
+}
+add("disc-noaa", "Disco de 12×12 sin antialiasing: los escalones del borde se ven duros.", ["antialiasing"], { b: "#e8dcc8", f: "#3b2a5a" }, disc(false));
+add("disc-aa", "El mismo disco con antialiasing selectivo: un tono intermedio SOLO en los escalones largos suaviza la curva a 1×.", ["antialiasing"], { b: "#e8dcc8", f: "#3b2a5a", m: "#9283a0" }, disc(true));
+
 // ---------- escribir y validar
 let bad = 0;
 for (const s of out) {

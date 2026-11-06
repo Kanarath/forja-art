@@ -1,0 +1,165 @@
+---
+id: p2-03
+discipline: pixel
+level: 2
+order: 3
+title: "Contornos: negro, selout y antialiasing selectivo"
+summary: "Elige entre contorno negro, selout o sin contorno, y suaviza las curvas con antialiasing selectivo solo donde hace falta."
+duration: 40
+status: borrador
+objectives:
+  - "Distinguir contorno negro, selout y sin contorno, y saber cuándo usar cada uno"
+  - "Construir un selout con el tono oscuro de cada zona"
+  - "Aplicar antialiasing solo en los escalones largos de una curva"
+  - "Saber por qué no se hace antialiasing hacia un fondo desconocido"
+prerequisites: [p2-02]
+fundamentals: [f02]
+tools: [aseprite]
+piece:
+  name: "Tu seta (o un objeto de 16×16) con selout y AA selectivo"
+  canvas: "16x16"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [selout]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Vas a forjar **tu seta de 16×16 con selout**: el contorno deja de ser negro y pasa a ser una versión oscura del color de cada zona. Y vas a suavizar sus curvas con **antialiasing selectivo**, solo donde lo pide.
+
+<Sprite name="mushroom16-selout" scale={12} caption="La meta: rojo oscuro alrededor del sombrero, marrón alrededor del pie" />
+</Block>
+
+<Block kind="concepto">
+El contorno es la frontera de la silueta. Hay tres formas de tratarlo.
+
+<Sprite name="mushroom16" scale={8} caption="Contorno casi negro (#2a1020) en todo el borde: máxima legibilidad, aire retro" />
+
+<Sprite name="mushroom16-selout" scale={8} caption="Selout: rojo oscuro en el sombrero, aún más oscuro en el lado en sombra, marrón en el pie" />
+
+<Sprite name="mushroom16-nooutline" scale={8} caption="Sin contorno: el borde es el propio relleno. Depende del fondo" />
+
+- **Negro:** separa la figura de cualquier fondo. Lo pagas con un look más duro y «de recortable».
+- **Selout** (*selective outline*): cada tramo del contorno usa el tono oscuro de la zona que encierra. Fíjate en la seta: el sombrero va en rojo oscuro, la parte derecha (en sombra) en un granate aún más oscuro, y el pie en dos marrones, más claro a la izquierda y más oscuro a la derecha. Hasta la línea entre sombrero y pie usa el marrón del pie.
+- **Sin contorno:** funciona si conoces el fondo y contrasta. Sobre un fondo rojo o crema, esta seta se deshace.
+
+<Why>
+El ojo lee primero el **valor**. El negro da el salto de valor más grande posible, así que la silueta nunca se pierde. El selout conserva casi todo ese salto, pero sin una línea ajena al objeto: el borde parece parte del volumen, no un trazo pintado encima. Es como un bisel en hard surface: define el canto sin cambiar el material.
+</Why>
+
+**Antialiasing selectivo (AA).** A 1×, los escalones largos de una curva se ven como dientes. Un píxel de **tono intermedio** en el codo del escalón engaña al ojo y suaviza la curva.
+
+<Mistake title="El mismo disco, con y sin AA" wrongLabel="Sin AA: codos duros" rightLabel="AA solo en los escalones">
+  <Sprite slot="wrong" name="disc-noaa" scale={10} />
+  <Sprite slot="right" name="disc-aa" scale={10} />
+
+En el disco con AA, el gris violáceo (#9283a0) está a medio camino entre el violeta del disco y el crema del fondo. Solo aparece en los codos de las cuatro curvas (filas 1–4 y 7–10). Los lados rectos (filas 5 y 6) y el centro del tramo de arriba no llevan ninguno.
+</Mistake>
+
+<Why title="Por qué «selectivo»">
+Si pones tono intermedio en **todo** el borde, el contorno se emborrona y parece desenfocado. Solo los escalones largos lo necesitan: un escalón de 1 ya se lee suave.
+</Why>
+
+<Warn title="Nunca hacia un fondo que no conoces">
+El disco funciona porque su fondo crema forma parte del dibujo. Un sprite de juego se mueve sobre cielo, cueva, hierba… Un píxel mezclado con crema hace de halo sobre un fondo oscuro. Por eso, en un sprite, el AA va **por dentro**: entre el contorno y el relleno, que sí conoces.
+</Warn>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Estudia el selout de cerca">
+Amplía la seta, activa la rejilla y pasa a la vista de grises. Comprueba que cada tramo del contorno es más oscuro que el relleno que toca.
+
+<Inspector sprite="mushroom16-selout" title="Recorre el contorno: ¿qué color tiene cada tramo?" />
+</Step>
+
+<Step n={2} title="Prepara la seta">
+Abre tu seta de 16×16 de una lección anterior o crea una con <Keys k="Ctrl+N" /> (16×16, fondo transparente). Activa *View → Grid*. Si es nueva, dibuja el contorno en negro con el lápiz (<Keys k="B" />) y **Pixel-perfect** activado.
+
+<Tip>
+Trabaja sobre una copia. Al final compararás la versión negra con la de selout.
+</Tip>
+</Step>
+
+<Step n={3} title="Crea los tonos de contorno">
+Para cada zona (sombrero, pie) toma su color con el cuentagotas (<Keys k="I" />) y añade a la paleta una versión **bastante más oscura y algo más saturada**. Para el lado en sombra, crea otra un paso más oscura.
+
+<Why>
+Si solo oscureces sin saturar, el tono se agrisa y parece sucio. Un granate o un marrón profundos siguen siendo «de» la seta.
+</Why>
+</Step>
+
+<Step n={4} title="Repinta el contorno por zonas">
+Con el lápiz (<Keys k="B" />), pinta encima de cada tramo negro el oscuro de la zona que encierra. En el lado de la luz, el oscuro normal. En el lado de la sombra, el más oscuro. La línea entre sombrero y pie, en el oscuro del pie.
+
+<Warn>
+No uses el cubo (<Keys k="G" />) sobre el contorno: el contorno es un solo color y lo cambiaría entero. Aquí cada tramo lleva su tono.
+</Warn>
+</Step>
+
+<Step n={5} title="AA selectivo por dentro">
+Busca en el sombrero los **escalones de 2 o más** píxeles. En el codo de cada uno, por el lado de dentro, cambia un píxel de relleno por un tono **intermedio** entre el contorno y el relleno.
+
+<Why>
+Ese tono suaviza el escalón y se queda dentro de la silueta. El borde exterior sigue siendo opaco y nítido, así que la seta funciona sobre cualquier fondo.
+</Why>
+</Step>
+
+<Step n={6} title="Comprueba a 1× y exporta">
+Aleja con la rueda del ratón hasta verla a tamaño real. Si el contorno parece borroso, quita AA. Guarda con <Keys k="Ctrl+S" /> y exporta con *File → Export → Export As*, PNG, **Resize** 800 %, más una copia al 100 %.
+</Step>
+</Block>
+
+<Block kind="version">
+Ahora a tu manera. Elige uno:
+
+- **Otro objeto de 16×16:** una manzana, una poción o una piedra, con selout en dos zonas como mínimo.
+- **Selout con luz:** el contorno se aclara del todo en el lado de la luz (puede llegar casi al tono del relleno) y se oscurece en la sombra.
+- **Tres versiones lado a lado:** negro, selout y sin contorno, sobre un fondo claro y otro oscuro. Escribe cuál ganaría en tu juego y por qué.
+</Block>
+
+<Block kind="errores">
+<Mistake title="Sin contorno sobre un fondo que no controlas" wrongLabel="Sin contorno" rightLabel="Con selout">
+  <Sprite slot="wrong" name="mushroom16-nooutline" scale={8} />
+  <Sprite slot="right" name="mushroom16-selout" scale={8} />
+
+Sin contorno, el borde del sombrero es el mismo rojo del relleno. Sobre un fondo rojizo la silueta desaparece. Si el sprite va a moverse, dale contorno: el selout cuesta poco y no endurece.
+</Mistake>
+
+<Mistake title="AA en todo el borde y hacia fuera" wrongLabel="Escalones duros" rightLabel="Tono intermedio solo en los codos">
+  <Sprite slot="wrong" name="disc-noaa" scale={8} />
+  <Sprite slot="right" name="disc-aa" scale={8} />
+
+El error típico no es olvidar el AA, sino pasarse: rodear todo el borde de intermedios y mezclarlos con un fondo que luego cambia. Fíjate en que el disco correcto deja los lados rectos sin tocar. En un sprite, haz el AA hacia dentro.
+</Mistake>
+
+<Mistake title="Selout que no oscurece" wrongLabel="Caso extremo: borde igual al relleno" rightLabel="Contorno claramente más oscuro">
+  <Sprite slot="wrong" name="mushroom16-nooutline" scale={8} view="gray" />
+  <Sprite slot="right" name="mushroom16-selout" scale={8} view="gray" />
+
+La izquierda es el caso extremo de un selout demasiado claro: el borde tiene exactamente el mismo valor que el relleno. Mira en grises: si tu contorno tiene casi el mismo valor que el relleno, en la práctica no hay contorno. Oscurécelo hasta que el borde se vea en la vista de grises.
+</Mistake>
+</Block>
+
+<Block kind="calidad">
+Sube tu seta **a 1×** y revísala con la vista de grises y la de silueta.
+
+<Inspector upload title="Revisa el contorno de tu seta" />
+
+<Checklist items={[
+  "El contorno de cada zona es una versión oscura de su color, no negro",
+  "El lado en sombra lleva un contorno más oscuro que el de la luz",
+  "En grises, el contorno se distingue del relleno en todo el borde",
+  "El AA solo está en los escalones de 2 o más, y por dentro",
+  "El borde exterior es opaco: ningún píxel mezclado con un fondo",
+  "Exporté el PNG a ×8 y guardé el .aseprite",
+]} />
+
+<Quiz q="Tu sprite se moverá sobre cielo, cueva y hierba. ¿Dónde pones el antialiasing?" options={["En todo el borde exterior, mezclado con el cielo", "Por dentro, entre el contorno y el relleno", "En ningún sitio: el AA siempre estropea el pixel art"]} answer={1}>
+Hacia fuera mezclarías con un fondo que cambia y saldría un halo. Por dentro, los dos colores que mezclas son tuyos y siempre están ahí.
+</Quiz>
+
+<Quiz q="¿Qué es el selout?" options={["Un contorno negro de 1 píxel", "Un contorno que usa el tono oscuro de cada zona", "Quitar el contorno y dejar solo el relleno"]} answer={1}>
+*Selective outline*: el color del contorno cambia según la zona que encierra, y suele oscurecerse más en el lado en sombra.
+</Quiz>
+</Block>

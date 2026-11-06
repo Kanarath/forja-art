@@ -1,0 +1,158 @@
+---
+id: p3-02
+discipline: pixel
+level: 3
+order: 2
+title: "Rampas de color con hue shifting"
+summary: "Construye una rampa de 5 tonos que gire hacia los fríos en la sombra y hacia los cálidos en la luz, comprueba su valor en grises y aplícala a un objeto de 16×16."
+duration: 40
+status: borrador
+objectives:
+  - "Entender qué es una rampa: la escala de tonos de un material"
+  - "Ver por qué oscurecer con negro y aclarar con blanco ensucia el color"
+  - "Aplicar hue shifting: sombras frías, luces cálidas, extremos menos saturados"
+  - "Comprobar en grises que el valor crece siempre"
+  - "Pintar un objeto de 16×16 con una rampa de 5 tonos"
+prerequisites: [p3-01]
+fundamentals: [f01]
+tools: [aseprite]
+piece:
+  name: "Una rampa de 5 tonos aplicada a un objeto de 16×16"
+  canvas: "16x16"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [rampa-hue]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Vas a forjar **una rampa de 5 tonos** y a pintar con ella **un objeto de 16×16**: una gema, una fruta, una piedra… Lo que tú elijas, pero con un solo material y una sola rampa.
+
+<Sprite name="gem" scale={12} caption="La gema usa una rampa: contorno, sombra, medio, luz y brillo. Tu objeto tendrá 5 tonos ordenados así" />
+</Block>
+
+<Block kind="concepto">
+Una **rampa** es la escala de tonos de un material, de la sombra a la luz. Cada tono es un peldaño. En pixel art se eligen a mano, uno a uno.
+
+**El atajo que falla.** Oscurecer mezclando con negro y aclarar mezclando con blanco. Funciona en valor, pero el color se apaga: la sombra queda **sucia** (grisácea, como barro) y la luz, **lavada** (como tiza).
+
+**Hue shifting.** Al bajar de valor, el tono **gira hacia los fríos** (azul o violeta). Al subir, **gira hacia los cálidos** (amarillo). Además, los extremos **pierden algo de saturación**: la sombra más honda y el brillo casi blanco no son colores chillones.
+
+<Why>
+Así se comporta la luz real. Una luz cálida (el sol, una vela) tiñe las zonas iluminadas. Lo que queda en sombra recibe sobre todo la luz del cielo o del ambiente, que es más fría. El ojo lo reconoce y lee el volumen como «natural».
+</Why>
+
+Compara las dos filas del laboratorio. Mueve el **Hue shifting** a 0 y súbelo después: mira cómo la sombra se vuelve violeta y la luz se calienta.
+
+<RampLab />
+
+**El valor manda.** Girar el tono no sirve de nada si rompe la escala. De la sombra a la luz, el valor **debe crecer siempre**. Compruébalo en la fila de grises: cada peldaño, más claro que el anterior.
+
+<Sprite name="gem" view="gray" scale={10} caption="La gema en grises: cuatro valores distintos que suben en orden. Por eso se lee el volumen" />
+
+<Why>
+El ojo lee primero el valor y después el tono. Si dos tonos tienen el mismo valor, en grises se funden y el volumen desaparece, por bonito que sea el color.
+</Why>
+
+Ahora con otro color y otro sprite. Prueba a llevar el hue shifting al máximo: en algún punto los grises dejan de subir limpios o el color se vuelve raro. Ese es tu límite.
+
+<RampLab base="#3fbf7f" steps={4} sprite="slime" />
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Diseña tu rampa en el laboratorio">
+En el primer laboratorio elige un **color base** para tu material y pon **Tonos** en 5. Ajusta el **Hue shifting** hasta que la sombra tire a violeta o azul y la luz a amarillo, sin que el color se vuelva otro.
+
+Mira la fila de grises: los 5 peldaños deben subir en orden. Cuando te guste, pulsa **Descargar .gpl (Aseprite)**.
+
+<Why>
+El .gpl es un archivo de paleta de texto que Aseprite sabe leer. Así no copias códigos hex a mano.
+</Why>
+</Step>
+
+<Step n={2} title="Lienzo y paleta en Aseprite">
+1. <Keys k="Ctrl+N" />: 16×16, fondo transparente.
+2. Activa la rejilla en *View → Grid*.
+3. En el panel de paleta, abre el botón de opciones y elige *Load Palette*. Busca `rampa-forja.gpl`.
+
+<Warn title="Verifica en tu versión">
+La posición del botón de opciones de la paleta y el nombre exacto del comando pueden cambiar entre versiones de Aseprite. Si no lo ves, busca en el menú del panel de paleta una opción para cargar paleta.
+</Warn>
+</Step>
+
+<Step n={3} title="Silueta con el tono más oscuro">
+Lápiz (<Keys k="B" />) con **Pixel-perfect** y el tono 1, el más oscuro. Dibuja el contorno de tu objeto. Rellena el interior con el tono 3, el medio, usando el cubo (<Keys k="G" />).
+
+<Tip>
+Antes de seguir, mira el objeto a 1×. Si la silueta no se lee, el color no lo va a arreglar.
+</Tip>
+</Step>
+
+<Step n={4} title="Sombra y luz">
+Decide de dónde viene la luz (por ejemplo, arriba a la izquierda, como en la lección anterior). Pinta con el tono 2 la zona que se aleja de la luz y con el tono 4 la que la mira. Trabaja en **grupos** de píxeles, no en puntos sueltos.
+</Step>
+
+<Step n={5} title="El brillo, con cuentagotas">
+Con el tono 5, el más claro, pon un brillo pequeño donde la luz pega de lleno: 1 a 3 píxeles. Si necesitas recuperar un tono que ya está en el lienzo, cógelo con el cuentagotas (<Keys k="I" />).
+
+<Why>
+El brillo funciona por contraste. Si ocupa mucho, deja de ser un brillo y pasa a ser otra zona de luz.
+</Why>
+</Step>
+
+<Step n={6} title="Guarda y exporta">
+Guarda con <Keys k="Ctrl+S" /> y exporta con *File → Export → Export As*, PNG, **Resize** 800 %. Exporta también una copia al 100 % para revisarla abajo.
+</Step>
+</Block>
+
+<Block kind="version">
+Ahora a tu manera. Elige uno:
+
+- **Mismo objeto, dos materiales:** una rampa para el metal y otra para la madera. Cada una con su propio giro de tono.
+- **Luz de atardecer:** sombras muy violetas y luces naranjas. Comprueba que los grises siguen subiendo.
+- **Rampa corta de 3 tonos:** el mismo objeto con menos peldaños. ¿Qué se pierde y qué se gana?
+</Block>
+
+<Block kind="errores">
+<Mistake title="Tonos distintos con el mismo valor" wrongLabel="Mismo valor: mancha plana en grises" rightLabel="Valor que sube en orden">
+  <Sprite slot="wrong" name="gem-samevalue" view="gray" scale={8} />
+  <Sprite slot="right" name="gem" view="gray" scale={8} />
+
+En color, la gema de la izquierda tiene tres tonos distintos. En grises, es una mancha. Si girar el tono te iguala dos peldaños, sube o baja el valor de uno de ellos hasta que se separen.
+</Mistake>
+
+<Mistake title="Rampa aplicada en píxeles sueltos" wrongLabel="Tonos alternados: ruido" rightLabel="Tonos en grupos">
+  <Sprite slot="wrong" name="rock-noisy" scale={8} />
+  <Sprite slot="right" name="rock-clean" scale={8} />
+
+Una buena rampa no salva un sombreado ruidoso. Pinta cada tono en zonas con forma y deja que un peldaño toque solo a sus vecinos de rampa.
+</Mistake>
+
+<Warn title="Sombra con negro, luz con blanco">
+Si tu sombra parece barro y tu luz parece tiza, has mezclado con negro y con blanco. Vuelve al laboratorio, sube el hue shifting y compara la fila de abajo, «Sin hue shifting», con la de arriba.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+Sube tu objeto **a 1×** y revísalo en la vista de grises.
+
+<Inspector upload title="Revisa el valor de tu rampa" />
+
+<Checklist items={[
+  "Mi lienzo es de 16×16 y el fondo es transparente",
+  "Uso exactamente 5 tonos de una misma rampa",
+  "En la sombra el tono gira hacia el azul o el violeta",
+  "En la luz el tono gira hacia el amarillo",
+  "En grises, los 5 tonos son distintos y suben en orden",
+  "Exporté el PNG a ×8 y guardé el .aseprite",
+]} />
+
+<Quiz q="Al bajar de valor en una rampa con hue shifting, ¿hacia dónde gira el tono?" options={["Hacia el amarillo", "Hacia el azul o el violeta", "No gira: solo se añade negro"]} answer={1}>
+Las sombras giran hacia los fríos y las luces hacia los cálidos, como con la luz real.
+</Quiz>
+
+<Quiz q="Tu rampa se ve preciosa en color, pero en grises dos tonos son iguales. ¿Qué haces?" options={["Nada: lo que importa es el color", "Cambiar el valor de uno para que el valor suba siempre", "Añadir más saturación a los dos"]} answer={1}>
+El valor manda. Si dos peldaños tienen el mismo valor, el volumen se pierde.
+</Quiz>
+</Block>

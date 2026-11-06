@@ -1,0 +1,28 @@
+{
+  "name": "disc-aa",
+  "description": "El mismo disco con antialiasing selectivo: un tono intermedio SOLO en los escalones largos suaviza la curva a 1×.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "antialiasing"
+  ],
+  "palette": {
+    "b": "#e8dcc8",
+    "f": "#3b2a5a",
+    "m": "#9283a0"
+  },
+  "rows": [
+    "bbbbbbbbbbbb",
+    "bbbmmffmmbbb",
+    "bbmffffffmbb",
+    "bmffffffffmb",
+    "bmffffffffmb",
+    "bffffffffffb",
+    "bffffffffffb",
+    "bmffffffffmb",
+    "bmffffffffmb",
+    "bbmffffffmbb",
+    "bbbmmffmmbbb",
+    "bbbbbbbbbbbb"
+  ]
+}
