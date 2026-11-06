@@ -36,9 +36,15 @@
 | 2.8 Revisión de calidad | ✅ Las 9 compilan y pasan la validación; atajos de MagicaVoxel sin inventar, con aviso «Verifica en tu versión» |
 | 2.9 Prueba del alumno | ⏳ Tú: probar cada lección en Aseprite o MagicaVoxel, verificar menús y atajos, y pasar `status` a `revisada` |
 
-**Pendiente de revisión:**
-- **Revisión visual con el panel del navegador visible:** con el panel oculto, las páginas no se dibujan.
-- **Número de visores 3D en las lecciones de voxel:** V1-02 tiene 9. Si resulta pesado en tu equipo, conviene reducirlo.
+**Revisión visual (hecha):** Taller, dashboards, Logros, Labs, lecciones y portfolio, en escritorio y móvil. Los 9 visores de V1-02 arrancan sin errores de WebGL. Corregido:
+- contraste del chip de fundamento activo;
+- nombre de la pieza de P0-01;
+- zoom automático del inspector;
+- cámara del visor (ahora se ve el frente de los modelos);
+- solapamiento del animador;
+-  anulado por  en el portfolio vacío;
+- desbordamiento horizontal de los visores 3D en móvil;
+- dos comparativas de V1-02 cuya imagen contradecía el texto.
 
 **Lecciones aprendidas durante la fase 1:**
 - **`BASE_URL` sin barra final.** Astro 7 da `BASE_URL` sin barra final, así que hay que usar siempre `src/lib/url.ts`. El validador detecta enlaces sin la base.

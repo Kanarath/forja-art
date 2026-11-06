@@ -10,6 +10,9 @@ body {
 .wrap { max-width: 1240px; margin: 0 auto; padding-inline: 16px; }
 main.wrap { padding-block: 32px 80px; min-height: 70vh; }
 
+/* el atributo hidden debe ocultar siempre, aunque el elemento tenga display: flex/grid */
+[hidden] { display: none !important; }
+
 .skip { position: absolute; left: -9999px; }
 .skip:focus { left: 16px; top: 8px; z-index: 100; background: var(--fund); color: #1a1400; padding: 8px 12px; }
 

@@ -92,6 +92,9 @@ if (preset === "slime-idle") {
 
     function drawFrame(c: HTMLCanvasElement, f: string[][], k: number, ghost?: string[][]) {
       c.width = W * k; c.height = H * k;
+      // tamaño en pantalla = tamaño real: así el contenedor no se desborda
+      c.style.width = `${W * k}px`;
+      c.style.height = `${H * k}px`;
       const g = c.getContext("2d")!;
       g.clearRect(0, 0, c.width, c.height);
       if (ghost) {
@@ -199,9 +202,11 @@ if (preset === "slime-idle") {
   .lab-head { display: flex; gap: 12px; align-items: baseline; padding: 10px 14px; border-bottom: 1px solid var(--line); }
   .tag { font: 600 .7rem var(--font-mono); color: #0e0f14; background: var(--accent); padding: 2px 8px; }
   .body { display: flex; gap: 18px; padding: 14px; flex-wrap: wrap; }
-  .edit { display: flex; gap: 10px; }
+  .edit { display: flex; gap: 10px; flex: none; max-width: 100%; overflow-x: auto; }
+  .side { flex: 1; min-width: 200px; max-width: 320px; }
   canvas { image-rendering: pixelated; }
-  .paint { background: conic-gradient(#5a5e6e 25%, #4a4d5b 0 50%, #5a5e6e 0 75%, #4a4d5b 0) 0 0 / 18px 18px; cursor: crosshair; touch-action: none; max-width: 70vw; }
+  .paint { background: conic-gradient(#5a5e6e 25%, #4a4d5b 0 50%, #5a5e6e 0 75%, #4a4d5b 0) 0 0 / 18px 18px; cursor: crosshair; touch-action: none; flex: none; }
+  .pal :global(button) { padding: 0; }
   .pal { display: flex; flex-direction: column; gap: 4px; }
   .pal :global(button) { width: 28px; height: 28px; border: 2px solid var(--line); cursor: pointer; }
   .pal :global(button.on) { border-color: #fff; outline: 2px solid var(--accent); }

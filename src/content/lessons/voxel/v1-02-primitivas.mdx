@@ -145,19 +145,13 @@ Antes de pintar, enséñale a alguien el blockout en un solo color. Si dice «un
 Si modelas sin **Mirror X**, te queda media seta o una seta torcida, porque a mano nunca repites igual los dos lados. Activa el espejo **antes** del primer vóxel. Si ya lo olvidaste, borra la mitad mal hecha con **Erase**, activa el espejo y repasa la buena: el programa rellena la otra.
 </Mistake>
 
-<Mistake title="Cambiar el color reconstruyendo" wrongLabel="Borrar y volver a poner" rightLabel="Paint sobre el volumen">
-  <VoxViewer slot="wrong" model="barril" stage={0} title="Cilindro sin aros" />
-  <VoxViewer slot="right" model="barril" stage={1} title="Aros pintados" />
+<Warn title="Error típico: cambiar el color reconstruyendo">
+Para poner los aros del barril no hace falta borrar dos anillos de madera y volver a construirlos en metal: así se cuelan huecos y bultos. Con el modo **Paint** cambias el color del vóxel que ya existe y la forma queda intacta. Compara las etapas 1 y 2 del barril del bloque «El concepto»: el volumen es idéntico, solo cambia el color.
+</Warn>
 
-Para poner los aros no hace falta borrar dos anillos de madera y volver a construirlos en metal: así se cuelan huecos y bultos. Con el modo **Paint** cambias el color del vóxel que ya existe y la forma queda intacta.
-</Mistake>
-
-<Mistake title="Detallar antes de cerrar la forma" wrongLabel="Motas sobre una forma dudosa" rightLabel="Blockout primero">
-  <VoxViewer slot="wrong" model="barril" stage={2} title="Detalle final" />
-  <VoxViewer slot="right" model="barril" stage={0} title="Blockout" />
-
-El barril terminado está bien, pero solo porque su blockout ya funcionaba. Si pintas duelas y motas sobre una forma que no se lee, tendrás que repintarlo todo al corregirla. Cierra la silueta en un solo color y **luego** detalla.
-</Mistake>
+<Warn title="Error típico: detallar antes de cerrar la forma">
+Si pintas duelas y motas sobre una forma que todavía no se lee, tendrás que repintarlo todo al corregirla. Cierra la silueta en un solo color (como la etapa 1, Blockout) y **luego** detalla. El barril terminado funciona porque su blockout ya funcionaba.
+</Warn>
 </Block>
 
 <Block kind="calidad">

@@ -70,6 +70,8 @@ const data = sprite ? getSprite(sprite) : null;
     function paint(c: HTMLCanvasElement, s: Sprite, k: number, view: string) {
       const w = s.rows[0].length, h = s.rows.length;
       c.width = w * k; c.height = h * k;
+      c.style.width = `${w * k}px`;
+      c.style.height = `${h * k}px`;
       const g = c.getContext("2d")!;
       g.clearRect(0, 0, c.width, c.height);
       s.rows.forEach((row, y) => [...row].forEach((ch, x) => {
@@ -83,9 +85,12 @@ const data = sprite ? getSprite(sprite) : null;
     function draw() {
       if (!sprite || !info) return;
       const o = opt();
-      // que quepa en el escenario: limitamos el zoom al ancho disponible
+      // que quepa en el escenario: limitamos el zoom al ancho disponible.
+      // Mientras no toques el deslizador, el zoom se ajusta solo para llenar el escenario.
       const maxK = Math.max(2, Math.floor((root.querySelector(".stage")!.clientWidth - 24) / sprite.rows[0].length));
-      const k = Math.min(o.zoom, maxK);
+      const fit = Math.max(2, Math.min(40, maxK, Math.floor(340 / sprite.rows.length)));
+      const k = autoZoom ? fit : Math.min(o.zoom, maxK);
+      if (autoZoom) form.querySelector<HTMLInputElement>("input[name=zoom]")!.value = String(k);
       const g = paint(canvas, sprite, k, o.view);
       if (o.grid && k >= 6) {
         g.strokeStyle = "rgba(0,0,0,.35)";
@@ -122,6 +127,8 @@ const data = sprite ? getSprite(sprite) : null;
       hover.textContent = ch === "." ? `(${x}, ${y}) · transparente` : `(${x}, ${y}) · ${sprite.palette[ch]} · valor ${Math.round((luma(sprite.palette[ch]) / 255) * 100)} %`;
     });
     canvas.addEventListener("mouseleave", () => (hover.textContent = "Pasa el ratón por un píxel"));
+    let autoZoom = true;
+    form.querySelector("input[name=zoom]")!.addEventListener("input", () => (autoZoom = false));
     form.addEventListener("input", draw);
     new ResizeObserver(draw).observe(root.querySelector(".stage")!);
 

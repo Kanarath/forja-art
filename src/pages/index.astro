@@ -133,9 +133,9 @@ const first = nextLesson((await buildCatalog()).lessons, emptyState(), ROUTE);
   .chips { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 8px; }
   .chips li { border: 1px solid var(--line); padding: 6px 12px; font-size: .85rem; color: var(--muted); }
   .chips b { font: 500 .75rem var(--font-mono); color: var(--fund); margin-right: 4px; }
-  .chips :global(.done) { border-color: var(--fund); color: var(--text); }
-  .chips :global(.now) { background: var(--fund); color: #1a1400; }
-  .chips :global(.now) b { color: #1a1400; }
+  .chips li:global(.done) { border-color: var(--fund); color: var(--text); }
+  .chips li:global(.now) { background: var(--fund); color: #1a1400; }
+  .chips li:global(.now) b { color: #1a1400; }
 
   @media (max-width: 860px) {
     .hero, .paths, .lower { grid-template-columns: 1fr; }

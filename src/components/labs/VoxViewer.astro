@@ -120,7 +120,7 @@ const stages = m.stages.map((s, i) => ({ label: s.label, note: s.note, src: url(
 
     const resize = () => {
       const w = wrap.clientWidth, h = wrap.clientHeight;
-      renderer.setSize(w, h);
+      renderer.setSize(w, h, false); // false: no fijar el ancho en CSS (lo da el contenedor)
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
     };
@@ -138,7 +138,8 @@ const stages = m.stages.map((s, i) => ({ label: s.label, note: s.note, src: url(
       note.innerHTML = `<b>${current + 1} · ${s.label}</b> — ${s.note} <span class="mono">${model.size.x}×${model.size.y}×${model.size.z} · ${count} vóxeles · ${model.colors.length} colores</span>`;
       if (frame) {
         const r = Math.max(model.size.x, model.size.y, model.size.z);
-        camera.position.set(r * 1.6, r * 1.3, r * 1.9);
+        // vista de 3/4 desde el frente: en los modelos, el frente está en el lado Y negativo de MagicaVoxel
+        camera.position.set(r * 1.15, r * 0.95, -r * 1.35);
         controls.target.set(0, model.size.z / 2.4, 0);
         controls.update();
       }
@@ -184,8 +185,9 @@ const stages = m.stages.map((s, i) => ({ label: s.label, note: s.note, src: url(
   .lab-head b { font: 600 .95rem var(--font-head); flex: 1; }
   .dl { font: .75rem var(--font-mono); color: var(--voxel); }
   .view { position: relative; background: radial-gradient(ellipse at 50% 40%, #1b2a3a, #0b0e14 70%); }
-  .canvas-wrap { height: min(52vh, 420px); display: grid; place-items: center; }
-  .canvas-wrap :global(canvas) { display: block; touch-action: none; }
+  .lab { min-width: 0; max-width: 100%; }
+  .canvas-wrap { height: min(52vh, 420px); display: grid; place-items: center; overflow: hidden; min-width: 0; }
+  .canvas-wrap :global(canvas) { display: block; touch-action: none; width: 100% !important; height: 100% !important; }
   .loading { color: var(--muted); font: .85rem var(--font-mono); }
   .hint { position: absolute; left: 10px; bottom: 8px; font-size: .68rem; color: var(--muted); pointer-events: none; }
   .hud { padding: 10px 14px; display: grid; gap: 8px; border-top: 1px solid var(--line); }

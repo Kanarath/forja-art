@@ -21,14 +21,16 @@ const { title, wrongLabel = "Así no", rightLabel = "Así sí" } = Astro.props;
 <style>
   .mistake { background: var(--panel); border: 1px solid var(--line); padding: 16px 18px; margin: 16px 0; }
   h3 { font-size: 1.1rem; margin: 0 0 12px; }
-  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  .side { border: 1px solid var(--line); padding: 10px; display: flex; flex-direction: column; gap: 8px; }
+  .pair { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; }
+  .side { border: 1px solid var(--line); padding: 10px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
   .wrong { border-color: #ff6b4a66; }
   .right { border-color: #4ade8066; }
   .tag { font: 600 .75rem var(--font-mono); }
   .wrong .tag { color: #ff6b4a; }
   .right .tag { color: #4ade80; }
-  .art { display: grid; place-items: center; min-height: 120px; }
+  .art { display: grid; place-items: center; min-height: 120px; min-width: 0; }
+  .art > :global(*) { max-width: 100%; }
+  .art :global(.lab) { width: 100%; margin: 0; }
   .explain { margin-top: 12px; color: var(--muted); }
   .explain :global(p) { margin: 0 0 6px; }
   @media (max-width: 520px) { .pair { grid-template-columns: 1fr; } }
