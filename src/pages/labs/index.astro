@@ -6,6 +6,9 @@ import Inspector from "../../components/labs/SpriteInspector.astro";
 import VoxViewer from "../../components/labs/VoxViewer.astro";
 import RampLab from "../../components/labs/RampLab.astro";
 import Animator from "../../components/labs/Animator.astro";
+import SilhouetteLab from "../../components/labs/SilhouetteLab.astro";
+import DitherLab from "../../components/labs/DitherLab.astro";
+import LightLab from "../../components/labs/LightLab.astro";
 ---
 
 <BaseLayout title="Labs" description="Laboratorios interactivos para entender conceptos de Pixel Art y Voxel Art.">
@@ -14,7 +17,7 @@ import Animator from "../../components/labs/Animator.astro";
   <p class="lead">Pequeñas herramientas para entender un concepto practicándolo. No sustituyen a Aseprite ni a MagicaVoxel: te preparan para usarlos mejor.</p>
 
   <nav class="jump" aria-label="Laboratorios">
-    <a href="#inspector">Inspector de sprites</a><a href="#vox">Visor voxel</a><a href="#rampas">Paletas y rampas</a><a href="#animacion">Mini-animador</a>
+    <a href="#inspector">Inspector de sprites</a><a href="#vox">Visor voxel</a><a href="#rampas">Paletas y rampas</a><a href="#animacion">Mini-animador</a><a href="#siluetas">Siluetas</a><a href="#dithering">Dithering</a><a href="#luz">Luz y sombra</a>
   </nav>
 
   <h2 class="section-title" id="inspector">Inspector de sprites</h2>
@@ -32,6 +35,18 @@ import Animator from "../../components/labs/Animator.astro";
   <h2 class="section-title" id="animacion">Mini-animador</h2>
   <p class="muted">Un idle de 4 frames: fíjate en cómo cambia la sensación al tocar la duración de cada frame.</p>
   <div data-discipline="pixel"><Animator preset="slime-idle" /></div>
+
+  <h2 class="section-title" id="siluetas">Comparador de siluetas</h2>
+  <p class="muted">Todos en negro y a tamaño real: si no sabes qué objeto es cada uno, la silueta no funciona. Añade tus PNG.</p>
+  <div data-discipline="fundamentos"><SilhouetteLab /></div>
+
+  <h2 class="section-title" id="dithering">Dithering</h2>
+  <p class="muted">Cinco formas de mezclar dos colores. Compara a 1× y ampliado: el buen dithering casi desaparece a tamaño real.</p>
+  <div data-discipline="pixel"><DitherLab /></div>
+
+  <h2 class="section-title" id="luz">Luz y sombra</h2>
+  <p class="muted">Mueve la luz alrededor de la esfera y cambia el número de tonos. Es el mismo razonamiento que usarás en cada sprite y en cada render.</p>
+  <div data-discipline="fundamentos"><LightLab /></div>
 </BaseLayout>
 
 <style>

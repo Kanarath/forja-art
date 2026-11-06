@@ -1,0 +1,95 @@
+---
+// LAB · Comparador de siluetas.
+// Uso en MDX:  <SilhouetteLab sprites="potion,flask-bad,sword,chest" />
+// Pone varios sprites lado a lado, EN NEGRO y a tamaño real: si no distingues cuál es cuál
+// solo por el contorno, la silueta no funciona. Puedes añadir tus PNG.
+import { getSprite } from "../../data/sprites";
+interface Props { sprites?: string; title?: string }
+const { sprites = "potion,flask-bad,sword,chest,slime", title } = Astro.props;
+const list = sprites.split(",").map((n) => n.trim()).filter(Boolean).map((n) => {
+  const s = getSprite(n);
+  return { name: n, label: s.description, palette: s.palette, rows: s.rows };
+});
+---
+
+<section class="lab sil" data-lab="silhouette" data-sprites={JSON.stringify(list)}>
+  <header class="lab-head"><span class="tag">LAB · SILUETAS</span><b>{title ?? "¿Se reconoce cada objeto solo por su contorno?"}</b></header>
+  <div class="tools">
+    <label><input type="radio" name="mode" value="black" checked /> En negro</label>
+    <label><input type="radio" name="mode" value="color" /> En color</label>
+    <label>Tamaño <select name="scale"><option value="1">1× (real)</option><option value="2">2×</option><option value="4" selected>4×</option><option value="8">8×</option></select></label>
+    <label class="upload">+ Tu PNG <input type="file" accept="image/png,image/gif,image/webp" multiple /></label>
+    <button type="button" data-reveal>Mostrar qué es cada uno</button>
+  </div>
+  <div class="grid" data-grid></div>
+  <p class="hint">Mira las siluetas de lejos o entrecerrando los ojos. Si dos se confunden, exagera el rasgo que las distingue (el cuello del frasco, la guarda de la espada…) hasta que toque el contorno.</p>
+</section>
+
+<script>
+  import { rgbaToSprite } from "../../lib/pixel/analyze.mjs";
+  type Item = { name: string; label: string; palette: Record<string, string>; rows: string[] };
+
+  for (const root of document.querySelectorAll<HTMLElement>("[data-lab=silhouette]")) {
+    const items: Item[] = JSON.parse(root.dataset.sprites!);
+    const grid = root.querySelector<HTMLElement>("[data-grid]")!;
+    let revealed = false;
+
+    function render() {
+      const mode = root.querySelector<HTMLInputElement>("input[name=mode]:checked")!.value;
+      const k = Number(root.querySelector<HTMLSelectElement>("select[name=scale]")!.value);
+      grid.replaceChildren(...items.map((it, i) => {
+        const fig = document.createElement("figure");
+        const c = document.createElement("canvas");
+        const w = it.rows[0].length, h = it.rows.length;
+        c.width = w * k; c.height = h * k;
+        c.style.width = `${w * k}px`; c.style.height = `${h * k}px`;
+        const g = c.getContext("2d")!;
+        it.rows.forEach((row, y) => [...row].forEach((ch, x) => {
+          if (ch === ".") return;
+          g.fillStyle = mode === "black" ? "#0b0a10" : it.palette[ch];
+          g.fillRect(x * k, y * k, k, k);
+        }));
+        const cap = document.createElement("figcaption");
+        cap.textContent = revealed ? it.label : `Objeto ${String.fromCharCode(65 + i)}`;
+        fig.append(c, cap);
+        return fig;
+      }));
+    }
+
+    root.querySelector<HTMLInputElement>(".upload input")!.addEventListener("change", async (e) => {
+      for (const file of (e.target as HTMLInputElement).files ?? []) {
+        const bmp = await createImageBitmap(file);
+        if (bmp.width > 128 || bmp.height > 128) continue; // solo sprites a 1×
+        const c = new OffscreenCanvas(bmp.width, bmp.height);
+        const g = c.getContext("2d")!;
+        g.drawImage(bmp, 0, 0);
+        const s = rgbaToSprite(bmp.width, bmp.height, g.getImageData(0, 0, bmp.width, bmp.height).data);
+        if (s) items.push({ name: file.name, label: `Tu sprite: ${file.name}`, ...s });
+      }
+      render();
+    });
+    root.querySelector("[data-reveal]")!.addEventListener("click", (e) => {
+      revealed = !revealed;
+      (e.target as HTMLElement).textContent = revealed ? "Ocultar nombres" : "Mostrar qué es cada uno";
+      render();
+    });
+    root.addEventListener("change", (e) => { if (!(e.target as HTMLElement).closest(".upload")) render(); });
+    render();
+  }
+</script>
+
+<style>
+  .lab { border: 1px solid var(--line); background: var(--panel); margin: 18px 0; }
+  .lab-head { display: flex; gap: 12px; align-items: baseline; padding: 10px 14px; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+  .tag { font: 600 .7rem var(--font-mono); color: #0e0f14; background: var(--accent); padding: 2px 8px; }
+  .lab-head b { font: 600 .95rem var(--font-head); }
+  .tools { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; padding: 10px 14px; font-size: .85rem; }
+  .tools input { accent-color: var(--accent); }
+  .tools select, .tools button, .upload { background: var(--panel-2); border: 1px solid var(--line); color: var(--text); padding: 5px 10px; font: 500 .82rem var(--font-head); cursor: pointer; }
+  .upload input { display: none; }
+  .grid { display: flex; gap: 22px; flex-wrap: wrap; align-items: flex-end; padding: 22px; background: #d8d6e0; }
+  .grid :global(figure) { margin: 0; display: grid; gap: 8px; justify-items: center; }
+  .grid :global(canvas) { image-rendering: pixelated; }
+  .grid :global(figcaption) { font: .72rem var(--font-mono); color: #2a2d3a; max-width: 140px; text-align: center; }
+  .hint { margin: 0; padding: 10px 14px; font-size: .85rem; color: var(--muted); }
+</style>

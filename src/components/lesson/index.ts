@@ -15,5 +15,8 @@ import Inspector from "../labs/SpriteInspector.astro";
 import VoxViewer from "../labs/VoxViewer.astro";
 import RampLab from "../labs/RampLab.astro";
 import Animator from "../labs/Animator.astro";
+import SilhouetteLab from "../labs/SilhouetteLab.astro";
+import DitherLab from "../labs/DitherLab.astro";
+import LightLab from "../labs/LightLab.astro";
 
-export const lessonComponents = { Block, Step, Keys, Why, Tip, Warn, ToolNote, Sprite, Mistake, Checklist, Quiz, Inspector, VoxViewer, RampLab, Animator };
+export const lessonComponents = { Block, Step, Keys, Why, Tip, Warn, ToolNote, Sprite, Mistake, Checklist, Quiz, Inspector, VoxViewer, RampLab, Animator, SilhouetteLab, DitherLab, LightLab };

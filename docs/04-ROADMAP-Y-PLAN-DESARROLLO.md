@@ -44,6 +44,8 @@
 - desbordamiento horizontal de los visores 3D en móvil;
 - dos comparativas de V1-02 cuya imagen contradecía el texto.
 
+**Fase 4 · Art Labs: completada.** A los 4 labs del MVP se suman el comparador de siluetas, el lab de dithering (5 métodos, a 1× y ampliado) y el lab de luz y sombra (esfera cuantizada en N tonos, con luz rebotada). Los 7 están en /labs/ y disponibles en las lecciones; el comparador de siluetas ya se usa en P1-02 y F02-01.
+
 **Lecciones aprendidas durante la fase 1:**
 - **`BASE_URL` sin barra final.** Astro 7 da `BASE_URL` sin barra final, así que hay que usar siempre `src/lib/url.ts`. El validador detecta enlaces sin la base.
 - **Colecciones nuevas en local.** El servidor de desarrollo no ve colecciones de contenido nuevas: hay que reiniciarlo (`npx astro dev --force`).

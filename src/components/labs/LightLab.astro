@@ -1,0 +1,97 @@
+---
+// LAB · Luz y sombra.
+// Uso en MDX:  <LightLab />   o   <LightLab base="#3fbf7f" tones={4} />
+// Una esfera de pixel art sombreada a partir de la dirección de la luz, cuantizada en N tonos
+// de una rampa. Mueve la luz y observa: el lado iluminado, el terminador (donde empieza la
+// sombra), la sombra propia y la luz rebotada en el borde.
+interface Props { base?: string; tones?: number }
+const { base = "#c2186b", tones = 4 } = Astro.props;
+---
+
+<section class="lab light" data-lab="light">
+  <header class="lab-head"><span class="tag">LAB · LUZ</span><b>Una fuente de luz, una esfera, N tonos</b></header>
+  <div class="body">
+    <div class="stage"><canvas class="big" aria-label="Esfera sombreada según la luz"></canvas><div class="sun" aria-hidden="true"></div></div>
+    <div class="side">
+      <label>Dirección de la luz <input type="range" name="angle" min="0" max="359" value="135" /> <span class="mono" data-o="angle"></span></label>
+      <label>Altura de la luz <input type="range" name="elev" min="5" max="85" value="40" /> <span class="mono" data-o="elev"></span></label>
+      <label>Tonos <input type="range" name="tones" min="2" max="6" value={tones} /> <span class="mono" data-o="tones"></span></label>
+      <label>Color <input type="color" name="base" value={base} /></label>
+      <label class="chk"><input type="checkbox" name="outline" checked /> Contorno</label>
+      <label class="chk"><input type="checkbox" name="bounce" checked /> Luz rebotada</label>
+      <label class="chk"><input type="checkbox" name="gray" /> Ver valor (grises)</label>
+      <div class="real"><span>1× y 2×</span><canvas class="one"></canvas><canvas class="two"></canvas></div>
+      <div class="ramp" data-ramp></div>
+    </div>
+  </div>
+  <p class="hint">Fíjate en que con <b>una sola luz</b> todo el sombreado es coherente. El error típico (pillow shading) es oscurecer todos los bordes por igual, como si la luz viniera del espectador.</p>
+</section>
+
+<script>
+  import { shadeSphere } from "../../lib/pixel/shade.mjs";
+  import { buildRamp } from "../../lib/pixel/ramp.mjs";
+  import { luma } from "../../lib/pixel/analyze.mjs";
+  const gray = (hex: string) => { const y = Math.round(luma(hex)).toString(16).padStart(2, "0"); return `#${y}${y}${y}`; };
+  const SIZE = 24;
+
+  for (const root of document.querySelectorAll<HTMLElement>("[data-lab=light]")) {
+    const val = (n: string) => root.querySelector<HTMLInputElement>(`input[name=${n}]`)!;
+    function paint(c: HTMLCanvasElement, grid: number[][], ramp: string[], k: number) {
+      c.width = SIZE * k; c.height = SIZE * k;
+      c.style.width = `${SIZE * k}px`; c.style.height = `${SIZE * k}px`;
+      const g = c.getContext("2d")!;
+      grid.forEach((row, y) => row.forEach((v, x) => {
+        if (v === -1) return;
+        g.fillStyle = v === -2 ? "#140c1c" : ramp[v];
+        g.fillRect(x * k, y * k, k, k);
+      }));
+    }
+    function render() {
+      const angle = Number(val("angle").value), elevation = Number(val("elev").value), tones = Number(val("tones").value);
+      const grid = shadeSphere({ size: SIZE, angle, elevation, tones, outline: val("outline").checked, bounce: val("bounce").checked });
+      let ramp = buildRamp(val("base").value, tones, 0.35, 0.75);
+      if (val("gray").checked) ramp = ramp.map(gray);
+      const stage = root.querySelector<HTMLElement>(".stage")!;
+      const k = Math.max(4, Math.min(14, Math.floor((stage.clientWidth - 40) / SIZE)));
+      paint(root.querySelector("canvas.big")!, grid, ramp, k);
+      paint(root.querySelector("canvas.one")!, grid, ramp, 1);
+      paint(root.querySelector("canvas.two")!, grid, ramp, 2);
+      // el «sol» indica de dónde viene la luz
+      const sun = root.querySelector<HTMLElement>(".sun")!;
+      const a = (angle * Math.PI) / 180, d = 46 - elevation * 0.25;
+      sun.style.left = `calc(50% + ${Math.cos(a) * d}% - 10px)`;
+      sun.style.top = `calc(50% - ${Math.sin(a) * d}% - 10px)`;
+      root.querySelector("[data-o=angle]")!.textContent = `${angle}°`;
+      root.querySelector("[data-o=elev]")!.textContent = `${elevation}°`;
+      root.querySelector("[data-o=tones]")!.textContent = String(tones);
+      root.querySelector("[data-ramp]")!.innerHTML = ramp.map((c) => `<i style="background:${c}" title="${c}"></i>`).join("");
+    }
+    root.addEventListener("input", render);
+    new ResizeObserver(render).observe(root.querySelector(".stage")!);
+  }
+</script>
+
+<style>
+  .lab { border: 1px solid var(--line); background: var(--panel); margin: 18px 0; }
+  .lab-head { display: flex; gap: 12px; align-items: baseline; padding: 10px 14px; border-bottom: 1px solid var(--line); }
+  .tag { font: 600 .7rem var(--font-mono); color: #0e0f14; background: var(--accent); padding: 2px 8px; }
+  .body { display: grid; grid-template-columns: minmax(0, 1fr) 250px; }
+  .stage { position: relative; min-height: 300px; display: grid; place-items: center; padding: 20px; background: conic-gradient(#5a5e6e 25%, #4a4d5b 0 50%, #5a5e6e 0 75%, #4a4d5b 0) 0 0 / 16px 16px; overflow: hidden; }
+  canvas { image-rendering: pixelated; display: block; }
+  .sun { position: absolute; width: 20px; height: 20px; border-radius: 50%; background: #ffe58a; box-shadow: 0 0 16px 6px #ffe58a88; }
+  .side { padding: 12px 14px; display: grid; gap: 8px; align-content: start; font-size: .85rem; border-left: 1px solid var(--line); }
+  .side label { display: grid; gap: 4px; }
+  .side .chk { display: flex; gap: 8px; align-items: center; }
+  .side input { accent-color: var(--accent); }
+  .side input[type=color] { width: 40px; height: 28px; border: 1px solid var(--line); background: none; padding: 0; }
+  .real { display: flex; gap: 8px; align-items: end; flex-wrap: wrap; }
+  .real span { width: 100%; font: .7rem var(--font-mono); color: var(--muted); text-transform: uppercase; }
+  .real canvas { background: #4a4d5b; padding: 4px; }
+  .ramp { display: flex; height: 22px; border: 1px solid #000; }
+  .ramp :global(i) { flex: 1; }
+  .hint { margin: 0; padding: 10px 14px; font-size: .85rem; color: var(--muted); border-top: 1px solid var(--line); }
+  @media (max-width: 640px) {
+    .body { grid-template-columns: 1fr; }
+    .side { border-left: 0; border-top: 1px solid var(--line); }
+  }
+</style>
