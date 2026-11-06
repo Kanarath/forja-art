@@ -1,0 +1,163 @@
+---
+// MAQUETA C — «Mundos»: dos mundos enfrentados, 2D en píxel y 3D isométrico,
+// cada uno con su ruta como un camino de mapa de videojuego, y un puente
+// central de Fundamentos que los une.
+import MockLayout from "../../layouts/MockLayout.astro";
+import PixelSprite from "../../components/PixelSprite.astro";
+import VoxelIso from "../../components/VoxelIso.astro";
+import { gem, potion, sword, slime, chest, islandDiorama, voxelTower, voxelChest } from "../../data/demo-art";
+
+const pixelLevels = ["Taller", "Píxel y silueta", "Líneas y clusters", "Valor y shading", "Props", "Personajes", "Animación", "Tilesets", "Ilustración", "Godot", "Proyecto final"];
+const voxelLevels = ["Taller", "Pensar en vóxels", "Forma y silueta", "Color y materiales", "Props", "Personajes", "Arquitectura", "Dioramas", "Render", "Godot", "Proyecto final"];
+// posiciones (en %) de los nodos del camino zigzag
+const path = [[50, 94], [26, 84], [62, 74], [30, 64], [68, 54], [34, 45], [66, 36], [30, 27], [62, 19], [38, 11], [56, 3]];
+---
+
+<MockLayout title="C · Mundos">
+  <header class="top">
+    <span class="logo">FORJA<span>//</span>ART</span>
+    <div class="who">Aprendiz · <b>340 XP</b> · 4 logros · 6 piezas</div>
+  </header>
+
+  <main class="worlds">
+    <section class="world pixel">
+      <div class="world-head">
+        <small>PATH 02</small>
+        <h2 class="px">PIXEL FORGE</h2>
+        <p>Nivel 1 · Píxel y silueta · 18%</p>
+      </div>
+      <div class="map">
+        <svg class="trail" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+          <polyline points={path.map((p) => p.join(",")).join(" ")} />
+        </svg>
+        {path.map(([x, y], i) => (
+          <div class={`node ${i < 1 ? "done" : i === 1 ? "now" : ""}`} style={`left:${x}%;top:${y}%`}>
+            <span>{i}</span><em>{pixelLevels[i]}</em>
+          </div>
+        ))}
+        <div class="deco d1"><PixelSprite {...slime} scale={4} label="Slime" /></div>
+        <div class="deco d2"><PixelSprite {...chest} scale={3} label="Cofre" /></div>
+        <div class="deco d3"><PixelSprite {...gem} scale={4} label="Gema" /></div>
+      </div>
+      <a class="enter" href="#">Entrar en Pixel Forge →</a>
+    </section>
+
+    <section class="bridge">
+      <div class="bridge-inner">
+        <small>TRONCO COMÚN</small>
+        <h2>Fundamentos</h2>
+        <p>Lo que aprendes aquí sirve en los dos mundos.</p>
+        <ul>
+          <li class="done">F01 Valor</li><li class="now">F02 Silueta</li><li>F03 Color</li><li>F04 Paletas</li><li>F05 Luz</li>
+        </ul>
+        <div class="today">
+          <small>HOY</small>
+          <div class="today-art"><PixelSprite {...potion} scale={5} label="Poción" /><span>⇄</span><div class="mini"><VoxelIso voxels={voxelChest()} size={5} label="Cofre voxel" /></div></div>
+          <p>F02 · La misma silueta en 2D y en 3D</p>
+          <a class="btn" href="#">Continuar →</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="world voxel">
+      <div class="world-head">
+        <small>PATH 01</small>
+        <h2>VOXEL FORGE</h2>
+        <p>Nivel 1 · Pensar en vóxels · 9%</p>
+      </div>
+      <div class="map">
+        <svg class="trail" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+          <polyline points={path.map(([x, y]) => `${100 - x},${y}`).join(" ")} />
+        </svg>
+        {path.map(([x, y], i) => (
+          <div class={`node ${i < 1 ? "done" : i === 1 ? "now" : ""}`} style={`left:${100 - x}%;top:${y}%`}>
+            <span>{i}</span><em>{voxelLevels[i]}</em>
+          </div>
+        ))}
+        <div class="deco v1"><VoxelIso voxels={voxelTower()} size={5} label="Torre voxel" /></div>
+        <div class="deco v2"><VoxelIso voxels={islandDiorama()} size={4} label="Isla voxel" /></div>
+      </div>
+      <a class="enter" href="#">Entrar en Voxel Forge →</a>
+    </section>
+  </main>
+
+  <section class="strip">
+    <span>Últimas piezas</span>
+    <PixelSprite {...sword} scale={3} label="Espada" />
+    <PixelSprite {...gem} scale={4} label="Gema" />
+    <div class="mini"><VoxelIso voxels={voxelChest()} size={4} label="Cofre voxel" /></div>
+    <PixelSprite {...slime} scale={3} label="Slime" />
+    <a href="#">Ver portfolio →</a>
+  </section>
+</MockLayout>
+
+<style>
+  .top { display: flex; justify-content: space-between; align-items: center; padding: 14px 24px; flex-wrap: wrap; gap: 8px; }
+  .logo { font: 700 1.3rem var(--font-head); } .logo span { color: var(--fund); }
+  .who { font: .8rem var(--font-mono); color: var(--muted); } .who b { color: var(--fund); }
+  .worlds { display: grid; grid-template-columns: 1fr 300px 1fr; min-height: calc(100vh - 140px); }
+  .world { position: relative; display: flex; flex-direction: column; padding: 24px; overflow: hidden; }
+  .world.pixel {
+    --c: var(--pixel);
+    background:
+      linear-gradient(#0000 0 70%, #1b0f2a 70%),
+      repeating-linear-gradient(0deg, #ffffff06 0 2px, transparent 2px 8px),
+      linear-gradient(180deg, #2a1240, #140b22);
+    image-rendering: pixelated;
+  }
+  .world.voxel {
+    --c: var(--voxel);
+    background:
+      repeating-linear-gradient(30deg, #38e1ff0a 0 1px, transparent 1px 22px),
+      repeating-linear-gradient(-30deg, #38e1ff0a 0 1px, transparent 1px 22px),
+      linear-gradient(180deg, #08243a, #071521);
+    text-align: right;
+  }
+  .world-head small { font: .72rem var(--font-mono); color: var(--c); letter-spacing: .1em; }
+  .world-head h2 { color: var(--c); font-size: clamp(1.6rem, 3vw, 2.4rem); margin: 4px 0; }
+  .world-head p { color: var(--muted); margin: 0; font-size: .9rem; }
+  .map { position: relative; flex: 1; min-height: 460px; margin: 16px 0; }
+  .trail { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .trail polyline { fill: none; stroke: var(--c); stroke-opacity: .35; stroke-width: 1.4; stroke-dasharray: 2 2; vector-effect: non-scaling-stroke; }
+  .pixel .trail polyline { stroke-linejoin: miter; }
+  .node { position: absolute; transform: translate(-50%, -50%); display: flex; align-items: center; gap: 8px; }
+  .node span { width: 30px; height: 30px; display: grid; place-items: center; font: 600 .8rem var(--font-mono); background: #0e0f14; border: 2px solid #ffffff30; color: var(--muted); }
+  .pixel .node span { box-shadow: 3px 3px 0 #000; }
+  /* en voxel el nodo es un rombo: se gira solo el fondo, no el número */
+  .voxel .node span { position: relative; background: none; border: 0; }
+  .voxel .node span::before { content: ""; position: absolute; inset: 3px; transform: rotate(45deg); background: #0e0f14; border: 2px solid #ffffff30; z-index: -1; }
+  .voxel .node.done span::before { border-color: var(--c); }
+  .voxel .node.now span { background: none; color: #0e0f14; }
+  .voxel .node.now span::before { background: var(--c); border-color: var(--c); }
+  .node em { font-style: normal; font-size: .78rem; color: var(--muted); white-space: nowrap; }
+  .voxel .node { flex-direction: row-reverse; }
+  .node.done span { border-color: var(--c); color: var(--text); }
+  .node.now span { background: var(--c); border-color: var(--c); color: #0e0f14; animation: pulse 2s infinite; }
+  .node.now em { color: var(--text); font-weight: 600; }
+  @keyframes pulse { 50% { box-shadow: 0 0 0 6px color-mix(in srgb, var(--c) 30%, transparent); } }
+  .deco { position: absolute; opacity: .9; }
+  .d1 { left: 8%; bottom: 2%; } .d2 { right: 6%; top: 40%; } .d3 { left: 6%; top: 12%; }
+  .v1 { width: 100px; left: 8%; bottom: 0; } .v2 { width: 120px; left: 6%; top: 34%; }
+  .enter { align-self: flex-start; text-decoration: none; font: 600 .95rem var(--font-head); color: var(--c); border: 1px solid var(--c); padding: 8px 14px; }
+  .voxel .enter { align-self: flex-end; }
+  .bridge { background: linear-gradient(90deg, #140b22, #0e0f14 30% 70%, #071521); display: grid; align-items: center; padding: 24px 16px; border-inline: 1px solid var(--line); }
+  .bridge small { font: .72rem var(--font-mono); color: var(--fund); letter-spacing: .1em; }
+  .bridge h2 { color: var(--fund); font-size: 1.8rem; }
+  .bridge p { color: var(--muted); font-size: .9rem; }
+  .bridge ul { list-style: none; padding: 0; display: grid; gap: 4px; font-size: .88rem; }
+  .bridge li { padding: 6px 10px; border-left: 3px solid var(--line); color: var(--muted); }
+  .bridge li.done { border-color: var(--fund); color: var(--text); }
+  .bridge li.now { border-color: var(--fund); background: #e6c35c18; color: var(--fund); font-weight: 600; }
+  .today { margin-top: 18px; background: var(--panel); border: 1px solid var(--fund); padding: 14px; }
+  .today-art { display: flex; align-items: center; justify-content: center; gap: 14px; padding: 10px 0; color: var(--fund); }
+  .mini { width: 64px; height: 60px; }
+  .btn { display: inline-block; background: var(--fund); color: #1a1400; padding: 8px 16px; font: 600 .9rem var(--font-head); text-decoration: none; }
+  .strip { display: flex; align-items: center; gap: 18px; padding: 14px 24px; border-top: 1px solid var(--line); font: .78rem var(--font-mono); color: var(--muted); flex-wrap: wrap; }
+  .strip a { margin-left: auto; color: var(--fund); text-decoration: none; }
+  .strip .mini { width: 44px; height: 40px; }
+  @media (max-width: 1000px) {
+    .worlds { grid-template-columns: 1fr; }
+    .bridge { order: -1; }
+    .map { min-height: 420px; }
+  }
+</style>

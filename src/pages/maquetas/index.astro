@@ -1,0 +1,16 @@
+---
+import MockLayout from "../../layouts/MockLayout.astro";
+const base = import.meta.env.BASE_URL;
+---
+
+<MockLayout title="Índice">
+  <main style="max-width:720px;margin:0 auto;padding:64px 16px">
+    <h1>Maquetas del dashboard</h1>
+    <p style="color:var(--muted)">Tarea 1.2 · tres direcciones visuales para elegir. Todo el arte son datos reales (sprites píxel a píxel y vóxeles en rejilla 3D).</p>
+    <ul style="line-height:2">
+      <li><a href={`${base}maquetas/a/`}>A · La Forja</a> — taller cálido, héroe con diorama, rutas como bancos de trabajo.</li>
+      <li><a href={`${base}maquetas/b/`}>B · Estudio</a> — el dashboard es un editor: herramientas, lienzo, capas, paleta y línea de tiempo.</li>
+      <li><a href={`${base}maquetas/c/`}>C · Mundos</a> — dos mundos 2D/3D con su camino de niveles y un puente de fundamentos.</li>
+    </ul>
+  </main>
+</MockLayout>

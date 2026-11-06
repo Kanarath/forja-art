@@ -1,0 +1,43 @@
+---
+// Plantilla mínima para las maquetas de la tarea 1.2 (no se indexan).
+import "../styles/tokens.css";
+interface Props { title: string }
+const { title } = Astro.props;
+const base = import.meta.env.BASE_URL;
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>{title} · Maquetas · FORJA//ART</title>
+    <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Silkscreen&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <nav class="mock-switch" aria-label="Maquetas">
+      <span>MAQUETAS</span>
+      <a href={`${base}maquetas/a/`}>A · Forja</a>
+      <a href={`${base}maquetas/b/`}>B · Estudio</a>
+      <a href={`${base}maquetas/c/`}>C · Mundos</a>
+    </nav>
+    <slot />
+  </body>
+</html>
+
+<style is:global>
+  .mock-switch {
+    position: fixed; right: 12px; bottom: 12px; z-index: 50;
+    display: flex; gap: 6px; align-items: center; flex-wrap: wrap;
+    background: #000c; border: 1px solid var(--line); padding: 6px 8px;
+    font: 500 .72rem var(--font-mono);
+  }
+  .mock-switch span { color: var(--muted); margin-right: 4px; }
+  .mock-switch a { text-decoration: none; padding: 3px 8px; border: 1px solid var(--line); color: var(--text); }
+  .mock-switch a:hover { border-color: var(--fund); color: var(--fund); }
+  .px { font-family: "Silkscreen", var(--font-mono); letter-spacing: .02em; }
+</style>

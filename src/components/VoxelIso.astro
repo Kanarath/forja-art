@@ -1,0 +1,63 @@
+---
+// Dibuja un modelo voxel REAL (lista de vóxeles en una rejilla 3D) en proyección
+// isométrica 2:1 como SVG estático. Sirve para miniaturas y tarjetas; el visor 3D
+// interactivo con archivos .vox llegará con el Voxel Lab.
+//
+// Cómo funciona:
+//  1. Cada vóxel tiene 3 caras visibles desde la cámara: arriba, izquierda (+y) y derecha (+x).
+//  2. Si un vecino tapa una cara, no se dibuja (culling): menos elementos SVG.
+//  3. Se ordenan de atrás hacia delante (x+y+z) y se pintan en ese orden (algoritmo del pintor).
+//  4. Cada cara se sombrea distinto para simular una luz desde arriba a la izquierda.
+import type { Voxel } from "../data/demo-art";
+
+interface Props {
+  voxels: Voxel[];
+  size?: number; // ancho en px de la mitad de un rombo
+  label: string;
+}
+const { voxels, size = 10, label } = Astro.props;
+
+const a = size, b = size / 2, h = size * 1.15;
+const key = (x: number, y: number, z: number) => `${x},${y},${z}`;
+const filled = new Set(voxels.map((v) => key(v.x, v.y, v.z)));
+
+function shade(hex: string, f: number) {
+  const n = parseInt(hex.slice(1), 16);
+  const ch = (s: number) => {
+    const c = (n >> s) & 255;
+    const r = f >= 1 ? c + (255 - c) * (f - 1) : c * f;
+    return Math.round(Math.min(255, Math.max(0, r)));
+  };
+  return `rgb(${ch(16)},${ch(8)},${ch(0)})`;
+}
+
+type Face = { pts: string; fill: string };
+const faces: Face[] = [];
+const sorted = [...voxels].sort((p, q) => p.x + p.y + p.z - (q.x + q.y + q.z) || p.z - q.z);
+let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+const P = (px: number, py: number) => {
+  minX = Math.min(minX, px); maxX = Math.max(maxX, px);
+  minY = Math.min(minY, py); maxY = Math.max(maxY, py);
+  return `${px.toFixed(2)},${py.toFixed(2)}`;
+};
+for (const v of sorted) {
+  const ox = (v.x - v.y) * a;
+  const oy = (v.x + v.y) * b - v.z * h;
+  if (!filled.has(key(v.x, v.y, v.z + 1)))
+    faces.push({ pts: [P(ox, oy), P(ox + a, oy + b), P(ox, oy + 2 * b), P(ox - a, oy + b)].join(" "), fill: shade(v.c, 1.12) });
+  if (!filled.has(key(v.x, v.y + 1, v.z)))
+    faces.push({ pts: [P(ox - a, oy + b), P(ox, oy + 2 * b), P(ox, oy + 2 * b + h), P(ox - a, oy + b + h)].join(" "), fill: shade(v.c, 0.86) });
+  if (!filled.has(key(v.x + 1, v.y, v.z)))
+    faces.push({ pts: [P(ox, oy + 2 * b), P(ox + a, oy + b), P(ox + a, oy + b + h), P(ox, oy + 2 * b + h)].join(" "), fill: shade(v.c, 0.66) });
+}
+const pad = 2;
+const vb = `${(minX - pad).toFixed(1)} ${(minY - pad).toFixed(1)} ${(maxX - minX + pad * 2).toFixed(1)} ${(maxY - minY + pad * 2).toFixed(1)}`;
+---
+
+<svg class="voxel-iso" viewBox={vb} role="img" aria-label={label} shape-rendering="geometricPrecision">
+  {faces.map((f) => <polygon points={f.pts} fill={f.fill} stroke={f.fill} stroke-width="0.4" stroke-linejoin="round" />)}
+</svg>
+
+<style>
+  .voxel-iso { width: 100%; height: 100%; display: block; }
+</style>
