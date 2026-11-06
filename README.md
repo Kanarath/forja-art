@@ -77,3 +77,10 @@ Los sprites didácticos son **datos**, no imágenes: `art-src/sprites/<nombre>.s
 - Se guarda **solo en tu navegador** (`localStorage`, clave `forja-art:progress`): qué partes de cada lección has completado y tus marcas del checklist.
 - XP, rangos, porcentajes y «siguiente lección» se **calculan** a partir de eso (`src/lib/game/core.ts`), con los rangos de `src/data/ranks.ts` y la ruta de `src/data/route.ts`.
 - `npm test` ejecuta los tests de esa lógica.
+
+## Portfolio y copia de seguridad
+
+- Tus piezas e imágenes se guardan **solo en este navegador** (IndexedDB, base de datos `forja-art`).
+- Cada pieza puede tener varias versiones; el detalle incluye un comparador antes/después.
+- Registrar una pieza asociada a una lección completa la parte «pieza» de esa lección (y su XP). Si la borras, la pierdes.
+- **Exportar copia** descarga un `.zip` (portfolio + imágenes + progreso). **Importar copia** lo restaura, sustituyendo lo actual. El zip se escribe sin dependencias (`src/lib/zip.ts`) y se abre con cualquier descompresor.

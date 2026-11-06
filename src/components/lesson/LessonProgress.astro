@@ -1,30 +1,29 @@
 ---
 // Tu progreso en una lección: tres partes con su XP. Se guarda en tu navegador.
-// La parte «pieza» es la que más XP da (regla del PRD); en la tarea 1.8 marcarla
-// abrirá el portfolio para registrar la imagen de tu pieza.
+// La parte «pieza» (la que más XP da) NO se marca a mano: se completa al registrar
+// tu pieza en el portfolio con esta lección asociada, y se pierde si la borras.
+import { url } from "../../lib/url";
 interface Props { id: string; xp: { concept: number; guided: number; piece: number }; piece: string }
 const { id, xp, piece } = Astro.props;
-const parts = [
-  { key: "concept", label: "He entendido el concepto", xp: xp.concept },
-  { key: "guided", label: "He completado la forja guiada", xp: xp.guided },
-  { key: "piece", label: `He forjado la pieza: ${piece}`, xp: xp.piece },
-];
 const total = xp.concept + xp.guided + xp.piece;
 ---
 
-<div class="lp panel" data-lesson-progress={id}>
+<div class="lp panel" data-lesson-progress={id} data-xp-concept={xp.concept} data-xp-guided={xp.guided} data-xp-piece={xp.piece}>
   <h2>Tu progreso</h2>
   <ul>
-    {parts.map((p) => (
-      <li>
-        <label>
-          <input type="checkbox" data-part={p.key} />
-          <span class="txt">{p.label}</span>
-          <span class="xp">+{p.xp}</span>
-        </label>
-      </li>
-    ))}
+    <li><label><input type="checkbox" data-part="concept" /><span class="txt">He entendido el concepto</span><span class="xp">+{xp.concept}</span></label></li>
+    <li><label><input type="checkbox" data-part="guided" /><span class="txt">He completado la forja guiada</span><span class="xp">+{xp.guided}</span></label></li>
+    <li class="piece-row">
+      <span class="mark" data-piece-mark aria-hidden="true"></span>
+      <span class="txt">
+        <span data-piece-todo>Registra tu pieza: <b>{piece}</b></span>
+        <span data-piece-done hidden>Pieza registrada en tu portfolio</span>
+      </span>
+      <span class="xp">+{xp.piece}</span>
+    </li>
   </ul>
+  <a class="btn reg" data-piece-link href={url(`portfolio/?nueva=1&lesson=${id}`)}>Registrar mi pieza →</a>
+  <a class="see" data-piece-see href={url("portfolio/")} hidden>Ver en el portfolio →</a>
   <p class="sum"><b data-lp-earned>0</b> / {total} XP <span class="done-msg">· ¡Lección forjada!</span></p>
 </div>
 
@@ -34,17 +33,21 @@ const total = xp.concept + xp.guided + xp.piece;
 
   for (const box of document.querySelectorAll<HTMLElement>("[data-lesson-progress]")) {
     const id = box.dataset.lessonProgress!;
+    const xp = { concept: Number(box.dataset.xpConcept), guided: Number(box.dataset.xpGuided), piece: Number(box.dataset.xpPiece) };
     const inputs = [...box.querySelectorAll<HTMLInputElement>("input[data-part]")];
     inputs.forEach((i) => i.addEventListener("change", () => setPart(id, i.dataset.part as Part, i.checked)));
     onProgress((s) => {
       const parts = s.lessons[id]?.parts ?? {};
-      let earned = 0;
-      inputs.forEach((i) => {
-        i.checked = !!parts[i.dataset.part as Part];
-        if (i.checked) earned += Number(i.closest("label")!.querySelector(".xp")!.textContent!.slice(1));
-      });
+      inputs.forEach((i) => (i.checked = !!parts[i.dataset.part as Part]));
+      const hasPiece = !!parts.piece;
+      box.querySelector("[data-piece-mark]")!.classList.toggle("on", hasPiece);
+      box.querySelector<HTMLElement>("[data-piece-todo]")!.hidden = hasPiece;
+      box.querySelector<HTMLElement>("[data-piece-done]")!.hidden = !hasPiece;
+      box.querySelector<HTMLElement>("[data-piece-link]")!.hidden = hasPiece;
+      box.querySelector<HTMLElement>("[data-piece-see]")!.hidden = !hasPiece;
+      const earned = (parts.concept ? xp.concept : 0) + (parts.guided ? xp.guided : 0) + (hasPiece ? xp.piece : 0);
       box.querySelector("[data-lp-earned]")!.textContent = String(earned);
-      box.classList.toggle("complete", inputs.every((i) => i.checked));
+      box.classList.toggle("complete", !!(parts.concept && parts.guided && hasPiece));
     });
   }
 </script>
@@ -52,10 +55,16 @@ const total = xp.concept + xp.guided + xp.piece;
 <style>
   h2 { font: 600 .75rem var(--font-mono); text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: 8px; }
   ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; }
-  label { display: grid; grid-template-columns: 18px 1fr auto; gap: 8px; align-items: start; cursor: pointer; font-size: .88rem; }
+  label, .piece-row { display: grid; grid-template-columns: 18px 1fr auto; gap: 8px; align-items: start; font-size: .88rem; }
+  label { cursor: pointer; }
   input { accent-color: var(--accent); width: 16px; height: 16px; margin-top: 2px; }
+  .mark { width: 16px; height: 16px; margin-top: 2px; border: 1px solid var(--line); }
+  .mark:global(.on) { background: var(--accent); border-color: var(--accent); }
   .xp { font: 600 .72rem var(--font-mono); color: var(--accent); }
   input:checked ~ .txt { color: var(--muted); text-decoration: line-through; }
+  .reg { display: block; text-align: center; margin-top: 12px; padding: 8px 12px; font-size: .88rem; }
+  .see { display: block; margin-top: 10px; font: .8rem var(--font-mono); color: var(--accent); text-decoration: none; }
+  [hidden] { display: none !important; }
   .sum { margin: 10px 0 0; font: .8rem var(--font-mono); color: var(--muted); }
   .sum b { color: var(--text); }
   .done-msg { display: none; color: #4ade80; }

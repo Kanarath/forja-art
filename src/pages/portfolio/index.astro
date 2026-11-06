@@ -1,18 +1,452 @@
 ---
+// PORTFOLIO — tus piezas, sus versiones y tu evolución.
+// Todo vive en tu navegador (IndexedDB). La página se genera vacía y el script la rellena.
+// Se puede abrir con parámetros para crear una pieza desde una lección:
+//   /portfolio/?nueva=1&lesson=p0-01
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import PlannedPage from "../../components/PlannedPage.astro";
 ---
 
 <BaseLayout title="Portfolio" description="Tus piezas de Pixel Art y Voxel Art, sus versiones y tu evolución.">
-  <PlannedPage
-    eyebrow="Tus creaciones"
-    title="Portfolio"
-    lead="Cada lección termina aquí, con tu pieza. Se guarda solo en tu navegador, con copia de seguridad exportable."
-    items={[
-      { name: "Piezas", text: "Nombre, disciplina, imágenes, técnicas, herramientas, lecciones relacionadas, fecha y notas.", when: "tarea 1.8" },
-      { name: "Versiones y antes/después", text: "Varias versiones de una misma pieza con comparador deslizante.", when: "tarea 1.8" },
-      { name: "Línea de tiempo", text: "Tu evolución en el tiempo, como los frames de una animación.", when: "tarea 1.8" },
-      { name: "Copia de seguridad", text: "Exporta e importa todo en un .zip para no perder nada.", when: "tarea 1.8" },
-    ]}
-  />
+  <header class="pf-head">
+    <div>
+      <p class="eyebrow">Tus creaciones</p>
+      <h1>Portfolio</h1>
+      <p class="lead">Cada lección termina aquí, con tu pieza. Se guarda solo en este navegador: haz copias de seguridad de vez en cuando.</p>
+    </div>
+    <div class="actions">
+      <button class="btn" type="button" data-open-new>+ Nueva pieza</button>
+      <button class="btn-ghost" type="button" data-export>Exportar copia</button>
+      <label class="btn-ghost file-btn">Importar copia<input type="file" accept=".zip,application/zip" data-import hidden /></label>
+    </div>
+  </header>
+
+  <p class="backup-line" data-backup-line></p>
+
+  <div class="filters" role="tablist" aria-label="Filtrar por disciplina">
+    <button type="button" class="on" data-filter="all">Todas <span data-count="all">0</span></button>
+    <button type="button" data-filter="pixel">Pixel <span data-count="pixel">0</span></button>
+    <button type="button" data-filter="voxel">Voxel <span data-count="voxel">0</span></button>
+    <button type="button" data-filter="fundamentos">Fundamentos <span data-count="fundamentos">0</span></button>
+  </div>
+
+  <div class="empty panel" data-empty>
+    <h2>Tu primera pieza aparecerá aquí</h2>
+    <p>Termina una lección y registra tu pieza, o añade un proyecto libre con «Nueva pieza». Sube una imagen PNG exportada desde Aseprite o un render de MagicaVoxel.</p>
+  </div>
+
+  <h2 class="section-title" data-when-items>Evolución</h2>
+  <div class="timeline" data-timeline data-when-items></div>
+
+  <h2 class="section-title" data-when-items>Piezas</h2>
+  <div class="grid" data-grid></div>
+
+  <!-- Nueva pieza -->
+  <dialog class="dlg" data-dlg-new aria-labelledby="new-title">
+    <form method="dialog" data-form-new>
+      <h2 id="new-title">Nueva pieza</h2>
+      <label class="field">Imagen *<input type="file" name="image" accept="image/png,image/gif,image/webp,image/jpeg" required /></label>
+      <div class="preview" data-new-preview hidden><img alt="Vista previa de la imagen" /></div>
+      <label class="field">Nombre *<input name="name" required maxlength="80" placeholder="Espada legible a 16×16" /></label>
+      <div class="row">
+        <label class="field">Disciplina *
+          <select name="discipline" required>
+            <option value="pixel">Pixel</option><option value="voxel">Voxel</option><option value="fundamentos">Fundamentos</option>
+          </select>
+        </label>
+        <label class="field">Lección relacionada
+          <select name="lesson" data-lesson-select><option value="">Ninguna · proyecto libre</option></select>
+        </label>
+      </div>
+      <label class="field">Descripción<textarea name="description" rows="2" maxlength="500"></textarea></label>
+      <label class="field">Técnicas <small>(separadas por comas)</small><input name="techniques" placeholder="silueta, hue shifting, dithering" /></label>
+      <fieldset class="field tools">
+        <legend>Herramientas</legend>
+        {["Aseprite", "Pixelorama", "MagicaVoxel", "Blender", "Godot"].map((t) => <label><input type="checkbox" name="tools" value={t} /> {t}</label>)}
+      </fieldset>
+      <label class="field">Notas personales<textarea name="notes" rows="2" maxlength="1000" placeholder="Qué me costó, qué haría distinto…"></textarea></label>
+      <p class="error" data-new-error></p>
+      <div class="dlg-actions">
+        <button class="btn-ghost" value="cancel" formnovalidate type="submit">Cancelar</button>
+        <button class="btn" value="save" type="submit">Guardar pieza</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Detalle de una pieza -->
+  <dialog class="dlg wide" data-dlg-piece aria-labelledby="piece-title">
+    <div class="piece-view">
+      <header class="pv-head">
+        <div><small data-pv-meta></small><h2 id="piece-title" data-pv-name></h2></div>
+        <button type="button" class="close" data-close aria-label="Cerrar">✕</button>
+      </header>
+      <div class="pv-body">
+        <div class="pv-main">
+          <div class="compare" data-compare>
+            <div class="stage checker-light"><img class="a" alt="Versión anterior" /><img class="b" alt="Versión posterior" /><span class="handle"></span></div>
+            <input type="range" min="0" max="100" value="50" aria-label="Deslizar para comparar versiones" />
+            <div class="cmp-labels"><span data-cmp-a></span><span data-cmp-b></span></div>
+          </div>
+          <div class="single stage checker-light" data-single><img alt="Tu pieza" /></div>
+          <ol class="versions" data-versions></ol>
+        </div>
+        <aside class="pv-side">
+          <p data-pv-desc></p>
+          <dl data-pv-dl></dl>
+          <form class="add-version" data-form-version>
+            <h3>Añadir versión</h3>
+            <input type="file" name="image" accept="image/png,image/gif,image/webp,image/jpeg" required />
+            <input name="note" placeholder="Qué has cambiado" maxlength="200" />
+            <button class="btn" type="submit">Guardar versión</button>
+            <p class="error" data-version-error></p>
+          </form>
+          <button class="danger" type="button" data-delete>Borrar pieza</button>
+        </aside>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Confirmar importación -->
+  <dialog class="dlg" data-dlg-import aria-labelledby="imp-title">
+    <form method="dialog" data-form-import>
+      <h2 id="imp-title">Importar copia</h2>
+      <p data-import-summary></p>
+      <p class="warn">Esto <b>sustituye</b> tu portfolio y tu progreso actuales por los de la copia. Si quieres conservar lo actual, exporta antes una copia.</p>
+      <div class="dlg-actions">
+        <button class="btn-ghost" value="cancel">Cancelar</button>
+        <button class="btn" value="ok">Sustituir por la copia</button>
+      </div>
+    </form>
+  </dialog>
 </BaseLayout>
+
+<script>
+  import { listPieces, getImage, createPiece, addVersion, deletePiece, getPiece, onPortfolio, type Piece } from "../../lib/store/portfolio";
+  import { exportBackup, inspectBackup, applyBackup, lastBackup, download } from "../../lib/store/backup";
+  import type { CatalogLesson } from "../../lib/game/core";
+
+  const $ = <T extends Element = HTMLElement>(s: string, root: ParentNode = document) => root.querySelector<T>(s)!;
+  const $$ = <T extends Element = HTMLElement>(s: string, root: ParentNode = document) => [...root.querySelectorAll<T>(s)];
+  const catalog: CatalogLesson[] = JSON.parse(document.getElementById("forja-catalog")?.textContent || "[]");
+  const DNAME = { pixel: "Pixel", voxel: "Voxel", fundamentos: "Fundamentos" } as const;
+  const fmt = (iso: string) => new Date(iso).toLocaleDateString("es-ES", { day: "numeric", month: "short", year: "numeric" });
+
+  // URLs de imagen en memoria (se reutilizan para no recrearlas en cada repintado)
+  const urls = new Map<string, string>();
+  async function imgUrl(id: string) {
+    if (!urls.has(id)) {
+      const img = await getImage(id);
+      urls.set(id, img ? URL.createObjectURL(img.blob) : "");
+    }
+    return urls.get(id)!;
+  }
+
+  let filter = "all";
+  let pieces: Piece[] = [];
+
+  async function render() {
+    pieces = await listPieces();
+    for (const k of ["all", "pixel", "voxel", "fundamentos"])
+      $(`[data-count="${k}"]`).textContent = String(k === "all" ? pieces.length : pieces.filter((p) => p.discipline === k).length);
+    const shown = pieces.filter((p) => filter === "all" || p.discipline === filter);
+    $("[data-empty]").hidden = pieces.length > 0;
+    $$("[data-when-items]").forEach((e) => (e.hidden = pieces.length === 0));
+
+    // timeline: todas las versiones de todas las piezas, en orden cronológico
+    const frames = shown.flatMap((p) => p.versions.map((v, i) => ({ p, v, i }))).sort((a, b) => a.v.date.localeCompare(b.v.date));
+    $("[data-timeline]").innerHTML = frames
+      .map((f) => `<button type="button" class="frame ${f.p.discipline}" data-piece="${f.p.id}" title="${esc(f.p.name)} · v${f.i + 1}"><img data-img="${f.v.imageId}" alt=""><span>${fmt(f.v.date)}</span></button>`)
+      .join("");
+    $("[data-grid]").innerHTML = shown
+      .map((p) => {
+        const last = p.versions[p.versions.length - 1];
+        return `<button type="button" class="card ${p.discipline}" data-piece="${p.id}">
+          <div class="thumb checker-light"><img data-img="${last.imageId}" alt="${esc(p.name)}"></div>
+          <div class="info"><small>${DNAME[p.discipline]}${p.lessons[0] ? " · " + p.lessons[0].toUpperCase() : ""}</small><b>${esc(p.name)}</b>
+          <span>${p.versions.length} ${p.versions.length === 1 ? "versión" : "versiones"} · ${fmt(p.updatedAt)}</span></div></button>`;
+      })
+      .join("");
+    for (const img of $$<HTMLImageElement>("img[data-img]")) img.src = await imgUrl(img.dataset.img!);
+
+    const lb = lastBackup();
+    const line = $("[data-backup-line]");
+    const days = lb ? (Date.now() - Date.parse(lb)) / 864e5 : Infinity;
+    line.textContent = pieces.length === 0 ? "" : lb ? `Última copia de seguridad: ${fmt(lb)}` : "Aún no has hecho ninguna copia de seguridad.";
+    line.classList.toggle("nudge", pieces.length > 0 && days > 7);
+  }
+
+  function esc(s: string) {
+    return s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!);
+  }
+
+  // ---- filtros
+  $$("[data-filter]").forEach((b) =>
+    b.addEventListener("click", () => {
+      filter = b.dataset.filter!;
+      $$("[data-filter]").forEach((x) => x.classList.toggle("on", x === b));
+      render();
+    }),
+  );
+
+  // ---- nueva pieza
+  const dlgNew = $<HTMLDialogElement>("[data-dlg-new]");
+  const formNew = $<HTMLFormElement>("[data-form-new]");
+  const lessonSel = $<HTMLSelectElement>("[data-lesson-select]");
+  for (const l of catalog) lessonSel.add(new Option(`${l.id.toUpperCase()} · ${l.title}`, l.id));
+
+  function openNew(prefill: { lesson?: string } = {}) {
+    formNew.reset();
+    $("[data-new-error]").textContent = "";
+    $("[data-new-preview]").hidden = true;
+    const l = catalog.find((x) => x.id === prefill.lesson);
+    if (l) {
+      lessonSel.value = l.id;
+      (formNew.elements.namedItem("discipline") as HTMLSelectElement).value = l.discipline;
+      (formNew.elements.namedItem("name") as HTMLInputElement).value = l.piece;
+    }
+    dlgNew.showModal();
+  }
+  $("[data-open-new]").addEventListener("click", () => openNew());
+  lessonSel.addEventListener("change", () => {
+    const l = catalog.find((x) => x.id === lessonSel.value);
+    if (l) (formNew.elements.namedItem("discipline") as HTMLSelectElement).value = l.discipline;
+  });
+  (formNew.elements.namedItem("image") as HTMLInputElement).addEventListener("change", (e) => {
+    const f = (e.target as HTMLInputElement).files?.[0];
+    const box = $("[data-new-preview]");
+    box.hidden = !f;
+    if (f) $<HTMLImageElement>("img", box).src = URL.createObjectURL(f);
+  });
+  formNew.addEventListener("submit", async (e) => {
+    const submitter = (e as SubmitEvent).submitter as HTMLButtonElement | null;
+    if (submitter?.value !== "save") return; // cancelar cierra el diálogo
+    e.preventDefault();
+    const fd = new FormData(formNew);
+    const image = fd.get("image") as File;
+    try {
+      const piece = await createPiece(
+        {
+          name: String(fd.get("name")).trim(),
+          discipline: fd.get("discipline") as Piece["discipline"],
+          description: String(fd.get("description") ?? "").trim(),
+          techniques: String(fd.get("techniques") ?? "").split(",").map((s) => s.trim()).filter(Boolean),
+          tools: fd.getAll("tools").map(String),
+          lessons: fd.get("lesson") ? [String(fd.get("lesson"))] : [],
+          notes: String(fd.get("notes") ?? "").trim(),
+        },
+        image,
+      );
+      dlgNew.close();
+      history.replaceState(null, "", location.pathname);
+      openPiece(piece.id);
+    } catch (err) {
+      $("[data-new-error]").textContent = (err as Error).message;
+    }
+  });
+
+  // ---- detalle de pieza
+  const dlgPiece = $<HTMLDialogElement>("[data-dlg-piece]");
+  let current: Piece | undefined;
+  document.addEventListener("click", (e) => {
+    const b = (e.target as Element).closest<HTMLElement>("[data-piece]");
+    if (b) openPiece(b.dataset.piece!);
+  });
+  $("[data-close]").addEventListener("click", () => dlgPiece.close());
+
+  async function openPiece(id: string, a?: number, b?: number) {
+    current = await getPiece(id);
+    if (!current) return;
+    const p = current;
+    const n = p.versions.length;
+    const ia = a ?? 0, ib = b ?? n - 1;
+    $("[data-pv-name]").textContent = p.name;
+    $("[data-pv-meta]").textContent = `${DNAME[p.discipline]} · creada el ${fmt(p.createdAt)}`;
+    $("[data-pv-desc]").textContent = p.description;
+    const lessonName = (lid: string) => catalog.find((l) => l.id === lid)?.title ?? "";
+    const rows: [string, string][] = [
+      ["Lección", p.lessons.map((l) => `${l.toUpperCase()} ${lessonName(l)}`).join(", ") || "Proyecto libre"],
+      ["Técnicas", p.techniques.join(", ")],
+      ["Herramientas", p.tools.join(", ")],
+      ["Notas", p.notes],
+    ];
+    $("[data-pv-dl]").innerHTML = rows.filter(([, v]) => v).map(([k, v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join("");
+
+    const cmp = $("[data-compare]"), single = $("[data-single]");
+    cmp.hidden = n < 2;
+    single.hidden = n >= 2;
+    if (n >= 2) {
+      $<HTMLImageElement>("img.a", cmp).src = await imgUrl(p.versions[ia].imageId);
+      $<HTMLImageElement>("img.b", cmp).src = await imgUrl(p.versions[ib].imageId);
+      $("[data-cmp-a]").textContent = `← v${ia + 1} · ${fmt(p.versions[ia].date)}`;
+      $("[data-cmp-b]").textContent = `v${ib + 1} · ${fmt(p.versions[ib].date)} →`;
+      setCompare(50);
+    } else {
+      $<HTMLImageElement>("img", single).src = await imgUrl(p.versions[0].imageId);
+    }
+    $("[data-versions]").innerHTML = p.versions
+      .map((v, i) => `<li class="${i === ia || i === ib ? "sel" : ""}"><button type="button" data-v="${i}" title="Comparar esta versión"><img data-img="${v.imageId}" alt="Versión ${i + 1}"></button>
+        <div><b>v${i + 1}</b> · ${fmt(v.date)}${v.width ? ` · ${v.width}×${v.height}px` : ""}<br><span>${esc(v.note)}</span></div></li>`)
+      .join("");
+    for (const img of $$<HTMLImageElement>("[data-versions] img")) img.src = await imgUrl(img.dataset.img!);
+    $$<HTMLButtonElement>("[data-v]").forEach((btn) =>
+      btn.addEventListener("click", () => {
+        const i = Number(btn.dataset.v);
+        // al pulsar una versión, se compara con la más reciente (o con la primera si es la reciente)
+        if (i === n - 1) openPiece(p.id, 0, n - 1);
+        else openPiece(p.id, i, n - 1);
+      }),
+    );
+    $("[data-version-error]").textContent = "";
+    if (!dlgPiece.open) dlgPiece.showModal();
+  }
+
+  const range = $<HTMLInputElement>("[data-compare] input");
+  function setCompare(v: number) {
+    range.value = String(v);
+    $<HTMLImageElement>("[data-compare] img.b").style.clipPath = `inset(0 0 0 ${v}%)`;
+    $("[data-compare] .handle").style.left = `${v}%`;
+  }
+  range.addEventListener("input", () => setCompare(Number(range.value)));
+
+  $<HTMLFormElement>("[data-form-version]").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if (!current) return;
+    const form = e.target as HTMLFormElement;
+    const fd = new FormData(form);
+    try {
+      await addVersion(current.id, fd.get("image") as File, String(fd.get("note") ?? "").trim() || "Nueva versión");
+      form.reset();
+      openPiece(current.id);
+    } catch (err) {
+      $("[data-version-error]").textContent = (err as Error).message;
+    }
+  });
+
+  $("[data-delete]").addEventListener("click", async () => {
+    if (!current) return;
+    if (!confirm(`¿Borrar «${current.name}» y sus ${current.versions.length} versiones? No se puede deshacer.`)) return;
+    await deletePiece(current.id);
+    dlgPiece.close();
+  });
+
+  // ---- copia de seguridad
+  $("[data-export]").addEventListener("click", async () => {
+    const { blob, filename } = await exportBackup();
+    download(blob, filename);
+    render();
+  });
+  const dlgImport = $<HTMLDialogElement>("[data-dlg-import]");
+  let pendingImport: Awaited<ReturnType<typeof inspectBackup>> | undefined;
+  // Se decide en el envío del formulario (qué botón se pulsó), no en el evento «close»
+  // del diálogo, que no siempre llega (p. ej. si la pestaña está en segundo plano).
+  $<HTMLFormElement>("[data-form-import]").addEventListener("submit", async (e) => {
+    const ok = ((e as SubmitEvent).submitter as HTMLButtonElement | null)?.value === "ok";
+    const data = pendingImport;
+    pendingImport = undefined;
+    if (!ok || !data) return;
+    urls.clear();
+    await applyBackup(data);
+    render();
+  });
+  $<HTMLInputElement>("[data-import]").addEventListener("change", async (e) => {
+    const input = e.target as HTMLInputElement;
+    const file = input.files?.[0];
+    input.value = "";
+    if (!file) return;
+    try {
+      const data = await inspectBackup(file);
+      const s = data.summary;
+      $("[data-import-summary]").textContent = `Copia del ${fmt(s.exportedAt)}: ${s.pieces} piezas y ${s.images} imágenes${s.missing ? ` (faltan ${s.missing} imágenes)` : ""}.`;
+      pendingImport = data;
+      dlgImport.showModal();
+    } catch (err) {
+      alert(`No se pudo leer la copia: ${(err as Error).message}`);
+    }
+  });
+
+  onPortfolio(render);
+
+  // abrir el formulario si venimos de una lección: ?nueva=1&lesson=p0-01
+  const params = new URLSearchParams(location.search);
+  if (params.get("nueva")) openNew({ lesson: params.get("lesson") ?? undefined });
+</script>
+
+<style>
+  .pf-head { display: flex; justify-content: space-between; align-items: end; gap: 20px; flex-wrap: wrap; }
+  h1 { font-size: clamp(2rem, 4.5vw, 3rem); }
+  .actions { display: flex; gap: 10px; flex-wrap: wrap; }
+  button.btn, button.btn-ghost, .file-btn { cursor: pointer; border: 0; font-family: var(--font-head); }
+  button.btn-ghost, .file-btn { background: none; color: var(--text); border: 1px solid var(--line); }
+  .backup-line { font: .78rem var(--font-mono); color: var(--muted); min-height: 1.2em; }
+  .backup-line:global(.nudge) { color: var(--pixel-2); }
+  .backup-line:global(.nudge)::after { content: " · Exporta una copia para no perder tu trabajo."; }
+  .filters { display: flex; gap: 6px; flex-wrap: wrap; margin: 20px 0; }
+  .filters button { background: var(--panel); border: 1px solid var(--line); color: var(--muted); padding: 6px 12px; font: 500 .85rem var(--font-head); cursor: pointer; }
+  .filters button:global(.on) { color: var(--text); border-color: var(--fund); }
+  .filters span { font-family: var(--font-mono); font-size: .75rem; margin-left: 4px; color: var(--muted); }
+  .empty h2 { font-size: 1.2rem; }
+  .empty p { color: var(--muted); margin: 0; }
+  .checker-light { background: conic-gradient(#5a5e6e 25%, #4a4d5b 0 50%, #5a5e6e 0 75%, #4a4d5b 0) 0 0 / 16px 16px; }
+  :global(.pf-head ~ * img), .dlg img { image-rendering: pixelated; }
+
+  .timeline { display: flex; gap: 6px; overflow-x: auto; padding: 10px; background: #111219; border: 1px solid var(--line); }
+  .timeline :global(.frame) { flex: none; width: 92px; background: var(--panel-2); border: 1px solid var(--line); border-bottom: 2px solid var(--c, var(--line)); padding: 6px; cursor: pointer; color: var(--muted); }
+  .timeline :global(.frame img) { width: 100%; height: 64px; object-fit: contain; display: block; }
+  .timeline :global(.frame span) { font: .62rem var(--font-mono); }
+  :global(.pixel) { --c: var(--pixel); }
+  :global(.voxel) { --c: var(--voxel); }
+  :global(.fundamentos) { --c: var(--fund); }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
+  .grid :global(.card) { text-align: left; background: var(--panel); border: 1px solid var(--line); border-top: 3px solid var(--c); padding: 0; cursor: pointer; color: var(--text); font: inherit; }
+  .grid :global(.card:hover) { border-color: var(--c); }
+  .grid :global(.thumb) { aspect-ratio: 1; display: grid; place-items: center; padding: 16px; }
+  .grid :global(.thumb img) { max-width: 100%; max-height: 100%; object-fit: contain; }
+  .grid :global(.info) { padding: 10px 12px; display: grid; gap: 2px; }
+  .grid :global(.info small) { font: .68rem var(--font-mono); color: var(--c); }
+  .grid :global(.info span) { font-size: .78rem; color: var(--muted); }
+
+  .dlg { background: var(--panel); color: var(--text); border: 1px solid var(--line); padding: 0; width: min(560px, 100% - 32px); max-height: calc(100vh - 32px); box-shadow: 6px 6px 0 #000; }
+  .dlg.wide { width: min(1000px, 100% - 32px); }
+  .dlg::backdrop { background: #000a; }
+  .dlg form, .piece-view { padding: 20px; }
+  .dlg h2 { font-size: 1.4rem; }
+  .field { display: grid; gap: 4px; margin: 0 0 12px; font-size: .85rem; color: var(--muted); }
+  .field small { font-size: .75rem; }
+  .field input, .field select, .field textarea, .add-version input { background: var(--bg); color: var(--text); border: 1px solid var(--line); padding: 8px 10px; font: .95rem var(--font-body); }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .tools { border: 1px solid var(--line); padding: 8px 12px; display: flex; flex-wrap: wrap; gap: 4px 16px; }
+  .tools legend { padding: 0 4px; }
+  .tools label { color: var(--text); }
+  .preview { margin: -4px 0 12px; }
+  .preview img { max-height: 160px; max-width: 100%; background: #4a4d5b; }
+  .error { color: #ff6b4a; font-size: .85rem; min-height: 1em; margin: 0; }
+  .warn { color: var(--pixel-2); font-size: .9rem; }
+  .dlg-actions { display: flex; justify-content: end; gap: 10px; margin-top: 8px; }
+
+  .pv-head { display: flex; justify-content: space-between; align-items: start; gap: 12px; }
+  .pv-head small { font: .72rem var(--font-mono); color: var(--muted); }
+  .close { background: none; border: 1px solid var(--line); color: var(--text); width: 34px; height: 34px; cursor: pointer; }
+  .pv-body { display: grid; grid-template-columns: 1fr 280px; gap: 20px; margin-top: 12px; }
+  .stage { position: relative; height: min(56vh, 460px); display: grid; place-items: center; overflow: hidden; }
+  .stage img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; padding: 16px; }
+  .single img { position: static; }
+  .handle { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--fund); pointer-events: none; }
+  .compare input { width: 100%; margin-top: 8px; accent-color: var(--fund); }
+  .cmp-labels { display: flex; justify-content: space-between; font: .72rem var(--font-mono); color: var(--muted); }
+  .versions { list-style: none; padding: 0; margin: 14px 0 0; display: grid; gap: 6px; max-height: 220px; overflow: auto; }
+  .versions :global(li) { display: grid; grid-template-columns: 56px 1fr; gap: 10px; align-items: center; font-size: .82rem; color: var(--muted); }
+  .versions :global(li.sel) { color: var(--text); }
+  .versions :global(button) { width: 56px; height: 56px; padding: 4px; background: #4a4d5b; border: 1px solid var(--line); cursor: pointer; }
+  .versions :global(li.sel button) { border-color: var(--fund); }
+  .versions :global(img) { width: 100%; height: 100%; object-fit: contain; }
+  .pv-side dl { display: grid; gap: 2px; font-size: .88rem; }
+  .pv-side :global(dt) { font: .7rem var(--font-mono); color: var(--muted); text-transform: uppercase; margin-top: 8px; }
+  .pv-side :global(dd) { margin: 0; }
+  .add-version { display: grid; gap: 8px; border-top: 1px solid var(--line); padding-top: 12px; margin-top: 16px; }
+  .add-version h3 { font-size: 1rem; margin: 0; }
+  .danger { margin-top: 16px; background: none; border: 1px solid #ff6b4a66; color: #ff6b4a; padding: 8px 12px; cursor: pointer; width: 100%; }
+  @media (max-width: 760px) {
+    .pv-body, .row { grid-template-columns: 1fr; }
+    .stage { height: 46vh; }
+  }
+</style>

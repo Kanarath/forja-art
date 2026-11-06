@@ -8,7 +8,7 @@ import VoxelIso from "../components/VoxelIso.astro";
 import XpBar from "../components/XpBar.astro";
 import LevelStrip from "../components/LevelStrip.astro";
 import AchievementPalette from "../components/AchievementPalette.astro";
-import PortfolioTimeline from "../components/PortfolioTimeline.astro";
+import RecentPieces from "../components/RecentPieces.astro";
 import { PIXEL, VOXEL, FUNDAMENTOS } from "../data/disciplines";
 import { ACHIEVEMENTS } from "../data/achievements";
 import { gem, potion, sword, chest, slime, islandDiorama, voxelChest, voxelTower } from "../data/demo-art";
@@ -91,23 +91,8 @@ const first = nextLesson(await buildCatalog(), emptyState(), ROUTE);
     <div class="panel ach"><AchievementPalette items={ACHIEVEMENTS} /></div>
   </section>
 
-  <h3 class="section-title">Piezas de ejemplo <span class="soon">tu portfolio real llega en la tarea 1.8</span></h3>
-  <PortfolioTimeline
-    href={`${base}portfolio/`}
-    frames={[
-      { label: "gema · F01", discipline: "pixel" },
-      { label: "cofre · V0-01", discipline: "voxel" },
-      { label: "espada · P1-01", discipline: "pixel" },
-      { label: "poción v2 · P1-02", discipline: "pixel" },
-      { label: "torre · V1-01", discipline: "voxel" },
-    ]}
-  >
-    <PixelSprite slot="f0" {...gem} scale={6} label="Gema" />
-    <VoxelIso slot="f1" voxels={voxelChest()} size={6} label="Cofre voxel" />
-    <PixelSprite slot="f2" {...sword} scale={4} label="Espada" />
-    <PixelSprite slot="f3" {...potion} scale={5} label="Poción" />
-    <VoxelIso slot="f4" voxels={voxelTower()} size={5} label="Torre voxel" />
-  </PortfolioTimeline>
+  <h3 class="section-title">Últimas piezas forjadas</h3>
+  <RecentPieces />
 </BaseLayout>
 
 <style>

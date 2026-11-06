@@ -1,0 +1,68 @@
+---
+// Tus últimas piezas (todas las versiones, de la más reciente a la más antigua),
+// leídas del portfolio en tu navegador. Idea de la maqueta B: el portfolio como
+// línea de tiempo, como los frames de una animación.
+import { url } from "../lib/url";
+interface Props { limit?: number }
+const { limit = 8 } = Astro.props;
+---
+
+<div class="recent" data-recent={limit}>
+  <div class="tl-head"><span>Portfolio · línea de tiempo</span><a href={url("portfolio/")}>▶ Ver portfolio</a></div>
+  <div class="frames" data-frames></div>
+  <a class="empty" href={url("portfolio/?nueva=1")} data-recent-empty>
+    <span>+</span> Tu primera pieza aparecerá aquí. Registra la de tu primera lección o un proyecto libre.
+  </a>
+</div>
+
+<script>
+  import { listPieces, getImage, onPortfolio } from "../lib/store/portfolio";
+  import { BASE } from "../lib/url";
+
+  for (const box of document.querySelectorAll<HTMLElement>("[data-recent]")) {
+    const limit = Number(box.dataset.recent);
+    const frames = box.querySelector<HTMLElement>("[data-frames]")!;
+    const empty = box.querySelector<HTMLElement>("[data-recent-empty]")!;
+    onPortfolio(async () => {
+      let pieces = [] as Awaited<ReturnType<typeof listPieces>>;
+      try { pieces = await listPieces(); } catch { /* sin IndexedDB: se queda vacío */ }
+      const items = pieces
+        .flatMap((p) => p.versions.map((v, i) => ({ p, v, i })))
+        .sort((a, b) => b.v.date.localeCompare(a.v.date))
+        .slice(0, limit);
+      empty.hidden = items.length > 0;
+      frames.hidden = items.length === 0;
+      frames.replaceChildren();
+      for (const { p, v, i } of items) {
+        const a = document.createElement("a");
+        a.className = `frame ${p.discipline}`;
+        a.href = `${BASE}portfolio/`;
+        a.title = `${p.name} · v${i + 1}`;
+        const img = document.createElement("img");
+        img.alt = p.name;
+        const stored = await getImage(v.imageId);
+        if (stored) img.src = URL.createObjectURL(stored.blob);
+        const cap = document.createElement("span");
+        cap.textContent = `${p.name}${p.versions.length > 1 ? ` · v${i + 1}` : ""}`;
+        a.append(img, cap);
+        frames.append(a);
+      }
+    });
+  }
+</script>
+
+<style>
+  .recent { background: #111219; border: 1px solid var(--line); padding: 10px 12px 12px; }
+  .tl-head { display: flex; justify-content: space-between; font: .75rem var(--font-mono); color: var(--muted); margin-bottom: 8px; }
+  .tl-head a { color: var(--fund); text-decoration: none; }
+  .frames { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; }
+  .frames :global(.frame) { flex: none; width: 112px; text-decoration: none; color: var(--muted); }
+  .frames :global(.frame img) { display: block; width: 112px; height: 100px; object-fit: contain; padding: 10px; image-rendering: pixelated; border: 1px solid var(--line); border-bottom: 2px solid var(--c, var(--line)); background: conic-gradient(#5a5e6e 25%, #4a4d5b 0 50%, #5a5e6e 0 75%, #4a4d5b 0) 0 0 / 16px 16px; }
+  .frames :global(.frame span) { display: block; font: .66rem var(--font-mono); margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .frames :global(.pixel) { --c: var(--pixel); }
+  .frames :global(.voxel) { --c: var(--voxel); }
+  .frames :global(.fundamentos) { --c: var(--fund); }
+  .empty { display: flex; gap: 12px; align-items: center; padding: 18px; border: 1px dashed var(--line); color: var(--muted); text-decoration: none; font-size: .9rem; }
+  .empty span { font-size: 1.6rem; color: var(--fund); }
+  [hidden] { display: none !important; }
+</style>
