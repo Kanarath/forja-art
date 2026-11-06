@@ -1,0 +1,18 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PlannedPage from "../../components/PlannedPage.astro";
+---
+
+<BaseLayout title="Labs" description="Laboratorios interactivos para entender conceptos de Pixel Art y Voxel Art.">
+  <PlannedPage
+    eyebrow="Laboratorios"
+    title="Labs"
+    lead="Pequeñas herramientas para entender un concepto practicándolo. No sustituyen a Aseprite ni a MagicaVoxel: te preparan para usarlos mejor."
+    items={[
+      { name: "Inspector de sprites", text: "Zoom, rejilla, índice de color, píxeles huérfanos, clusters, silueta y escala de grises. Carga tus propios PNG.", when: "tarea 2.1" },
+      { name: "Visor voxel por etapas", text: "Modelos .vox reales paso a paso: girar, zoom, cortar por capas y ver la paleta.", when: "tarea 2.2" },
+      { name: "Paletas y rampas", text: "Construye rampas con hue shifting, comprueba el contraste en grises y expórtalas a Aseprite.", when: "tarea 2.3" },
+      { name: "Mini-animador", text: "Hasta 8 frames, onion skinning y timing por frame para entender ciclos.", when: "tarea 2.7" },
+    ]}
+  />
+</BaseLayout>

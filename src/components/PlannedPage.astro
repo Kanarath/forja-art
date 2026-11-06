@@ -1,0 +1,28 @@
+---
+// Página «en la forja»: explica qué habrá aquí y cuándo llega, en vez de un vacío.
+interface Item { name: string; text: string; when: string }
+interface Props { eyebrow: string; title: string; lead: string; items: Item[] }
+const { eyebrow, title, lead, items } = Astro.props;
+---
+
+<p class="eyebrow">{eyebrow}</p>
+<h1>{title}</h1>
+<p class="lead">{lead}</p>
+<div class="slot"><slot /></div>
+<ul class="planned">
+  {items.map((i) => (
+    <li class="panel">
+      <div class="row"><h2>{i.name}</h2><span class="soon">{i.when}</span></div>
+      <p>{i.text}</p>
+    </li>
+  ))}
+</ul>
+
+<style>
+  h1 { font-size: clamp(2rem, 4.5vw, 3rem); }
+  .slot { margin: 24px 0; }
+  .planned { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
+  .row { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+  h2 { font-size: 1.15rem; margin: 0; }
+  p { color: var(--muted); margin: 8px 0 0; font-size: .92rem; }
+</style>

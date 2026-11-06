@@ -1,0 +1,25 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import DisciplineDashboard from "../../components/DisciplineDashboard.astro";
+import PixelSprite from "../../components/PixelSprite.astro";
+import VoxelIso from "../../components/VoxelIso.astro";
+import { FUNDAMENTOS } from "../../data/disciplines";
+import { DEMO } from "../../data/demo-progress";
+import { chest, voxelChest } from "../../data/demo-art";
+---
+
+<BaseLayout title="Fundamentos" discipline="fundamentos" description="Teoría del arte que se practica en Pixel Art y en Voxel Art.">
+  <DisciplineDashboard d={FUNDAMENTOS} done={DEMO.levelDone.fundamentos} percent={DEMO.percent.fundamentos}>
+    <div slot="art" class="pair">
+      <PixelSprite {...chest} scale={10} label="Cofre en pixel art" />
+      <span>⇄</span>
+      <div class="vox"><VoxelIso voxels={voxelChest()} size={12} label="Cofre en voxel art" /></div>
+    </div>
+  </DisciplineDashboard>
+</BaseLayout>
+
+<style>
+  .pair { display: flex; align-items: center; gap: 24px; color: var(--fund); font-size: 1.6rem; }
+  .pair :global(svg.pixel-sprite) { max-width: 34vw; height: auto; }
+  .vox { width: 170px; max-width: 34vw; }
+</style>

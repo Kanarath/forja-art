@@ -1,0 +1,21 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PlannedPage from "../../components/PlannedPage.astro";
+import AchievementPalette from "../../components/AchievementPalette.astro";
+import { ACHIEVEMENTS } from "../../data/demo-progress";
+---
+
+<BaseLayout title="Logros" description="Rangos, logros y encargos de FORJA//ART.">
+  <PlannedPage
+    eyebrow="Progresión"
+    title="Logros y rangos"
+    lead="Los logros representan habilidades demostradas con piezas reales, no clics. Sin rachas ni penalizaciones."
+    items={[
+      { name: "Rangos", text: "Un rango por disciplina y un rango global de la Forja, calculados a partir de tus lecciones y piezas.", when: "tarea 1.7" },
+      { name: "Logros de habilidad", text: "Se desbloquean solo al registrar la pieza que demuestra la habilidad.", when: "tarea 1.9" },
+      { name: "Encargos", text: "Proyectos libres no ligados a una lección, como «forja 5 pociones con la misma paleta».", when: "tarea 1.9" },
+    ]}
+  >
+    <div class="panel" style="max-width:520px"><AchievementPalette items={ACHIEVEMENTS} /></div>
+  </PlannedPage>
+</BaseLayout>

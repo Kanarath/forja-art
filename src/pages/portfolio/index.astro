@@ -1,0 +1,18 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PlannedPage from "../../components/PlannedPage.astro";
+---
+
+<BaseLayout title="Portfolio" description="Tus piezas de Pixel Art y Voxel Art, sus versiones y tu evolución.">
+  <PlannedPage
+    eyebrow="Tus creaciones"
+    title="Portfolio"
+    lead="Cada lección termina aquí, con tu pieza. Se guarda solo en tu navegador, con copia de seguridad exportable."
+    items={[
+      { name: "Piezas", text: "Nombre, disciplina, imágenes, técnicas, herramientas, lecciones relacionadas, fecha y notas.", when: "tarea 1.8" },
+      { name: "Versiones y antes/después", text: "Varias versiones de una misma pieza con comparador deslizante.", when: "tarea 1.8" },
+      { name: "Línea de tiempo", text: "Tu evolución en el tiempo, como los frames de una animación.", when: "tarea 1.8" },
+      { name: "Copia de seguridad", text: "Exporta e importa todo en un .zip para no perder nada.", when: "tarea 1.8" },
+    ]}
+  />
+</BaseLayout>

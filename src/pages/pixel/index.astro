@@ -1,0 +1,23 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import DisciplineDashboard from "../../components/DisciplineDashboard.astro";
+import PixelSprite from "../../components/PixelSprite.astro";
+import { PIXEL } from "../../data/disciplines";
+import { DEMO } from "../../data/demo-progress";
+import { sword, potion, slime } from "../../data/demo-art";
+---
+
+<BaseLayout title="Pixel Forge" discipline="pixel" description="Ruta de Pixel Art: de la silueta a escenas JRPG en Godot.">
+  <DisciplineDashboard d={PIXEL} done={DEMO.levelDone.pixel} percent={DEMO.percent.pixel}>
+    <div slot="art" class="trio">
+      <PixelSprite {...sword} scale={10} label="Espada de pixel art" />
+      <PixelSprite {...potion} scale={10} label="Poción de pixel art" />
+      <PixelSprite {...slime} scale={10} label="Slime de pixel art" />
+    </div>
+  </DisciplineDashboard>
+</BaseLayout>
+
+<style>
+  .trio { display: flex; gap: 24px; align-items: end; flex-wrap: wrap; justify-content: center; }
+  .trio :global(svg) { max-width: 30vw; height: auto; filter: drop-shadow(4px 4px 0 #000); }
+</style>

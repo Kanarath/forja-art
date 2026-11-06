@@ -1,0 +1,94 @@
+---
+// Dashboard de una disciplina: cabecera con su arte, progreso y el mapa de niveles.
+// El mapa es un camino vertical: cada nivel muestra qué aprendes y qué pieza forjas.
+// Pixel, Voxel y Fundamentos usan el mismo componente; solo cambian los datos y el tema.
+import type { Discipline } from "../data/disciplines";
+import LevelStrip from "./LevelStrip.astro";
+
+interface Props { d: Discipline; done: number; percent: number }
+const { d, done, percent } = Astro.props;
+const prefix = d.id === "fundamentos" ? "F" : "N";
+const current = d.levels.find((l) => l.n === done + 1);
+const labelOf = (n: number) => `${prefix}${d.id === "fundamentos" ? String(n).padStart(2, "0") : n}`;
+---
+
+<section class="d-hero">
+  <div>
+    <p class="eyebrow">{d.path}</p>
+    <h1 class={d.id === "pixel" ? "px" : ""}>{d.name}</h1>
+    <p class="lead">{d.tagline}</p>
+    <ul class="facts">
+      <li><span>Herramienta</span>{d.tool}</li>
+      <li><span>Progreso</span>{percent}%</li>
+      <li><span>Niveles</span>{d.levels.length}</li>
+    </ul>
+    {current && (
+      <div class="now-card">
+        <small>SIGUIENTE EN TU RUTA</small>
+        <b>{labelOf(current.n)} · {current.title}</b>
+        <p>{current.summary}</p>
+        <span class="soon">Lecciones en la forja · fase 2</span>
+      </div>
+    )}
+  </div>
+  <div class="d-art"><slot name="art" /></div>
+</section>
+
+<LevelStrip levels={d.levels} done={done} />
+
+<h2 class="section-title" id="ruta">Mapa de aprendizaje</h2>
+<ol class="map">
+  {d.levels.map((l) => {
+    const state = l.n <= done ? "done" : l.n === done + 1 ? "now" : "todo";
+    return (
+      <li class={state}>
+        <span class="node">{labelOf(l.n)}</span>
+        <div class="card">
+          <div class="card-head">
+            <h3>{l.title}</h3>
+            <span class="state">{state === "done" ? "Completado" : state === "now" ? "Siguiente" : "Pendiente"}</span>
+          </div>
+          <p>{l.summary}</p>
+          <p class="piece">◆ Pieza: {l.piece}</p>
+        </div>
+      </li>
+    );
+  })}
+</ol>
+
+<style>
+  .d-hero { display: grid; grid-template-columns: 1.2fr 1fr; gap: 32px; align-items: center; margin-bottom: 28px; }
+  h1 { font-size: clamp(2.2rem, 5vw, 3.6rem); color: var(--accent); }
+  h1.px { font-weight: 400; }
+  .facts { list-style: none; padding: 0; display: flex; gap: 24px; flex-wrap: wrap; margin: 20px 0; }
+  .facts li { font-size: .95rem; }
+  .facts span { display: block; font: .7rem var(--font-mono); color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+  .now-card { border: 1px solid var(--accent); background: var(--panel); padding: 16px; max-width: 520px; }
+  .now-card small { font: .7rem var(--font-mono); color: var(--accent); letter-spacing: .08em; display: block; }
+  .now-card b { font: 600 1.15rem var(--font-head); }
+  .now-card p { color: var(--muted); margin: 6px 0 10px; font-size: .92rem; }
+  .d-art { display: grid; place-items: center; min-height: 280px; background: radial-gradient(closest-side, color-mix(in srgb, var(--accent) 14%, transparent), transparent); }
+  .d-art :global(svg.voxel-iso) { width: 80%; max-width: 380px; height: auto; }
+
+  .map { list-style: none; padding: 0; margin: 0; position: relative; }
+  .map::before { content: ""; position: absolute; left: 23px; top: 8px; bottom: 8px; width: 2px; background: repeating-linear-gradient(var(--line) 0 6px, transparent 6px 10px); }
+  .map li { display: grid; grid-template-columns: 48px 1fr; gap: 16px; margin-bottom: 12px; position: relative; }
+  .node { width: 48px; height: 48px; display: grid; place-items: center; font: 600 .85rem var(--font-mono); background: var(--bg); border: 2px solid var(--line); color: var(--muted); z-index: 1; }
+  :global([data-discipline="pixel"]) .node { box-shadow: 3px 3px 0 #000; }
+  :global([data-discipline="voxel"]) .node { box-shadow: 0 8px 18px -8px color-mix(in srgb, var(--accent) 60%, transparent); }
+  .done .node { border-color: var(--accent); color: var(--text); }
+  .now .node { background: var(--accent); border-color: var(--accent); color: #0e0f14; }
+  .card { background: var(--panel); border: 1px solid var(--line); padding: 14px 16px; }
+  .now .card { border-color: var(--accent); }
+  .todo .card { opacity: .78; }
+  .card-head { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
+  .card h3 { font-size: 1.1rem; margin: 0; }
+  .state { font: .7rem var(--font-mono); color: var(--muted); white-space: nowrap; }
+  .now .state, .done .state { color: var(--accent); }
+  .card p { margin: 6px 0 0; color: var(--muted); font-size: .92rem; }
+  .card .piece { color: var(--text); font-size: .85rem; }
+  @media (max-width: 860px) {
+    .d-hero { grid-template-columns: 1fr; }
+    .d-art { min-height: 200px; order: -1; }
+  }
+</style>

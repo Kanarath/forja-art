@@ -1,0 +1,14 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import DisciplineDashboard from "../../components/DisciplineDashboard.astro";
+import VoxelIso from "../../components/VoxelIso.astro";
+import { VOXEL } from "../../data/disciplines";
+import { DEMO } from "../../data/demo-progress";
+import { voxelTower } from "../../data/demo-art";
+---
+
+<BaseLayout title="Voxel Forge" discipline="voxel" description="Ruta de Voxel Art: de tu primer prop a dioramas isométricos y assets para Godot.">
+  <DisciplineDashboard d={VOXEL} done={DEMO.levelDone.voxel} percent={DEMO.percent.voxel}>
+    <VoxelIso slot="art" voxels={voxelTower()} size={14} label="Torre voxel de piedra con tejado rojo" />
+  </DisciplineDashboard>
+</BaseLayout>

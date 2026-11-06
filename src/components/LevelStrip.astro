@@ -1,0 +1,19 @@
+---
+// Tira compacta de niveles: completados, actual y pendientes.
+import type { Level } from "../data/disciplines";
+interface Props { levels: Level[]; done: number }
+const { levels, done } = Astro.props;
+---
+
+<ol class="strip">
+  {levels.map((l) => (
+    <li class={l.n <= done ? "done" : l.n === done + 1 ? "now" : ""} title={`${l.n} · ${l.title}`}>{l.n}</li>
+  ))}
+</ol>
+
+<style>
+  .strip { list-style: none; display: flex; gap: 4px; padding: 0; margin: 0; }
+  .strip li { flex: 1; text-align: center; font: .7rem var(--font-mono); padding: 4px 0; background: var(--panel-2); color: var(--muted); }
+  .strip li.done { background: color-mix(in srgb, var(--c, var(--accent)) 40%, var(--panel-2)); color: var(--text); }
+  .strip li.now { background: var(--c, var(--accent)); color: #0e0f14; font-weight: 600; }
+</style>

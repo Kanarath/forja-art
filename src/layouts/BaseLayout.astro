@@ -1,0 +1,45 @@
+---
+// Plantilla común de todas las páginas.
+// `discipline` activa el tema de color: data-discipline="pixel|voxel|fundamentos"
+// cambia la variable --accent y todo lo que dependa de ella.
+import "../styles/tokens.css";
+import "../styles/base.css";
+import SiteHeader from "../components/SiteHeader.astro";
+import type { DisciplineId } from "../data/disciplines";
+
+interface Props {
+  title: string;
+  description?: string;
+  discipline?: DisciplineId;
+}
+const { title, description = "Academia personal de Pixel Art y Voxel Art: aprende haciendo piezas reales en Aseprite y MagicaVoxel.", discipline } = Astro.props;
+import { BASE as base } from "../lib/url";
+const fullTitle = title === "Taller" ? "FORJA//ART · Academia de Pixel Art y Voxel Art" : `${title} · FORJA//ART`;
+---
+
+<!doctype html>
+<html lang="es" data-discipline={discipline}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Silkscreen&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <a class="skip" href="#contenido">Saltar al contenido</a>
+    <SiteHeader />
+    <main id="contenido" class="wrap">
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <div class="wrap">
+        <span>FORJA//ART · academia personal de arte digital</span>
+        <span>Todo el arte de ejemplo son datos reales: píxeles y vóxeles inspeccionables.</span>
+      </div>
+    </footer>
+  </body>
+</html>

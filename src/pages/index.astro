@@ -1,93 +1,148 @@
 ---
-// Página provisional del Taller (tarea 1.1). Su objetivo es comprobar que el
-// build y el despliegue funcionan; el dashboard real llega en las tareas 1.2–1.3.
-import "../styles/tokens.css";
+// TALLER — dashboard principal (maqueta A + paleta de logros y timeline de B).
+import BaseLayout from "../layouts/BaseLayout.astro";
 import PixelSprite from "../components/PixelSprite.astro";
+import VoxelIso from "../components/VoxelIso.astro";
+import XpBar from "../components/XpBar.astro";
+import LevelStrip from "../components/LevelStrip.astro";
+import AchievementPalette from "../components/AchievementPalette.astro";
+import PortfolioTimeline from "../components/PortfolioTimeline.astro";
+import { PIXEL, VOXEL, FUNDAMENTOS } from "../data/disciplines";
+import { DEMO, ACHIEVEMENTS } from "../data/demo-progress";
+import { gem, potion, sword, chest, slime, islandDiorama, voxelChest, voxelTower } from "../data/demo-art";
 
-const base = import.meta.env.BASE_URL; // "/forja-art/" en producción
-
-// Gema 9×7: contorno oscuro, sombra, luz y brillo. Datos reales, no una imagen.
-const gem = {
-  palette: { "1": "#1b1030", "2": "#c2186b", "3": "#ff4fa3", "4": "#ffd6ec" },
-  rows: [
-    "..11111..",
-    ".1343321.",
-    "133332221",
-    ".1332221.",
-    "..13221..",
-    "...121...",
-    "....1....",
-  ],
-};
+import { BASE as base } from "../lib/url";
+const nextLevel = (d: typeof PIXEL) => d.levels.find((l) => l.n === DEMO.levelDone[d.id] + 1);
 ---
 
-<!doctype html>
-<html lang="es">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>FORJA//ART · Academia de Pixel Art y Voxel Art</title>
-    <meta name="description" content="Academia personal de Pixel Art y Voxel Art: aprende haciendo piezas reales en Aseprite y MagicaVoxel." />
-    <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
-  </head>
-  <body>
-    <main class="wrap">
-      <p class="eyebrow">Fase 1 · Foundation · la forja se está encendiendo</p>
-      <h1 class="logo">FORJA<span>//</span>ART</h1>
-      <p class="lead">Academia personal de arte digital. Cada lección termina con una pieza real hecha por ti en Aseprite o MagicaVoxel.</p>
+<BaseLayout title="Taller">
+  <section class="hero">
+    <div>
+      <p class="eyebrow">Bienvenido de vuelta al taller</p>
+      <h1>Hoy forjas: <em>{DEMO.current.pitch}</em></h1>
+      <p class="lead">{DEMO.current.id.toUpperCase()} · {DEMO.current.title} · {DEMO.current.minutes} min en {DEMO.current.tool}. Termina con un {DEMO.current.piece} en tu portfolio.</p>
+      <div class="cta">
+        <a class="btn" href={`${base}pixel/`}>Continuar lección →</a>
+        <a class="btn-ghost" href={`${base}pixel/#ruta`}>Ver ruta</a>
+      </div>
+      <XpBar xp={DEMO.xp} next={DEMO.xpNext} nextLabel={DEMO.nextRank} />
+      <p class="demo-note">Datos de ejemplo: el progreso real llega en la tarea 1.7.</p>
+    </div>
+    <div class="hero-art">
+      <div class="glow"></div>
+      <VoxelIso voxels={islandDiorama()} size={14} label="Diorama voxel de una isla con árbol, roca y agua" />
+      <span class="tag">// diorama voxel real · rejilla 8×8×8</span>
+    </div>
+  </section>
 
-      <section class="paths">
-        <article class="path" data-discipline="pixel">
-          <div class="art"><PixelSprite {...gem} scale={10} label="Gema de pixel art de 9×7 píxeles" /></div>
-          <div>
-            <small>PATH 02</small>
-            <h2>PIXEL FORGE</h2>
-            <p>Siluetas, clusters, rampas, personajes, animación y tilesets para Godot.</p>
-          </div>
-        </article>
+  <section class="paths" aria-label="Especializaciones">
+    <a class="bench" data-discipline="pixel" href={`${base}${PIXEL.href}`}>
+      <header>
+        <div><small>{PIXEL.path}</small><h2 class="px">{PIXEL.name}</h2></div>
+        <span class="pct">{DEMO.percent.pixel}%</span>
+      </header>
+      <div class="shelf">
+        <div class="item done"><PixelSprite {...gem} scale={5} label="Gema" /></div>
+        <div class="item done"><PixelSprite {...potion} scale={4} label="Poción" /></div>
+        <div class="item now"><PixelSprite {...sword} scale={4} label="Espada" /></div>
+        <div class="item lock"><PixelSprite {...chest} scale={4} label="Cofre" /></div>
+        <div class="item lock"><PixelSprite {...slime} scale={4} label="Slime" /></div>
+      </div>
+      <LevelStrip levels={PIXEL.levels} done={DEMO.levelDone.pixel} />
+      <p class="next">Siguiente: <b>N{nextLevel(PIXEL)?.n} · {nextLevel(PIXEL)?.title}</b></p>
+    </a>
 
-        <article class="path" data-discipline="voxel">
-          <div class="art">
-            <svg viewBox="0 0 60 60" width="90" height="90" role="img" aria-label="Cubo voxel isométrico">
-              <polygon points="30,6 54,18 30,30 6,18" fill="#9df2ff" />
-              <polygon points="6,18 30,30 30,56 6,44" fill="#38e1ff" />
-              <polygon points="54,18 30,30 30,56 54,44" fill="#1a8aa6" />
-            </svg>
-          </div>
-          <div>
-            <small>PATH 01</small>
-            <h2>VOXEL FORGE</h2>
-            <p>Props, personajes chibi, arquitectura y dioramas isométricos en MagicaVoxel.</p>
-          </div>
-        </article>
-      </section>
+    <a class="bench" data-discipline="voxel" href={`${base}${VOXEL.href}`}>
+      <header>
+        <div><small>{VOXEL.path}</small><h2>{VOXEL.name}</h2></div>
+        <span class="pct">{DEMO.percent.voxel}%</span>
+      </header>
+      <div class="shelf">
+        <div class="item done iso"><VoxelIso voxels={voxelChest()} size={6} label="Cofre voxel" /></div>
+        <div class="item now iso"><VoxelIso voxels={voxelTower()} size={5} label="Torre voxel" /></div>
+        <div class="item lock iso"><VoxelIso voxels={islandDiorama()} size={4} label="Diorama voxel" /></div>
+      </div>
+      <LevelStrip levels={VOXEL.levels} done={DEMO.levelDone.voxel} />
+      <p class="next">Siguiente: <b>N{nextLevel(VOXEL)?.n} · {nextLevel(VOXEL)?.title}</b></p>
+    </a>
+  </section>
 
-      <p class="status"><code>v0.1.0</code> · desplegado con GitHub Actions</p>
-    </main>
-  </body>
-</html>
+  <section class="lower">
+    <div class="fund" data-discipline="fundamentos">
+      <h3 class="section-title">Fundamentos compartidos <a href={`${base}${FUNDAMENTOS.href}`}>ver todos →</a></h3>
+      <ul class="chips">
+        {FUNDAMENTOS.levels.map((f) => (
+          <li class={f.n <= DEMO.levelDone.fundamentos ? "done" : f.n === DEMO.levelDone.fundamentos + 1 ? "now" : ""}>
+            <b>F{String(f.n).padStart(2, "0")}</b> {f.title}
+          </li>
+        ))}
+      </ul>
+    </div>
+    <div class="panel ach"><AchievementPalette items={ACHIEVEMENTS} /></div>
+  </section>
+
+  <h3 class="section-title">Últimas piezas forjadas</h3>
+  <PortfolioTimeline
+    href={`${base}portfolio/`}
+    frames={[
+      { label: "gema · F01", discipline: "pixel" },
+      { label: "cofre · V0-01", discipline: "voxel" },
+      { label: "espada · P1-01", discipline: "pixel" },
+      { label: "poción v2 · P1-02", discipline: "pixel" },
+      { label: "torre · V1-01", discipline: "voxel" },
+    ]}
+  >
+    <PixelSprite slot="f0" {...gem} scale={6} label="Gema" />
+    <VoxelIso slot="f1" voxels={voxelChest()} size={6} label="Cofre voxel" />
+    <PixelSprite slot="f2" {...sword} scale={4} label="Espada" />
+    <PixelSprite slot="f3" {...potion} scale={5} label="Poción" />
+    <VoxelIso slot="f4" voxels={voxelTower()} size={5} label="Torre voxel" />
+  </PortfolioTimeline>
+</BaseLayout>
 
 <style>
-  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 72px 16px 48px; }
-  .eyebrow { font: 500 .8rem var(--font-mono); color: var(--fund); letter-spacing: .08em; text-transform: uppercase; }
-  .logo { font-size: clamp(2.6rem, 9vw, 5.5rem); letter-spacing: .02em; }
-  .logo span { color: var(--fund); }
-  .lead { color: var(--muted); max-width: 620px; font-size: 1.1rem; }
-  .paths { display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); margin: 40px 0; }
-  .path {
-    display: flex; gap: 20px; align-items: center;
-    background: var(--panel); border: 1px solid var(--line); border-top: 3px solid var(--accent);
-    padding: 24px; transition: transform .2s ease, box-shadow .2s ease;
+  .hero { display: grid; grid-template-columns: 1.1fr 1fr; gap: 32px; align-items: center; }
+  h1 { font-size: clamp(2rem, 4.4vw, 3.2rem); }
+  h1 em { font-style: normal; color: var(--pixel); }
+  .cta { display: flex; gap: 12px; margin: 20px 0 28px; flex-wrap: wrap; }
+  .cta .btn { background: var(--fund); color: #1a1400; }
+  .demo-note { font: .7rem var(--font-mono); color: var(--muted); opacity: .7; margin-top: 8px; }
+  .hero-art { position: relative; display: grid; place-items: center; min-height: 320px; }
+  .hero-art :global(svg) { width: 86%; max-width: 460px; height: auto; position: relative; filter: drop-shadow(0 24px 30px #0008); animation: float 6s ease-in-out infinite; }
+  .glow { position: absolute; inset: 15% 10% 5%; background: radial-gradient(closest-side, rgba(255, 170, 80, .2), transparent); }
+  .tag { position: absolute; bottom: 0; right: 0; font: .72rem var(--font-mono); color: var(--muted); }
+  @keyframes float { 50% { transform: translateY(-8px); } }
+
+  .paths { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 48px 0 0; }
+  .bench { --c: var(--accent); display: block; text-decoration: none; background: var(--panel); border: 1px solid var(--line); padding: 20px; position: relative; transition: transform .2s ease, box-shadow .2s ease; }
+  .bench::before { content: ""; position: absolute; inset: 0 0 auto; height: 3px; background: var(--c); }
+  .bench[data-discipline="pixel"] { box-shadow: 4px 4px 0 #000; }
+  .bench[data-discipline="pixel"]:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--pixel); }
+  .bench[data-discipline="voxel"] { box-shadow: 0 20px 40px -20px rgba(56, 225, 255, .25); }
+  .bench[data-discipline="voxel"]:hover { transform: translateY(-3px); box-shadow: 0 26px 50px -18px rgba(56, 225, 255, .45); }
+  .bench header { display: flex; justify-content: space-between; align-items: start; }
+  .bench small { font: .72rem var(--font-mono); color: var(--c); letter-spacing: .1em; }
+  .bench h2 { color: var(--c); font-size: 1.7rem; }
+  .pct { font: 600 1.6rem var(--font-head); color: var(--c); }
+  .shelf { display: flex; gap: 10px; margin: 10px 0 18px; background: repeating-linear-gradient(90deg, #ffffff05 0 1px, transparent 1px 12px), var(--panel-2); padding: 14px; overflow-x: auto; }
+  .item { flex: none; width: 76px; height: 76px; display: grid; place-items: center; border: 1px solid var(--line); background: var(--bg); }
+  .item.iso { padding: 8px; }
+  .item.done { border-color: color-mix(in srgb, var(--c) 50%, transparent); }
+  .item.now { border-color: var(--c); box-shadow: 0 0 0 2px color-mix(in srgb, var(--c) 30%, transparent); }
+  .item.lock { opacity: .3; filter: grayscale(1); }
+  .next { margin: 12px 0 0; font-size: .9rem; color: var(--muted); }
+  .next b { color: var(--text); }
+
+  .lower { display: grid; grid-template-columns: 1.6fr 1fr; gap: 20px; align-items: end; }
+  .chips { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+  .chips li { border: 1px solid var(--line); padding: 6px 12px; font-size: .85rem; color: var(--muted); }
+  .chips b { font: 500 .75rem var(--font-mono); color: var(--fund); margin-right: 4px; }
+  .chips .done { border-color: var(--fund); color: var(--text); }
+  .chips .now { background: var(--fund); color: #1a1400; }
+  .chips .now b { color: #1a1400; }
+
+  @media (max-width: 860px) {
+    .hero, .paths, .lower { grid-template-columns: 1fr; }
+    .hero-art { min-height: 260px; }
   }
-  .path:hover { transform: translateY(-3px); box-shadow: 0 10px 30px -12px var(--accent); }
-  .path[data-discipline="pixel"] { box-shadow: 4px 4px 0 0 #000; }
-  .path[data-discipline="pixel"]:hover { box-shadow: 6px 6px 0 0 var(--pixel); }
-  .path small { font: 500 .75rem var(--font-mono); color: var(--accent); letter-spacing: .1em; }
-  .path h2 { color: var(--accent); font-size: 1.6rem; }
-  .path p { margin: 0; color: var(--muted); }
-  .art { flex: none; display: grid; place-items: center; width: 110px; height: 110px; background: var(--panel-2); }
-  .status { font: .8rem var(--font-mono); color: var(--muted); }
 </style>

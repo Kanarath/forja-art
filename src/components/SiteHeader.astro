@@ -1,0 +1,58 @@
+---
+// Cabecera común: logo, navegación y rango.
+// En escritorio el menú está siempre visible; en móvil se pliega en un <details>
+// (HTML nativo: funciona sin JavaScript y es accesible con teclado).
+import { NAV } from "../data/nav";
+import { DEMO } from "../data/demo-progress";
+
+import { BASE as base } from "../lib/url";
+const here = Astro.url.pathname.replace(/\/?$/, "/");
+const isActive = (href: string) => (href === "" ? here === base : here.startsWith(base + href));
+---
+
+<header class="site-header">
+  <div class="sh-inner">
+    <a class="logo" href={base}>FORJA<span>//</span>ART</a>
+
+    <nav class="nav-desktop" aria-label="Principal">
+      {NAV.map((i) => <a href={base + i.href} data-accent={i.accent} aria-current={isActive(i.href) ? "page" : undefined}>{i.label}</a>)}
+    </nav>
+
+    <div class="rank" title="Datos de ejemplo hasta la tarea 1.7"><b>{DEMO.rank}</b> · {DEMO.xp} XP</div>
+
+    <details class="nav-mobile">
+      <summary aria-label="Abrir menú"><span></span><span></span><span></span></summary>
+      <nav aria-label="Principal (móvil)">
+        {NAV.map((i) => <a href={base + i.href} data-accent={i.accent} aria-current={isActive(i.href) ? "page" : undefined}>{i.label}</a>)}
+      </nav>
+    </details>
+  </div>
+</header>
+
+<style>
+  .site-header { position: sticky; top: 0; z-index: 20; background: #0e0f14ee; backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  .sh-inner { max-width: 1240px; margin: 0 auto; display: flex; align-items: center; gap: 20px; padding: 12px 16px; }
+  .logo { font: 700 1.25rem var(--font-head); text-decoration: none; white-space: nowrap; }
+  .logo span { color: var(--fund); }
+  .nav-desktop { display: flex; gap: 2px; flex: 1; }
+  nav a { text-decoration: none; padding: 6px 12px; font: 500 .92rem var(--font-head); color: var(--muted); border-bottom: 2px solid transparent; }
+  nav a:hover { color: var(--text); }
+  nav a[data-accent="pixel"]:hover { color: var(--pixel); }
+  nav a[data-accent="voxel"]:hover { color: var(--voxel); }
+  nav a[data-accent="fundamentos"]:hover { color: var(--fund); }
+  nav a[aria-current="page"] { color: var(--text); border-color: var(--accent); }
+  .rank { font: .8rem var(--font-mono); color: var(--muted); white-space: nowrap; }
+  .rank b { color: var(--fund); }
+  .nav-mobile { display: none; position: relative; }
+  .nav-mobile summary { list-style: none; cursor: pointer; display: grid; gap: 4px; padding: 10px 8px; }
+  .nav-mobile summary::-webkit-details-marker { display: none; }
+  .nav-mobile summary span { display: block; width: 22px; height: 2px; background: var(--text); }
+  .nav-mobile nav { position: absolute; right: 0; top: calc(100% + 8px); background: var(--panel); border: 1px solid var(--line); display: flex; flex-direction: column; min-width: 200px; padding: 6px; box-shadow: 4px 4px 0 #000; }
+  .nav-mobile nav a { border-bottom: 0; border-left: 2px solid transparent; padding: 10px 12px; }
+  .nav-mobile nav a[aria-current="page"] { border-left-color: var(--accent); background: var(--panel-2); }
+  @media (max-width: 900px) {
+    .nav-desktop { display: none; }
+    .nav-mobile { display: block; }
+    .rank { margin-left: auto; }
+  }
+</style>

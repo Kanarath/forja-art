@@ -1,0 +1,44 @@
+/* Estilos base compartidos por todas las páginas (los tokens están en tokens.css). */
+[data-discipline="fundamentos"] { --accent: var(--fund); }
+
+body {
+  background:
+    radial-gradient(1000px 600px at 75% -10%, color-mix(in srgb, var(--accent) 9%, transparent), transparent 60%),
+    var(--bg);
+}
+
+.wrap { max-width: 1240px; margin: 0 auto; padding-inline: 16px; }
+main.wrap { padding-block: 32px 80px; min-height: 70vh; }
+
+.skip { position: absolute; left: -9999px; }
+.skip:focus { left: 16px; top: 8px; z-index: 100; background: var(--fund); color: #1a1400; padding: 8px 12px; }
+
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.eyebrow { font: 500 .78rem var(--font-mono); color: var(--accent); text-transform: uppercase; letter-spacing: .1em; margin: 0 0 .6em; }
+.lead { color: var(--muted); max-width: 620px; font-size: 1.05rem; }
+.muted { color: var(--muted); }
+.px { font-family: "Silkscreen", var(--font-mono); letter-spacing: .02em; font-weight: 400; }
+.mono { font-family: var(--font-mono); }
+
+.btn {
+  display: inline-block; background: var(--accent); color: #0e0f14; padding: 10px 18px;
+  font: 600 .95rem var(--font-head); text-decoration: none; box-shadow: 3px 3px 0 #000;
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+.btn:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 #000; }
+.btn-ghost { display: inline-block; padding: 10px 18px; border: 1px solid var(--line); text-decoration: none; font: 600 .95rem var(--font-head); }
+.btn-ghost:hover { border-color: var(--accent); }
+
+.section-title { font-size: 1.05rem; color: var(--muted); font-weight: 600; margin: 40px 0 12px; display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.section-title a { font: 500 .8rem var(--font-mono); color: var(--accent); text-decoration: none; }
+
+.panel { background: var(--panel); border: 1px solid var(--line); padding: 20px; }
+
+/* damero de transparencia, como en los editores (claro para que los contornos oscuros destaquen) */
+.checker { background: conic-gradient(#ffffff08 25%, transparent 0 50%, #ffffff08 0 75%, transparent 0) 0 0 / 16px 16px, var(--panel); }
+
+.site-footer { border-top: 1px solid var(--line); padding: 20px 0; font: .78rem var(--font-mono); color: var(--muted); }
+.site-footer .wrap { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+
+.soon { display: inline-block; font: 500 .72rem var(--font-mono); color: var(--accent); border: 1px dashed var(--accent); padding: 2px 8px; }

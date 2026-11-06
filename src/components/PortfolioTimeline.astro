@@ -1,0 +1,35 @@
+---
+// Portfolio como línea de tiempo (idea de la maqueta B): tus piezas en fila,
+// como los frames de una animación. Recibe el arte por slots con nombre.
+interface Frame { label: string; discipline: "pixel" | "voxel" }
+interface Props { frames: Frame[]; href: string }
+const { frames, href } = Astro.props;
+---
+
+<div class="timeline">
+  <div class="tl-head"><span>Portfolio · línea de tiempo</span><a href={href}>▶ Ver portfolio</a></div>
+  <div class="frames">
+    {frames.map((f, i) => (
+      <figure class={f.discipline}>
+        <div class="art checker"><slot name={`f${i}`} /></div>
+        <figcaption><b>{String(i + 1).padStart(2, "0")}</b> {f.label}</figcaption>
+      </figure>
+    ))}
+    <figure class="empty"><div class="art">+</div><figcaption>tu próxima pieza</figcaption></figure>
+  </div>
+</div>
+
+<style>
+  .timeline { background: #111219; border: 1px solid var(--line); padding: 10px 12px 12px; }
+  .tl-head { display: flex; justify-content: space-between; font: .75rem var(--font-mono); color: var(--muted); margin-bottom: 8px; }
+  .tl-head a { color: var(--fund); text-decoration: none; }
+  .frames { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; }
+  figure { flex: none; margin: 0; width: 112px; }
+  .art { height: 100px; display: grid; place-items: center; border: 1px solid var(--line); padding: 12px; }
+  .art :global(svg.voxel-iso) { width: 76px; height: 72px; }
+  .pixel .art { border-bottom: 2px solid var(--pixel); }
+  .voxel .art { border-bottom: 2px solid var(--voxel); }
+  .empty .art { border-style: dashed; color: var(--muted); font-size: 1.6rem; }
+  figcaption { font: .66rem var(--font-mono); color: var(--muted); margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  figcaption b { color: var(--text); }
+</style>
