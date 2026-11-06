@@ -65,7 +65,7 @@ const data = sprite ? getSprite(sprite) : null;
       loose: form.querySelector<HTMLInputElement>("input[name=loose]")!.checked,
       zoom: Number(form.querySelector<HTMLInputElement>("input[name=zoom]")!.value),
     });
-    const colorAt = (s: Sprite, ch: string, view: string) => (view === "silhouette" ? "#e8e6f0" : view === "gray" ? gray(s.palette[ch]) : s.palette[ch]);
+    const colorAt = (s: Sprite, ch: string, view: string) => (view === "silhouette" ? "#0b0a10" : view === "gray" ? gray(s.palette[ch]) : s.palette[ch]);
 
     function paint(c: HTMLCanvasElement, s: Sprite, k: number, view: string) {
       const w = s.rows[0].length, h = s.rows.length;

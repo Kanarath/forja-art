@@ -1,0 +1,175 @@
+---
+id: f01-01
+discipline: fundamentos
+level: 1
+order: 1
+title: "Valor y lectura"
+summary: "El valor (claro u oscuro) hace que algo se lea antes que el tono. Aprende a separar 3 valores y a comprobarlos en grises."
+duration: 40
+status: borrador
+prerequisites: [p0-01, v0-01]
+fundamentals: []
+objectives:
+  - "Distinguir valor (claro/oscuro) de tono (rojo, azul…)"
+  - "Comprobar cualquier pieza con la prueba de grises"
+  - "Construir una rampa de 3 valores bien separados: sombra, medio y luz"
+tools: [aseprite, magicavoxel]
+piece:
+  name: "Una gema (pixel) y un cofre (voxel) que se leen en grises"
+  canvas: "16x16"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [valor-3]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Hoy forjas **dos piezas** que se entienden aunque les quites el color:
+
+- una **gema de 16×16** en Aseprite;
+- un **cofre** en MagicaVoxel, renderizado.
+
+Las dos con **3 valores** bien separados: sombra, medio y luz.
+
+<Sprite name="gem" scale={12} caption="Así debe verse: forma clara en color…" />
+<Sprite name="gem" scale={12} view="gray" caption="…y también en grises" />
+</Block>
+
+<Block kind="concepto">
+Un color tiene dos cosas que se confunden:
+
+- **Tono**: qué color es (rosa, naranja, azul).
+- **Valor**: lo claro u oscuro que es.
+
+El ojo lee **primero el valor**. El volumen, la forma y lo que destaca salen de ahí. El tono va después.
+
+<Mistake title="Misma gema, mismos píxeles, otra paleta" wrongLabel="Tonos distintos, mismo valor" rightLabel="Valores separados">
+  <Sprite slot="wrong" name="gem-samevalue" scale={10} view="gray" caption="gem-samevalue en grises" />
+  <Sprite slot="right" name="gem" scale={10} view="gray" caption="gem en grises" />
+
+Las dos gemas tienen **exactamente** los mismos píxeles. En color, `gem-samevalue` parece variada: magenta, naranja y azul. Pero los tres colores tienen casi el mismo valor. En grises se funden en una mancha plana. La gema buena separa sombra, luz y brillo en valor, y se ve facetada.
+</Mistake>
+
+<Sprite name="gem-samevalue" scale={10} caption="gem-samevalue en color: engaña, parece que funciona" />
+
+<Why title="La prueba de grises">
+Quitar el color deja solo el valor. Si en grises la pieza se lee, en color se leerá mejor. Si en grises es una mancha, ningún tono la salvará. Hazla **siempre** antes de dar algo por terminado.
+</Why>
+
+### Tres valores, bien separados
+
+Para empezar basta con tres escalones:
+
+1. **Sombra**: oscuro. Las caras que no mira la luz.
+2. **Medio**: el color «real» del objeto.
+3. **Luz**: claro. Las caras que miran a la luz.
+
+Si dos escalones están muy cerca, en grises se fusionan y pierdes uno. Prueba aquí: mira la fila en grises y separa los pasos hasta que cada uno se distinga.
+
+<RampLab base="#c2186b" steps={3} sprite="gem" />
+
+<Tip>
+La gema de ejemplo usa además un contorno muy oscuro y un brillo casi blanco. Son extras: el volumen lo cuentan sombra, medio y luz.
+</Tip>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Elige tus 3 valores">
+En el `RampLab` de arriba, crea una rampa de 3 pasos de tu color. Comprueba en grises que los tres se distinguen. Apunta los tres códigos hexadecimales.
+
+<Why>
+Decidir los valores **antes** de pintar evita el error más común: elegir colores «bonitos» que luego tienen el mismo valor.
+</Why>
+</Step>
+
+<Step n={2} title="Gema de 16×16 en Aseprite">
+1. <Keys k="Ctrl+N" />: 16×16, fondo transparente. Activa *View → Grid*.
+2. Lápiz (<Keys k="B" />) con *Pixel-perfect*. Dibuja la silueta de la gema con el valor de **sombra**.
+3. Rellena el cuerpo con el **medio** (<Keys k="G" />).
+4. Decide de dónde viene la luz (arriba a la izquierda) y pinta esas facetas con la **luz**.
+
+<Tip>
+Usa el cuentagotas (<Keys k="I" />) para recoger un color que ya está en el lienzo. Así no se te cuela un cuarto tono casi igual.
+</Tip>
+</Step>
+
+<Step n={3} title="Prueba de grises del sprite">
+Guarda (<Keys k="Ctrl+S" />) y exporta a 1× con *File → Export → Export As*. Súbelo al Inspector y pulsa la vista **Grises**.
+
+<Inspector upload title="Tu gema en grises" />
+
+Si dos zonas se funden, vuelve a Aseprite y aleja esos valores.
+</Step>
+
+<Step n={4} title="Mira el cofre por partes">
+Abre el modelo de referencia y fíjate en qué zonas puedes separar por valor: cuerpo, tapa, bandas y cerradura.
+
+<VoxViewer model="cofre" stage={3} title="Cofre de referencia" />
+</Step>
+
+<Step n={5} title="Cofre de 3 valores en MagicaVoxel">
+1. Construye tu cofre o parte del `.vox` descargado del visor.
+2. En la **paleta de la izquierda**, elige tres colores: madera **oscura**, madera **media** y metal **claro**.
+3. Con el modo *Paint* y el pincel *Voxel* o *Face*, pinta: cuerpo en medio, interior y bordes inferiores en sombra, bandas y cerradura en luz.
+4. Pulsa *Render* arriba y guarda una imagen PNG.
+
+<Why>
+En voxel la luz del render ya crea sombras. Pero si los colores base tienen el mismo valor, el cofre se lee como un bloque. Los 3 valores separan las **partes**; la luz separa las **caras**.
+</Why>
+</Step>
+
+<Step n={6} title="Prueba de grises del render">
+Abre el PNG en cualquier visor o editor de imágenes y desatúralo (pásalo a blanco y negro). ¿Distingues tapa, cuerpo y bandas?
+
+<Warn>
+No subas el render al Inspector: solo admite imágenes pequeñas de pixel art.
+</Warn>
+
+<Warn title="Verifica en tu versión">
+Los nombres de modos, pinceles y del botón para guardar el render pueden variar entre versiones de MagicaVoxel.
+</Warn>
+</Step>
+</Block>
+
+<Block kind="version">
+Aplica la regla de los 3 valores a tu manera. Elige un reto:
+
+- **Gema fría**: la misma gema en azul o verde. Mismo valor en sombra, medio y luz que tu versión rosa.
+- **Noche**: tres valores todos oscuros pero separados entre sí. ¿Sigue leyéndose?
+- **Cofre de tesoro**: añade monedas en el cofre usando solo tu valor de luz.
+</Block>
+
+<Block kind="errores">
+<Mistake title="Cambiar de tono creyendo que cambias de valor">
+  <Sprite slot="wrong" name="gem-samevalue" scale={8} view="gray" />
+  <Sprite slot="right" name="gem" scale={8} view="gray" />
+
+Poner naranja junto a azul parece contraste, pero si tienen la misma luminancia el ojo no ve forma. **Corrección**: haz la prueba de grises y aclara la luz u oscurece la sombra hasta que se separen.
+</Mistake>
+
+<Mistake title="Ruido en lugar de zonas de valor">
+  <Sprite slot="wrong" name="rock-noisy" scale={8} view="gray" />
+  <Sprite slot="right" name="rock-clean" scale={8} view="gray" />
+
+Tener 3 valores no basta: hay que agruparlos. Píxeles sueltos alternados mezclan los valores y el volumen desaparece. **Corrección**: pinta cada valor en **zonas grandes** y continuas.
+</Mistake>
+</Block>
+
+<Block kind="calidad">
+<Checklist items={[
+  "Mi gema mide 16×16 y usa 3 valores de cuerpo (sombra, medio, luz)",
+  "En la vista Grises del Inspector se distinguen los 3 valores",
+  "Mi cofre en MagicaVoxel usa 3 valores y está renderizado",
+  "En el render desaturado distingo tapa, cuerpo y bandas",
+  "He guardado el .aseprite, el .vox y los dos PNG en mi portfolio",
+]} />
+
+<Quiz q="Tu sprite tiene rojo, verde y azul y en color se ve variado. En grises es una mancha. ¿Qué falla?" options={["Hay demasiados colores", "Los colores tienen el mismo valor", "Le falta contorno"]} answer={1}>
+El tono es distinto, pero el valor es igual. El ojo lee el valor primero, así que no ve forma. Separa sombra, medio y luz en claridad.
+</Quiz>
+
+<Quiz q="¿Qué comprueba la prueba de grises?" options={["El tono", "La saturación", "El valor"]} answer={2}>
+Al quitar el color solo queda el valor: lo claro u oscuro de cada zona.
+</Quiz>
+</Block>

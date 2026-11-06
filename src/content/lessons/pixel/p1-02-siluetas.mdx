@@ -1,0 +1,155 @@
+---
+id: p1-02
+discipline: pixel
+level: 1
+order: 2
+title: "Siluetas de objetos"
+summary: "Un objeto se reconoce por su contorno. Aprende a darle a cada prop un rasgo que se lea en negro a tamaño real."
+duration: 40
+status: borrador
+prerequisites: [p1-01]
+fundamentals: [f02]
+objectives:
+  - "Comprobar si un sprite se reconoce rellenándolo de negro"
+  - "Identificar el rasgo característico de un objeto (cuello, guarda, tapa)"
+  - "Dibujar 3 siluetas de objeto que se lean a 1×"
+tools: [aseprite]
+piece:
+  name: "3 siluetas de objeto que se reconocen en negro"
+  canvas: "16x16"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [primera-silueta]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Vas a forjar **tres objetos en negro puro**: una poción, una espada y un cofre. Sin color, sin luces. Si alguien los reconoce a tamaño real, la pieza está terminada.
+
+<Sprite name="potion" scale={10} view="silhouette" caption="Poción en silueta: el corcho y el cuello la delatan" />
+<Sprite name="sword" scale={10} view="silhouette" caption="Espada en silueta: la guarda cruza la hoja" />
+</Block>
+
+<Block kind="concepto">
+En un juego, el jugador ve tus sprites pequeños, rápidos y a menudo sobre fondos cargados. Antes que el color o el sombreado, el ojo lee el **contorno**. Si el contorno no dice «poción», ningún brillo lo arreglará.
+
+La prueba es sencilla: rellena el sprite de negro y míralo a 1×.
+
+<Mistake title="Frasco frente a poción" wrongLabel="Sin cuello" rightLabel="Con cuello y corcho">
+  <Sprite slot="wrong" name="flask-bad" scale={10} view="silhouette" />
+  <Sprite slot="right" name="potion" scale={10} view="silhouette" />
+
+El frasco de la izquierda es una bola de 10×8: arriba solo se estrecha a 4 píxeles y ya está. En negro podría ser una pelota, una manzana o un slime. La poción tiene **corcho**, un **reborde** más ancho y un **cuello** estrecho antes de abrirse en el cuerpo. Ese «estrecho, ancho, estrecho, ancho» es lo que el ojo reconoce.
+</Mistake>
+
+<Why>
+Cada objeto tiene uno o dos **rasgos característicos**: el cuello del frasco, la guarda de la espada, la tapa del cofre. Son lo que distingue al objeto de una forma genérica. En pixel art, con tan pocos píxeles, ese rasgo hay que **exagerarlo**: si mide un píxel de más, se lee; si se queda dentro del contorno, desaparece.
+</Why>
+
+Piensa como en hard surface: primero el *blockout* que se entiende desde lejos, luego el detalle. Aquí la silueta es tu blockout.
+
+Analiza tú mismo el frasco: cambia a la vista de silueta y mira la vista a 1×.
+
+<Inspector sprite="flask-bad" title="¿Qué objeto es este frasco en negro?" />
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Prepara tres lienzos">
+1. <Keys k="Ctrl+N" />: 16×16, RGB, fondo transparente.
+2. Activa la rejilla en *View → Grid*.
+3. Repite para los otros dos objetos, o dibuja los tres en un lienzo más ancho (48×16) separados.
+
+<Tip>
+Trabaja en un solo color: negro. Así no te distraes con el sombreado.
+</Tip>
+</Step>
+
+<Step n={2} title="La poción: estrecho, ancho, estrecho, ancho">
+1. Lápiz con <Keys k="B" />, con *Pixel-perfect* activado.
+2. Arriba, un corcho de 2–4 píxeles de ancho.
+3. Debajo, una fila más ancha: el reborde.
+4. Un cuello estrecho de 1–2 filas.
+5. El cuerpo, que se abre hasta casi todo el ancho y se cierra abajo.
+6. Rellena el interior con el cubo (<Keys k="G" />).
+
+<Why>
+El cuello solo se lee si es **claramente** más estrecho que el cuerpo. La poción de referencia pasa de 4 píxeles en el cuello a 10 en el cuerpo.
+</Why>
+</Step>
+
+<Step n={3} title="La espada: la guarda que cruza">
+1. Una hoja vertical de 3–4 píxeles de ancho con punta.
+2. Una **guarda** horizontal que sobresalga por los dos lados de la hoja.
+3. Una empuñadura estrecha y un pomo al final.
+
+<Why>
+Sin guarda, una hoja con mango es un cuchillo, un palo o un lápiz. La guarda que cruza la hoja y forma una cruz es la firma de la espada.
+</Why>
+</Step>
+
+<Step n={4} title="El cofre: el reto difícil">
+1. Una caja más ancha que alta (unos 12×9).
+2. Redondea las esquinas de arriba para insinuar la tapa.
+3. Busca un rasgo que **salga** del contorno: una cerradura que cuelgue, asas a los lados o una tapa algo más ancha que la base.
+
+<Sprite name="chest" scale={10} view="silhouette" caption="El cofre de referencia en negro: casi un rectángulo" />
+
+<Warn title="Lo que la silueta no guarda">
+Las bandas y la cerradura del cofre de referencia están **dentro** del contorno, así que en negro desaparecen. Solo quedan las dos esquinas de arriba recortadas. Por eso el cofre es el más difícil de los tres: tienes que inventar un rasgo exterior.
+</Warn>
+</Step>
+
+<Step n={5} title="Compruébalo a 1×">
+1. Aleja el zoom con la rueda hasta ver el lienzo a tamaño real.
+2. Pregúntate: ¿sabría alguien qué es cada objeto sin explicárselo?
+3. Si dudas, corrige el rasgo característico con el lápiz y la goma (<Keys k="E" />).
+4. Guarda con <Keys k="Ctrl+S" /> y exporta con *File → Export → Export As*, en PNG y con *Resize* entero.
+</Step>
+</Block>
+
+<Block kind="version">
+Ya sabes el método: elige el rasgo, exagéralo, compruébalo en negro. Ahora a tu manera. Elige uno o más retos:
+
+- **Tres pociones distintas:** redonda, alta y cónica. Que se distingan entre sí solo por la silueta.
+- **Armas reconocibles:** hacha, martillo y arco. ¿Cuál es el rasgo de cada una?
+- **Un objeto de tu mundo:** una herramienta de tu modelado hard surface (llave inglesa, taladro) en 16×16.
+</Block>
+
+<Block kind="errores">
+<Mistake title="Juzgar la forma en color" wrongLabel="En color te engaña" rightLabel="En negro, la verdad">
+  <Sprite slot="wrong" name="flask-bad" scale={10} />
+  <Sprite slot="right" name="flask-bad" scale={10} view="silhouette" />
+
+El rojo y el brillo blanco hacen que el frasco «parezca» una poción porque ya sabes lo que es. En negro, sin pistas de color, es una bola. Comprueba siempre la silueta **antes** de pintar.
+</Mistake>
+
+<Mistake title="El rasgo escondido dentro del contorno" wrongLabel="Lo que se ve en negro" rightLabel="Lo que creías que se leía">
+  <Sprite slot="wrong" name="chest" scale={10} view="silhouette" />
+  <Sprite slot="right" name="chest" scale={10} />
+
+Las bandas y la cerradura son detalles interiores: ayudan en color, pero no cambian el contorno. Si el rasgo que define el objeto no toca el borde, la silueta no lo cuenta. Sácalo fuera: una cerradura que asome por debajo o una tapa que sobresalga.
+</Mistake>
+</Block>
+
+<Block kind="calidad">
+Exporta tus tres objetos **a 1×** (*Resize* 100 %) y súbelos. Mira la vista de silueta y la vista a tamaño real.
+
+<Inspector upload title="Comprueba tus siluetas" />
+
+<Checklist items={[
+  "He dibujado tres objetos: poción, espada y cofre (o mis variantes)",
+  "Cada uno se reconoce en negro a 1× sin explicarlo",
+  "Sé señalar el rasgo característico de cada objeto",
+  "El rasgo toca el contorno, no se queda dentro",
+  "He enseñado las siluetas a alguien y las ha acertado",
+]} />
+
+<Quiz q="Tu frasco parece una pelota en negro. ¿Qué lo arregla?" options={["Un brillo blanco más grande", "Un cuello estrecho y un corcho que cambien el contorno", "Un rojo más saturado"]} answer={1}>
+El brillo y el color no cambian la silueta. Solo un rasgo que altere el contorno, como el cuello y el corcho, hace que se lea como poción.
+</Quiz>
+
+<Quiz q="¿Por qué las bandas doradas del cofre no ayudan a reconocerlo en silueta?" options={["Porque están dentro del contorno", "Porque son demasiado oscuras", "Porque el cofre es muy pequeño"]} answer={0}>
+En negro todo el interior se funde. Solo cuenta lo que modifica el borde.
+</Quiz>
+</Block>

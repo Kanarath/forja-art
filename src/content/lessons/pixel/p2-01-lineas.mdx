@@ -1,0 +1,168 @@
+---
+id: p2-01
+discipline: pixel
+level: 2
+order: 1
+title: "Líneas pixel-perfect y jaggies"
+summary: "Traza líneas y curvas limpias con pendientes 1:1, 2:1 y 3:1, detecta los jaggies y elimina la «L» de más con la casilla Pixel-perfect."
+duration: 40
+status: borrador
+objectives:
+  - "Reconocer las pendientes limpias 1:1, 2:1 y 3:1"
+  - "Detectar jaggies y píxeles dobles en forma de L"
+  - "Trazar curvas con tramos que crecen y decrecen con orden"
+  - "Dibujar un escudo redondo de 16×16 con contorno limpio"
+prerequisites: [p1-02]
+tools: [aseprite]
+piece:
+  name: "Escudo redondo de 16×16 con contorno limpio"
+  canvas: "16x16"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [linea-limpia]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Vas a forjar un **escudo redondo de 16×16**. Lo importante no es el relleno: es el **contorno**. Tiene que leerse redondo, sin bultos ni escalones raros.
+
+<Sprite name="circle-clean" scale={12} caption="La meta: un círculo de tramos ordenados (4, 2, 1, 1…). Tu escudo será igual, pero a 16×16" />
+</Block>
+
+<Block kind="concepto">
+En pixel art una línea es una **escalera**. Cada peldaño es un **tramo**: píxeles seguidos en la misma fila o columna. Si todos los tramos miden lo mismo, el ojo ve una recta.
+
+<Sprite name="line-1-1" scale={10} caption="1:1 (45°): tramos de 1. La más limpia" />
+
+<Sprite name="line-2-1" scale={10} caption="2:1: tramos de 2" />
+
+<Sprite name="line-3-1" scale={10} caption="3:1: tramos de 3" />
+
+<Why>
+El ojo busca patrones. Tramos iguales forman un ritmo regular y se leen como una recta. Si mezclas 1, 3, 1, 2, 4… el ritmo se rompe y aparecen **jaggies**: escalones que llaman la atención.
+</Why>
+
+<Mistake title="Jaggies: tramos irregulares" wrongLabel="Tramos 1, 3, 1, 2, 4, 1, 2" rightLabel="Tramos iguales de 2">
+  <Sprite slot="wrong" name="line-jaggy" scale={8} />
+  <Sprite slot="right" name="line-2-1" scale={8} />
+
+Si una pendiente no cabe en 1:1, 2:1 o 3:1, elige la limpia más cercana. Como en hard surface: mejor un ángulo estándar que uno «casi».
+</Mistake>
+
+**Curvas.** Una curva es una línea cuya pendiente cambia poco a poco. Los tramos **crecen o decrecen con orden**: 4, 2, 1, 1… y luego al revés. Nunca saltan de 1 a 3 y vuelta a 1.
+
+<Mistake title="Círculo limpio frente a círculo abollado" wrongLabel="Tramos desordenados" rightLabel="4, 2, 1, 1 con orden">
+  <Sprite slot="wrong" name="circle-bumpy" scale={8} />
+  <Sprite slot="right" name="circle-clean" scale={8} />
+
+En el abollado, el lado izquierdo entra y sale (filas 6 y 7), el tramo de arriba es de 5 y el de abajo de 3: la parte de abajo no repite la de arriba. El ojo lo lee como un golpe en el metal.
+</Mistake>
+
+Busca tú mismo los fallos: amplía, activa la rejilla y compara.
+
+<Inspector sprite="circle-bumpy" title="Encuentra los bultos del círculo abollado" />
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Lienzo y lápiz pixel-perfect">
+1. <Keys k="Ctrl+N" />: 16×16, fondo transparente.
+2. Activa la rejilla en *View → Grid*.
+3. Lápiz con <Keys k="B" /> y activa **Pixel-perfect** en la barra de contexto.
+
+<Why>
+Al trazar a mano, el lápiz pinta cada píxel por el que pasa el ratón. En una diagonal, eso deja un píxel de más en cada esquina: una **«L»** que engorda la línea. *Pixel-perfect* borra esos píxeles al vuelo.
+</Why>
+
+<Mistake title="La «L» de más" wrongLabel="Sin Pixel-perfect" rightLabel="Con Pixel-perfect">
+  <Sprite slot="wrong" name="line-doubled" scale={8} />
+  <Sprite slot="right" name="line-perfect" scale={8} />
+
+Mismo trazo, misma mano. A la izquierda la línea parece de grosor 2 y escalonada; a la derecha, un píxel por paso.
+</Mistake>
+</Step>
+
+<Step n={2} title="Calienta con tres pendientes">
+En una esquina del lienzo traza una 1:1, una 2:1 y una 3:1. Cuenta los tramos: deben ser todos iguales. Cuando salgan bien, bórralas con <Keys k="M" /> y Supr, o con la goma (<Keys k="E" />).
+</Step>
+
+<Step n={3} title="Marca el cuarto superior izquierdo">
+Trabaja solo un cuarto del círculo, de arriba al lado izquierdo. Coloca estos tramos píxel a píxel:
+
+1. Arriba: un tramo horizontal de 3 en la fila 0 (columnas 5–7).
+2. Fila 1: tramo de 2 (columnas 3–4).
+3. Filas 2 y 3: un píxel cada una (columnas 2 y 1).
+4. Columna 1: baja un tramo vertical de 2 (filas 3–4).
+5. Columna 0: tramo vertical de 3 (filas 5–7).
+
+<Why>
+Lee la secuencia: 3, 2, 1, 1, 2, 3. Decrece y vuelve a crecer **con orden**. Esa simetría es lo que el ojo interpreta como «redondo».
+</Why>
+</Step>
+
+<Step n={4} title="Completa los otros tres cuartos">
+Copia el mismo patrón en espejo: a la derecha (columnas 8–15) y abajo (filas 8–15). El tramo de arriba pasa a ser de 6 (columnas 5–10) y el del lado, de 6 (filas 5–10).
+
+<Tip>
+Cuenta en voz alta cada tramo del cuarto nuevo y compáralo con el primero. Un píxel de diferencia ya se ve como un bulto.
+</Tip>
+</Step>
+
+<Step n={5} title="Rellena y añade un detalle">
+Rellena el interior con el cubo (<Keys k="G" />) en un color de metal o madera. Si quieres, añade un **umbo** (el botón central) o una cruz. Toda línea nueva, con pendientes limpias.
+
+<Warn>
+Si el cubo pinta fuera, el contorno tiene un hueco. Deshaz con <Keys k="Ctrl+Z" /> y ciérralo: en diagonal, dos píxeles que se tocan por la esquina sí cierran.
+</Warn>
+</Step>
+
+<Step n={6} title="Guarda y exporta">
+Guarda con <Keys k="Ctrl+S" /> y exporta con *File → Export → Export As*, PNG, **Resize** 800 %. Exporta también una copia al 100 % para revisarla abajo.
+</Step>
+</Block>
+
+<Block kind="version">
+Ahora a tu manera. Elige uno:
+
+- **Escudo ovalado de 12×16:** los tramos cambian distinto en vertical y en horizontal, pero siguen con orden.
+- **Escudo con borde doble:** un segundo contorno por dentro, también limpio.
+- **Escudo con emblema:** una diagonal 2:1 o 3:1 que lo cruce, sin jaggies.
+</Block>
+
+<Block kind="errores">
+<Mistake title="Trazar a mano sin Pixel-perfect" wrongLabel="Con la «L» de más" rightLabel="Un píxel por paso">
+  <Sprite slot="wrong" name="line-doubled" scale={8} />
+  <Sprite slot="right" name="line-perfect" scale={8} />
+
+Si se te olvidó la casilla, no repitas el trazo: busca las «L» y borra el píxel de la esquina. Comprueba que cada píxel solo toca al siguiente por un lado o por una esquina.
+</Mistake>
+
+<Mistake title="Bultos en la curva" wrongLabel="Tramos 1, 3, 1…" rightLabel="Tramos que crecen y decrecen">
+  <Sprite slot="wrong" name="circle-bumpy" scale={8} />
+  <Sprite slot="right" name="circle-clean" scale={8} />
+
+Escribe la secuencia de tramos de tu curva. Si un número rompe el orden, mueve ese píxel hacia dentro o hacia fuera hasta que la secuencia suba o baje sin saltos.
+</Mistake>
+</Block>
+
+<Block kind="calidad">
+Sube tu escudo **a 1×** y revísalo con la rejilla y la vista de silueta.
+
+<Inspector upload title="Revisa el contorno de tu escudo" />
+
+<Checklist items={[
+  "Mi lienzo es de 16×16 y el fondo es transparente",
+  "El contorno no tiene ninguna «L» de píxeles dobles",
+  "Los tramos de cada cuarto crecen y decrecen con orden",
+  "Los cuatro cuartos son simétricos",
+  "Exporté el PNG a ×8 y guardé el .aseprite",
+]} />
+
+<Quiz q="Una línea tiene tramos 2, 2, 3, 2, 2. ¿Qué haces?" options={["Nada, se nota poco", "Igualar el 3 a 2 para que sea una 2:1 limpia", "Activar el suavizado al exportar"]} answer={1}>
+Un tramo distinto rompe el ritmo y crea un jaggy. Iguálalo a la pendiente limpia más cercana.
+</Quiz>
+
+<Quiz q="¿Qué hace la casilla Pixel-perfect del lápiz?" options={["Quita el píxel de más que forma una «L» al trazar a mano", "Amplía el sprite sin desenfoque", "Convierte cualquier línea en 2:1"]} answer={0}>
+Elimina los píxeles de esquina que sobran al trazar, para que la línea tenga un píxel por paso.
+</Quiz>
+</Block>

@@ -1,0 +1,164 @@
+---
+id: f02-01
+discipline: fundamentos
+level: 2
+order: 1
+title: "Silueta y lenguaje de formas"
+summary: "Usa círculo, cuadrado y triángulo para que tus formas digan algo, y comprueba con la silueta en negro que se leen en 2D y en 3D."
+duration: 40
+status: borrador
+prerequisites: [f01-01]
+fundamentals: []
+objectives:
+  - "Asociar círculo, cuadrado y triángulo a lo que transmiten"
+  - "Usar la silueta en negro como prueba de lectura"
+  - "Girar un modelo voxel para comprobar su silueta desde varias cámaras"
+tools: [aseprite, magicavoxel]
+piece:
+  name: "Tres siluetas en 2D y una en 3D"
+  canvas: "16x16"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: []
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Hoy forjas **tres siluetas de 16×16**, una por forma básica (amable, estable y peligrosa), y compruebas **un modelo voxel** desde varias cámaras. La prueba es siempre la misma: rellénalo de negro. Si se entiende, funciona.
+
+<Sprite name="shape-circle" scale={8} view="silhouette" caption="Amable" />
+<Sprite name="shape-square" scale={8} view="silhouette" caption="Estable" />
+<Sprite name="shape-triangle" scale={8} view="silhouette" caption="Peligroso" />
+</Block>
+
+<Block kind="concepto">
+Antes de ver colores o detalles, el ojo lee la **forma general**. Cada forma básica trae un mensaje:
+
+- **Círculo**: sin esquinas. Amable, blando, seguro (un slime, una poción curativa).
+- **Cuadrado**: base ancha y lados rectos. Estable, sólido, fiable (un cofre, un escudo).
+- **Triángulo**: puntas. Dinámico, peligroso, agresivo (una espada, un pincho).
+
+<Sprite name="shape-circle" scale={10} caption="Círculo: bordes que giran con suavidad" />
+<Sprite name="shape-square" scale={10} caption="Cuadrado: lados rectos y esquinas firmes" />
+<Sprite name="shape-triangle" scale={10} caption="Triángulo: una punta arriba y base ancha" />
+
+<Why title="Por qué la silueta en negro">
+Al quitar color, luz y detalle solo queda el contorno. Si así ya se reconoce el objeto, el resto es un extra. Si no, ningún sombreado lo salvará. En un juego, el jugador a menudo ve el sprite pequeño, rápido o a contraluz: casi como silueta.
+</Why>
+
+<Mistake title="Frasco frente a poción, en silueta" wrongLabel="Sin cuello" rightLabel="Con cuello y corcho">
+  <Sprite slot="wrong" name="flask-bad" scale={10} view="silhouette" />
+  <Sprite slot="right" name="potion" scale={10} view="silhouette" />
+
+En color, los dos son rojos y brillan. En negro, el frasco sin cuello es una bola. La poción conserva el cuello estrecho y el corcho: el rasgo que dice «poción» está en el contorno, no en el color.
+</Mistake>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Tres lienzos en negro">
+1. <Keys k="Ctrl+N" />: lienzo de **16×16**, fondo transparente. Repite hasta tener tres.
+2. Activa *View → Grid* y amplía con la rueda.
+3. Elige un solo color: **negro**. Hoy no hay sombreado.
+
+<Why>
+Dibujar directamente en negro te obliga a pensar en la forma. No puedes «arreglarla» con luces.
+</Why>
+</Step>
+
+<Step n={2} title="Silueta amable (círculo)">
+1. Lápiz con <Keys k="B" /> y la casilla **Pixel-perfect** activada.
+2. Traza un objeto redondo: un slime, una bolsa, una seta gorda.
+3. Rellena el interior con el cubo de pintura (<Keys k="G" />).
+
+<Tip>
+En curvas, los tramos deben crecer o decrecer con orden (4, 2, 1, 1…), como en el círculo del ejemplo. Un tramo fuera de orden se ve como un bulto.
+</Tip>
+</Step>
+
+<Step n={3} title="Silueta estable (cuadrado)">
+En el segundo lienzo, dibuja algo con base ancha y lados rectos: un cofre, una caja, un yunque. Traza el contorno con el lápiz (<Keys k="B" />), con líneas rectas, y rellénalo con <Keys k="G" />. Si dudas de la forma, enmárcala antes con la selección rectangular (<Keys k="M" />) para medir.
+</Step>
+
+<Step n={4} title="Silueta peligrosa (triángulo)">
+En el tercero, algo con puntas: un pincho, una espada, un cristal afilado. Haz las diagonales con pendientes limpias (1:1, 2:1 o 3:1).
+
+<Warn>
+Una punta de un solo píxel a 1× casi no se ve. Si la punta es lo importante, dale al menos dos píxeles de grosor en la base.
+</Warn>
+</Step>
+
+<Step n={5} title="Prueba a 1× y exporta">
+1. Aleja el zoom hasta ver el lienzo pequeño. ¿Se distinguen las tres sin pensar?
+2. Guarda cada archivo con <Keys k="Ctrl+S" />.
+3. Exporta con *File → Export → Export As* en PNG, con **Resize** 800 %.
+</Step>
+
+<Step n={6} title="La silueta en 3D: gira la cámara">
+En voxel la silueta **no es una sola**: cambia con el ángulo. Abre este cofre y gíralo.
+
+<VoxViewer model="cofre" stage={3} title="Gira el cofre: de frente, de lado y desde arriba" />
+
+De frente y de lado se ve el bloque y la tapa curva. Desde arriba, solo un rectángulo: la curva desaparece. Descarga el .vox, ábrelo en MagicaVoxel y gíralo con el **botón derecho** del ratón.
+
+<Why>
+Un modelo voxel se verá desde la cámara del juego. Comprueba la silueta desde **esa** cámara, no solo desde la que modelaste.
+</Why>
+
+<Warn title="Verifica en tu versión">
+Los nombres de botones y paneles de MagicaVoxel pueden variar entre versiones.
+</Warn>
+</Step>
+</Block>
+
+<Block kind="version">
+Ahora, a tu manera. Elige un reto:
+
+- **Mezcla de formas**: un personaje con cuerpo redondo y sombrero triangular. ¿Es amable o peligroso?
+- **Mismo objeto, tres caracteres**: una seta amable (círculo), una seta tanque (cuadrado) y una seta venenosa (triángulo).
+- **3D desde la cámara del juego**: abre la seta en MagicaVoxel, elige un ángulo fijo, como el que tendría la cámara de un juego (por ejemplo, desde arriba en diagonal), y haz un render con el botón *Render*. Comprueba si su silueta sigue leyéndose.
+
+<VoxViewer model="seta" stage={1} title="La seta: compara su silueta de frente y desde arriba" />
+</Block>
+
+<Block kind="errores">
+<Mistake title="El rasgo clave está dentro, no en el borde" wrongLabel="Se lee como bola" rightLabel="Se lee como poción">
+  <Sprite slot="wrong" name="flask-bad" scale={8} view="silhouette" />
+  <Sprite slot="right" name="potion" scale={8} view="silhouette" />
+
+Si lo que identifica al objeto (cuello, corcho, asa) no toca el contorno, la silueta lo pierde. Corrígelo llevando ese rasgo al borde: estrecha el cuello y saca el corcho por arriba.
+</Mistake>
+
+<Mistake title="Formas que dicen lo contrario" wrongLabel="«Amable» con puntas" rightLabel="Amable de verdad">
+  <Sprite slot="wrong" name="shape-triangle" scale={8} view="silhouette" />
+  <Sprite slot="right" name="shape-circle" scale={8} view="silhouette" />
+
+Si quieres algo amable pero lo construyes con puntas, la silueta grita «peligro». Elige la forma dominante según el mensaje, y deja las demás como acento.
+</Mistake>
+
+<Warn title="También en 3D">
+Comprobar el modelo voxel desde una sola cámara es otro error típico: el cofre tiene una silueta clara de frente y es un rectángulo sin carácter desde arriba. Gíralo siempre antes de darlo por bueno.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+Sube una de tus siluetas **a 1×** y mírala en la vista de silueta del Inspector.
+
+<Inspector upload title="Comprueba tu silueta" />
+
+<Checklist items={[
+  "Tengo tres lienzos de 16×16, uno por forma: círculo, cuadrado y triángulo",
+  "Cada silueta se reconoce en negro a 1×",
+  "Los rasgos clave tocan el contorno",
+  "He girado un modelo voxel y comprobado su silueta desde al menos tres ángulos",
+  "He exportado los PNG a ×8",
+]} />
+
+<Quiz q="Diseñas un enemigo que debe parecer peligroso. ¿Qué forma domina su silueta?" options={["El círculo", "El cuadrado", "El triángulo"]} answer={2}>
+Las puntas del triángulo se leen como peligro y agresividad. El círculo transmite amabilidad y el cuadrado estabilidad.
+</Quiz>
+
+<Quiz q="Tu modelo voxel se lee bien de frente. ¿Ya está?" options={["Sí, la silueta es la de frente", "No, hay que girarlo: la silueta cambia con la cámara", "Solo si tiene color"]} answer={1}>
+En 3D cada ángulo da una silueta distinta. Compruébala, sobre todo, desde la cámara que usará el juego.
+</Quiz>
+</Block>

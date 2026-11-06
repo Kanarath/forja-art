@@ -1,0 +1,164 @@
+---
+id: v1-01
+discipline: voxel
+level: 1
+order: 1
+title: "Rejilla 3D, escala y resolución"
+summary: "El vóxel como unidad: elige el tamaño del modelo (8³, 16³, 32³) y construye dos props que convivan a la misma escala."
+duration: 40
+status: borrador
+prerequisites: [v0-01]
+fundamentals: [f01]
+objectives:
+  - "Entender el vóxel como la unidad mínima de decisión"
+  - "Elegir y fijar el tamaño del modelo en MagicaVoxel"
+  - "Construir un barril y una caja con la misma densidad de vóxel"
+tools: [magicavoxel]
+piece:
+  name: "Barril y caja a la misma escala"
+  canvas: "8x8x9"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: []
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Vas a forjar **dos props que viven en el mismo mundo**: una caja de 8×8×8 y un barril de 7×7×9. Por separado son sencillos. Lo difícil, y lo que aprendes hoy, es que **parezcan del mismo juego**.
+
+<VoxViewer model="caja" stage={2} title="Caja 8×8×8: la medida de referencia" />
+
+<VoxViewer model="barril" stage={2} title="Barril 7×7×9: misma densidad, otra forma" />
+
+Fíjate en la rejilla del visor: un vóxel de la caja mide **exactamente** lo mismo que uno del barril.
+</Block>
+
+<Block kind="concepto">
+En Blender trabajas con vértices libres y una escala en metros. Aquí no. Aquí la unidad es el **vóxel**: un cubo que está o no está. No hay medio vóxel ni bisel.
+
+El **tamaño del modelo** es tu lienzo 3D. Las tres medidas típicas:
+
+- **8³**: cada vóxel es una decisión. Solo cabe la silueta y uno o dos tonos.
+- **16³**: cabe volumen. Puedes poner luz arriba y sombra dentro.
+- **32³**: cabe detalle real, pero tardas ocho veces más que en 16³ (y 64 veces más que en 8³).
+
+Compara el mismo árbol en 8³ y en 16³. Usa el deslizador **Capas** para cortarlo y ver el interior.
+
+<VoxViewer model="arbol" title="El mismo árbol a 8³ y a 16³" />
+
+<Why>
+A baja resolución, **un vóxel de más cambia la forma entera**. En 8³ el tronco mide 1 vóxel de ancho: si le pones 2, el árbol pasa a ser «gordo». Por eso al principio conviene trabajar pequeño: te obliga a pensar en la **silueta y el valor** (f01) antes que en el detalle.
+</Why>
+
+<Why title="Escala coherente">
+Lo que une una escena no es el tamaño de los objetos, es el **tamaño del vóxel**. Una caja de 8 de alto y un barril de 9 conviven bien. Pero si modelas un arbusto a 16³ y luego lo **encoges** para que ocupe lo mismo que la caja, sus vóxeles saldrán a la mitad de tamaño: parecerá de otro juego. La regla: **decide cuánto mide un vóxel en tu mundo y no lo cambies**.
+</Why>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Fija el tamaño del modelo">
+1. Crea un proyecto nuevo con el botón **New** del panel de archivos.
+2. Arriba del editor verás **tres campos numéricos** con el tamaño del modelo (X, Y, Z). En versiones recientes salen a 40 40 40.
+3. Escribe **8 8 8** y confirma con Intro.
+
+<Why>
+El tamaño del modelo es tu marco. Si lo dejas en 40³, te sobran 39 vóxeles por lado para equivocarte. A 8³, el propio límite te enseña la escala.
+</Why>
+</Step>
+
+<Step n={2} title="Bloquea la caja">
+1. Elige el modo **Attach** y el pincel **Box**.
+2. Escoge un marrón medio en la **paleta de la izquierda**.
+3. Arrastra sobre el suelo para cubrir las 8×8 casillas y sube hasta llenar el modelo.
+4. Gira la cámara con el **botón derecho** y comprueba que no queda ningún hueco.
+
+<Tip>
+Si en Blender pensabas en «extruir una cara», aquí el equivalente es el pincel **Face** en modo Attach: añade una capa entera de vóxeles sobre la cara que pulsas.
+</Tip>
+</Step>
+
+<Step n={3} title="Marco y refuerzo">
+1. Cambia al modo **Paint** y elige un marrón oscuro.
+2. Con el pincel **Voxel**, pinta las 12 aristas de la caja.
+3. Con un marrón claro, pinta una diagonal en cada cara visible.
+
+<Why>
+No añades vóxeles: solo cambias su color. La forma ya estaba bien; ahora el **valor** (oscuro en las aristas, claro en la diagonal) separa las caras y hace que se lea «caja».
+</Why>
+</Step>
+
+<Step n={4} title="Un segundo modelo para el barril">
+1. Añade un modelo nuevo a la escena y ponle de tamaño **7 7 9**.
+2. Colócalo al lado de la caja, apoyado en el mismo suelo.
+
+<Warn>
+No escales el modelo después para que «quede bien»: escalarlo cambia el tamaño del vóxel. Si el barril queda grande, **quita vóxeles**, no lo encojas.
+</Warn>
+</Step>
+
+<Step n={5} title="Bloquea el barril">
+1. Modo **Attach**, pincel **Voxel**. Dibuja en la capa del suelo un **círculo de 7 de diámetro**: filas de 3, 5, 7, 7, 7, 5, 3.
+2. Repite ese círculo en las 9 capas de altura. El pincel **Box** te ahorra trabajo en el centro.
+3. Abre el visor de arriba, pasa el barril a la etapa **Blockout** y usa **Capas** para comprobar tu círculo.
+</Step>
+
+<Step n={6} title="Aros, duelas y guardado">
+1. Modo **Paint**: pinta de gris metálico la **segunda capa** y la **octava** (los aros).
+2. Alterna dos marrones en vertical para marcar las duelas.
+3. Pinta la tapa de un marrón más claro: recibe la luz.
+4. Guarda el proyecto como `.vox` y haz un **Render** de los dos props juntos.
+
+<Warn title="Verifica en tu versión">
+Los nombres y la posición de los botones (**New**, los campos de tamaño, cómo añadir un modelo nuevo a la escena) cambian entre versiones de MagicaVoxel. Si no encuentras algo, busca el panel con ese nombre o pasa el ratón por encima de los iconos para ver su descripción.
+</Warn>
+</Step>
+</Block>
+
+<Block kind="version">
+Ahora a tu manera. Elige **uno** de estos retos y constrúyelo **a la misma escala** que tu caja:
+
+- **Saco de grano** de 6×6×7: blando, sin aristas rectas.
+- **Tonel tumbado**: tu barril girado, de 9×7×7.
+- **El mismo barril a 16³** (14×14×18): compáralo con el de 8³ en un render. ¿Ganas algo que se vea desde lejos?
+
+Coloca la pieza nueva junto a la caja y el barril. Si algo «no pega», cuenta vóxeles antes de tocar nada.
+</Block>
+
+<Block kind="errores">
+<Mistake title="Mezclar densidades de vóxel" wrongLabel="Tronco de 2×2 (hecho a 16³)" rightLabel="Tronco de 1 (a 8³, como la caja)">
+  <VoxViewer slot="wrong" model="arbol" stage={1} title="Árbol a 16³" />
+  <VoxViewer slot="right" model="arbol" stage={0} title="Árbol a 8³" />
+
+Los dos árboles son correctos por separado. El error es **juntarlos con props de otra densidad**: si escalas el de 16³ para que mida lo mismo que la caja, sus vóxeles salen a la mitad y la escena se rompe. Arreglo: modela cada prop con el mismo vóxel. Si un prop necesita más detalle, hazlo **más grande**, no más denso.
+</Mistake>
+
+<Mistake title="Detallar antes de cerrar la forma" wrongLabel="Primer paso: aros y duelas" rightLabel="Primer paso: el cilindro">
+  <VoxViewer slot="wrong" model="barril" stage={2} title="Empezar por el detalle" />
+  <VoxViewer slot="right" model="barril" stage={0} title="Empezar por el blockout" />
+
+El barril terminado está bien; lo que falla es **el orden**. Si pintas aros y duelas y luego descubres que el barril es demasiado alto, toca repintarlo todo. Arreglo: primero el volumen en un solo color, compáralo con la caja y, cuando la proporción funcione, pasa a **Paint**.
+</Mistake>
+
+<Warn title="Otro error frecuente: dejar el modelo en 40³">
+Si no cambias el tamaño del modelo, tienes espacio de sobra y acabas con una caja de 13×11×9 sin saber por qué. Fija el tamaño **antes** de colocar el primer vóxel.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+<Checklist items={[
+  "La caja mide exactamente 8×8×8 y no tiene huecos",
+  "El barril mide 7×7×9 y su base es un círculo limpio",
+  "Ninguno de los dos modelos está escalado: el vóxel mide lo mismo en ambos",
+  "Las aristas de la caja y los aros del barril se distinguen por valor, no solo por tono",
+  "He guardado el .vox y un render con los dos props juntos",
+]} />
+
+<Quiz q="Tu caja mide 8×8×8 y quieres un cofre con más detalle en la misma escena. ¿Qué haces?" options={["Lo modelo a 32³ y lo encojo hasta que mida como la caja", "Lo modelo con el mismo vóxel, algo más grande, por ejemplo 10×6×7", "Lo modelo a 8³ y lo escalo ×1,5 al exportar"]} answer={1}>
+Lo que mantiene la coherencia es el tamaño del vóxel. Encoger un modelo denso o escalarlo con factores raros cambia ese tamaño. Si necesitas más detalle, gana espacio, no densidad.
+</Quiz>
+
+<Quiz q="¿Por qué conviene empezar en 8³?" options={["Porque los archivos .vox pesan menos", "Porque cada vóxel es una decisión y te obliga a resolver silueta y valor", "Porque MagicaVoxel no admite modelos más grandes"]} answer={1}>
+A baja resolución no puedes esconder una mala forma con detalle. MagicaVoxel admite modelos mucho mayores, pero tú aún no los necesitas.
+</Quiz>
+</Block>

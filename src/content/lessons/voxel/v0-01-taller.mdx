@@ -1,0 +1,176 @@
+---
+id: v0-01
+discipline: voxel
+level: 0
+order: 1
+title: "El taller de MagicaVoxel y tu primer render"
+summary: "Instala MagicaVoxel, aprende a moverte por su interfaz y renderiza una caja de madera de 8×8×8."
+duration: 40
+status: borrador
+objectives:
+  - "Tener MagicaVoxel funcionando en tu equipo"
+  - "Orbitar, hacer zoom y desplazar la cámara con el ratón"
+  - "Distinguir los modos Attach, Erase y Paint y los pinceles Voxel, Face y Box"
+  - "Guardar un .vox y exportar un PNG desde el modo Render"
+tools: [magicavoxel]
+prerequisites: []
+piece:
+  name: "Tu primera caja de madera renderizada"
+  canvas: "8x8x8"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [primer-render]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Hoy montas el **taller voxel**. Al terminar tendrás MagicaVoxel listo, un archivo `.vox` con una caja de madera de 8×8×8 y un **PNG renderizado** con luz y sombras para tu portfolio.
+
+<VoxViewer model="caja" stage={2} title="Tu pieza: una caja de 8×8×8 con marco y refuerzo" />
+
+Gira el visor: es el mismo `.vox` que vas a construir. Puedes descargarlo y abrirlo en MagicaVoxel para compararlo con el tuyo.
+</Block>
+
+<Block kind="concepto">
+Un **vóxel** es un píxel con profundidad: un cubito en una rejilla 3D. Igual que en pixel art, **cada vóxel es una decisión**. No hay subdivisión ni bisel como en Blender: la forma sale de colocar cubos enteros.
+
+MagicaVoxel trabaja en dos mundos:
+
+- **Model** (modelado): colocas, borras y pintas vóxeles. La vista es simple y rápida.
+- **Render**: el mismo modelo con luz, sombras y materiales. Aquí sale la imagen final.
+
+<VoxViewer model="caja" stage={0} title="Etapa 0: el cubo. Solo volumen y proporción" />
+
+<Why>
+Empezamos por un cubo de 8×8×8 porque es la **escala base** de muchos props. Primero el volumen; luego el color define los detalles. Es el mismo orden que el blockout en Blender: forma grande primero, detalle después.
+</Why>
+
+<Why title="Por qué el color hace el trabajo">
+En una caja de 8 vóxeles no cabe un marco en relieve. Basta con pintar las aristas **más oscuras**: el contraste de valor separa las caras y el ojo lee «marco». Es el principio de valor (f01) aplicado al 3D.
+</Why>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Consigue MagicaVoxel">
+1. Ve a la web oficial de su autor, **ephtracy**, y descarga la versión para Windows. Es **gratis**.
+2. Descomprime el `.zip` en una carpeta tuya, por ejemplo `Documentos\MagicaVoxel`.
+3. Ejecuta `MagicaVoxel.exe`. **No hay instalador**.
+
+<Warn>
+Descárgalo solo de la web oficial de ephtracy. No uses webs de descargas de terceros.
+</Warn>
+</Step>
+
+<Step n={2} title="Reconoce la interfaz">
+- **A la izquierda**: la **paleta** de colores. Haz clic en un color para pintar con él.
+- **Junto a la paleta**: las **herramientas**, es decir, los modos y los pinceles.
+- **En el centro**: la **vista 3D** con el modelo de ejemplo.
+- **A la derecha**: los **paneles** de proyecto, archivos y exportación (*Export*).
+- **Arriba**: los botones para pasar de modelado a **Render**.
+
+<Tip>
+Al abrir verás un modelo de ejemplo. No pasa nada si lo estropeas: puedes crear uno nuevo desde el panel de archivos.
+</Tip>
+</Step>
+
+<Step n={3} title="Mueve la cámara">
+- **Botón derecho** del ratón y arrastra: **girar** alrededor del modelo.
+- **Rueda**: **zoom**.
+- **Botón central** y arrastra: **desplazar** la vista.
+
+<Why>
+En voxel nunca trabajes desde un solo ángulo. Gira la cámara a menudo: un vóxel que parece bien colocado de frente puede estar flotando visto de lado.
+</Why>
+</Step>
+
+<Step n={4} title="Modos y pinceles">
+Cada acción combina un **modo** (qué haces) y un **pincel** (cómo lo aplicas).
+
+- **Modos**: *Attach* añade vóxeles, *Erase* los borra y *Paint* cambia el color de los que ya existen.
+- **Pinceles**: *Voxel* actúa sobre un solo vóxel, *Face* sobre toda una cara conectada y *Box* sobre una caja que arrastras.
+
+Practica: crea un modelo nuevo, ajusta su tamaño a **8×8×8** y rellénalo con un marrón de madera.
+
+<Tip>
+El pincel *Box* en modo *Attach* te da el cubo de un solo arrastre. Luego cambia a *Paint* para colorear sin alterar la forma.
+</Tip>
+</Step>
+
+<Step n={5} title="Marco y refuerzo con Paint">
+1. Elige un marrón **más oscuro** en la paleta.
+2. En modo *Paint* con el pincel *Voxel*, pinta las **aristas** del cubo: es el marco.
+3. Con un marrón **más claro**, pinta una **diagonal** en cada cara: es el refuerzo.
+
+<VoxViewer model="caja" stage={1} title="Etapa 1: el marco oscuro separa las caras" />
+
+<Why>
+No añades ni un vóxel: solo cambias el color. *Paint* conserva la forma y te deja probar sin miedo.
+</Why>
+</Step>
+
+<Step n={6} title="Guarda el .vox">
+Guarda el modelo desde el panel de archivos con el nombre `caja-madera.vox`, en una carpeta de tu portfolio.
+
+<Warn>
+Guarda antes de pasar a Render. El `.vox` es tu archivo de trabajo; el PNG es solo una foto.
+</Warn>
+</Step>
+
+<Step n={7} title="Render y PNG">
+1. Pulsa el botón **Render**, arriba.
+2. Espera a que la imagen deje de tener ruido: se va limpiando sola.
+3. Gira la cámara hasta un ángulo de tres cuartos, con la luz marcando dos caras distintas.
+4. Guarda la imagen con el botón de captura o desde el panel *Export* (png).
+
+<Warn title="Verifica en tu versión">
+Los nombres y la posición de botones y paneles cambian entre versiones de MagicaVoxel. Si no encuentras *Attach*, *Box* o el botón de guardar la imagen, busca su icono pasando el ratón por encima: suele aparecer una pista con el nombre.
+</Warn>
+</Step>
+</Block>
+
+<Block kind="version">
+Haz **tu** caja. Elige uno de estos retos y renderízalo igual:
+
+1. **Caja metálica**: grises en vez de marrones, con el marco más claro que las caras.
+2. **Caja con tapa**: añade con *Attach* una capa de vóxeles encima, algo más ancha.
+3. **Caja vieja**: borra con *Erase* dos o tres vóxeles de las esquinas para que parezca gastada.
+
+Guarda cada versión como un `.vox` distinto: no sobrescribas la caja base.
+</Block>
+
+<Block kind="errores">
+<Mistake title="Un cubo plano no se lee como caja" wrongLabel="Solo el cubo" rightLabel="Con marco y refuerzo">
+  <VoxViewer slot="wrong" model="caja" stage={0} />
+  <VoxViewer slot="right" model="caja" stage={2} />
+
+Un solo color hace que las caras se fundan, sobre todo en el render, donde la luz suaviza las diferencias. Pinta las aristas más oscuras y añade una diagonal clara: el contraste de **valor** dice «caja de madera» a cualquier distancia.
+</Mistake>
+
+<Mistake title="Modelar con Attach cuando querías pintar" wrongLabel="Detalle añadido como volumen" rightLabel="Detalle pintado con Paint">
+  <VoxViewer slot="wrong" model="caja" stage={0} />
+  <VoxViewer slot="right" model="caja" stage={1} />
+
+Si pintas el marco en modo *Attach*, cada clic **añade** un vóxel por fuera y la caja deja de medir 8×8×8. Para cambiar el color de lo que ya existe, usa siempre *Paint*. Usa el corte por capas del visor para comprobar que el volumen no ha cambiado.
+</Mistake>
+
+Otro error frecuente: **renderizar sin guardar**. Si cierras el programa, pierdes el modelo y solo te queda el PNG. Guarda el `.vox` primero.
+</Block>
+
+<Block kind="calidad">
+<Checklist items={[
+  "MagicaVoxel abre sin errores desde mi carpeta",
+  "Sé girar, hacer zoom y desplazar la cámara con el ratón",
+  "Mi caja mide 8×8×8 vóxeles",
+  "El marco es más oscuro que las caras y se distinguen en el render",
+  "He guardado caja-madera.vox y un PNG renderizado",
+]} />
+
+<Quiz q="Quieres oscurecer las aristas de la caja sin cambiar su forma. ¿Qué modo usas?" options={["Attach", "Erase", "Paint"]} answer={2}>
+*Paint* cambia el color de los vóxeles existentes. *Attach* añadiría vóxeles y *Erase* los borraría.
+</Quiz>
+
+<Quiz q="¿Qué pincel rellena de una vez un volumen rectangular que arrastras?" options={["Voxel", "Face", "Box"]} answer={2}>
+*Box* actúa sobre la caja que dibujas al arrastrar. *Voxel* va de uno en uno y *Face* afecta a una cara conectada.
+</Quiz>
+</Block>

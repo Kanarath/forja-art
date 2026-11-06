@@ -1,0 +1,180 @@
+---
+id: v1-02
+discipline: voxel
+level: 1
+order: 2
+title: "Primitivas, simetría y operaciones"
+summary: "Construye con formas base, usa el espejo para la simetría, pinta en vez de reconstruir y modela por etapas: blockout, forma y detalle."
+duration: 40
+status: borrador
+prerequisites: [v1-01]
+fundamentals: [f02]
+objectives:
+  - "Construir volúmenes a partir de cubo, esfera, cilindro y pirámide"
+  - "Modelar solo media pieza y dejar que el espejo (Mirror) haga la otra"
+  - "Cambiar colores con el modo Paint sin tocar la forma"
+  - "Trabajar por etapas: blockout, forma y detalle"
+tools: [magicavoxel]
+piece:
+  name: "Seta simétrica"
+  canvas: "9x9x8"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [prop-coherente]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Hoy forjas una **seta simétrica**: un pie claro y un sombrero rojo con motas. Modelarás **solo la mitad**. El espejo construirá la otra.
+
+<VoxViewer model="seta" stage={1} title="Tu pieza: la seta completa, reflejada en X" />
+
+Pulsa la etapa 1 del visor: verás la mitad que modelas tú. La etapa 2 es lo que hace el espejo.
+</Block>
+
+<Block kind="concepto">
+En Blender no modelas vértice a vértice desde la nada: partes de un cubo o un cilindro. En voxel es igual. Casi todo prop sale de **cuatro formas base**.
+
+<VoxViewer model="primitivas" title="Las cuatro primitivas: cubo, esfera, cilindro y pirámide" />
+
+- **Cubo:** cajas, casas, cofres. Estable.
+- **Esfera:** copas, cabezas, sombreros. Blanda.
+- **Cilindro:** barriles, troncos, pies de seta.
+- **Pirámide:** tejados, puntas, escalonados. Dinámica.
+
+<Why>
+Es el mismo principio de **silueta y formas** (F02): una forma simple que se lee bien a distancia vale más que mil detalles. Si el blockout no se entiende con un solo color, el detalle no lo salvará.
+</Why>
+
+Tres **operaciones** sobre esas formas:
+
+1. **Espejo (Mirror):** lo que añades a un lado aparece en el otro. Simetría perfecta y la mitad de trabajo.
+2. **Pintar, no reconstruir:** el modo *Paint* cambia el color de vóxeles que ya existen. La forma no se toca.
+3. **Etapas:** primero el **blockout** (forma y proporción), luego la **forma** (curvas, escalones) y al final el **detalle** (color, motas, aros).
+
+<VoxViewer model="barril" title="Un barril por etapas: blockout, aros pintados y duelas" />
+
+<Why>
+Mira el barril: las etapas 2 y 3 **no añaden ni un vóxel**. Solo pintan sobre el cilindro. Separar forma y color te deja corregir uno sin romper el otro.
+</Why>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Prepara un modelo de 9×9×8">
+1. Crea un modelo nuevo en MagicaVoxel.
+2. En los tres campos de **tamaño** del modelo, escribe 9, 9 y 8 (la Z es la altura).
+3. Elige en la **paleta** de la izquierda un tono crema para el pie.
+
+<Why>
+Un ancho **impar** (9) deja una columna central. El espejo refleja respecto al centro, así que la seta tendrá un eje limpio.
+</Why>
+</Step>
+
+<Step n={2} title="Activa el espejo">
+1. Busca los botones **Mirror** X / Y / Z (en la barra de pinceles).
+2. Activa solo **Mirror X**.
+3. Prueba en modo **Attach** con el pincel **Voxel**: pon un vóxel a un lado del centro. Debe aparecer su gemelo al otro lado.
+
+<Tip>
+Gira la cámara con el botón derecho para comprobarlo desde arriba. Si el gemelo no aparece, el espejo está en otro eje.
+</Tip>
+</Step>
+
+<Step n={3} title="Blockout: el pie (cilindro)">
+1. En **Attach**, con el pincel **Voxel**, dibuja en la capa del suelo un círculo pequeño: unos 3 vóxeles de diámetro.
+2. Apila la misma sección 4 capas hacia arriba. Ya tienes un cilindro.
+
+<Why>
+Un cilindro en voxel es un **círculo repetido** en altura. El mismo truco sirve para troncos, barriles y torres.
+</Why>
+</Step>
+
+<Step n={4} title="Forma: el sombrero (media esfera)">
+1. Cambia a un rojo en la paleta.
+2. Encima del pie, dibuja un círculo ancho (casi todo el modelo).
+3. Cada capa superior, haz el círculo **un poco más estrecho**. Cuatro capas bastan.
+
+Compara con la etapa 1 del visor de la pieza: esa es tu mitad.
+
+<Warn>
+No amplíes el sombrero en una sola capa de golpe: el escalón se leerá como un plato, no como una cúpula.
+</Warn>
+</Step>
+
+<Step n={5} title="Detalle: motas con Paint">
+1. Cambia al modo **Paint** y elige el crema del pie.
+2. Con el pincel **Voxel**, pinta motas sueltas sobre el sombrero.
+3. Deja el espejo activo: cada mota tendrá su gemela.
+
+<Why>
+Paint solo cambia colores. Si una mota no te gusta, la repintas de rojo. Nunca borras ni reconstruyes la forma.
+</Why>
+</Step>
+
+<Step n={6} title="Revisa y renderiza">
+1. Gira la seta y mírala de frente, de lado y desde arriba.
+2. Guarda el `.vox`.
+3. Pulsa **Render** arriba y exporta una imagen para tu portfolio.
+
+<Tip>
+Si en algún momento quieres algo asimétrico (una mota que no se repita), desactiva **Mirror X** antes de pintarla.
+</Tip>
+</Step>
+
+<Warn title="Verifica en tu versión">
+Los nombres y la posición de los botones (**Mirror**, **Attach**/**Erase**/**Paint**, los pinceles y los campos de tamaño) pueden variar entre versiones de MagicaVoxel. Algunas versiones traen además generadores de formas (esferas, cilindros); si los tienes, úsalos para el blockout, pero aprende primero a hacerlo capa a capa.
+</Warn>
+</Block>
+
+<Block kind="version">
+Forja **otra seta tuya** con las mismas operaciones. Elige un reto:
+
+- **Seta alta:** pie de 6 capas y sombrero cónico (más pirámide que esfera).
+- **Seta gorda:** pie corto y ancho, sombrero muy aplastado. Cambia también los colores.
+- **Grupo de dos:** una seta grande y otra pequeña al lado. Activa el espejo solo para modelar cada una por separado.
+
+Antes de pintar, enséñale a alguien el blockout en un solo color. Si dice «una seta», sigue. Si no, corrige la forma.
+</Block>
+
+<Block kind="errores">
+<Mistake title="Olvidar el espejo" wrongLabel="Media seta" rightLabel="Mirror X activado">
+  <VoxViewer slot="wrong" model="seta" stage={0} title="Solo la mitad" />
+  <VoxViewer slot="right" model="seta" stage={1} title="Reflejada" />
+
+Si modelas sin **Mirror X**, te queda media seta o una seta torcida, porque a mano nunca repites igual los dos lados. Activa el espejo **antes** del primer vóxel. Si ya lo olvidaste, borra la mitad mal hecha con **Erase**, activa el espejo y repasa la buena: el programa rellena la otra.
+</Mistake>
+
+<Mistake title="Cambiar el color reconstruyendo" wrongLabel="Borrar y volver a poner" rightLabel="Paint sobre el volumen">
+  <VoxViewer slot="wrong" model="barril" stage={0} title="Cilindro sin aros" />
+  <VoxViewer slot="right" model="barril" stage={1} title="Aros pintados" />
+
+Para poner los aros no hace falta borrar dos anillos de madera y volver a construirlos en metal: así se cuelan huecos y bultos. Con el modo **Paint** cambias el color del vóxel que ya existe y la forma queda intacta.
+</Mistake>
+
+<Mistake title="Detallar antes de cerrar la forma" wrongLabel="Motas sobre una forma dudosa" rightLabel="Blockout primero">
+  <VoxViewer slot="wrong" model="barril" stage={2} title="Detalle final" />
+  <VoxViewer slot="right" model="barril" stage={0} title="Blockout" />
+
+El barril terminado está bien, pero solo porque su blockout ya funcionaba. Si pintas duelas y motas sobre una forma que no se lee, tendrás que repintarlo todo al corregirla. Cierra la silueta en un solo color y **luego** detalla.
+</Mistake>
+</Block>
+
+<Block kind="calidad">
+<Checklist items={[
+  "Mi modelo mide 9×9×8 y la seta queda centrada",
+  "Los dos lados son idénticos: he usado Mirror X",
+  "El sombrero se estrecha capa a capa y se lee como cúpula",
+  "Las motas están pintadas con Paint, sin huecos en la forma",
+  "En un solo color, la silueta ya se lee como una seta",
+  "He guardado el .vox y un render en mi portfolio",
+]} />
+
+<Quiz q="Quieres cambiar el color de los aros de un barril ya modelado. ¿Qué haces?" options={["Borro los aros con Erase y los vuelvo a construir", "Uso el modo Paint sobre los vóxeles de los aros", "Empiezo el barril de nuevo"]} answer={1}>
+Paint cambia el color sin tocar la forma. Borrar y reconstruir es más lento y suele dejar huecos.
+</Quiz>
+
+<Quiz q="¿Por qué conviene un ancho impar (9) para una pieza simétrica?" options={["Porque MagicaVoxel no admite anchos pares", "Porque deja una columna central como eje del espejo", "Porque ocupa menos memoria"]} answer={1}>
+Con un ancho impar hay un vóxel central: el eje de simetría pasa por él y la pieza queda limpia a ambos lados.
+</Quiz>
+</Block>

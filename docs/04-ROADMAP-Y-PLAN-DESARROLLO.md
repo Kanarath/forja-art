@@ -22,6 +22,24 @@
 | 1.9 Logros y encargos | ✅ | `75d4d5e` |
 | 1.10 Validación en CI | ✅ | este commit |
 
+**Fase 2+3 · MVP de contenido: escrita (tareas 2.1–2.8); falta la 2.9, que es tuya.**
+
+| Tarea | Estado |
+|---|---|
+| 2.1 Inspector de sprites + P0-01 | ✅ Lab hecho; P0-01 pulida con el inspector |
+| 2.2 Visor voxel + V0-01 | ✅ Formato .vox propio, 6 modelos y 18 .vox por etapas |
+| 2.3 F01 + Paletas y rampas | ✅ |
+| 2.4 P1-01 y V1-01 | ✅ |
+| 2.5 F02 | ✅ |
+| 2.6 P1-02 y V1-02 | ✅ |
+| 2.7 P2-01 + mini-animador | ✅ |
+| 2.8 Revisión de calidad | ✅ Las 9 compilan y pasan la validación; atajos de MagicaVoxel sin inventar, con aviso «Verifica en tu versión» |
+| 2.9 Prueba del alumno | ⏳ Tú: probar cada lección en Aseprite o MagicaVoxel, verificar menús y atajos, y pasar `status` a `revisada` |
+
+**Pendiente de revisión:**
+- **Revisión visual con el panel del navegador visible:** con el panel oculto, las páginas no se dibujan.
+- **Número de visores 3D en las lecciones de voxel:** V1-02 tiene 9. Si resulta pesado en tu equipo, conviene reducirlo.
+
 **Lecciones aprendidas durante la fase 1:**
 - **`BASE_URL` sin barra final.** Astro 7 da `BASE_URL` sin barra final, así que hay que usar siempre `src/lib/url.ts`. El validador detecta enlaces sin la base.
 - **Colecciones nuevas en local.** El servidor de desarrollo no ve colecciones de contenido nuevas: hay que reiniciarlo (`npx astro dev --force`).

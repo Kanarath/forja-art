@@ -25,7 +25,7 @@ const toGray = (hex: string) => {
   return `#${h}${h}${h}`;
 };
 const palette = Object.fromEntries(
-  Object.entries(s.palette).map(([k, c]) => [k, view === "silhouette" ? "#e8e6f0" : view === "gray" ? toGray(c) : c]),
+  Object.entries(s.palette).map(([k, c]) => [k, view === "silhouette" ? "#0b0a10" : view === "gray" ? toGray(c) : c]),
 );
 const labels = { normal: "", silhouette: " (silueta)", gray: " (escala de grises)", smooth: " (ampliado con suavizado: simulación)" };
 ---

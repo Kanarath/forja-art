@@ -4,28 +4,171 @@ discipline: pixel
 level: 1
 order: 1
 title: "Resolución y legibilidad"
-summary: "Por qué 16×16 y 32×32 no son lo mismo: cada píxel cuenta y la legibilidad manda."
+summary: "A baja resolución no cabe todo: aprende a elegir qué dibujar y a comprobar siempre que tu sprite se lee a 1×."
 duration: 40
 status: borrador
 prerequisites: [p0-01]
 fundamentals: [f01, f02]
 objectives:
-  - "Elegir la resolución adecuada para un objeto"
-  - "Comprobar la legibilidad a tamaño real (1×)"
-tools: [aseprite]
+  - "Elegir un tamaño de lienzo adecuado para cada tipo de objeto"
+  - "Decidir qué rasgos son esenciales y cuáles sobran"
+  - "Comprobar la legibilidad a tamaño real (1×) y en silueta"
+tools: [aseprite, pixelorama]
 piece:
-  name: "Espada legible a 16×16"
+  name: "Seta legible a 16×16"
   canvas: "16x16"
 xp: { concept: 10, guided: 20, piece: 60 }
-achievements: [primera-silueta]
+achievements: []
+review:
+  examplesChecked: false
+  testedByLearner: false
 ---
 
-> **Esqueleto de prueba (tarea 1.4).** El contenido real de esta lección se escribe en la fase 2.
+<Block kind="pieza">
+Vas a forjar una **seta de 16×16** que se reconozca sin zoom, a tamaño real. No se trata de meter mucho detalle, sino de meter el **justo**.
 
-## La pieza
+<Sprite name="mushroom16" scale={10} caption="Tu pieza: una seta de 16×16 con sombrero, motas, sombra y pie" />
+</Block>
 
-Una espada que se reconoce a 1×, sin zoom.
+<Block kind="concepto">
+En Blender añades polígonos cuando falta detalle. Aquí no: el lienzo es diminuto y **cada píxel es una decisión**. A baja resolución no dibujas el objeto; dibujas lo que hace falta para **reconocerlo**.
 
-## El concepto
+Mira la misma seta a dos tamaños:
 
-A baja resolución no hay sitio para el detalle: hay que **elegir** qué se dibuja.
+<Sprite name="mushroom8" scale={16} caption="8×8: 3 colores. Sombrero, dos motas de 1 píxel y pie. Nada más." />
+
+<Sprite name="mushroom16" scale={8} caption="16×16: 5 colores. Ya caben motas con forma, sombra en el sombrero y volumen en el pie." />
+
+Las dos se leen como seta. La de 8×8 lo consigue con lo **esencial**: la forma de cúpula sobre un pie estrecho. La de 16×16 usa el sitio extra para la **sombra** (rojo oscuro abajo a la derecha) y para dar forma a las motas.
+
+<Why>
+Lo primero que reconoce el ojo es la **silueta** (f02) y el contraste de **valor** (f01). El detalle viene después. Si la silueta no funciona, ningún detalle la salva.
+</Why>
+
+Tamaños de referencia habituales en juegos:
+
+- **8×8**: iconos mínimos, partículas, tiles muy simples.
+- **16×16**: objetos e items (gemas, pociones, setas) y tiles.
+- **32×32**: personajes y enemigos con algo de expresión.
+- **64×64 o más**: retratos, jefes, ilustración.
+
+<Sprite name="gem" scale={8} caption="Gema de 9×7: cabe holgada en un lienzo de 16×16" />
+
+<Sprite name="sword" scale={6} caption="Espada de 7×15: alta y estrecha, aprovecha la altura del 16×16" />
+
+<Sprite name="potion" scale={6} caption="Poción de 10×12: corcho, cuello y cristal con brillo" />
+
+<Tip>
+El lienzo no tiene que llenarse. La gema ocupa 9×7 de 16×16 y está bien: el tamaño del lienzo es la **escala del juego**, no el tamaño del objeto.
+</Tip>
+
+<Inspector sprite="mushroom8" title="Inspecciona la seta de 8×8" />
+
+Usa la **vista a 1×** del inspector. Esa es la prueba de verdad: a tamaño real es como la verá el jugador.
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Lienzo y referencia">
+1. <Keys k="Ctrl+N" />: **16×16**, RGB, fondo transparente.
+2. Activa la rejilla con *View → Grid*.
+3. Antes de dibujar, escribe en un papel **tres rasgos** que hacen que una seta sea una seta. Por ejemplo: sombrero ancho, pie estrecho, motas.
+
+<Why>
+Elegir antes de dibujar evita llenar el lienzo de detalles que luego no se leen.
+</Why>
+</Step>
+
+<Step n={2} title="Bloquea la silueta">
+1. Lápiz (<Keys k="B" />) con **Pixel-perfect** activado y el color de contorno más oscuro.
+2. Dibuja el contorno del sombrero: una cúpula que ocupe casi todo el ancho y unas 8 filas de alto.
+3. Debajo, un pie estrecho, de unos 4 píxeles de ancho, que se ensanche un poco en la base.
+4. Rellena con el cubo de pintura (<Keys k="G" />): rojo en el sombrero, crema en el pie.
+
+<Tip>
+El contraste entre un sombrero **ancho** y un pie **estrecho** es lo que dice «seta». Exagéralo.
+</Tip>
+</Step>
+
+<Step n={3} title="Prueba a 1×, ya">
+Exporta un PNG **sin** *Resize* (100 %) con *File → Export → Export As* y míralo sin ampliar. También puedes alejar el zoom con la rueda hasta el 100 %.
+
+Si a 1× parece un champiñón o una lámpara, vale. Si parece una mancha, corrige la silueta **ahora**.
+</Step>
+
+<Step n={4} title="Motas y sombra">
+1. Añade 3 o 4 motas crema en el sombrero. A 16×16 ya puedes hacerlas de **2 a 4 píxeles**, no de uno solo.
+2. Con un rojo más oscuro, sombrea la parte baja y el lado derecho del sombrero (luz arriba a la izquierda).
+3. En el pie, una columna de crema más oscuro a la derecha da volumen.
+
+<Why>
+La sombra separa el sombrero del pie por **valor**, no solo por color. Por eso funciona también en grises.
+</Why>
+</Step>
+
+<Step n={5} title="Revisa y exporta">
+1. Vuelve a mirar a 1×. Borra con la goma (<Keys k="E" />) cualquier detalle que no se distinga.
+2. Guarda con <Keys k="Ctrl+S" />.
+3. *File → Export → Export As*, PNG, **Resize 800 %**.
+</Step>
+
+<ToolNote tool="pixelorama">
+En Pixelorama el flujo es el mismo. Para comprobar el tamaño real, exporta a escala 1 y mira el PNG.
+</ToolNote>
+
+<Warn title="Verifica en tu versión">
+Algunas versiones de Aseprite tienen además una ventana de previsualización a tamaño real. Su nombre y ubicación varían; si la tienes, úsala.
+</Warn>
+</Block>
+
+<Block kind="version">
+Ahora aplica el método a tu manera. Elige **uno** de estos retos:
+
+- **Seta a 8×8:** dibuja tu seta en un lienzo de 8×8. Quédate solo con tres colores y los rasgos de tu papel.
+- **Otra especie:** una seta alta y estrecha, o una con el sombrero plano. Que la silueta la distinga de la tuya.
+- **Item propio a 16×16:** una llave, una moneda o una manzana. Antes de dibujar, escribe sus tres rasgos esenciales.
+
+Sube tu PNG exportado a 1× y comprueba la silueta y la vista a tamaño real:
+
+<Inspector upload title="Inspecciona tu sprite" />
+</Block>
+
+<Block kind="errores">
+<Mistake title="Juzgar el sprite solo con zoom" wrongLabel="Lo que ves al dibujar (×10)" rightLabel="Lo que ve el jugador (1×)">
+  <Sprite slot="wrong" name="mushroom16" scale={10} />
+  <Sprite slot="right" name="mushroom16" scale={1} />
+
+Con zoom todo parece legible. Los detalles de 1 píxel desaparecen a tamaño real. Mira a 1× cada pocos minutos, no solo al final.
+</Mistake>
+
+<Mistake title="Silueta que no dice qué es" wrongLabel="Frasco sin cuello" rightLabel="Poción con cuello y corcho">
+  <Sprite slot="wrong" name="flask-bad" scale={8} view="silhouette" />
+  <Sprite slot="right" name="potion" scale={8} view="silhouette" />
+
+En silueta, el frasco sin cuello es una pelota. El cuello y el corcho son los rasgos esenciales de una poción. Si quitas el rasgo que define el objeto, ningún brillo lo arregla.
+</Mistake>
+
+<Mistake title="Colores distintos, mismo valor" wrongLabel="Mismo valor" rightLabel="Valores distintos">
+  <Sprite slot="wrong" name="gem-samevalue" scale={8} view="gray" />
+  <Sprite slot="right" name="gem" scale={8} view="gray" />
+
+A baja resolución, las zonas se separan por **valor**. Si tu sombrero rojo y su sombra tienen el mismo brillo, en pequeño se funden. Revisa tu seta en grises.
+</Mistake>
+</Block>
+
+<Block kind="calidad">
+<Checklist items={[
+  "Mi lienzo es de 16×16 y el fondo es transparente",
+  "La seta se reconoce a 1×, sin zoom",
+  "En silueta se distinguen el sombrero ancho y el pie estrecho",
+  "El sombrero tiene sombra en un rojo más oscuro y se separa del pie en grises",
+  "He exportado un PNG a ×8 y guardado el archivo .aseprite",
+]} />
+
+<Quiz q="Vas a dibujar una poción para el inventario de tu juego. ¿Qué lienzo eliges?" options={["8×8, cuanto más pequeño, mejor", "16×16, el tamaño típico de un item", "64×64, para que quepa todo el detalle"]} answer={1}>
+16×16 es el tamaño habitual de items: cabe la silueta (cuello y corcho) y algo de luz. 64×64 es tamaño de retrato y desentonaría con el resto del inventario.
+</Quiz>
+
+<Quiz q="Tu seta se ve genial con zoom, pero a 1× parece una mancha roja. ¿Qué corriges primero?" options={["Añado más motas y brillos", "La silueta y el contraste de valor", "Subo el lienzo a 64×64"]} answer={1}>
+A tamaño real manda la silueta, y después el valor. Más detalle solo añade ruido.
+</Quiz>
+</Block>
