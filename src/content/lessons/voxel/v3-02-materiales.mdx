@@ -1,0 +1,197 @@
+---
+id: v3-02
+discipline: voxel
+level: 3
+order: 2
+title: "Materiales de render: metal, cristal y emisivo"
+summary: "Asigna materiales de render a los colores de la paleta (Metal, Glass y Emit) y renderiza un farol de hierro con cristales y una llama que ilumina."
+duration: 40
+status: borrador
+prerequisites: [v3-01]
+fundamentals: [f01]
+objectives:
+  - "Entender que en MagicaVoxel el material se asigna a cada color de la paleta"
+  - "Distinguir qué hacen Metal, Glass y Emit en el render"
+  - "Decidir primero el color y el valor, y después el material"
+  - "Saber que el visor web solo muestra colores y comprobar el resultado en el modo Render"
+tools: [magicavoxel]
+piece:
+  name: "Un farol renderizado con metal, cristal y llama emisiva"
+  canvas: "5x5x9"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [material-render]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Hoy forjas un **farol**: estructura de hierro, cuatro paredes de cristal y una llama dentro. Cada parte tendrá su propio material de render.
+
+<VoxViewer model="farol" stage={2} title="Tu pieza: el farol (5×5×9)" />
+
+Pulsa las tres etapas: **Estructura**, **Cristales** y **Llama**. Es el orden en que lo construirás.
+
+<Warn title="El visor web no simula materiales">
+Aquí solo ves **colores planos**. Ni el brillo del metal, ni la transparencia del cristal, ni la luz de la llama. Eso solo aparece en el **modo Render de MagicaVoxel**. El visor sirve para ver la forma y la paleta.
+</Warn>
+</Block>
+
+<Block kind="concepto">
+En Blender asignas un material a cada cara u objeto. En MagicaVoxel es distinto: el material va **pegado a cada color de la paleta**. Todos los vóxeles de ese color comparten material.
+
+Los tipos que usarás hoy:
+
+- **Diffuse:** mate. El de por defecto.
+- **Metal:** refleja el entorno. Donde no hay nada que reflejar, se **oscurece**.
+- **Glass:** deja pasar la luz. Se ve lo que hay detrás, algo deformado.
+- **Emit:** emite luz. Brilla e **ilumina** lo que tiene cerca en el render.
+
+Es lo mismo que pintas a mano en pixel art. Compara la bola mate, la metálica y la de cristal:
+
+<Sprite name="mat-mate" scale={8} caption="Mate: tres tonos suaves, sin brillo especular" />
+
+<Sprite name="mat-metal" scale={8} caption="Metal: contraste muy alto, brillo blanco pequeño y una banda oscura (el horizonte reflejado)" />
+
+<Sprite name="mat-glass" scale={8} caption="Cristal: interior semitransparente, contorno claro y dos brillos opuestos" />
+
+<Why>
+En pixel art **pintas** el reflejo y la transparencia. En el render de MagicaVoxel los **calcula** la luz. Pero el efecto es el mismo: el metal se define por contraste, el cristal por lo que deja ver.
+</Why>
+
+Fíjate en las piezas del farol:
+
+- **Hierro** (dos grises azulados oscuros): base, techo, remate, asa y cuatro montantes. Material **Metal**.
+- **Cristal** (un azul muy claro): doce columnas de cinco vóxeles, tres por pared. Material **Glass**.
+- **Llama** (un amarillo y un amarillo casi blanco encima): dos vóxeles sobre un soporte de hierro. Material **Emit**.
+
+<Why title="El color sigue mandando">
+El material no arregla una paleta mala. Si el hierro y el cristal tienen el mismo valor, en el render se confunden. Decide primero colores con **valores distintos** (F01: hierro oscuro, cristal claro, llama clarísima) y luego el material.
+</Why>
+
+Con pocos cristales, la transparencia se luce: a través de una pared ves la llama y la pared del fondo. Con un bloque macizo de cristal, la luz rebota tanto que todo se vuelve una masa turbia.
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="La estructura de hierro">
+1. Crea un modelo nuevo de **5×5×9** (la Z es la altura).
+2. Elige en la **paleta** dos grises azulados oscuros: uno para base y techo, otro algo más claro para montantes, remate y asa.
+3. Con **Attach** y el pincel **Box**: base de 5×5 en la capa 0 y techo de 5×5 en la capa 6.
+4. Con **Box** o **Line**, levanta los cuatro montantes en las esquinas, de la capa 1 a la 5.
+5. Encima: un remate de 3×3 en la capa 7 y un vóxel de asa en la 8.
+
+<Tip>
+Usa los botones **Mirror** X e Y para los montantes: colocas uno y salen los cuatro.
+</Tip>
+</Step>
+
+<Step n={2} title="Los cristales">
+1. Elige un azul **muy claro** en la paleta.
+2. Rellena los huecos entre montantes: tres columnas por pared, de la capa 1 a la 5.
+3. El interior queda **vacío**.
+
+<Why>
+Paredes de un vóxel de grosor y el centro hueco: la luz atraviesa poco cristal y se ve lo que hay dentro.
+</Why>
+</Step>
+
+<Step n={3} title="La llama">
+1. En el centro, capa 1, pon un vóxel de hierro como soporte.
+2. Encima, en la capa 2, un vóxel amarillo; en la 3, un amarillo casi blanco.
+
+<Tip>
+Si el techo y los cristales te tapan el centro, quita con **Erase** un vóxel del techo, coloca la llama desde arriba y repónlo luego.
+</Tip>
+</Step>
+
+<Step n={4} title="Asigna los materiales por color">
+1. Selecciona en la paleta el primer gris del hierro. En el **panel de materiales**, cambia el tipo de *Diffuse* a **Metal**. Repite con el segundo gris.
+2. Selecciona el azul del cristal y elige **Glass**.
+3. Selecciona los dos amarillos de la llama y elige **Emit**.
+
+<Why>
+El material va con el color: si pintas otro vóxel con ese gris, también será metal. Por eso conviene que cada material tenga **sus propios** colores en la paleta.
+</Why>
+</Step>
+
+<Step n={5} title="Mira el resultado en Render">
+1. Pulsa **Render** arriba.
+2. Espera unos segundos: la imagen se va limpiando de ruido.
+3. Comprueba: ¿el hierro refleja algo? ¿Ves la llama a través del cristal? ¿La llama tiñe de luz el interior?
+4. Si la llama no destaca, sube la intensidad de emisión en el panel de materiales.
+
+<Tip>
+Si el metal sale casi negro, no hay nada que reflejar. Prueba a cambiar el cielo o la luz del entorno en los paneles del modo Render.
+</Tip>
+</Step>
+
+<Step n={6} title="Guarda y exporta">
+1. Guarda como `farol_v1.vox`.
+2. Desde el modo Render, exporta la imagen en PNG para tu portfolio.
+
+<Warn>
+Si exportas a .obj para Blender u otro motor, los materiales de render de MagicaVoxel no viajan tal cual: se pierden o hay que rehacerlos allí.
+</Warn>
+</Step>
+
+<Warn title="Verifica en tu versión">
+El nombre y la ubicación del **panel de materiales**, de los tipos (*Diffuse*, *Metal*, *Glass*, *Emit*…) y de sus parámetros (rugosidad, transparencia, intensidad de emisión) cambian entre versiones de MagicaVoxel. Lo mismo el botón **Render** y los paneles de cielo y luz. Busca el equivalente en la tuya.
+</Warn>
+</Block>
+
+<Block kind="version">
+Forja **otro objeto con al menos dos materiales** de los tres. Elige un reto:
+
+- **Farol de colores:** cambia el cristal por un verde o un ámbar suave. ¿Cómo cambia la luz que sale?
+- **Vela en tarro:** un tarro de cristal con una vela emisiva dentro. Sin metal.
+- **Espada mágica:** hoja de metal y una gema emisiva en la guarda.
+
+Renderiza cada uno y compáralo con su vista en colores planos: lo que cambia es lo que aporta el material.
+</Block>
+
+<Block kind="errores">
+<Mistake title="Juzgar el material en el visor o en el modo de edición" wrongLabel="Solo colores" rightLabel="En Render">
+  <p slot="wrong">En el visor web y en la edición, el farol se ve plano: «el cristal no funciona».</p>
+  <p slot="right">En el modo Render aparecen el reflejo, la transparencia y la luz.</p>
+
+El visor de esta web y la vista de edición solo enseñan colores. Los materiales son cálculo de luz: compruébalos siempre en **Render**.
+</Mistake>
+
+<Mistake title="Cristal macizo y saturado" wrongLabel="Bloque de cristal" rightLabel="Paredes finas">
+  <p slot="wrong">El farol relleno de cristal azul intenso: una masa oscura donde la llama no se ve.</p>
+  <p slot="right">Paredes de un vóxel, azul muy claro e interior vacío: la llama se ve a través.</p>
+
+Cuanto más cristal atraviesa la luz, más se apaga y se tiñe. Usa **poco** cristal y de color claro.
+</Mistake>
+
+<Warn title="Error típico: un color compartido">
+Si el hierro y el soporte de otra pieza mate usan el mismo gris, al ponerlo en Metal cambian los dos. Reserva colores propios para cada material.
+</Warn>
+
+<Warn title="Error típico: todo emisivo">
+Si pones Emit en muchos colores, la pieza se quema de luz y pierde volumen. La llama brilla porque es **lo único** que emite.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+<Checklist items={[
+  "Mi farol mide 5×5×9: base, techo, montantes, remate y asa",
+  "El hierro, el cristal y la llama tienen valores claramente distintos",
+  "Cada material tiene sus propios colores en la paleta",
+  "Los cristales son paredes de un vóxel y el interior está vacío",
+  "He comprobado el resultado en el modo Render, no en la vista de edición",
+  "He guardado farol_v1.vox y un PNG del render",
+]} />
+
+<Quiz q="En MagicaVoxel, ¿a qué se asigna un material de render?" options={["A cada vóxel por separado", "A cada color de la paleta", "Al modelo entero"]} answer={1}>
+El material va con el color: todos los vóxeles de ese color comparten material.
+</Quiz>
+
+<Quiz q="Tu farol se ve plano en el visor de la web. ¿Qué pasa?" options={["Los materiales están mal asignados", "El visor solo muestra colores; los materiales se ven en Render", "Hay que exportarlo a .obj"]} answer={1}>
+El visor web no simula Metal, Glass ni Emit. El resultado real se ve en el modo Render de MagicaVoxel.
+</Quiz>
+
+<Quiz q="El metal te sale casi negro en el render. ¿Por qué?" options={["Porque el metal solo refleja, y no hay nada claro que reflejar", "Porque el color es demasiado claro", "Porque falta material Emit en el metal"]} answer={0}>
+El metal toma su aspecto del entorno. Cambia el cielo o la luz, o pon cerca algo claro que reflejar.
+</Quiz>
+</Block>

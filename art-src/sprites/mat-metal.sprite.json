@@ -1,0 +1,35 @@
+{
+  "name": "mat-metal",
+  "description": "Bola de metal: contraste muy alto, un reflejo especular blanco y una banda oscura en el centro (el horizonte reflejado).",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "material"
+  ],
+  "palette": {
+    "1": "#1f2733",
+    "2": "#5f6b7d",
+    "3": "#b9c4d2",
+    "4": "#e6edf5",
+    "5": "#ffffff",
+    "o": "#10131a"
+  },
+  "rows": [
+    "................",
+    "....oooooooo....",
+    "...o44444332o...",
+    "..o4444443322o..",
+    ".o445544433221o.",
+    ".o445544333221o.",
+    ".o444444333221o.",
+    ".o444443332211o.",
+    ".o111111111111o.",
+    ".o111111111111o.",
+    ".o333332221111o.",
+    ".o222222211111o.",
+    "..o2222111111o..",
+    "...o11111111o...",
+    "....oooooooo....",
+    "................"
+  ]
+}

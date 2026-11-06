@@ -1,0 +1,176 @@
+---
+id: p4-03
+discipline: pixel
+level: 4
+order: 3
+title: "Microanimación: un brillo de 4 frames"
+summary: "Una animación son frames con duración. Anima un brillo de 4 frames en bucle, con una pausa larga y un destello rápido, usando la línea de tiempo y el onion skin de Aseprite."
+duration: 40
+status: borrador
+objectives:
+  - "Entender una animación como frames, cada uno con su duración"
+  - "Usar el timing (pausa larga y destello rápido) para atraer la vista"
+  - "Usar el onion skin para ver el frame anterior mientras dibujas"
+  - "Cerrar un bucle limpio: el último frame encaja con el primero"
+prerequisites: [p4-02]
+fundamentals: []
+tools: [aseprite]
+piece:
+  name: "Una gema o moneda con un brillo de 4 frames en bucle"
+  canvas: "16x16"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [brillo-animado]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Vas a forjar **una gema o una moneda con un brillo de 4 frames en bucle**. Es la animación más pequeña y más útil de un juego: le dice al jugador «esto se puede recoger».
+
+Dale a *Reproducir*. La gema está quieta medio segundo y, de pronto, un destello la cruza en tres frames rápidos.
+
+<Animator preset="gem-shine" />
+</Block>
+
+<Block kind="concepto">
+**Una animación son frames con duración.** No basta con dibujar cada frame: cada uno se queda en pantalla un tiempo, en milisegundos. El mismo dibujo con otros tiempos es otra animación.
+
+En el ejemplo de arriba:
+
+- **Frame 1 · 500 ms:** la gema tal cual. Es la pausa.
+- **Frames 2, 3 y 4 · 90 ms cada uno:** una franja clara de 2 píxeles de alto recorre las facetas de arriba, de izquierda a derecha.
+
+<Sprite name="gem" scale={10} caption="El frame 1: la gema base. En los frames 2–4 el brillo avanza una columna por frame sobre las dos filas de facetas superiores" />
+
+<Why>
+El ojo se habitúa a lo que no cambia y salta hacia lo que cambia de golpe. Una pausa larga deja que la gema «descanse»; el destello corto rompe esa calma y **atrapa la vista**. Si todos los frames duran lo mismo, el brillo parece un parpadeo mecánico y deja de llamar la atención.
+</Why>
+
+**El timing es tan importante como el dibujo.** Prueba ahora en el laboratorio:
+
+1. Selecciona el frame 1 en la tira y baja su duración a 90 ms. Reproduce: el brillo se vuelve un zumbido constante.
+2. Súbelo a 800 ms: el destello se vuelve raro, casi una sorpresa.
+3. Sube los frames 2–4 a 300 ms: el brillo se arrastra y pierde chispa.
+
+**Onion skin.** Con la casilla activada, el lienzo muestra el frame anterior en transparencia. Así colocas el brillo **una columna más allá** del anterior, sin adivinar.
+
+**Bucle limpio.** El frame 4 debe encajar con el 1. Aquí el brillo sale por la derecha y se vuelve a la gema base: no hay salto. Si el último frame dejara el brillo a medias, verías un tirón cada vez que vuelve a empezar.
+
+**En un juego**, este brillo es lenguaje: monedas, gemas y llaves brillan; el decorado no. El jugador aprende que lo que destella se puede recoger.
+
+El timing también da carácter a una criatura. Mira el slime: un aplastamiento corto, una pausa larga y un parpadeo rapidísimo (240, 160, 400 y 120 ms).
+
+<Animator preset="slime-idle" />
+
+<Tip>
+Cambia el parpadeo (frame 4) a 400 ms. El slime pasa de «vivo» a «adormilado». Mismo dibujo, otro carácter.
+</Tip>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Lienzo y objeto base">
+1. <Keys k="Ctrl+N" />: 16×16, fondo transparente. Activa *View → Grid*.
+2. Dibuja tu gema o moneda con lo que ya sabes: silueta limpia, contorno, una luz arriba a la izquierda y 3–4 tonos.
+3. Guarda con <Keys k="Ctrl+S" /> en formato `.aseprite`: conserva los frames y sus duraciones.
+
+<Why>
+El frame 1 es el que más tiempo se ve. Si el objeto quieto no está bien, ningún brillo lo salva.
+</Why>
+</Step>
+
+<Step n={2} title="La línea de tiempo">
+Abre la línea de tiempo (*Timeline*) si no la ves. Cada columna es un frame; cada fila, una capa. Ahora tienes un solo frame.
+
+Añade un frame nuevo desde el menú *Frame* (opción de frame nuevo). Aseprite copia el contenido del frame actual. Repite hasta tener **4 frames iguales**.
+</Step>
+
+<Step n={3} title="Duración de cada frame">
+Clic derecho sobre el número del frame en la línea de tiempo y abre *Frame Properties*. Pon:
+
+- Frame 1: **500 ms**.
+- Frames 2, 3 y 4: **90 ms**.
+
+<Tip>
+Puedes seleccionar varios frames a la vez y cambiar su duración de una sola vez.
+</Tip>
+</Step>
+
+<Step n={4} title="Dibuja el brillo con onion skin">
+Activa el onion skin (el botón está en la línea de tiempo). Ve al frame 2 y pinta con el tono más claro una franja de 1–2 píxeles en el borde izquierdo de las facetas de arriba. En el frame 3, muévela una columna a la derecha. En el frame 4, otra más.
+
+<Why>
+El onion skin te enseña el frame anterior en transparencia. Ves dónde estaba el brillo y lo avanzas siempre la misma distancia: el movimiento sale regular.
+</Why>
+
+<Warn>
+No pintes el brillo encima del contorno. Si tapa el borde oscuro, la silueta «parpadea» y el objeto parece deformarse.
+</Warn>
+</Step>
+
+<Step n={5} title="Revisa el bucle">
+Reproduce la animación (botón de *play* de la línea de tiempo) y déjala correr varias vueltas. Mira el paso del frame 4 al 1: el brillo debe salir del objeto o desvanecerse, nunca cortarse a la mitad.
+</Step>
+
+<Step n={6} title="Exporta: GIF y spritesheet">
+1. Para enseñarla: *File → Export → Export As* y elige formato **GIF**, con **Resize** 400 % o más. El GIF guarda las duraciones.
+2. Para un juego: *File → Export → Export Sprite Sheet*, en una fila horizontal, como PNG a 1×. Godot y otros motores cortan la tira en frames.
+
+<Tip>
+La spritesheet **no guarda las duraciones**. Apúntalas (500, 90, 90, 90) para ponerlas luego en el motor.
+</Tip>
+</Step>
+
+<Warn title="Verifica en tu versión">
+Los nombres y la posición pueden variar según la versión de Aseprite: el panel *Timeline*, la opción de frame nuevo del menú *Frame*, *Frame Properties* (clic derecho sobre el frame), el botón de onion skin y las opciones de *Export Sprite Sheet* (disposición en fila, formato). Si no encuentras algo, búscalo por nombre en los menús.
+</Warn>
+</Block>
+
+<Block kind="version">
+Ahora a tu manera. Mantén los 4 frames y el bucle limpio. Elige uno:
+
+- **Otro ritmo:** pausa de 1200 ms y destello de 60 ms por frame. ¿Atrae más o menos?
+- **Otra forma de brillo:** en vez de una franja, una estrella de 4 puntas que crece y se apaga en la esquina de la luz.
+- **Cambia de objeto:** si hiciste gema, haz una moneda; el brillo cruza en diagonal, siguiendo la luz.
+</Block>
+
+<Block kind="errores">
+<Mistake title="Todos los frames con la misma duración" wrongLabel="4 × 90 ms" rightLabel="500 + 90 + 90 + 90 ms">
+  <p slot="wrong">Parpadeo constante, como una luz averiada. El ojo se cansa y lo ignora.</p>
+  <p slot="right">Pausa larga y destello rápido. El brillo llega por sorpresa y atrapa la vista.</p>
+
+Cámbialo en el laboratorio de arriba y compáralo. El dibujo no cambia; el timing lo es todo. Corrígelo alargando el frame de reposo.
+</Mistake>
+
+<Mistake title="Un brillo sin salto de valor" wrongLabel="Tonos de valor parecido" rightLabel="Tonos bien separados">
+  <Sprite slot="wrong" name="gem-samevalue" scale={8} view="gray" />
+  <Sprite slot="right" name="gem" scale={8} view="gray" />
+
+Si el tono del brillo tiene casi el mismo valor que la faceta, en movimiento apenas se nota. Usa el tono más claro de tu rampa, o casi blanco: el destello tiene que ser el punto más claro del sprite.
+</Mistake>
+
+<Warn title="Bucle con tirón">
+Si el frame 4 deja el brillo a medio camino y el 1 lo quita de golpe, cada vuelta da un salto. El último frame debe llevar el brillo fuera del objeto o dejarlo casi apagado.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+Juzga tu animación **a 1×** y a tamaño de juego, no solo ampliada.
+
+<Checklist items={[
+  "Tengo 4 frames y cada uno tiene su duración",
+  "El frame de reposo es claramente más largo que los del destello",
+  "El brillo avanza una distancia regular en cada frame",
+  "El brillo no tapa el contorno",
+  "El paso del último frame al primero no da tirón",
+  "He exportado un GIF ampliado y una spritesheet PNG a 1×",
+]} />
+
+<Quiz q="¿Por qué el primer frame del brillo dura 500 ms y los otros 90 ms?" options={["Porque Aseprite obliga a que el primero sea más largo", "Porque la pausa larga y el destello rápido hacen que el brillo atrape la vista", "Para que el archivo pese menos"]} answer={1}>
+El contraste de tiempos es lo que llama la atención: calma y, de golpe, el destello.
+</Quiz>
+
+<Quiz q="¿Para qué sirve el onion skin?" options={["Para ver el frame anterior en transparencia mientras dibujas", "Para exportar a GIF", "Para suavizar los bordes"]} answer={0}>
+Te deja colocar cada frame en relación con el anterior, sin adivinar.
+</Quiz>
+</Block>

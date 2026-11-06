@@ -23,5 +23,12 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   { id: "luz-con-direccion", name: "Luz con dirección", description: "Sombreado con una sola fuente de luz, sin pillow shading (P3-01).", color: "#ffe58a" },
   { id: "rampa-hue", name: "Rampa con hue shifting", description: "Una rampa propia con las sombras frías y las luces cálidas (P3-02).", color: "#ffb84d" },
   { id: "dither-justo", name: "Dithering justo", description: "Un dithering que se lee como un tono a 1× y no como ruido (P3-03).", color: "#8f7bff" },
+  { id: "materiales", name: "Cuatro materiales", description: "Metal, madera, piedra y cristal que se distinguen por cómo responden a la luz (P4-01).", color: "#c9d1dc" },
+  { id: "set-iconos", name: "Set de iconos", description: "Ocho iconos de inventario con la misma escala, luz y paleta (P4-02).", color: "#f2c14e" },
+  { id: "brillo-animado", name: "Brillo animado", description: "Una microanimación de brillo en bucle (P4-03).", color: "#fff3c4" },
+  { id: "rampa-3d", name: "Rampa en 3D", description: "Un modelo voxel con rampa de valor y hue shifting en su paleta (V3-01).", color: "#b4ab9f" },
+  { id: "material-render", name: "Metal, cristal y luz", description: "Un render con materiales Metal, Glass y Emit (V3-02).", color: "#9fd8ff" },
+  { id: "temperatura", name: "Temperatura de color", description: "Una pieza con luces cálidas y sombras frías en las dos disciplinas (F03).", color: "#ff8f5a" },
+  { id: "luz-dos-mundos", name: "Una luz, dos mundos", description: "El mismo objeto iluminado desde la misma dirección en pixel y en voxel (F05).", color: "#ffe58a" },
   { id: "forma-primero", name: "Forma antes que detalle", description: "Un modelo voxel con su blockout guardado como primera versión (V2-01).", color: "#38e1ff" },
 ];

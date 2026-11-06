@@ -1,0 +1,179 @@
+---
+id: f05-01
+discipline: fundamentos
+level: 5
+order: 1
+title: "Luz y sombra en los dos mundos"
+summary: "Las mismas zonas de luz sirven en pixel y en voxel. En pixel tú pintas la luz; en voxel la calcula el render, pero la dirección la decides tú."
+duration: 45
+status: borrador
+prerequisites: [f03-01]
+fundamentals: [f01]
+objectives:
+  - "Nombrar las zonas de luz: luz, medio tono, terminador, sombra propia, sombra proyectada, luz rebotada y oclusión"
+  - "Pintar a mano una luz coherente en pixel art, sin pillow shading"
+  - "Colocar el sol del render de MagicaVoxel en la misma dirección que tu sprite"
+tools: [aseprite, magicavoxel]
+piece:
+  name: "Una roca con la luz desde arriba a la izquierda, en pixel y en voxel"
+  canvas: "16x16"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [luz-dos-mundos]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Hoy forjas **el mismo objeto dos veces**, con **la misma luz**:
+
+- una **roca de 16×16** en Aseprite, con la luz desde arriba a la izquierda;
+- una **roca en MagicaVoxel**, renderizada con el sol también arriba a la izquierda.
+
+Puestas una junto a la otra, deben parecer del mismo juego.
+
+<Sprite name="rock-clean" scale={12} caption="Pixel: tú pintas la luz (arriba a la izquierda)" />
+
+<VoxViewer model="roca" stage={1} title="Voxel: la roca con AO pintado" />
+</Block>
+
+<Block kind="concepto">
+La luz se reparte igual sobre una bola de píxeles que sobre una de vóxeles. Siempre aparecen las mismas zonas:
+
+- **Luz**: la cara que mira a la fuente.
+- **Medio tono**: la transición, ni de cara ni de espaldas.
+- **Terminador**: la línea donde empieza la sombra. Es la frontera más oscura y nítida.
+- **Sombra propia**: la parte del objeto que no ve la luz.
+- **Sombra proyectada**: la que el objeto tira sobre el suelo, en el lado contrario a la luz.
+- **Luz rebotada**: un poco de luz que vuelve del suelo y aclara el borde de la sombra.
+- **Oclusión** (AO): los rincones y contactos donde no entra casi luz. Lo más oscuro.
+
+<Sprite name="ball-lit" scale={14} caption="ball-lit: luz arriba a la izquierda, terminador en diagonal, sombra abajo a la derecha y un borde algo más claro: la luz rebotada" />
+
+<Tip>
+`ball-lit` no tiene sombra proyectada ni suelo: es solo el objeto. La sombra proyectada y la oclusión las verás en el render de voxel.
+</Tip>
+
+### Mueve tú la luz
+
+Gira la dirección y la altura. Mira cómo se desplaza el terminador y dónde aparece la luz rebotada. Activa «Ver valor» para comprobar que las zonas se separan en grises.
+
+<LightLab />
+
+### Dos mundos, un mismo principio
+
+- **En pixel art, TÚ pintas la luz.** No hay motor: cada píxel claro u oscuro es una decisión. Si te equivocas de lado, nadie lo corrige.
+- **En voxel, la luz la calcula el render**: el sol, el cielo y la oclusión ambiental (AO) salen solos. Pero **tú decides** de dónde viene el sol, a qué altura está y con qué intensidad.
+
+<Why title="Una sola dirección para todo el juego">
+Si el héroe tiene la luz a la izquierda y la roca a la derecha, el ojo nota que algo no encaja aunque no sepa decir qué. Elige **una dirección** (la clásica: arriba a la izquierda) y úsala en **todos** los assets, sean de pixel o de voxel. Es lo que hace que un juego parezca un mundo y no un collage.
+</Why>
+
+<Why title="Por qué pintar AO en voxel">
+La etapa «Rampa de valor» de la roca lleva la oclusión **pintada en el color**: claro arriba, oscuro abajo. Así se lee bien incluso en el visor web, que no hace render. En el modo Render de MagicaVoxel, esa AO pintada se suma a la que calcula el motor.
+</Why>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Decide la luz antes de dibujar">
+Escribe en un papel: **luz arriba a la izquierda, altura media**. En el `LightLab`, pon la dirección hacia arriba a la izquierda (en torno a 135°) y 4 tonos. Esa esfera es tu chuleta.
+
+<Why>
+Con la luz decidida de antemano, cada píxel tiene respuesta: ¿mira hacia la luz o no?
+</Why>
+</Step>
+
+<Step n={2} title="Roca de 16×16 en Aseprite">
+1. <Keys k="Ctrl+N" />: 16×16, fondo transparente. Activa *View → Grid*.
+2. Lápiz (<Keys k="B" />) con *Pixel-perfect*: silueta de roca irregular, más ancha abajo.
+3. Rellena con el **medio tono** (<Keys k="G" />).
+4. Pinta la **luz** en las caras de arriba a la izquierda y la **sombra propia** abajo a la derecha. Marca el **terminador** con el tono más oscuro de la sombra.
+5. Aclara un poco el borde inferior derecho: **luz rebotada**.
+6. Debajo, una franja oscura y achatada hacia la derecha: **sombra proyectada**. Donde la roca toca el suelo, el tono más oscuro: **oclusión**.
+
+<Tip>
+Recoge los tonos con el cuentagotas (<Keys k="I" />). Cuatro tonos y el contorno bastan.
+</Tip>
+</Step>
+
+<Step n={3} title="Comprueba la luz en grises">
+Guarda (<Keys k="Ctrl+S" />), exporta a 1× con *File → Export → Export As* y súbelo al Inspector. Pulsa **Grises**: lo más claro debe estar arriba a la izquierda y lo más oscuro, en el contacto con el suelo.
+
+<Inspector upload title="Tu roca en grises" />
+</Step>
+
+<Step n={4} title="La roca en voxel">
+Parte de la roca de referencia (descárgala del visor de arriba) o modela la tuya. Pinta en modo *Paint* una rampa de valor: claro arriba, oscuro en la base. Es tu **AO pintado**.
+
+<Why>
+El render añade luz real, pero el color base tiene que acompañarla. Si la base es igual de clara que la cima, la roca parece flotar.
+</Why>
+</Step>
+
+<Step n={5} title="Coloca el sol en el modo Render">
+1. Pulsa *Render* arriba.
+2. En el panel de luz, busca los ajustes del **sol** (*Sun*): su **dirección** (ángulo alrededor de la escena) y su **altura** (elevación sobre el horizonte).
+3. Gira la dirección hasta que la cara iluminada quede **arriba a la izquierda** vista desde tu cámara, igual que en el sprite.
+4. Ajusta la altura a un valor medio: sombra proyectada visible, ni muy larga ni inexistente.
+5. Sube o baja la intensidad del sol y del cielo (*Sky*) hasta que la sombra propia sea oscura pero conserve detalle.
+6. Guarda la imagen del render en PNG.
+
+<Warn>
+Gira la cámara y la luz se verá desde otro lado. Fija primero la cámara que usarás para el render y **después** coloca el sol.
+</Warn>
+</Step>
+
+<Step n={6} title="Júntalas">
+Pon el PNG del sprite (ampliado a escala entera) junto al render. ¿La luz viene del mismo sitio? ¿La sombra proyectada cae hacia el mismo lado?
+
+<Warn title="Verifica en tu versión">
+Los nombres del panel de luz (*Sun*, *Sky*, dirección, altura, intensidad) y su ubicación en el modo Render cambian entre versiones de MagicaVoxel. Busca los controles del sol aunque se llamen de otra forma.
+</Warn>
+</Step>
+</Block>
+
+<Block kind="version">
+Misma luz, otro objeto. Elige un reto:
+
+- **Atardecer**: luz desde la izquierda y muy baja. Sombras proyectadas largas en los dos mundos.
+- **Mediodía**: sol casi vertical. Sombra propia solo en la base y AO fuerte en el contacto.
+- **Otro asset**: un barril o una seta con la misma luz de tu roca, para ver que conviven.
+</Block>
+
+<Block kind="errores">
+<Mistake title="Pillow shading: oscurecer todos los bordes" wrongLabel="Anillos concéntricos" rightLabel="Una luz con dirección">
+  <Sprite slot="wrong" name="ball-pillow" scale={8} />
+  <Sprite slot="right" name="ball-lit" scale={8} />
+
+`ball-pillow` oscurece el borde por igual y aclara el centro, como si la luz saliera de tus ojos. Se ve plana e hinchada. **Corrección**: elige una dirección y desplaza la luz hacia ese lado; la sombra, al opuesto.
+</Mistake>
+
+<Mistake title="Ruido en vez de zonas de luz">
+  <Sprite slot="wrong" name="rock-noisy" scale={8} view="gray" />
+  <Sprite slot="right" name="rock-clean" scale={8} view="gray" />
+
+Alternar píxeles claros y oscuros borra el terminador y el volumen se pierde. **Corrección**: cada zona de luz en un grupo grande y continuo.
+</Mistake>
+
+<Warn title="Error en voxel: el sol por un lado y el sprite por otro">
+Dejar el sol del render donde venía por defecto suele poner la luz en otra dirección que tus sprites. **Corrección**: fija la cámara y coloca el sol para que coincida con tu dirección del juego.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+<Checklist items={[
+  "Mi roca de 16×16 tiene luz arriba a la izquierda y sombra abajo a la derecha",
+  "Se distinguen terminador, luz rebotada, sombra proyectada y oclusión",
+  "No hay pillow shading: los bordes no se oscurecen todos por igual",
+  "En el render de voxel el sol viene también de arriba a la izquierda",
+  "He guardado el .aseprite, el .vox y los dos PNG en mi portfolio",
+]} />
+
+<Quiz q="¿Dónde va la luz rebotada en una bola iluminada desde arriba a la izquierda?" options={["Arriba a la izquierda, junto al brillo", "En el borde de la sombra, abajo a la derecha", "En todo el contorno"]} answer={1}>
+La luz rebotada viene del suelo y aclara ligeramente el borde de la sombra, en el lado opuesto a la luz.
+</Quiz>
+
+<Quiz q="En MagicaVoxel el render calcula la luz. ¿Qué te toca decidir a ti?" options={["Nada, es automático", "La dirección, la altura y la intensidad del sol", "Solo el color del fondo"]} answer={1}>
+El motor calcula sombras y AO, pero la dirección del sol la eliges tú, y debe coincidir con la de tus sprites.
+</Quiz>
+</Block>

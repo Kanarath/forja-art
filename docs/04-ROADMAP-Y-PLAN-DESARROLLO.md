@@ -68,6 +68,14 @@
 - **Ruta y logros:** 6 logros nuevos y la ruta guiada ampliada.
 - **Estado:** todas en borrador, pendientes de tu prueba.
 
+**Contenido · tercer bloque: 7 lecciones más (23 en total).**
+- **Pixel nivel 4:** P4-01 Materiales, P4-02 Set de iconos, P4-03 Microanimación.
+- **Voxel nivel 3:** V3-01 Paleta y rampas en 3D, V3-02 Materiales de render.
+- **Fundamentos:** F03-01 Color, F05-01 Luz y sombra.
+- **Arte nuevo:** 4 sprites de materiales (metal, mate, cristal con alfa y madera) y los modelos «roca» y «farol».
+- **Logros:** 7 nuevos.
+- **Pendiente:** un set de iconos de ejemplo realmente coherente para P4-02. La lección hoy audita las incoherencias de los sprites del curso.
+
 **Lecciones aprendidas durante la fase 1:**
 - **`BASE_URL` sin barra final.** Astro 7 da `BASE_URL` sin barra final, así que hay que usar siempre `src/lib/url.ts`. El validador detecta enlaces sin la base.
 - **Colecciones nuevas en local.** El servidor de desarrollo no ve colecciones de contenido nuevas: hay que reiniciarlo (`npx astro dev --force`).

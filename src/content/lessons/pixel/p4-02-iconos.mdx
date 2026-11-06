@@ -1,0 +1,171 @@
+---
+id: p4-02
+discipline: pixel
+level: 4
+order: 2
+title: "Set de iconos de inventario coherente"
+summary: "Haz que varios iconos se lean como un solo set: mismo lienzo y margen, misma luz, mismo contorno, paleta común y tamaño visual parecido, con una silueta distinta para cada objeto."
+duration: 45
+status: borrador
+objectives:
+  - "Fijar las reglas de un set antes de dibujar: lienzo, margen, luz, contorno y paleta"
+  - "Igualar el tamaño visual de objetos de formas muy distintas"
+  - "Dar a cada icono una silueta reconocible en negro a 1×"
+  - "Detectar el icono que rompe el set y corregirlo"
+prerequisites: [p4-01]
+fundamentals: [f02]
+tools: [aseprite]
+piece:
+  name: "Ocho iconos de 16×16 con la misma luz y paleta"
+  canvas: "16x16"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [set-iconos]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Vas a forjar **ocho iconos de inventario de 16×16**: pociones, armas, gemas, lo que quieras. Distintos entre sí, pero que se vean **del mismo juego**.
+
+<Sprite name="potion" scale={8} caption="Poción: contorno casi negro, luz desde la izquierda (brillo blanco a la izquierda, rojo oscuro abajo a la derecha)" />
+<Sprite name="sword" scale={6} caption="Espada: el mismo contorno y la misma luz (acero claro a la izquierda, gris a la derecha)" />
+<Sprite name="chest" scale={8} caption="Cofre: madera clara arriba, oscura a la derecha y abajo. Misma luz otra vez" />
+
+Estos tres ya comparten casi todo. Al final de la lección sabrás qué les falta para ser un set de verdad.
+</Block>
+
+<Block kind="concepto">
+Un set se lee como conjunto cuando todos sus iconos comparten **cinco reglas**:
+
+- **Lienzo y margen:** todos en 16×16, con el mismo hueco libre al borde (por ejemplo 1 píxel).
+- **Luz:** la misma dirección en todos. Aquí, arriba a la izquierda.
+- **Contorno:** el mismo estilo (mismo color, mismo grosor, con o sin selout).
+- **Paleta:** una paleta común; los colores se repiten entre iconos.
+- **Tamaño visual:** cada objeto ocupa más o menos la misma «masa» del lienzo.
+
+Y una regla que va al revés: **cada icono, una silueta distinta**. Lo común es el estilo; lo que diferencia es la forma.
+
+<Why>
+En un inventario el jugador escanea una rejilla en medio segundo. El estilo común le dice «esto es un objeto»; la silueta le dice «cuál». Si cambias el estilo, un icono parece de otro juego. Si repites la silueta, dos objetos se confunden. Es como un kit de piezas hard surface: mismo bisel y mismo material, formas distintas.
+</Why>
+
+**Auditemos los sprites del taller.** Los abrí píxel a píxel; esto es lo que hay:
+
+- **Luz:** coherente. Poción, gema, espada, cofre, slime y seta tienen el claro arriba o a la izquierda y el oscuro abajo a la derecha.
+- **Contorno:** cinco usan el mismo morado casi negro (`#1b1030`). **La seta no:** su contorno es `#2a1020`, más rojizo. Casi no se nota, pero rompe la regla.
+- **Paleta:** espada y cofre comparten el dorado y el marrón oscuro. La poción usa **otros marrones** en el corcho, y la seta un rojo distinto del de la poción. Paleta parecida, no común.
+- **Lienzo y tamaño:** aquí está el fallo gordo. Solo la seta mide 16×16, y la llena de borde a borde sin margen. La gema mide 9×7: a su lado parece una miga. La espada mide 7×15.
+
+<Sprite name="gem" scale={8} caption="La gema: 9×7. Bien iluminada, pero en un lienzo de 16×16 quedaría diminuta junto a la seta" />
+<Sprite name="mushroom16" scale={8} caption="La seta: 16×16 sin margen lateral y con un contorno ligeramente distinto" />
+
+<Tip title="Tamaño visual no es tamaño en píxeles">
+Una espada larga y fina puede ocupar toda la altura y seguir pesando poco. Una gema compacta necesita crecer para igualarla. Iguala la **masa**, no la caja.
+</Tip>
+
+Ahora mira solo las siluetas. Activa *En negro* y a 1×: ¿distingues los cinco sin pistas?
+
+<SilhouetteLab sprites="potion,gem,sword,chest,mushroom16" title="¿Cinco siluetas distintas?" />
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Escribe las reglas del set">
+Antes de abrir Aseprite, anota en un papel:
+
+1. Lienzo 16×16, margen de 1 píxel (el objeto vive en 14×14).
+2. Luz arriba a la izquierda.
+3. Contorno de 1 píxel, un solo color casi negro.
+4. Paleta de 12–16 colores, como mucho.
+5. Lista de ocho objetos con **formas distintas**: redondo, alto, ancho, puntiagudo…
+
+<Why>
+Es tu hoja de estilo. Sin ella, el icono ocho no se parecerá al uno.
+</Why>
+</Step>
+
+<Step n={2} title="Una plantilla con la rejilla y el margen">
+<Keys k="Ctrl+N" />: 16×16, fondo transparente. Activa *View → Grid*. Con la selección rectangular (<Keys k="M" />) marca el área de 14×14 dentro del margen y pinta sus esquinas con un color guía que borrarás al final.
+
+Guárdalo como plantilla con <Keys k="Ctrl+S" />. Cada icono nuevo empieza como copia de este archivo.
+</Step>
+
+<Step n={3} title="Las ocho siluetas primero, en negro">
+Con el lápiz (<Keys k="B" />, *Pixel-perfect* activado) dibuja las ocho siluetas en un solo color oscuro, una por archivo. Compáralas juntas a 1×.
+
+<Warn>
+Si dos se confunden, no sigas. Exagera el rasgo que las distingue (el cuello del frasco, la guarda de la espada) hasta que toque el contorno.
+</Warn>
+</Step>
+
+<Step n={4} title="Iguala la masa">
+Pon los ocho uno al lado de otro. Agranda los objetos compactos (gema, anillo) y no estires los alargados hasta el borde. Todos deben respetar el margen de 1 píxel.
+</Step>
+
+<Step n={5} title="Una paleta compartida">
+Crea la paleta una vez y úsala en los ocho: un contorno, dos o tres rampas de 3 tonos (metal, madera, un color vivo) y un brillo blanco. Toma los colores con el cuentagotas (<Keys k="I" />) de un icono ya terminado, nunca a ojo.
+
+<Tip>
+Repetir colores entre iconos es lo que más «cose» un set. El dorado de la espada vale para la tapa de una poción.
+</Tip>
+</Step>
+
+<Step n={6} title="Luz y contorno, icono a icono">
+Sombrea cada uno con la luz arriba a la izquierda: claro en ese lado, oscuro abajo a la derecha, como en P3-01. Revisa que el contorno sea del mismo color en los ocho.
+</Step>
+
+<Step n={7} title="Exporta la tira">
+Borra las marcas guía. Exporta cada icono con *File → Export → Export As*, PNG, una copia al 100 % y otra con **Resize** 800 %. Sube las copias al 100 % al inspector y revísalas en silueta y en grises.
+</Step>
+</Block>
+
+<Block kind="version">
+Aplica las reglas a tu manera. Elige uno:
+
+- **Botica:** el encargo [«Botica de pociones»](/forja-art/logros/#c-botica) pide cinco pociones de 16×16 con la misma paleta de 8 colores y siluetas distintas. Es este mismo ejercicio con una regla extra: una sola familia de objetos.
+- **Paleta mínima:** los ocho iconos con solo 8 colores en total.
+- **Rehaz el taller:** pasa poción, gema, espada, cofre, slime y seta a 16×16 con margen, el mismo contorno y una paleta común. Añade dos iconos tuyos.
+</Block>
+
+<Block kind="errores">
+<Mistake title="Siluetas que se confunden" wrongLabel="Frasco sin cuello: una pelota" rightLabel="Poción con cuello y corcho">
+  <Sprite slot="wrong" name="flask-bad" scale={8} view="silhouette" />
+  <Sprite slot="right" name="potion" scale={8} view="silhouette" />
+
+En un set con una bomba o una bola, el frasco sin cuello se confunde. El estilo común no salva una silueta genérica.
+</Mistake>
+
+<Mistake title="Un icono con otro contorno" wrongLabel="Sin contorno" rightLabel="Con el contorno del set">
+  <Sprite slot="wrong" name="mushroom16-nooutline" scale={8} />
+  <Sprite slot="right" name="mushroom16" scale={8} />
+
+Si siete iconos llevan contorno oscuro y uno no, ese uno parece de otro juego. Decide el estilo de contorno una vez y aplícalo a todos.
+</Mistake>
+
+<Warn title="Escalas distintas">
+La gema de 9×7 junto a la seta de 16×16 es el error de tamaño visual. Si un icono parece «de otra resolución», agrándalo o rediseña los demás. Nunca escales un icono con un factor no entero.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+Sube tus iconos **a 1×** y revísalos uno a uno en silueta y en grises.
+
+<Inspector upload title="Revisa cada icono de tu set" />
+
+<Checklist items={[
+  "Los ocho miden 16×16 y respetan el mismo margen",
+  "La luz viene de arriba a la izquierda en todos",
+  "El contorno es del mismo color y grosor en todos",
+  "Todos usan la misma paleta",
+  "Ninguno parece mucho más grande o más pequeño que los demás",
+  "En negro a 1× distingo los ocho sin dudar",
+]} />
+
+<Quiz q="¿Qué debe ser distinto en cada icono de un set?" options={["La dirección de la luz", "La silueta", "El color del contorno"]} answer={1}>
+Luz, contorno y paleta son comunes. La silueta es lo que distingue un objeto de otro.
+</Quiz>
+
+<Quiz q="Una gema de 9×7 queda diminuta junto a una seta de 16×16. ¿Qué haces?" options={["Escalarla al 150 %", "Redibujarla más grande dentro del mismo margen", "Dejarla, el jugador lo entenderá"]} answer={1}>
+Iguala la masa redibujando. Escalar a factores no enteros rompe los píxeles.
+</Quiz>
+</Block>

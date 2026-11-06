@@ -1,0 +1,27 @@
+{
+  "name": "mat-wood",
+  "description": "Tablón de madera de 16×10: tres tonos cálidos y vetas horizontales que siguen la longitud de la tabla.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "material"
+  ],
+  "palette": {
+    "o": "#2a160c",
+    "l": "#c98a4e",
+    "m": "#a0663a",
+    "d": "#6e4126"
+  },
+  "rows": [
+    "oooooooooooooooo",
+    "olllllmmllllllmo",
+    "ommmmmmddmmmmmmo",
+    "olllllllllmmlllo",
+    "ommddmmmmmmmmmmo",
+    "omllllllllllllmo",
+    "ommmmmmmmddmmmmo",
+    "olllmmlllllllllo",
+    "oddddddddddddddo",
+    "oooooooooooooooo"
+  ]
+}

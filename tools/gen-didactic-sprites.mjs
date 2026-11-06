@@ -245,6 +245,53 @@ function disc(aa) {
 add("disc-noaa", "Disco de 12×12 sin antialiasing: los escalones del borde se ven duros.", ["antialiasing"], { b: "#e8dcc8", f: "#3b2a5a" }, disc(false));
 add("disc-aa", "El mismo disco con antialiasing selectivo: un tono intermedio SOLO en los escalones largos suaviza la curva a 1×.", ["antialiasing"], { b: "#e8dcc8", f: "#3b2a5a", m: "#9283a0" }, disc(true));
 
+// ---------- materiales: la MISMA forma (bola de 16×16, misma luz) con reglas de cada material
+// Lo que cambia entre materiales no es la forma, sino CÓMO responden a la luz:
+//  · metal: contraste muy alto, reflejo especular duro y una banda oscura (el «horizonte» reflejado)
+//  · piedra/mate: contraste suave, sin brillo especular
+//  · cristal: casi transparente (canal alfa), contorno claro y brillos puntuales
+const matLit = shadeSphere({ size: 16, angle: 135, elevation: 40, tones: 4, outline: true, bounce: false });
+{
+  const rows = matLit.map((row, y) => row.map((v, x) => {
+    if (v === -1) return ".";
+    if (v === -2) return "o";
+    if (y >= 8 && y <= 9 && v >= 1) return "1"; // banda de horizonte: el metal refleja el suelo oscuro
+    if (v === 3 && (x - 4.5) ** 2 + (y - 4.5) ** 2 <= 1.6) return "5"; // reflejo especular: pequeño y duro
+    return String(v + 1);
+  }).join(""));
+  add("mat-metal", "Bola de metal: contraste muy alto, un reflejo especular blanco y una banda oscura en el centro (el horizonte reflejado).", ["material"],
+    { o: "#10131a", "1": "#1f2733", "2": "#5f6b7d", "3": "#b9c4d2", "4": "#e6edf5", "5": "#ffffff" }, rows);
+}
+{
+  const rows = matLit.map((row) => row.map((v) => (v === -1 ? "." : v === -2 ? "o" : String(Math.min(2, v) + 1))).join(""));
+  add("mat-mate", "La misma bola en un material mate (piedra, arcilla): contraste suave, solo 3 tonos y ningún brillo especular.", ["material"],
+    { o: "#1d1a24", "1": "#5e5a6b", "2": "#7d788c", "3": "#9b96aa" }, rows);
+}
+{
+  const rows = matLit.map((row, y) => row.map((v, x) => {
+    if (v === -1) return ".";
+    if (v === -2) return "o";
+    if ((x === 4 && y === 4) || (x === 5 && y === 4) || (x === 4 && y === 5)) return "h"; // brillo principal
+    if (x === 11 && y === 11) return "h"; // brillo secundario (reflejo interior)
+    return v <= 1 ? "d" : "g";
+  }).join(""));
+  add("mat-glass", "Bola de cristal: el interior es semitransparente (se ve el fondo), contorno claro y brillos puntuales opuestos.", ["material"],
+    { o: "#cdeaff", g: "#9fd8ff40", d: "#5aa8e070", h: "#ffffff" }, rows);
+}
+add("mat-wood", "Tablón de madera de 16×10: tres tonos cálidos y vetas horizontales que siguen la longitud de la tabla.", ["material"],
+  { o: "#2a160c", l: "#c98a4e", m: "#a0663a", d: "#6e4126" }, [
+    "oooooooooooooooo",
+    "olllllmmllllllmo",
+    "ommmmmmddmmmmmmo",
+    "olllllllllmmlllo",
+    "ommddmmmmmmmmmmo",
+    "omllllllllllllmo",
+    "ommmmmmmmddmmmmo",
+    "olllmmlllllllllo",
+    "oddddddddddddddo",
+    "oooooooooooooooo",
+  ]);
+
 // ---------- escribir y validar
 let bad = 0;
 for (const s of out) {

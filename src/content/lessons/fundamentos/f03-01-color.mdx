@@ -1,0 +1,192 @@
+---
+id: f03-01
+discipline: fundamentos
+level: 3
+order: 1
+title: "Color: tono, saturación, valor y temperatura"
+summary: "Las tres dimensiones del color y la temperatura: luces cálidas, sombras frías y hue shifting, en pixel y en voxel."
+duration: 45
+status: borrador
+prerequisites: [f02-01]
+fundamentals: [f01]
+objectives:
+  - "Separar tono, saturación y valor de cualquier color"
+  - "Reservar la saturación alta para el punto focal"
+  - "Aplicar luz cálida con sombras frías (y al revés) mediante hue shifting"
+tools: [aseprite, magicavoxel]
+piece:
+  name: "El mismo objeto con luz cálida y con luz fría, en pixel y en voxel"
+  canvas: "16x16"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [temperatura]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Hoy forjas **el mismo objeto dos veces**: una con luz cálida y otra con luz fría.
+
+- En **Aseprite**: un sprite de 16×16 pintado con una rampa cálida y con una rampa fría.
+- En **MagicaVoxel**: una roca recoloreada con sombras frías y luces cálidas, renderizada.
+
+Los mismos píxeles y los mismos vóxels. Solo cambia la temperatura.
+
+<Sprite name="gem" scale={12} caption="Punto de partida: una gema con valores bien separados" />
+<VoxViewer model="roca" stage={2} title="Roca con hue shifting: sombras azuladas, luces ocres" />
+</Block>
+
+<Block kind="concepto">
+Un color tiene **tres dimensiones**:
+
+- **Tono** (*hue*): qué color es. Rojo, verde, azul.
+- **Saturación**: lo puro o lo gris que es.
+- **Valor**: lo claro u oscuro que es.
+
+### El valor manda
+
+Ya lo viste en F01: el ojo lee el valor primero. Tono y saturación decoran; el valor da la forma.
+
+<Mistake title="Mucho tono y mucha saturación no sustituyen al valor" wrongLabel="Tonos saturados, mismo valor" rightLabel="Valores separados">
+  <Sprite slot="wrong" name="gem-samevalue" scale={10} caption="gem-samevalue: magenta, naranja y azul, todos intensos" />
+  <Sprite slot="right" name="gem" scale={10} caption="gem: un solo tono, tres valores" />
+
+`gem-samevalue` tiene tres tonos distintos y muy saturados. Llama la atención, pero no se ve facetada: los tres colores tienen casi el mismo valor. `gem` usa un único tono rosa y se lee mejor. Compruébalo en grises más abajo.
+</Mistake>
+
+<Sprite name="gem-samevalue" scale={10} view="gray" caption="gem-samevalue en grises: una mancha" />
+
+### La saturación atrae la vista
+
+El ojo va hacia lo más saturado. Si todo está saturado, nada destaca y la imagen cansa.
+
+<Why title="Saturación con moderación">
+Piensa en la saturación como un foco. Úsala alta en el **punto focal** (la gema, la llama, los ojos) y baja en el resto (piedra, madera, fondo). Así guías la mirada sin añadir un solo píxel.
+</Why>
+
+### Temperatura
+
+- **Cálidos**: rojo, naranja, amarillo. Sol, fuego, velas.
+- **Fríos**: azul, violeta. Cielo, noche, sombra.
+
+En la realidad, la luz y la sombra tienen temperaturas opuestas. Una luz cálida (sol) deja sombras frías, porque las rellena la luz azul del cielo. Una luz fría (luna, neón) deja sombras más cálidas en comparación.
+
+<Why title="Luz cálida, sombra fría">
+El contraste de temperatura separa luz y sombra **además** del valor. El volumen se lee mejor y la escena parece iluminada de verdad, no oscurecida con negro.
+</Why>
+
+### Hue shifting: la temperatura aplicada
+
+El *hue shifting* es girar el tono a lo largo de la rampa: las luces van hacia el amarillo (cálido) y las sombras hacia el azul o el violeta (frío). No es un truco aparte: es la temperatura llevada a cada escalón.
+
+Prueba aquí. Mueve **Hue shifting** de 0 a 100 y compara las dos filas de color. Después mira la fila **En grises**: el valor no debe cambiar. Si se te fusionan escalones, sube el **Contraste**.
+
+<RampLab base="#c2186b" steps={5} sprite="gem" />
+
+<Tip>
+Al bajar a la sombra, baja también un poco la saturación. Las sombras muy saturadas parecen manchas de pintura, no sombra.
+</Tip>
+
+### En 3D, igual
+
+La roca de MagicaVoxel en tres etapas: un color, rampa de valor y hue shifting. Empieza en «Rampa de valor» y pasa a «Hue shifting»: mismos valores, pero las sombras giran al azul y las luces al ocre. La piedra gana luz.
+
+<VoxViewer model="roca" stage={1} title="Roca: de «Rampa de valor» a «Hue shifting»" />
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Rampa cálida">
+En el `RampLab`, elige un color base y deja **Hue shifting** alrededor del 40–60 %. El lab gira las luces hacia el amarillo y las sombras hacia el azul: es la versión de **luz cálida, sombra fría**. Usa 4 tonos y apunta los códigos.
+
+<Why>
+Comprueba la fila **En grises** antes de seguir. Girar el tono cambia algo el valor real: si dos escalones se funden, sube el Contraste.
+</Why>
+</Step>
+
+<Step n={2} title="Rampa fría">
+Ahora la versión de **luz fría**: luces hacia el cian o el azul muy claro, sombras hacia el violeta o el marrón rojizo. El lab no la genera, así que créala a mano en el selector de color de Aseprite, con **los mismos valores** que la cálida.
+
+<Tip>
+Para igualar valores, pon cada color frío junto a su pareja cálida y haz la prueba de grises en el Inspector (paso 4).
+</Tip>
+</Step>
+
+<Step n={3} title="Mismo sprite, dos rampas">
+1. <Keys k="Ctrl+N" />: 16×16, fondo transparente. Activa *View → Grid*.
+2. Lápiz (<Keys k="B" />) con *Pixel-perfect*: dibuja tu objeto (una gema, una roca, una poción) con la rampa **cálida**. Luz arriba a la izquierda.
+3. Guarda (<Keys k="Ctrl+S" />). Duplica el archivo y, en la copia, cambia cada color por su pareja **fría** con el cubo de pintura (<Keys k="G" />) y el cuentagotas (<Keys k="I" />).
+
+<Warn>
+Desactiva la opción *Contiguous* del cubo si quieres cambiar todos los píxeles de un color de una vez. Verifica el nombre en la barra de contexto de tu versión.
+</Warn>
+</Step>
+
+<Step n={4} title="Prueba de grises de las dos versiones">
+Exporta las dos a 1× con *File → Export → Export As* y súbelas una a una. En **Grises** deben verse **casi iguales**: la temperatura cambia el ambiente, no la forma.
+
+<Inspector upload title="Tus dos versiones en grises" />
+</Step>
+
+<Step n={5} title="Roca con sombras frías en MagicaVoxel">
+1. Descarga el `.vox` del visor de la roca (etapa «Rampa de valor») y ábrelo.
+2. En la **paleta de la izquierda**, localiza los tonos de piedra.
+3. Edita los colores de sombra: gíralos hacia el azul sin cambiar su claridad. Los de luz, hacia el ocre.
+4. Como cada vóxel usa un índice de la paleta, al editar el color cambia toda la roca a la vez.
+5. Pulsa *Render* y guarda el PNG. Repite con luz fría: luces azuladas, sombras más cálidas.
+
+<Why>
+El render añade su propia luz y sombra. La temperatura pintada en la paleta se suma a ella y separa luz y sombra con más fuerza.
+</Why>
+
+<Warn title="Verifica en tu versión">
+La forma de editar un color de la paleta y los nombres de los botones pueden variar entre versiones de MagicaVoxel.
+</Warn>
+</Step>
+</Block>
+
+<Block kind="version">
+Aplica la temperatura a tu manera. Elige un reto:
+
+- **Atardecer**: luz naranja intensa y sombras violetas.
+- **Neón nocturno**: luz cian, sombras magenta, todo con valores bajos.
+- **Foco saturado**: el objeto en gris casi desaturado salvo un detalle muy saturado (un brillo, una gema incrustada).
+</Block>
+
+<Block kind="errores">
+<Mistake title="Creer que más saturación es más contraste">
+  <Sprite slot="wrong" name="gem-samevalue" scale={8} view="gray" />
+  <Sprite slot="right" name="gem" scale={8} view="gray" />
+
+En color, `gem-samevalue` grita; en grises no tiene forma. **Corrección**: separa primero los valores. Luego decide dónde va la saturación alta, y que sea solo en el punto focal.
+</Mistake>
+
+<Mistake title="Sombrear oscureciendo hacia el negro" wrongLabel="Sin hue shifting" rightLabel="Con hue shifting">
+  <VoxViewer slot="wrong" model="roca" stage={1} title="Solo valor" />
+  <VoxViewer slot="right" model="roca" stage={2} title="Valor y temperatura" />
+
+Oscurecer solo bajando el valor deja sombras sucias y apagadas. **Corrección**: al bajar a la sombra, gira el tono hacia el frío y baja un poco la saturación. Los valores de las dos rocas son los mismos.
+</Mistake>
+
+<Warn title="Error de temperatura mezclada">
+Si pintas luces frías y también sombras frías, el objeto pierde la separación de temperatura y queda plano. Luz y sombra deben ir en direcciones **opuestas**.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+<Checklist items={[
+  "Tengo una rampa cálida y una fría con los mismos valores",
+  "El mismo sprite de 16×16 existe en versión cálida y en versión fría",
+  "En la vista Grises del Inspector las dos versiones se ven casi iguales",
+  "La saturación alta está solo en el punto focal",
+  "Mi roca en MagicaVoxel tiene sombras frías y luces cálidas, y está renderizada",
+  "He guardado los .aseprite, el .vox y los PNG en mi portfolio",
+]} />
+
+<Quiz q="Pintas un objeto bajo el sol de mediodía. ¿Hacia dónde giras el tono de las sombras?" options={["Hacia el amarillo", "Hacia el azul o el violeta", "No lo giro, solo lo oscurezco"]} answer={1}>
+Luz cálida, sombra fría. La sombra recibe la luz azul del cielo.
+</Quiz>
+
+<Quiz q="¿Qué dimensión del color manda en la lectura de la forma?" options={["El tono", "La saturación", "El valor"]} answer={2}>
+El valor. Tono, saturación y temperatura ayudan, pero si el valor falla, la forma no se lee.
+</Quiz>
+</Block>

@@ -1,0 +1,33 @@
+{
+  "name": "mat-glass",
+  "description": "Bola de cristal: el interior es semitransparente (se ve el fondo), contorno claro y brillos puntuales opuestos.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "material"
+  ],
+  "palette": {
+    "o": "#cdeaff",
+    "g": "#9fd8ff40",
+    "d": "#5aa8e070",
+    "h": "#ffffff"
+  },
+  "rows": [
+    "................",
+    "....oooooooo....",
+    "...ogggggggdo...",
+    "..oggggggggddo..",
+    ".ogghhgggggdddo.",
+    ".ogghggggggdddo.",
+    ".ogggggggggdddo.",
+    ".oggggggggddddo.",
+    ".ogggggggdddddo.",
+    ".oggggggddddddo.",
+    ".ogggggdddddddo.",
+    ".odddddddddhddo.",
+    "..oddddddddddo..",
+    "...oddddddddo...",
+    "....oooooooo....",
+    "................"
+  ]
+}

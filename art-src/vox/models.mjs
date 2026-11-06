@@ -113,7 +113,56 @@ for (let z = 7; z < 10; z++) {
 }
 const tower3 = [...towerWalls, ...steppedRoof];
 
+// ---------- ROCA: un color plano → rampa de valor (AO pintado) → hue shifting
+function rockShape() {
+  const v = [];
+  for (let x = -5; x <= 5; x++) for (let y = -4; y <= 4; y++) for (let z = 0; z <= 6; z++) {
+    // un elipsoide achatado y algo irregular
+    const d = (x / 5.4) ** 2 + (y / 4.4) ** 2 + ((z - 1.5) / 5) ** 2 + (((x * 7 + y * 3 + z * 5) % 5) - 2) * 0.03;
+    if (d <= 1 && z >= 0) v.push({ x, y, z });
+  }
+  return v;
+}
+const rock = rockShape();
+const maxZ = Math.max(...rock.map((v) => v.z));
+const rockFlat = rock.map((v) => ({ ...v, c: "#8a8698" }));
+// rampa de valor: más claro arriba (recibe luz), más oscuro abajo y en la base (oclusión)
+const VALUE = ["#4a4656", "#6a6678", "#8a8698", "#aeaabb", "#d2cfdc"];
+const HUE = ["#3c3f5e", "#5e6280", "#8a8698", "#b4ab9f", "#dcd3c2"]; // sombras frías, luces cálidas
+const level = (v) => Math.max(0, Math.min(4, Math.round((v.z / maxZ) * 4 - (v.z === 0 ? 1 : 0))));
+const rockValue = rock.map((v) => ({ ...v, c: VALUE[level(v)] }));
+const rockHue = rock.map((v) => ({ ...v, c: HUE[level(v)] }));
+
+// ---------- FAROL: estructura de metal → cristales → núcleo de luz (emisivo)
+const IRON = "#3b3f4a", IRON_L = "#5c6270", GLASS = "#9fd8ff", FLAME = "#ffd36e", FLAME_C = "#fff3c4";
+const lanternFrame = [
+  ...box(0, 0, 0, 4, 4, 0, IRON), // base
+  ...box(0, 0, 6, 4, 4, 6, IRON), // techo
+  ...box(1, 1, 7, 3, 3, 7, IRON_L), // remate
+  { x: 2, y: 2, z: 8, c: IRON_L }, // asa
+  ...[0, 4].flatMap((x) => [0, 4].flatMap((y) => box(x, y, 1, x, y, 5, IRON_L))), // cuatro montantes
+];
+const panes = [];
+for (let z = 1; z <= 5; z++) for (const [x, y] of [[1, 0], [2, 0], [3, 0], [1, 4], [2, 4], [3, 4], [0, 1], [0, 2], [0, 3], [4, 1], [4, 2], [4, 3]]) panes.push({ x, y, z, c: GLASS });
+const flame = [...box(2, 2, 1, 2, 2, 1, IRON), { x: 2, y: 2, z: 2, c: FLAME }, { x: 2, y: 2, z: 3, c: FLAME_C }];
+
 export const MODELS = {
+  roca: {
+    description: "Roca: del color plano a la rampa con hue shifting",
+    stages: [
+      { label: "Un color", note: "Un solo color: la forma existe, pero en el render dependerá solo de la luz. Sin render, parece plana.", voxels: rockFlat },
+      { label: "Rampa de valor", note: "Cinco tonos de la misma piedra: más claros arriba, más oscuros abajo. Es «AO pintado»: oclusión dibujada en el color.", voxels: rockValue },
+      { label: "Hue shifting", note: "Los mismos valores, pero las sombras giran hacia el azul y las luces hacia el ocre: la piedra parece iluminada por luz real.", voxels: rockHue },
+    ],
+  },
+  farol: {
+    description: "Farol: metal, cristal y luz",
+    stages: [
+      { label: "Estructura", note: "Hierro oscuro: base, techo y cuatro montantes. En MagicaVoxel, material Metal.", voxels: lanternFrame },
+      { label: "Cristales", note: "Paneles de un azul muy claro. En MagicaVoxel, material Glass: dejan pasar la luz.", voxels: [...lanternFrame, ...panes] },
+      { label: "Llama", note: "El núcleo amarillo, en material Emit: en el render ilumina el resto del farol. Aquí el cristal se ve opaco: baja «Capas» a 3 para ver la llama por dentro.", voxels: [...lanternFrame, ...panes, ...flame] },
+    ],
+  },
   torre: {
     description: "Torre de piedra: del blockout al tejado escalonado",
     stages: [

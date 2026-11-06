@@ -1,0 +1,179 @@
+---
+id: p4-01
+discipline: pixel
+level: 4
+order: 1
+title: "Materiales: metal, madera, piedra y cristal"
+summary: "La forma y la luz no cambian; el material es cómo responde a la luz. Metal con contraste extremo y horizonte, piedra mate y suave, madera cálida con vetas y cristal transparente con brillos opuestos."
+duration: 45
+status: borrador
+objectives:
+  - "Entender que el material es la respuesta a la luz, no la forma"
+  - "Pintar metal con contraste extremo, brillo duro y banda de horizonte"
+  - "Pintar un material mate con contraste suave y sin brillo"
+  - "Pintar madera con tonos cálidos y vetas que siguen la forma"
+  - "Pintar cristal con transparencia, contorno claro y brillos opuestos"
+prerequisites: [p3-03]
+fundamentals: [f01]
+tools: [aseprite]
+piece:
+  name: "Cuatro bolas o tiles de 16×16, una por material"
+  canvas: "16x16"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [materiales]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Vas a forjar **cuatro sprites de 16×16**: metal, piedra, madera y cristal. Misma forma, misma luz desde arriba a la izquierda. Solo cambia **cómo responde la superficie**.
+
+<Sprite name="mat-metal" scale={10} caption="Metal: negro casi puro junto a blanco puro, y una banda oscura que cruza la bola" />
+
+<Sprite name="mat-glass" scale={10} caption="Cristal: se ve el fondo a través, contorno claro y dos brillos en esquinas opuestas" />
+</Block>
+
+<Block kind="concepto">
+**La forma la da la luz. El material, la forma de responder a ella.** Ya sabes poner un terminador (P3-01). Ahora decides cuánto contraste hay, si hay brillo y qué se refleja.
+
+**Metal: contraste extremo y entorno.** El metal pulido apenas tiene color propio: refleja lo que le rodea. Por eso salta del blanco al casi negro sin pasos suaves.
+
+<Sprite name="mat-metal" scale={10} caption="Brillo especular de 2×2 en blanco puro arriba a la izquierda. Las filas 9 y 10 son una franja del tono más oscuro de lado a lado: el horizonte reflejado. Debajo vuelve a aclarar: es el suelo reflejado" />
+
+<Why>
+Una esfera cromada refleja el mundo: cielo claro arriba, suelo abajo y, entre ellos, la línea del horizonte, que se ve oscura. En Blender lo ves al poner Metallic a 1 y Roughness a 0 con un HDRI: la bola es el entorno, no un degradado.
+</Why>
+
+**Mate (piedra, arcilla): contraste suave y sin brillo.** La luz se dispersa. Pocos tonos, cercanos en valor, y ningún píxel blanco.
+
+<Sprite name="mat-mate" scale={10} caption="La misma bola en mate: tres tonos de violeta gris muy próximos. El paso de luz a sombra es tranquilo y no hay brillo especular" />
+
+**Madera: tonos cálidos y vetas que siguen la forma.** Rampa de marrones anaranjados. Las vetas son trazos del tono medio u oscuro a lo largo de la pieza, nunca de través.
+
+<Sprite name="mat-wood" scale={10} caption="Tablón de 16×10: tres marrones cálidos, vetas horizontales a lo largo de la tabla y la fila de abajo oscura, en sombra" />
+
+**Cristal: transparencia, contorno claro y brillos opuestos.** El interior deja ver el fondo. El borde, en vez de oscuro, es **claro**. Un brillo donde entra la luz y otro, pequeño, en el lado contrario, donde sale.
+
+<Sprite name="mat-glass" scale={10} caption="Interior semitransparente (canal alfa: se ve el damero), contorno azul muy claro, brillo blanco arriba a la izquierda y un solo píxel blanco abajo a la derecha" />
+
+**Compáralos en valor.** El contraste es lo primero que lee el ojo:
+
+<Tip title="Compara el rango de valor">
+<Sprite name="mat-mate" scale={8} view="gray" caption="Mate: valores juntos" />
+<Sprite name="mat-metal" scale={8} view="gray" caption="Metal: del blanco al casi negro" />
+
+Aquí ninguno está mal: es la misma bola. Fíjate en el **rango de valor**. El mate se mueve en una franja estrecha de grises. El metal usa todo el rango, del blanco al casi negro. Si tu metal en grises parece el de la izquierda, se leerá como plástico o piedra.
+</Tip>
+
+<Sprite name="rock-clean" scale={10} view="gray" caption="La roca de P2-02 en grises: tres tonos suaves y sin brillo. Es piedra mate, aunque la forma sea irregular" />
+
+Abre la bola de metal en el inspector. Pasa a *grises* y mírala a 1×: el blanco y la banda oscura siguen ahí aunque sea diminuta.
+
+<Inspector sprite="mat-metal" />
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Una bola base que vas a reutilizar">
+1. <Keys k="Ctrl+N" />: 16×16, modo RGBA, fondo transparente. Activa *View → Grid*.
+2. Con el lápiz (<Keys k="B" />, *Pixel-perfect*) traza un círculo limpio y rellénalo con el cubo (<Keys k="G" />).
+3. Marca el terminador como en P3-01: luz arriba a la izquierda. Guarda con <Keys k="Ctrl+S" /> como `bola-base`.
+
+<Tip>
+Haz *Guardar como* una copia por material. Así la forma y la luz son idénticas y solo comparas el material.
+</Tip>
+</Step>
+
+<Step n={2} title="Piedra mate">
+Tres tonos de un gris violáceo, **cercanos en valor**. Luz, medio tono y sombra con transiciones tranquilas. Sin blanco y sin brillo.
+
+<Why>
+Una superficie rugosa dispersa la luz en todas direcciones. No hay un punto que la devuelva de golpe, así que no hay brillo especular.
+</Why>
+</Step>
+
+<Step n={3} title="Metal">
+1. Paleta de 5 tonos fríos, del casi negro al **blanco puro**.
+2. Mitad de arriba clara (el cielo reflejado). En el centro, **dos filas del tono más oscuro** de lado a lado: el horizonte.
+3. Debajo, vuelve a subir un poco el valor: el suelo reflejado.
+4. Pon un brillo de 2×2 en blanco puro arriba a la izquierda.
+
+<Why>
+El contraste brusco, la banda y el brillo duro dicen «pulido» antes de que el ojo vea el color.
+</Why>
+</Step>
+
+<Step n={4} title="Madera">
+Para la madera, mejor un **tablón o tile** de 16×16 que una bola. Rellena con el marrón medio, añade filas del claro arriba y el oscuro en el borde inferior. Pinta las vetas con trazos cortos del tono medio u oscuro **a lo largo de la tabla**.
+
+<Warn>
+Vetas de 1 píxel salteadas por todo el tablón son ruido, no madera. Haz trazos de 2 a 6 píxeles, agrupados.
+</Warn>
+</Step>
+
+<Step n={5} title="Cristal">
+1. Contorno de un azul muy claro, no oscuro.
+2. Rellena el interior con un azul al que le bajas el **alfa** en el selector de color, para que se vea el fondo.
+3. Una zona algo más opaca abajo a la derecha, el lado en sombra.
+4. Un brillo blanco de 2–3 píxeles arriba a la izquierda y **un solo píxel** blanco abajo a la derecha.
+
+<Warn title="Verifica en tu versión">
+El canal alfa se ajusta en el editor de color de Aseprite (deslizador *Alpha* o «A»). El nombre y su sitio pueden variar entre versiones. El sprite debe estar en modo RGBA.
+</Warn>
+</Step>
+
+<Step n={6} title="Exportar">
+Exporta los cuatro con *File → Export → Export As*, PNG, **Resize** 800 %, y una copia al 100 % para revisarlos.
+</Step>
+</Block>
+
+<Block kind="version">
+Ahora a tu manera. Misma luz en todo. Elige uno:
+
+- **Oro frente a hierro:** dos metales. Mismo contraste extremo; cambia solo el tono (ocres frente a grises fríos).
+- **Tiles de suelo:** suelo de piedra, de tablones y de baldosas metálicas que encajen en un mosaico.
+- **Un objeto, dos materiales:** la espada con hoja de metal y empuñadura de madera, o la poción con cristal y corcho.
+</Block>
+
+<Block kind="errores">
+<Mistake title="Metal sin contraste" wrongLabel="Grises suaves: parece piedra" rightLabel="Blanco, horizonte y casi negro">
+  <Sprite slot="wrong" name="mat-mate" scale={8} view="gray" />
+  <Sprite slot="right" name="mat-metal" scale={8} view="gray" />
+
+Si pintas el metal como la piedra, con valores juntos, se lee mate. Abre el rango: blanco puro en el brillo, casi negro en la banda de horizonte.
+</Mistake>
+
+<Mistake title="Cristal con contorno oscuro y opaco" wrongLabel="Contorno oscuro, relleno opaco" rightLabel="Contorno claro, se ve el fondo">
+  <Sprite slot="wrong" name="mat-mate" scale={8} />
+  <Sprite slot="right" name="mat-glass" scale={8} />
+
+Con contorno oscuro y relleno sólido, el cristal se lee como la bola de piedra de la izquierda. Aclara el contorno, baja el alfa del interior y pon los dos brillos opuestos.
+</Mistake>
+
+<Warn title="Vetas de través">
+Si las vetas de la madera cruzan la tabla en vez de recorrerla, o van en direcciones distintas, la pieza parece rota. Siguen siempre la longitud de la forma.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+Sube tus cuatro sprites **a 1×** y mira cada uno en grises.
+
+<Inspector upload title="Compara tus cuatro materiales" />
+
+<Checklist items={[
+  "Los cuatro tienen la misma luz, desde arriba a la izquierda",
+  "En grises, el metal va del blanco al casi negro y la piedra no",
+  "El metal tiene brillo duro y una banda de horizonte",
+  "La piedra no tiene ningún píxel blanco",
+  "La madera usa tonos cálidos y sus vetas siguen la tabla",
+  "En el cristal se ve el fondo, el contorno es claro y hay dos brillos opuestos",
+]} />
+
+<Quiz q="¿Qué distingue sobre todo al metal pulido de la piedra mate?" options={["El color base", "El contraste extremo y el reflejo del entorno", "El grosor del contorno"]} answer={1}>
+El metal refleja lo que le rodea: salta del blanco al casi negro y muestra el horizonte. La piedra dispersa la luz y se queda en valores suaves.
+</Quiz>
+
+<Quiz q="¿Por qué el cristal lleva un brillo en el lado contrario a la luz?" options={["Porque hay una segunda luz", "Porque la luz atraviesa el cristal y sale por el otro lado", "Para que el contorno se vea mejor"]} answer={1}>
+La luz entra, cruza el objeto y se concentra al salir. Ese segundo brillo pequeño dice «transparente».
+</Quiz>
+</Block>

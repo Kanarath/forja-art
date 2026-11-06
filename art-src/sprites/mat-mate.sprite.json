@@ -1,0 +1,33 @@
+{
+  "name": "mat-mate",
+  "description": "La misma bola en un material mate (piedra, arcilla): contraste suave, solo 3 tonos y ningún brillo especular.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "material"
+  ],
+  "palette": {
+    "1": "#5e5a6b",
+    "2": "#7d788c",
+    "3": "#9b96aa",
+    "o": "#1d1a24"
+  },
+  "rows": [
+    "................",
+    "....oooooooo....",
+    "...o33333332o...",
+    "..o3333333322o..",
+    ".o333333333221o.",
+    ".o333333333221o.",
+    ".o333333333221o.",
+    ".o333333332211o.",
+    ".o333333322211o.",
+    ".o333333222111o.",
+    ".o333332221111o.",
+    ".o222222211111o.",
+    "..o2222111111o..",
+    "...o11111111o...",
+    "....oooooooo....",
+    "................"
+  ]
+}

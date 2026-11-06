@@ -1,0 +1,179 @@
+---
+id: v3-01
+discipline: voxel
+level: 3
+order: 1
+title: "Paleta y rampas en 3D"
+summary: "Organiza la paleta de MagicaVoxel en rampas por material, pinta la oclusión en el color y gira el tono de sombras y luces, como en pixel art."
+duration: 40
+status: borrador
+prerequisites: [v2-02]
+fundamentals: [f01]
+objectives:
+  - "Entender que en MagicaVoxel el color es por vóxel y la paleta tiene 255 huecos"
+  - "Organizar la paleta en rampas de oscuro a claro, una fila por material"
+  - "Pintar AO: oscurecer la base y los huecos aunque el render ya tenga oclusión"
+  - "Aplicar hue shifting a una rampa 3D"
+tools: [magicavoxel]
+piece:
+  name: "Una roca con una rampa de 5 tonos y AO pintado"
+  canvas: "11x9x7"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [rampa-3d]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Hoy forjas una **roca de 11×9×7** pintada con una rampa de 5 tonos: oscura en la base, clara arriba, con sombras frías y luces cálidas.
+
+<VoxViewer model="roca" stage={2} title="Tu pieza: la roca con rampa y hue shifting (11×9×7)" />
+
+Gírala. Aunque el visor no tiene sombras de render, la roca **ya tiene volumen**: está pintado en el color.
+</Block>
+
+<Block kind="concepto">
+En Blender texturizas con UV o con materiales. En MagicaVoxel no: **cada vóxel tiene un color**, y ese color es un índice de la paleta. La paleta tiene **255 huecos** utilizables. Es un límite, y una ventaja: te obliga a decidir.
+
+Recorre las tres etapas de la roca:
+
+<VoxViewer model="roca" stage={0} title="Un color, rampa de valor y hue shifting" />
+
+- **Un color:** la forma existe, pero sin render parece plana.
+- **Rampa de valor:** cinco tonos de la misma piedra. Claro arriba, oscuro abajo.
+- **Hue shifting:** los mismos valores; las sombras giran al azul y las luces al ocre.
+
+<Why>
+El valor (F01) hace el trabajo. Entre la etapa 2 y la 3 el tono cambia, pero la lectura de volumen es la misma: la decidieron los cinco valores.
+</Why>
+
+**Rampas en la paleta.** Organiza la paleta como en pixel art: **una fila por material**, de oscuro a claro. Piedra en una fila, musgo en otra, madera en otra. Así encuentras el tono siguiente sin buscar.
+
+**AO pintado.** La oclusión ambiental es la sombra suave donde la luz llega peor: la base que toca el suelo, los huecos, las juntas. El render de MagicaVoxel ya la calcula. Aun así, píntala.
+
+<Why title="¿Por qué pintar lo que el render ya hace?">
+Porque tu modelo no siempre vivirá en el render. En el visor normal del editor, en un motor como Godot exportado en .obj o en una vista previa, esa oclusión desaparece. Si está en el color, viaja con el modelo.
+</Why>
+
+**Hue shifting en 3D.** Igual que en pixel art: las sombras se enfrían (hacia el azul o el violeta) y las luces se calientan (hacia el amarillo o el ocre). Diseña tu rampa aquí:
+
+<RampLab base="#8a8698" steps={5} />
+
+Compara la rampa plana con la girada y mira la vista en grises: los dos valores deben coincidir. Exporta el .gpl si quieres guardarla como referencia.
+
+<Tip>
+La rampa del visor es esta: `#3c3f5e`, `#5e6280`, `#8a8698`, `#b4ab9f`, `#dcd3c2`. El centro, `#8a8698`, es el gris piedra de la etapa 1.
+</Tip>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Elige una fila libre de la paleta">
+1. Crea un modelo nuevo de 11×9×7 (los tres campos de **tamaño**).
+2. En la **paleta** de la izquierda, busca cinco huecos seguidos en una misma fila.
+3. Esa fila será tu rampa de piedra: de oscuro (izquierda) a claro (derecha).
+
+<Why>
+Cinco huecos contiguos son una rampa que se lee de un vistazo. Si los tonos quedan dispersos, acabarás cogiendo el que no era.
+</Why>
+</Step>
+
+<Step n={2} title="Edita el color de cada hueco">
+1. Haz clic en el primer hueco.
+2. Con el **selector de color** del panel de paleta, escribe o ajusta el tono más oscuro: `#3c3f5e`.
+3. Repite con los otros cuatro huecos, hasta `#dcd3c2`. O usa tu rampa del laboratorio.
+
+<Tip>
+Editar un hueco cambia **todos** los vóxels que ya usan ese color. Es una ventaja: puedes retocar la rampa entera al final sin repintar nada.
+</Tip>
+</Step>
+
+<Step n={3} title="Modela la roca con el tono central">
+1. Selecciona el tono central, `#8a8698`.
+2. En modo **Attach**, con el pincel **Box**, levanta un bloque ancho y bajo.
+3. Cambia a **Erase** y redondea: quita las esquinas y estrecha las capas de arriba.
+
+<Warn>
+No pintes todavía. Primero la forma en un color, como en el blockout de V2-01.
+</Warn>
+</Step>
+
+<Step n={4} title="Pinta la rampa por alturas">
+1. Cambia al modo **Paint** y al pincel **Voxel** (o **Face** para cubrir una cara entera).
+2. La capa de la base, la que toca el suelo: el tono 1, el más oscuro.
+3. Las capas bajas, el tono 2; el centro, el 3; las altas, el 4; la cima, el 5.
+
+<Why>
+La cima recibe la luz del cielo; la base apenas recibe nada. Pintar por alturas es la forma más simple de AO pintado.
+</Why>
+</Step>
+
+<Step n={5} title="Oscurece los huecos">
+1. Busca entrantes: rincones, grietas, el borde donde la roca toca el suelo.
+2. Píntalos un tono más oscuro que lo que los rodea.
+3. Gira la cámara con el botón derecho y revisa todos los lados.
+
+<Tip>
+Un solo tono más oscuro basta. Si bajas dos, el hueco parece un agujero negro.
+</Tip>
+</Step>
+
+<Step n={6} title="Compara con y sin render y guarda">
+1. Mira la roca en el visor normal del editor: ¿se lee el volumen sin render?
+2. Pulsa **Render** arriba: el AO del render se suma al tuyo.
+3. Guarda `roca_v1.vox` y exporta una imagen del render para tu portfolio.
+</Step>
+
+<Warn title="Verifica en tu versión">
+La forma de editar un color de la paleta cambia entre versiones de MagicaVoxel: en algunas el selector (con campos RGB, HSV o hexadecimal) aparece al seleccionar el hueco; en otras se abre con un botón o un doble clic sobre él. Comprueba también los nombres de **Attach**/**Erase**/**Paint** y de los pinceles.
+</Warn>
+</Block>
+
+<Block kind="version">
+Forja **otra roca o un elemento de terreno** con su propia rampa de 5 tonos. Elige un reto:
+
+- **Roca con musgo:** una segunda fila de paleta en verde, con su propio hue shifting, solo en la cara superior.
+- **Roca volcánica:** una rampa casi negra con luces rojizas. ¿Se sigue leyendo el volumen en grises?
+- **Montón de rocas:** tres rocas juntas. Pinta AO en los huecos donde se tocan.
+
+Comprueba cada rampa en el **RampLab**: la vista en grises debe subir sin saltos.
+</Block>
+
+<Block kind="errores">
+<Mistake title="Confiar en el AO del render" wrongLabel="Un color" rightLabel="AO pintado">
+  <VoxViewer slot="wrong" model="roca" stage={0} title="Un color: sin render, plana" />
+  <VoxViewer slot="right" model="roca" stage={1} title="Rampa de valor: volumen en el color" />
+
+Con un solo color, la roca solo tiene volumen dentro del render. En el editor o exportada a un motor, es una mancha. Pinta la oclusión en el color y el volumen viajará con el modelo.
+</Mistake>
+
+<Mistake title="Rampa sin orden en la paleta" wrongLabel="Tonos dispersos" rightLabel="Una fila por material">
+  <p slot="wrong">Los grises de la piedra están repartidos por la paleta, mezclados con verdes y marrones.</p>
+  <p slot="right">Cinco huecos seguidos, de oscuro a claro. El siguiente tono siempre está al lado.</p>
+
+Si los tonos están dispersos, pintas con el que tienes más a mano y la rampa se rompe. Ordena la paleta antes de pintar: una fila, un material.
+</Mistake>
+
+<Warn title="Error típico: hue shifting que rompe el valor">
+Si al girar el tono cambias también la luminancia, la roca pierde volumen o se ve manchada. Comprueba la vista en grises del RampLab: los valores deben ser los mismos que en la rampa plana.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+<Checklist items={[
+  "Mi rampa de piedra ocupa cinco huecos seguidos de una fila de la paleta",
+  "Va de oscuro a claro y sube sin saltos en la vista en grises",
+  "Las sombras tiran a frío y las luces a cálido",
+  "La base y los huecos están un tono más oscuros",
+  "La roca se lee con volumen en el visor normal, sin render",
+  "He guardado roca_v1.vox y un render en mi portfolio",
+]} />
+
+<Quiz q="El render de MagicaVoxel ya calcula oclusión ambiental. ¿Por qué pintarla en el color?" options={["Porque el render no la calcula bien", "Porque el modelo también se verá sin ese render: en el editor o en un motor", "Porque así ocupa menos huecos de la paleta"]} answer={1}>
+El AO del render se queda en el render. El AO pintado va en el color de cada vóxel y viaja con el modelo a cualquier sitio.
+</Quiz>
+
+<Quiz q="Cambias el color de un hueco de la paleta. ¿Qué pasa con los vóxels pintados con él?" options={["Nada, conservan el color antiguo", "Cambian todos al nuevo color", "Solo cambian los que pintes a partir de ahora"]} answer={1}>
+El color es un índice de la paleta: si editas el hueco, cambian todos los vóxels que lo usan. Por eso puedes ajustar la rampa al final.
+</Quiz>
+</Block>
