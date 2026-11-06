@@ -10,7 +10,8 @@
     "dev": "astro dev",
     "prebuild": "npm run sprites",
     "build": "astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "test": "node --test tests/"
   },
   "dependencies": {
     "@astrojs/mdx": "8.1.3",

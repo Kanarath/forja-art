@@ -1,19 +1,20 @@
 ---
 // Barra de XP segmentada (bloques, como una barra de vida de videojuego).
-interface Props { xp: number; next: number; label?: string; nextLabel?: string; segments?: number }
-const { xp, next, label = "Rango global", nextLabel = "", segments = 20 } = Astro.props;
-const filled = Math.round((xp / next) * segments);
+// Muestra el avance hacia el siguiente rango; se rellena en el navegador con tu progreso.
+interface Props { scope?: "global" | "pixel" | "voxel" | "fundamentos"; label?: string; segments?: number }
+const { scope = "global", label = "Rango global", segments = 20 } = Astro.props;
 ---
 
-<div class="xp" role="meter" aria-valuemin="0" aria-valuemax={next} aria-valuenow={xp} aria-label={label}>
-  <div class="xp-row"><span>{label}</span><span>{xp} / {next} XP{nextLabel && ` → ${nextLabel}`}</span></div>
-  <div class="segbar">{Array.from({ length: segments }, (_, i) => <i class={i < filled ? "on" : ""} />)}</div>
+<div class="xp" role="meter" aria-valuemin="0" aria-valuemax="1" aria-valuenow="0" aria-label={label} data-xpbar={scope}>
+  <div class="xp-row"><span>{label} · <b data-rank={scope}>…</b></span><span data-xpbar-label>0 XP</span></div>
+  <div class="segbar">{Array.from({ length: segments }, () => <i />)}</div>
 </div>
 
 <style>
   .xp { max-width: 460px; }
-  .xp-row { display: flex; justify-content: space-between; font: .75rem var(--font-mono); color: var(--muted); margin-bottom: 6px; }
+  .xp-row { display: flex; justify-content: space-between; gap: 12px; font: .75rem var(--font-mono); color: var(--muted); margin-bottom: 6px; }
+  .xp-row b { color: var(--fund); font-weight: 500; }
   .segbar { display: flex; gap: 3px; }
   .segbar i { flex: 1; height: 10px; background: var(--panel-2); }
-  .segbar i.on { background: linear-gradient(var(--fund), #b8902f); }
+  .segbar i:global(.on) { background: linear-gradient(var(--fund), #b8902f); }
 </style>

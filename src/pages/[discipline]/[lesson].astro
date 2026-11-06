@@ -7,6 +7,7 @@ import { visibleLessons, lessonXp, type Lesson } from "../../lib/lessons";
 import { DISCIPLINES, FUNDAMENTOS } from "../../data/disciplines";
 import { url } from "../../lib/url";
 import { lessonComponents } from "../../components/lesson";
+import LessonProgress from "../../components/lesson/LessonProgress.astro";
 
 export async function getStaticPaths() {
   const list = await visibleLessons();
@@ -52,6 +53,7 @@ const fundTitle = (f: string) => FUNDAMENTOS.levels.find((x) => x.n === Number(f
 
   <div class="layout">
     <aside class="side">
+      <LessonProgress id={l.id} xp={l.xp} piece={l.piece.name} />
       <nav class="panel toc" aria-label="En esta lección">
         <h2>En esta lección</h2>
         <ol>
@@ -81,7 +83,7 @@ const fundTitle = (f: string) => FUNDAMENTOS.levels.find((x) => x.n === Number(f
       )}
     </aside>
 
-    <article class="body">
+    <article class="body" data-lesson-id={l.id}>
       <Content components={lessonComponents} />
     </article>
   </div>

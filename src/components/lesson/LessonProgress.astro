@@ -1,0 +1,64 @@
+---
+// Tu progreso en una lección: tres partes con su XP. Se guarda en tu navegador.
+// La parte «pieza» es la que más XP da (regla del PRD); en la tarea 1.8 marcarla
+// abrirá el portfolio para registrar la imagen de tu pieza.
+interface Props { id: string; xp: { concept: number; guided: number; piece: number }; piece: string }
+const { id, xp, piece } = Astro.props;
+const parts = [
+  { key: "concept", label: "He entendido el concepto", xp: xp.concept },
+  { key: "guided", label: "He completado la forja guiada", xp: xp.guided },
+  { key: "piece", label: `He forjado la pieza: ${piece}`, xp: xp.piece },
+];
+const total = xp.concept + xp.guided + xp.piece;
+---
+
+<div class="lp panel" data-lesson-progress={id}>
+  <h2>Tu progreso</h2>
+  <ul>
+    {parts.map((p) => (
+      <li>
+        <label>
+          <input type="checkbox" data-part={p.key} />
+          <span class="txt">{p.label}</span>
+          <span class="xp">+{p.xp}</span>
+        </label>
+      </li>
+    ))}
+  </ul>
+  <p class="sum"><b data-lp-earned>0</b> / {total} XP <span class="done-msg">· ¡Lección forjada!</span></p>
+</div>
+
+<script>
+  import { onProgress, setPart } from "../../lib/store/progress";
+  import type { Part } from "../../lib/game/core";
+
+  for (const box of document.querySelectorAll<HTMLElement>("[data-lesson-progress]")) {
+    const id = box.dataset.lessonProgress!;
+    const inputs = [...box.querySelectorAll<HTMLInputElement>("input[data-part]")];
+    inputs.forEach((i) => i.addEventListener("change", () => setPart(id, i.dataset.part as Part, i.checked)));
+    onProgress((s) => {
+      const parts = s.lessons[id]?.parts ?? {};
+      let earned = 0;
+      inputs.forEach((i) => {
+        i.checked = !!parts[i.dataset.part as Part];
+        if (i.checked) earned += Number(i.closest("label")!.querySelector(".xp")!.textContent!.slice(1));
+      });
+      box.querySelector("[data-lp-earned]")!.textContent = String(earned);
+      box.classList.toggle("complete", inputs.every((i) => i.checked));
+    });
+  }
+</script>
+
+<style>
+  h2 { font: 600 .75rem var(--font-mono); text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: 8px; }
+  ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; }
+  label { display: grid; grid-template-columns: 18px 1fr auto; gap: 8px; align-items: start; cursor: pointer; font-size: .88rem; }
+  input { accent-color: var(--accent); width: 16px; height: 16px; margin-top: 2px; }
+  .xp { font: 600 .72rem var(--font-mono); color: var(--accent); }
+  input:checked ~ .txt { color: var(--muted); text-decoration: line-through; }
+  .sum { margin: 10px 0 0; font: .8rem var(--font-mono); color: var(--muted); }
+  .sum b { color: var(--text); }
+  .done-msg { display: none; color: #4ade80; }
+  .complete { border-color: #4ade80; }
+  .complete .done-msg { display: inline; }
+</style>

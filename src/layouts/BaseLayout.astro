@@ -6,6 +6,8 @@ import "../styles/tokens.css";
 import "../styles/base.css";
 import SiteHeader from "../components/SiteHeader.astro";
 import type { DisciplineId } from "../data/disciplines";
+import { buildCatalog } from "../lib/catalog";
+const catalog = await buildCatalog();
 
 interface Props {
   title: string;
@@ -41,5 +43,10 @@ const fullTitle = title === "Taller" ? "FORJA//ART · Academia de Pixel Art y Vo
         <span>Todo el arte de ejemplo son datos reales: píxeles y vóxeles inspeccionables.</span>
       </div>
     </footer>
+    <!-- catálogo de lecciones para calcular tu progreso en el navegador -->
+    <script type="application/json" id="forja-catalog" set:html={JSON.stringify(catalog)} />
+    <script>
+      import "../lib/ui/progress-ui";
+    </script>
   </body>
 </html>

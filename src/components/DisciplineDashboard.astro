@@ -2,19 +2,25 @@
 // Dashboard de una disciplina: cabecera con su arte, progreso y el mapa de niveles.
 // El mapa es un camino vertical: cada nivel muestra qué aprendes y qué pieza forjas.
 // Pixel, Voxel y Fundamentos usan el mismo componente; solo cambian los datos y el tema.
+// Tu progreso (porcentaje, niveles hechos, siguiente lección) se rellena en el navegador.
 import type { Discipline } from "../data/disciplines";
 import LevelStrip from "./LevelStrip.astro";
+import XpBar from "./XpBar.astro";
 import { lessonsOf } from "../lib/lessons";
+import { buildCatalog } from "../lib/catalog";
+import { emptyState, nextLesson } from "../lib/game/core";
+import { ROUTE } from "../data/route";
 import { url } from "../lib/url";
 
-interface Props { d: Discipline; done: number; percent: number }
-const { d, done, percent } = Astro.props;
+interface Props { d: Discipline }
+const { d } = Astro.props;
 // Las lecciones salen del contenido (src/content/lessons), no de este componente.
 const lessons = await lessonsOf(d.id);
 const lessonsAt = (n: number) => lessons.filter((l) => l.data.level === n);
 const prefix = d.id === "fundamentos" ? "F" : "N";
-const current = d.levels.find((l) => l.n === done + 1);
 const labelOf = (n: number) => `${prefix}${d.id === "fundamentos" ? String(n).padStart(2, "0") : n}`;
+const first = nextLesson(await buildCatalog(), emptyState(), ROUTE, d.id);
+const firstLevel = d.levels[0].n;
 ---
 
 <section class="d-hero">
@@ -24,54 +30,57 @@ const labelOf = (n: number) => `${prefix}${d.id === "fundamentos" ? String(n).pa
     <p class="lead">{d.tagline}</p>
     <ul class="facts">
       <li><span>Herramienta</span>{d.tool}</li>
-      <li><span>Progreso</span>{percent}%</li>
-      <li><span>Niveles</span>{d.levels.length}</li>
+      <li><span>Progreso</span><b data-pct={d.id}>0%</b></li>
+      <li><span>Lecciones</span>{lessons.length}</li>
     </ul>
-    {current && (
-      <div class="now-card">
-        <small>SIGUIENTE EN TU RUTA</small>
-        <b>{labelOf(current.n)} · {current.title}</b>
-        <p>{current.summary}</p>
-        <span class="soon">Lecciones en la forja · fase 2</span>
+    <XpBar scope={d.id} label="Rango" />
+    <div class={`now-card ${first ? "" : "is-empty"}`} data-next={d.id}>
+      <small>SIGUIENTE EN TU RUTA</small>
+      <div class="has">
+        <b><span data-next-id>{first?.id.toUpperCase()}</span> · <span data-next-title>{first?.title}</span></b>
+        <p>Pieza: <span data-next-piece>{first?.piece}</span></p>
+        <a class="btn" data-next-link href={first?.href ?? "#"}>Empezar →</a>
       </div>
-    )}
+      <div class="none">
+        <b>Lecciones en la forja</b>
+        <p>Las lecciones de esta ruta se están escribiendo (fase 2). El mapa muestra lo que aprenderás.</p>
+      </div>
+    </div>
   </div>
   <div class="d-art"><slot name="art" /></div>
 </section>
 
-<LevelStrip levels={d.levels} done={done} />
+<LevelStrip levels={d.levels} discipline={d.id} />
 
 <h2 class="section-title" id="ruta">Mapa de aprendizaje</h2>
-<ol class="map">
-  {d.levels.map((l) => {
-    const state = l.n <= done ? "done" : l.n === done + 1 ? "now" : "todo";
-    return (
-      <li class={state}>
-        <span class="node">{labelOf(l.n)}</span>
-        <div class="card">
-          <div class="card-head">
-            <h3>{l.title}</h3>
-            <span class="state">{state === "done" ? "Completado" : state === "now" ? "Siguiente" : "Pendiente"}</span>
-          </div>
-          <p>{l.summary}</p>
-          <p class="piece">◆ Pieza: {l.piece}</p>
-          {lessonsAt(l.n).length > 0 && (
-            <ul class="lessons">
-              {lessonsAt(l.n).map((x) => (
-                <li>
-                  <a href={url(`${x.data.discipline}/${x.data.id}/`)}>
-                    <span class="lid">{x.data.id.toUpperCase()}</span> {x.data.title}
-                    <span class="dur">{x.data.duration} min</span>
-                    {x.data.status !== "publicada" && <span class="st">{x.data.status === "borrador" ? "borrador" : "en prueba"}</span>}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          )}
+<ol class="map" data-levels={d.id}>
+  {d.levels.map((l) => (
+    <li data-n={l.n} class={l.n === firstLevel ? "now" : "todo"}>
+      <span class="node">{labelOf(l.n)}</span>
+      <div class="card">
+        <div class="card-head">
+          <h3>{l.title}</h3>
+          <span class="state" data-state>{l.n === firstLevel ? "Siguiente" : "Pendiente"}</span>
         </div>
-      </li>
-    );
-  })}
+        <p>{l.summary}</p>
+        <p class="piece">◆ Pieza: {l.piece}</p>
+        {lessonsAt(l.n).length > 0 && (
+          <ul class="lessons">
+            {lessonsAt(l.n).map((x) => (
+              <li data-lesson-item={x.data.id}>
+                <a href={url(`${x.data.discipline}/${x.data.id}/`)}>
+                  <span class="check" aria-hidden="true"></span>
+                  <span class="lid">{x.data.id.toUpperCase()}</span> {x.data.title}
+                  <span class="dur">{x.data.duration} min</span>
+                  {x.data.status !== "publicada" && <span class="st">{x.data.status === "borrador" ? "borrador" : "en prueba"}</span>}
+                </a>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </li>
+  ))}
 </ol>
 
 <style>
@@ -85,6 +94,16 @@ const labelOf = (n: number) => `${prefix}${d.id === "fundamentos" ? String(n).pa
   .now-card small { font: .7rem var(--font-mono); color: var(--accent); letter-spacing: .08em; display: block; }
   .now-card b { font: 600 1.15rem var(--font-head); }
   .now-card p { color: var(--muted); margin: 6px 0 10px; font-size: .92rem; }
+  .now-card { margin-top: 16px; }
+  .now-card .none { display: none; }
+  .now-card:global(.is-empty) .has { display: none; }
+  .now-card:global(.is-empty) .none { display: block; }
+  .now-card .btn { padding: 8px 14px; font-size: .88rem; }
+  .facts b { font-weight: 500; }
+  .check { width: 14px; height: 14px; border: 1px solid var(--line); flex: none; align-self: center; }
+  :global(.is-done) .check { background: var(--accent); border-color: var(--accent); }
+  :global(.is-started) .check { background: linear-gradient(135deg, var(--accent) 50%, transparent 50%); border-color: var(--accent); }
+  :global(.is-done) .lid { text-decoration: line-through; }
   .d-art { display: grid; place-items: center; min-height: 280px; background: radial-gradient(closest-side, color-mix(in srgb, var(--accent) 14%, transparent), transparent); }
   .d-art :global(svg.voxel-iso) { width: 80%; max-width: 380px; height: auto; }
 
@@ -94,15 +113,15 @@ const labelOf = (n: number) => `${prefix}${d.id === "fundamentos" ? String(n).pa
   .node { width: 48px; height: 48px; display: grid; place-items: center; font: 600 .85rem var(--font-mono); background: var(--bg); border: 2px solid var(--line); color: var(--muted); z-index: 1; }
   :global([data-discipline="pixel"]) .node { box-shadow: 3px 3px 0 #000; }
   :global([data-discipline="voxel"]) .node { box-shadow: 0 8px 18px -8px color-mix(in srgb, var(--accent) 60%, transparent); }
-  .done .node { border-color: var(--accent); color: var(--text); }
-  .now .node { background: var(--accent); border-color: var(--accent); color: #0e0f14; }
+  :global(.done) > .node { border-color: var(--accent); color: var(--text); }
+  :global(.now) > .node { background: var(--accent); border-color: var(--accent); color: #0e0f14; }
   .card { background: var(--panel); border: 1px solid var(--line); padding: 14px 16px; }
-  .now .card { border-color: var(--accent); }
-  .todo .card { opacity: .78; }
+  :global(.now) > .card { border-color: var(--accent); }
+  :global(.todo) > .card { opacity: .78; }
   .card-head { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
   .card h3 { font-size: 1.1rem; margin: 0; }
   .state { font: .7rem var(--font-mono); color: var(--muted); white-space: nowrap; }
-  .now .state, .done .state { color: var(--accent); }
+  :global(.now) .state, :global(.done) .state { color: var(--accent); }
   .card p { margin: 6px 0 0; color: var(--muted); font-size: .92rem; }
   .card .piece { color: var(--text); font-size: .85rem; }
   .lessons { list-style: none; padding: 0; margin: 12px 0 0; display: grid; gap: 4px; }

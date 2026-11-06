@@ -1,7 +1,7 @@
 ---
 // Lista de comprobación de tu pieza. Uso:
 //   <Checklist items={["El PNG ampliado tiene bordes nítidos", "El fondo es transparente"]} />
-// (Guardar las marcas en tu navegador llega con el sistema de progreso, tarea 1.7.)
+// Las marcas se guardan en tu navegador, asociadas a la lección.
 interface Props { items: string[]; title?: string }
 const { items, title = "Antes de dar tu pieza por buena" } = Astro.props;
 ---
@@ -17,7 +17,10 @@ const { items, title = "Antes de dar tu pieza por buena" } = Astro.props;
 </div>
 
 <script>
+  import { loadProgress, setChecks } from "../../lib/store/progress";
+
   for (const box of document.querySelectorAll<HTMLElement>("[data-checklist]")) {
+    const lessonId = box.closest<HTMLElement>("[data-lesson-id]")?.dataset.lessonId;
     const inputs = [...box.querySelectorAll<HTMLInputElement>("input")];
     const out = box.querySelector("[data-done]")!;
     const update = () => {
@@ -25,7 +28,17 @@ const { items, title = "Antes de dar tu pieza por buena" } = Astro.props;
       out.textContent = String(done);
       box.classList.toggle("complete", done === inputs.length);
     };
-    inputs.forEach((x) => x.addEventListener("change", update));
+    if (lessonId) {
+      const saved = loadProgress().lessons[lessonId]?.checks ?? [];
+      inputs.forEach((x, i) => (x.checked = saved.includes(i)));
+    }
+    inputs.forEach((x) =>
+      x.addEventListener("change", () => {
+        update();
+        if (lessonId) setChecks(lessonId, inputs.flatMap((y, i) => (y.checked ? [i] : [])));
+      }),
+    );
+    update();
   }
 </script>
 

@@ -1,5 +1,7 @@
 ---
 // TALLER — dashboard principal (maqueta A + paleta de logros y timeline de B).
+// Tu progreso (XP, rango, siguiente lección, niveles) se rellena en el navegador:
+// ver src/lib/ui/progress-ui.ts. El HTML trae el estado inicial (sin progreso).
 import BaseLayout from "../layouts/BaseLayout.astro";
 import PixelSprite from "../components/PixelSprite.astro";
 import VoxelIso from "../components/VoxelIso.astro";
@@ -8,25 +10,35 @@ import LevelStrip from "../components/LevelStrip.astro";
 import AchievementPalette from "../components/AchievementPalette.astro";
 import PortfolioTimeline from "../components/PortfolioTimeline.astro";
 import { PIXEL, VOXEL, FUNDAMENTOS } from "../data/disciplines";
-import { DEMO, ACHIEVEMENTS } from "../data/demo-progress";
+import { ACHIEVEMENTS } from "../data/achievements";
 import { gem, potion, sword, chest, slime, islandDiorama, voxelChest, voxelTower } from "../data/demo-art";
-
+import { buildCatalog } from "../lib/catalog";
+import { emptyState, nextLesson } from "../lib/game/core";
+import { ROUTE } from "../data/route";
 import { BASE as base } from "../lib/url";
-const nextLevel = (d: typeof PIXEL) => d.levels.find((l) => l.n === DEMO.levelDone[d.id] + 1);
+
+// estado inicial para el HTML (antes de leer tu progreso): la primera lección de la ruta
+const first = nextLesson(await buildCatalog(), emptyState(), ROUTE);
 ---
 
 <BaseLayout title="Taller">
   <section class="hero">
-    <div>
-      <p class="eyebrow">Bienvenido de vuelta al taller</p>
-      <h1>Hoy forjas: <em>{DEMO.current.pitch}</em></h1>
-      <p class="lead">{DEMO.current.id.toUpperCase()} · {DEMO.current.title} · {DEMO.current.minutes} min en {DEMO.current.tool}. Termina con un {DEMO.current.piece} en tu portfolio.</p>
-      <div class="cta">
-        <a class="btn" href={`${base}pixel/`}>Continuar lección →</a>
-        <a class="btn-ghost" href={`${base}pixel/#ruta`}>Ver ruta</a>
+    <div class={`next ${first ? "" : "is-empty"}`} data-next="global">
+      <p class="eyebrow">Bienvenido al taller</p>
+      <div class="has">
+        <h1>Hoy forjas: <em data-next-piece>{first?.piece}</em></h1>
+        <p class="lead"><b data-next-id>{first?.id.toUpperCase()}</b> · <span data-next-title>{first?.title}</span><br /><span class="muted" data-next-meta></span></p>
+        <div class="cta">
+          <a class="btn" data-next-link href={first?.href ?? "#"}>Continuar →</a>
+          <a class="btn-ghost" href={`${base}pixel/#ruta`}>Ver rutas</a>
+        </div>
       </div>
-      <XpBar xp={DEMO.xp} next={DEMO.xpNext} nextLabel={DEMO.nextRank} />
-      <p class="demo-note">Datos de ejemplo: el progreso real llega en la tarea 1.7.</p>
+      <div class="none">
+        <h1>La forja se está <em>encendiendo</em></h1>
+        <p class="lead">Las primeras lecciones están en preparación. Mientras tanto, explora las rutas y los fundamentos.</p>
+        <div class="cta"><a class="btn" href={`${base}pixel/`}>Ver Pixel Forge →</a><a class="btn-ghost" href={`${base}voxel/`}>Ver Voxel Forge</a></div>
+      </div>
+      <XpBar scope="global" />
     </div>
     <div class="hero-art">
       <div class="glow"></div>
@@ -39,49 +51,47 @@ const nextLevel = (d: typeof PIXEL) => d.levels.find((l) => l.n === DEMO.levelDo
     <a class="bench" data-discipline="pixel" href={`${base}${PIXEL.href}`}>
       <header>
         <div><small>{PIXEL.path}</small><h2 class="px">{PIXEL.name}</h2></div>
-        <span class="pct">{DEMO.percent.pixel}%</span>
+        <span class="pct" data-pct="pixel">0%</span>
       </header>
-      <div class="shelf">
-        <div class="item done"><PixelSprite {...gem} scale={5} label="Gema" /></div>
-        <div class="item done"><PixelSprite {...potion} scale={4} label="Poción" /></div>
-        <div class="item now"><PixelSprite {...sword} scale={4} label="Espada" /></div>
-        <div class="item lock"><PixelSprite {...chest} scale={4} label="Cofre" /></div>
-        <div class="item lock"><PixelSprite {...slime} scale={4} label="Slime" /></div>
+      <div class="shelf" aria-label="Piezas que forjarás en esta ruta">
+        <div class="item"><PixelSprite {...gem} scale={5} label="Gema" /></div>
+        <div class="item"><PixelSprite {...potion} scale={4} label="Poción" /></div>
+        <div class="item"><PixelSprite {...sword} scale={4} label="Espada" /></div>
+        <div class="item"><PixelSprite {...chest} scale={4} label="Cofre" /></div>
+        <div class="item"><PixelSprite {...slime} scale={4} label="Slime" /></div>
       </div>
-      <LevelStrip levels={PIXEL.levels} done={DEMO.levelDone.pixel} />
-      <p class="next">Siguiente: <b>N{nextLevel(PIXEL)?.n} · {nextLevel(PIXEL)?.title}</b></p>
+      <LevelStrip levels={PIXEL.levels} discipline="pixel" />
+      <p class="next-line"><span data-rank="pixel">Aprendiz de píxel</span> · <span data-xp="pixel">0</span> XP</p>
     </a>
 
     <a class="bench" data-discipline="voxel" href={`${base}${VOXEL.href}`}>
       <header>
         <div><small>{VOXEL.path}</small><h2>{VOXEL.name}</h2></div>
-        <span class="pct">{DEMO.percent.voxel}%</span>
+        <span class="pct" data-pct="voxel">0%</span>
       </header>
-      <div class="shelf">
-        <div class="item done iso"><VoxelIso voxels={voxelChest()} size={6} label="Cofre voxel" /></div>
-        <div class="item now iso"><VoxelIso voxels={voxelTower()} size={5} label="Torre voxel" /></div>
-        <div class="item lock iso"><VoxelIso voxels={islandDiorama()} size={4} label="Diorama voxel" /></div>
+      <div class="shelf" aria-label="Piezas que forjarás en esta ruta">
+        <div class="item iso"><VoxelIso voxels={voxelChest()} size={6} label="Cofre voxel" /></div>
+        <div class="item iso"><VoxelIso voxels={voxelTower()} size={5} label="Torre voxel" /></div>
+        <div class="item iso"><VoxelIso voxels={islandDiorama()} size={4} label="Diorama voxel" /></div>
       </div>
-      <LevelStrip levels={VOXEL.levels} done={DEMO.levelDone.voxel} />
-      <p class="next">Siguiente: <b>N{nextLevel(VOXEL)?.n} · {nextLevel(VOXEL)?.title}</b></p>
+      <LevelStrip levels={VOXEL.levels} discipline="voxel" />
+      <p class="next-line"><span data-rank="voxel">Aprendiz de cantero</span> · <span data-xp="voxel">0</span> XP</p>
     </a>
   </section>
 
   <section class="lower">
     <div class="fund" data-discipline="fundamentos">
       <h3 class="section-title">Fundamentos compartidos <a href={`${base}${FUNDAMENTOS.href}`}>ver todos →</a></h3>
-      <ul class="chips">
+      <ul class="chips" data-levels="fundamentos">
         {FUNDAMENTOS.levels.map((f) => (
-          <li class={f.n <= DEMO.levelDone.fundamentos ? "done" : f.n === DEMO.levelDone.fundamentos + 1 ? "now" : ""}>
-            <b>F{String(f.n).padStart(2, "0")}</b> {f.title}
-          </li>
+          <li data-n={f.n} class={f.n === 1 ? "now" : ""}><b>F{String(f.n).padStart(2, "0")}</b> {f.title}</li>
         ))}
       </ul>
     </div>
     <div class="panel ach"><AchievementPalette items={ACHIEVEMENTS} /></div>
   </section>
 
-  <h3 class="section-title">Últimas piezas forjadas</h3>
+  <h3 class="section-title">Piezas de ejemplo <span class="soon">tu portfolio real llega en la tarea 1.8</span></h3>
   <PortfolioTimeline
     href={`${base}portfolio/`}
     frames={[
@@ -106,7 +116,10 @@ const nextLevel = (d: typeof PIXEL) => d.levels.find((l) => l.n === DEMO.levelDo
   h1 em { font-style: normal; color: var(--pixel); }
   .cta { display: flex; gap: 12px; margin: 20px 0 28px; flex-wrap: wrap; }
   .cta .btn { background: var(--fund); color: #1a1400; }
-  .demo-note { font: .7rem var(--font-mono); color: var(--muted); opacity: .7; margin-top: 8px; }
+  .next .none { display: none; }
+  .next.is-empty .has { display: none; }
+  .next.is-empty .none { display: block; }
+  .next :global(.xp) { margin-top: 8px; }
   .hero-art { position: relative; display: grid; place-items: center; min-height: 320px; }
   .hero-art :global(svg) { width: 86%; max-width: 460px; height: auto; position: relative; filter: drop-shadow(0 24px 30px #0008); animation: float 6s ease-in-out infinite; }
   .glow { position: absolute; inset: 15% 10% 5%; background: radial-gradient(closest-side, rgba(255, 170, 80, .2), transparent); }
@@ -130,16 +143,15 @@ const nextLevel = (d: typeof PIXEL) => d.levels.find((l) => l.n === DEMO.levelDo
   .item.done { border-color: color-mix(in srgb, var(--c) 50%, transparent); }
   .item.now { border-color: var(--c); box-shadow: 0 0 0 2px color-mix(in srgb, var(--c) 30%, transparent); }
   .item.lock { opacity: .3; filter: grayscale(1); }
-  .next { margin: 12px 0 0; font-size: .9rem; color: var(--muted); }
-  .next b { color: var(--text); }
+  .next-line { margin: 12px 0 0; font-size: .85rem; color: var(--muted); font-family: var(--font-mono); }
 
   .lower { display: grid; grid-template-columns: 1.6fr 1fr; gap: 20px; align-items: end; }
   .chips { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 8px; }
   .chips li { border: 1px solid var(--line); padding: 6px 12px; font-size: .85rem; color: var(--muted); }
   .chips b { font: 500 .75rem var(--font-mono); color: var(--fund); margin-right: 4px; }
-  .chips .done { border-color: var(--fund); color: var(--text); }
-  .chips .now { background: var(--fund); color: #1a1400; }
-  .chips .now b { color: #1a1400; }
+  .chips :global(.done) { border-color: var(--fund); color: var(--text); }
+  .chips :global(.now) { background: var(--fund); color: #1a1400; }
+  .chips :global(.now) b { color: #1a1400; }
 
   @media (max-width: 860px) {
     .hero, .paths, .lower { grid-template-columns: 1fr; }

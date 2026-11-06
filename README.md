@@ -71,3 +71,9 @@ Los sprites didácticos son **datos**, no imágenes: `art-src/sprites/<nombre>.s
 - `.` es transparente; cada otro carácter es una clave de `palette`; todas las filas miden lo mismo.
 - `npm run sprites` valida todos y genera `public/assets/sprites/<nombre>.png` y `<nombre>@8x.png` (se ejecuta solo antes de `dev` y `build`; los PNG no se suben al repo).
 - En una lección: `<Sprite name="gem" />`.
+
+## Progreso y XP
+
+- Se guarda **solo en tu navegador** (`localStorage`, clave `forja-art:progress`): qué partes de cada lección has completado y tus marcas del checklist.
+- XP, rangos, porcentajes y «siguiente lección» se **calculan** a partir de eso (`src/lib/game/core.ts`), con los rangos de `src/data/ranks.ts` y la ruta de `src/data/route.ts`.
+- `npm test` ejecuta los tests de esa lógica.

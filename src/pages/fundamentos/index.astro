@@ -4,12 +4,11 @@ import DisciplineDashboard from "../../components/DisciplineDashboard.astro";
 import PixelSprite from "../../components/PixelSprite.astro";
 import VoxelIso from "../../components/VoxelIso.astro";
 import { FUNDAMENTOS } from "../../data/disciplines";
-import { DEMO } from "../../data/demo-progress";
 import { chest, voxelChest } from "../../data/demo-art";
 ---
 
 <BaseLayout title="Fundamentos" discipline="fundamentos" description="Teoría del arte que se practica en Pixel Art y en Voxel Art.">
-  <DisciplineDashboard d={FUNDAMENTOS} done={DEMO.levelDone.fundamentos} percent={DEMO.percent.fundamentos}>
+  <DisciplineDashboard d={FUNDAMENTOS}>
     <div slot="art" class="pair">
       <PixelSprite {...chest} scale={10} label="Cofre en pixel art" />
       <span>⇄</span>
