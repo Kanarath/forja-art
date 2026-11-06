@@ -1,0 +1,46 @@
+/* FORJA//ART — design tokens (provisionales hasta la tarea 1.2).
+   Base grafito compartida + un acento por disciplina mediante [data-discipline]. */
+:root {
+  --bg: #0e0f14;
+  --panel: #171922;
+  --panel-2: #1e2130;
+  --line: #2a2d3a;
+  --text: #e8e6f0;
+  --muted: #9a98ab;
+
+  --pixel: #ff4fa3;
+  --pixel-2: #ffb84d;
+  --voxel: #38e1ff;
+  --voxel-2: #2ec4a6;
+  --fund: #e6c35c;
+
+  --accent: var(--fund);
+
+  --font-head: "Chakra Petch", "Segoe UI", sans-serif;
+  --font-body: "Inter", "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", Consolas, monospace;
+  --maxw: 1120px;
+  color-scheme: dark;
+}
+
+[data-discipline="pixel"] { --accent: var(--pixel); }
+[data-discipline="voxel"] { --accent: var(--voxel); }
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background:
+    radial-gradient(900px 500px at 15% -10%, rgba(255, 79, 163, .10), transparent 60%),
+    radial-gradient(900px 500px at 90% 0%, rgba(56, 225, 255, .09), transparent 60%),
+    var(--bg);
+  color: var(--text);
+  font: 16px/1.6 var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+a { color: inherit; }
+h1, h2, h3 { font-family: var(--font-head); line-height: 1.1; margin: 0 0 .4em; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}

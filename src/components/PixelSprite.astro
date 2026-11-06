@@ -1,0 +1,30 @@
+---
+// Dibuja un sprite a partir de DATOS: una paleta y filas de índices.
+// Cada carácter de `rows` es un índice de `palette` ("." = transparente).
+// Se genera un <rect> por píxel, así que el sprite es exacto a cualquier escala
+// y se puede inspeccionar píxel a píxel (principio de calidad de FORJA//ART).
+interface Props {
+  palette: Record<string, string>;
+  rows: string[];
+  scale?: number; // tamaño en pantalla de cada píxel
+  label: string; // texto alternativo
+}
+const { palette, rows, scale = 8, label } = Astro.props;
+const width = Math.max(...rows.map((r) => r.length));
+const height = rows.length;
+const pixels = rows.flatMap((row, y) =>
+  [...row].flatMap((ch, x) => (palette[ch] ? [{ x, y, fill: palette[ch] }] : [])),
+);
+---
+
+<svg
+  class="pixel-sprite"
+  viewBox={`0 0 ${width} ${height}`}
+  width={width * scale}
+  height={height * scale}
+  shape-rendering="crispEdges"
+  role="img"
+  aria-label={label}
+>
+  {pixels.map((p) => <rect x={p.x} y={p.y} width="1" height="1" fill={p.fill} />)}
+</svg>

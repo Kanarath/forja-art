@@ -1,0 +1,93 @@
+---
+// Página provisional del Taller (tarea 1.1). Su objetivo es comprobar que el
+// build y el despliegue funcionan; el dashboard real llega en las tareas 1.2–1.3.
+import "../styles/tokens.css";
+import PixelSprite from "../components/PixelSprite.astro";
+
+const base = import.meta.env.BASE_URL; // "/forja-art/" en producción
+
+// Gema 9×7: contorno oscuro, sombra, luz y brillo. Datos reales, no una imagen.
+const gem = {
+  palette: { "1": "#1b1030", "2": "#c2186b", "3": "#ff4fa3", "4": "#ffd6ec" },
+  rows: [
+    "..11111..",
+    ".1343321.",
+    "133332221",
+    ".1332221.",
+    "..13221..",
+    "...121...",
+    "....1....",
+  ],
+};
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FORJA//ART · Academia de Pixel Art y Voxel Art</title>
+    <meta name="description" content="Academia personal de Pixel Art y Voxel Art: aprende haciendo piezas reales en Aseprite y MagicaVoxel." />
+    <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <main class="wrap">
+      <p class="eyebrow">Fase 1 · Foundation · la forja se está encendiendo</p>
+      <h1 class="logo">FORJA<span>//</span>ART</h1>
+      <p class="lead">Academia personal de arte digital. Cada lección termina con una pieza real hecha por ti en Aseprite o MagicaVoxel.</p>
+
+      <section class="paths">
+        <article class="path" data-discipline="pixel">
+          <div class="art"><PixelSprite {...gem} scale={10} label="Gema de pixel art de 9×7 píxeles" /></div>
+          <div>
+            <small>PATH 02</small>
+            <h2>PIXEL FORGE</h2>
+            <p>Siluetas, clusters, rampas, personajes, animación y tilesets para Godot.</p>
+          </div>
+        </article>
+
+        <article class="path" data-discipline="voxel">
+          <div class="art">
+            <svg viewBox="0 0 60 60" width="90" height="90" role="img" aria-label="Cubo voxel isométrico">
+              <polygon points="30,6 54,18 30,30 6,18" fill="#9df2ff" />
+              <polygon points="6,18 30,30 30,56 6,44" fill="#38e1ff" />
+              <polygon points="54,18 30,30 30,56 54,44" fill="#1a8aa6" />
+            </svg>
+          </div>
+          <div>
+            <small>PATH 01</small>
+            <h2>VOXEL FORGE</h2>
+            <p>Props, personajes chibi, arquitectura y dioramas isométricos en MagicaVoxel.</p>
+          </div>
+        </article>
+      </section>
+
+      <p class="status"><code>v0.1.0</code> · desplegado con GitHub Actions</p>
+    </main>
+  </body>
+</html>
+
+<style>
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 72px 16px 48px; }
+  .eyebrow { font: 500 .8rem var(--font-mono); color: var(--fund); letter-spacing: .08em; text-transform: uppercase; }
+  .logo { font-size: clamp(2.6rem, 9vw, 5.5rem); letter-spacing: .02em; }
+  .logo span { color: var(--fund); }
+  .lead { color: var(--muted); max-width: 620px; font-size: 1.1rem; }
+  .paths { display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); margin: 40px 0; }
+  .path {
+    display: flex; gap: 20px; align-items: center;
+    background: var(--panel); border: 1px solid var(--line); border-top: 3px solid var(--accent);
+    padding: 24px; transition: transform .2s ease, box-shadow .2s ease;
+  }
+  .path:hover { transform: translateY(-3px); box-shadow: 0 10px 30px -12px var(--accent); }
+  .path[data-discipline="pixel"] { box-shadow: 4px 4px 0 0 #000; }
+  .path[data-discipline="pixel"]:hover { box-shadow: 6px 6px 0 0 var(--pixel); }
+  .path small { font: 500 .75rem var(--font-mono); color: var(--accent); letter-spacing: .1em; }
+  .path h2 { color: var(--accent); font-size: 1.6rem; }
+  .path p { margin: 0; color: var(--muted); }
+  .art { flex: none; display: grid; place-items: center; width: 110px; height: 110px; background: var(--panel-2); }
+  .status { font: .8rem var(--font-mono); color: var(--muted); }
+</style>
