@@ -6,6 +6,7 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import { visibleLessons, lessonXp, type Lesson } from "../../lib/lessons";
 import { DISCIPLINES, FUNDAMENTOS } from "../../data/disciplines";
 import { url } from "../../lib/url";
+import { lessonComponents } from "../../components/lesson";
 
 export async function getStaticPaths() {
   const list = await visibleLessons();
@@ -51,6 +52,17 @@ const fundTitle = (f: string) => FUNDAMENTOS.levels.find((x) => x.n === Number(f
 
   <div class="layout">
     <aside class="side">
+      <nav class="panel toc" aria-label="En esta lección">
+        <h2>En esta lección</h2>
+        <ol>
+          <li><a href="#b-pieza">La pieza</a></li>
+          <li><a href="#b-concepto">El concepto</a></li>
+          <li><a href="#b-guiada">Forja guiada</a></li>
+          <li><a href="#b-version">Tu versión</a></li>
+          <li><a href="#b-errores">Errores típicos</a></li>
+          <li><a href="#b-calidad">Control de calidad</a></li>
+        </ol>
+      </nav>
       <div class="panel">
         <h2>Objetivos</h2>
         <ul>{l.objectives.map((o) => <li>{o}</li>)}</ul>
@@ -70,7 +82,7 @@ const fundTitle = (f: string) => FUNDAMENTOS.levels.find((x) => x.n === Number(f
     </aside>
 
     <article class="body">
-      <Content />
+      <Content components={lessonComponents} />
     </article>
   </div>
 
@@ -93,6 +105,9 @@ const fundTitle = (f: string) => FUNDAMENTOS.levels.find((x) => x.n === Number(f
   .side h2 { font: 600 .75rem var(--font-mono); text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: 8px; }
   .side ul { margin: 0; padding-left: 1.1em; font-size: .9rem; }
   .side a { color: var(--accent); }
+  .toc ol { padding-left: 1.4em; }
+  .toc a { color: var(--text); text-decoration: none; }
+  .toc a:hover { color: var(--accent); }
   .body { max-width: 760px; min-width: 0; }
   .body :global(h2) { font-size: 1.5rem; margin-top: 2em; padding-bottom: 6px; border-bottom: 1px solid var(--line); }
   .body :global(blockquote) { margin: 0 0 1.5em; padding: 12px 16px; border-left: 3px solid var(--accent); background: var(--panel); color: var(--muted); }

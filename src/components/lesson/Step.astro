@@ -1,0 +1,20 @@
+---
+// Un paso de la forja guiada. Uso: <Step n={2} title="Configura la rejilla"> … </Step>
+interface Props { n: number; title: string }
+const { n, title } = Astro.props;
+---
+
+<div class="step">
+  <div class="head"><span class="n">{n}</span><h3>{title}</h3></div>
+  <div class="body"><slot /></div>
+</div>
+
+<style>
+  .step { background: var(--panel); border: 1px solid var(--line); padding: 16px 18px; margin: 14px 0; }
+  .head { display: flex; gap: 12px; align-items: center; margin-bottom: 8px; }
+  .n { flex: none; width: 28px; height: 28px; display: grid; place-items: center; border: 2px solid var(--accent); color: var(--accent); font: 600 .85rem var(--font-mono); }
+  h3 { margin: 0; font-size: 1.1rem; }
+  .body :global(ol), .body :global(ul) { padding-left: 1.3em; margin: 6px 0; }
+  .body :global(li) { margin: 4px 0; }
+  .body :global(> :last-child) { margin-bottom: 0; }
+</style>

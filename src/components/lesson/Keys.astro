@@ -1,0 +1,22 @@
+---
+// Atajo de teclado. Uso: <Keys k="Ctrl+Shift+N" />  o varios: <Keys k="B" or="Shift+B" />
+// Se muestra cada tecla como una tecla física para que sea fácil de reconocer.
+interface Props { k: string; or?: string }
+const { k, or } = Astro.props;
+const split = (s: string) => s.split("+").map((x) => x.trim());
+---
+
+<span class="keys">
+  {split(k).map((key, i) => <>{i > 0 && <span class="plus">+</span>}<kbd>{key}</kbd></>)}
+  {or && <><span class="or">o</span>{split(or).map((key, i) => <>{i > 0 && <span class="plus">+</span>}<kbd>{key}</kbd></>)}</>}
+</span>
+
+<style>
+  .keys { white-space: nowrap; }
+  kbd {
+    display: inline-block; min-width: 1.7em; text-align: center; padding: 1px 6px;
+    font: 600 .8rem var(--font-mono); color: var(--text);
+    background: linear-gradient(#2a2d3a, #1e2130); border: 1px solid #3a3e4e; border-bottom-width: 3px;
+  }
+  .plus, .or { margin: 0 3px; color: var(--muted); font-size: .8rem; }
+</style>

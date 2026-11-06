@@ -1,0 +1,45 @@
+---
+// Sprite de una lección, citado por nombre. Uso en MDX:
+//   <Sprite name="potion" scale={8} />
+//   <Sprite name="potion" view="silhouette" />   → solo la forma, en un color
+//   <Sprite name="potion" view="gray" />         → escala de grises (para leer el valor)
+//   <Sprite name="potion" view="smooth" />       → SIMULA ampliar con suavizado (el error típico)
+// Las vistas se calculan a partir de los mismos datos: no son imágenes distintas.
+import PixelSprite from "../PixelSprite.astro";
+import { getSprite } from "../../data/sprites";
+
+interface Props {
+  name: string;
+  scale?: number;
+  view?: "normal" | "silhouette" | "gray" | "smooth";
+  caption?: string;
+}
+const { name, scale = 8, view = "normal", caption } = Astro.props;
+const s = getSprite(name);
+
+const toGray = (hex: string) => {
+  const n = parseInt(hex.slice(1, 7), 16);
+  // luminancia percibida (Rec. 709): el verde pesa más que el rojo y el azul
+  const y = Math.round(0.2126 * ((n >> 16) & 255) + 0.7152 * ((n >> 8) & 255) + 0.0722 * (n & 255));
+  const h = y.toString(16).padStart(2, "0");
+  return `#${h}${h}${h}`;
+};
+const palette = Object.fromEntries(
+  Object.entries(s.palette).map(([k, c]) => [k, view === "silhouette" ? "#e8e6f0" : view === "gray" ? toGray(c) : c]),
+);
+const labels = { normal: "", silhouette: " (silueta)", gray: " (escala de grises)", smooth: " (ampliado con suavizado: simulación)" };
+---
+
+<figure class={`sprite ${view}`}>
+  <div class="frame" style={view === "smooth" ? `--blur:${(scale * 0.45).toFixed(1)}px` : undefined}>
+    <PixelSprite palette={palette} rows={s.rows} scale={scale} label={`Sprite «${name}»${labels[view]}`} />
+  </div>
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>
+
+<style>
+  .sprite { margin: 0; display: inline-flex; flex-direction: column; align-items: center; gap: 6px; }
+  .frame { padding: 14px; line-height: 0; background: conic-gradient(#5a5e6e 25%, #4a4d5b 0 50%, #5a5e6e 0 75%, #4a4d5b 0) 0 0 / 16px 16px; overflow: hidden; }
+  .smooth .frame :global(svg) { filter: blur(var(--blur)); }
+  figcaption { font: .75rem var(--font-mono); color: var(--muted); text-align: center; max-width: 220px; }
+</style>

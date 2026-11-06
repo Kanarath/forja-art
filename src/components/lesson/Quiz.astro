@@ -1,0 +1,56 @@
+---
+// Pregunta de autoevaluación con explicación. Uso:
+//   <Quiz q="¿A qué escala exportas?" options={["×1,5", "×8"]} answer={1}>
+//     Explicación que aparece al responder.
+//   </Quiz>
+// Funciona sin JavaScript como lista; con JS corrige al instante.
+interface Props { q: string; options: string[]; answer: number }
+const { q, options, answer } = Astro.props;
+const uid = `q${Math.random().toString(36).slice(2, 8)}`;
+---
+
+<fieldset class="quiz" data-quiz data-answer={answer}>
+  <legend>{q}</legend>
+  {options.map((o, i) => (
+    <label><input type="radio" name={uid} value={i} /> <span>{o}</span></label>
+  ))}
+  <div class="result" aria-live="polite" hidden>
+    <p class="verdict"></p>
+    <div class="why"><slot /></div>
+  </div>
+</fieldset>
+
+<script>
+  for (const q of document.querySelectorAll<HTMLElement>("[data-quiz]")) {
+    const answer = Number(q.dataset.answer);
+    const result = q.querySelector<HTMLElement>(".result")!;
+    const verdict = q.querySelector<HTMLElement>(".verdict")!;
+    q.addEventListener("change", (e) => {
+      const input = e.target as HTMLInputElement;
+      const ok = Number(input.value) === answer;
+      q.querySelectorAll("label").forEach((l, i) => {
+        l.classList.toggle("is-right", i === answer);
+        l.classList.toggle("is-wrong", !ok && l.contains(input));
+      });
+      verdict.textContent = ok ? "✓ Correcto" : "✕ No exactamente";
+      q.classList.toggle("ok", ok);
+      q.classList.toggle("ko", !ok);
+      result.hidden = false;
+    });
+  }
+</script>
+
+<style>
+  .quiz { border: 1px solid var(--line); background: var(--panel); padding: 14px 18px 16px; margin: 16px 0; }
+  legend { font: 600 1rem var(--font-head); padding: 0 6px; }
+  label { display: flex; gap: 10px; align-items: center; padding: 8px 10px; margin: 6px 0; border: 1px solid var(--line); cursor: pointer; }
+  label:hover { border-color: var(--accent); }
+  input { accent-color: var(--accent); }
+  label.is-right { border-color: #4ade80; background: #4ade8014; }
+  label.is-wrong { border-color: #ff6b4a; background: #ff6b4a14; }
+  .verdict { font: 600 .85rem var(--font-mono); margin: 10px 0 4px; }
+  .ok .verdict { color: #4ade80; }
+  .ko .verdict { color: #ff6b4a; }
+  .why { color: var(--muted); }
+  .why :global(p) { margin: 0; }
+</style>

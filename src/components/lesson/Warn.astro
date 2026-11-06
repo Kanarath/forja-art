@@ -1,0 +1,7 @@
+---
+// <Warn> nota de tipo «Cuidado». Uso: <Warn>texto</Warn>  (title opcional cambia la etiqueta)
+import Note from "./Note.astro";
+const { title } = Astro.props;
+---
+
+<Note variant="warn" label={title ?? "Cuidado"}><slot /></Note>

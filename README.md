@@ -36,3 +36,19 @@ Cada push a `main` ejecuta [`.github/workflows/deploy.yml`](.github/workflows/de
 4. `revisada` la muestra también en la web con la etiqueta «En prueba»; `publicada` exige `review.examplesChecked` y `review.testedByLearner`.
 
 Si algo del frontmatter está mal (un campo, un prerrequisito inexistente, la XP mal repartida…), `npm run build` falla y te dice qué y dónde.
+
+### Componentes disponibles en las lecciones
+
+No hace falta importarlos en el `.mdx`:
+
+| Componente | Para qué |
+|---|---|
+| `<Block kind="pieza\|concepto\|guiada\|version\|errores\|calidad">` | Los 6 bloques fijos de una lección |
+| `<Step n={1} title="…">` | Un paso de la forja guiada |
+| `<Keys k="Ctrl+N" />` | Atajo de teclado |
+| `<Why>`, `<Tip>`, `<Warn>` | Notas: por qué, truco, cuidado |
+| `<ToolNote tool="pixelorama">` | Equivalencia en otro programa |
+| `<Sprite name="gem" view="normal\|silhouette\|gray\|smooth" />` | Sprite real del registro `src/data/sprites.ts` |
+| `<Mistake title="…">` con `slot="wrong"` y `slot="right"` | Comparativa error / corrección |
+| `<Checklist items={[…]} />` | Comprobación de la pieza |
+| `<Quiz q="…" options={[…]} answer={n}>` | Pregunta con explicación |

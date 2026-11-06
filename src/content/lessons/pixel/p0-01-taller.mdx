@@ -9,41 +9,110 @@ duration: 35
 status: borrador
 objectives:
   - "Tener Aseprite instalado (comprado o compilado gratis)"
-  - "Configurar rejilla, modo pixel-perfect y fondo de transparencia"
-  - "Exportar un sprite escalado ×N sin desenfoque"
-tools: [aseprite]
+  - "Crear un lienzo de 16×16 con fondo transparente y rejilla de píxel"
+  - "Exportar un sprite ampliado ×8 sin desenfoque"
+tools: [aseprite, pixelorama]
 piece:
-  name: "Lienzo plantilla 16×16"
+  name: "Gema de prueba exportada a ×8"
   canvas: "16x16"
 xp: { concept: 10, guided: 20, piece: 50 }
+review:
+  examplesChecked: false
+  testedByLearner: false
 ---
 
-> **Esqueleto de prueba (tarea 1.4).** El contenido real de esta lección se escribe en la fase 2.
+<Block kind="pieza">
+Hoy no dibujas nada difícil: preparas el **taller**. Al terminar tendrás Aseprite configurado como lo usarás el resto del curso y un PNG de una gema pequeña, ampliado y nítido, en tu portfolio.
 
-## La pieza
+<Sprite name="gem" scale={12} caption="Tu pieza: una gema de 9×7 píxeles, exportada a ×8" />
+</Block>
 
-Un lienzo de 16×16 configurado como lo usarás el resto del curso, y un PNG exportado a ×8.
+<Block kind="concepto">
+Un **píxel de tu sprite** no es un píxel de tu pantalla. Un sprite de 16×16 se ve diminuto a tamaño real, así que siempre lo **ampliaremos**. La regla de oro: al ampliar, cada píxel debe convertirse en un **bloque cuadrado y nítido**, nunca en una mancha.
 
-## El concepto
+<Mistake title="La misma gema, ampliada de dos formas">
+  <Sprite slot="wrong" name="gem" scale={10} view="smooth" caption="Ampliada con suavizado" />
+  <Sprite slot="right" name="gem" scale={10} caption="Ampliada vecino a vecino" />
 
-Un píxel de un sprite no es un píxel de tu pantalla: al ampliar, cada píxel debe convertirse en un bloque nítido, nunca en una mancha difuminada.
+Los programas de imagen normales «suavizan» al ampliar inventando colores intermedios. En pixel art eso destruye el trabajo: cada píxel lo has puesto a propósito. Aseprite amplía siempre **vecino a vecino** (*nearest neighbor*): copia cada píxel tal cual.
+</Mistake>
 
-## Forja guiada
+<Why>
+Por eso exportamos a **escalas enteras** (×2, ×4, ×8): cada píxel se convierte en un cuadrado de 2×2, 4×4 u 8×8. Con ×1,5 algunos píxeles saldrían de 1 y otros de 2, y el sprite se deformaría.
+</Why>
+</Block>
 
-1. Instalar Aseprite.
-2. `File → New`: 16×16, RGB, fondo transparente.
-3. `View → Grid` y configurar la rejilla a 1 px.
-4. Exportar con `File → Export As…` y escala ×8.
+<Block kind="guiada">
+<Step n={1} title="Consigue Aseprite">
+Tienes dos caminos, y los dos son legales:
 
-## Tu versión
+- **Comprarlo** (unos 20 $ en Steam o itch.io). Se actualiza solo.
+- **Compilarlo gratis** desde su código fuente, para uso personal. Sigue la guía oficial `INSTALL.md` del repositorio `aseprite/aseprite` en GitHub. Necesitas Visual Studio, CMake, Ninja y Skia. Lleva una tarde.
 
-Crea un segundo lienzo de 32×32 y compáralo con el de 16×16.
+<ToolNote tool="pixelorama">
+Si prefieres no usar Aseprite, **Pixelorama** es gratuito y de código abierto. Todos los conceptos del curso valen igual. Los menús cambian un poco y te avisaremos en recuadros como este.
+</ToolNote>
+</Step>
 
-## Errores típicos
+<Step n={2} title="Crea el lienzo">
+1. <Keys k="Ctrl+N" /> (*File → New*).
+2. **Width** 16, **Height** 16.
+3. **Color Mode**: RGB Color. **Background**: Transparent.
+4. Pulsa **OK** y amplía con la rueda del ratón hasta ver el lienzo grande.
+</Step>
 
-Exportar a escala no entera (×1,5) o ampliar en otro programa con suavizado.
+<Step n={3} title="Activa las rejillas">
+1. *View → Show → Pixel Grid*: una línea entre cada píxel.
+2. *View → Grid → Show Grid* (<Keys k="Ctrl+'" />): una rejilla mayor para medir. Ajústala en *View → Grid → Grid Settings*.
 
-## Control de calidad
+<Tip>
+La rejilla de píxel solo se ve con mucho zoom. Si no aparece, sigue ampliando.
+</Tip>
+</Step>
 
-- El PNG ampliado tiene bordes nítidos.
-- El fondo es transparente.
+<Step n={4} title="Lápiz pixel-perfect">
+1. Elige el lápiz con <Keys k="B" />.
+2. En la barra superior (la *context bar*), activa la casilla **Pixel-perfect**.
+3. Dibuja la gema del ejemplo píxel a píxel. Usa la goma (<Keys k="E" />) para corregir.
+
+<Why>
+Con *Pixel-perfect*, Aseprite quita automáticamente los píxeles sobrantes que salen en las esquinas al trazar líneas a mano. Lo entenderás a fondo en la lección de líneas (P2-01).
+</Why>
+</Step>
+
+<Step n={5} title="Guarda y exporta">
+1. Guarda el archivo de trabajo con <Keys k="Ctrl+S" />, en formato `.aseprite`. Conserva las capas y la paleta.
+2. Exporta con *File → Export → Export As…*.
+3. Elige formato **PNG** y, en **Resize**, **800 %**.
+
+<Warn>
+Nunca amplíes el PNG después en otro programa: lo suavizaría. Amplía siempre al exportar desde Aseprite.
+</Warn>
+</Step>
+</Block>
+
+<Block kind="version">
+Crea un **segundo lienzo de 32×32** y dibuja la misma gema más grande, con más detalle. Exporta las dos a la misma escala y compáralas: ¿cuál se lee mejor a tamaño real? Guarda las dos en tu portfolio.
+</Block>
+
+<Block kind="errores">
+<Mistake title="Borde gris o blanco alrededor del sprite">
+  <Sprite slot="wrong" name="gem" scale={6} view="smooth" />
+  <Sprite slot="right" name="gem" scale={6} />
+
+Casi siempre viene de ampliar en otro programa o de exportar a JPG. Exporta en PNG, con fondo transparente y ampliando desde Aseprite.
+</Mistake>
+</Block>
+
+<Block kind="calidad">
+<Checklist items={[
+  "Tengo Aseprite (o Pixelorama) instalado y abre sin errores",
+  "Mi lienzo es de 16×16 y el fondo es transparente",
+  "El PNG exportado mide 128×128 (16 × 8) y sus bordes son nítidos",
+  "He guardado también el archivo .aseprite",
+]} />
+
+<Quiz q="Quieres enseñar tu sprite de 16×16 más grande. ¿A qué escala lo exportas?" options={["×1,5, para que no quede enorme", "×8, una escala entera", "×1 y luego lo amplío en el visor de fotos"]} answer={1}>
+Las escalas enteras convierten cada píxel en un cuadrado exacto. ×1,5 deforma los píxeles, y ampliar en otro programa suele suavizar.
+</Quiz>
+</Block>

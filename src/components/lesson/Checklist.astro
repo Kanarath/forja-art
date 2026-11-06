@@ -1,0 +1,42 @@
+---
+// Lista de comprobación de tu pieza. Uso:
+//   <Checklist items={["El PNG ampliado tiene bordes nítidos", "El fondo es transparente"]} />
+// (Guardar las marcas en tu navegador llega con el sistema de progreso, tarea 1.7.)
+interface Props { items: string[]; title?: string }
+const { items, title = "Antes de dar tu pieza por buena" } = Astro.props;
+---
+
+<div class="checklist" data-checklist>
+  <h3>{title}</h3>
+  <ul>
+    {items.map((it, i) => (
+      <li><label><input type="checkbox" data-i={i} /> <span>{it}</span></label></li>
+    ))}
+  </ul>
+  <p class="count" aria-live="polite"><b data-done>0</b>/{items.length} comprobado</p>
+</div>
+
+<script>
+  for (const box of document.querySelectorAll<HTMLElement>("[data-checklist]")) {
+    const inputs = [...box.querySelectorAll<HTMLInputElement>("input")];
+    const out = box.querySelector("[data-done]")!;
+    const update = () => {
+      const done = inputs.filter((x) => x.checked).length;
+      out.textContent = String(done);
+      box.classList.toggle("complete", done === inputs.length);
+    };
+    inputs.forEach((x) => x.addEventListener("change", update));
+  }
+</script>
+
+<style>
+  .checklist { background: var(--panel); border: 1px solid var(--line); padding: 16px 18px; margin: 16px 0; }
+  .checklist.complete { border-color: #4ade80; }
+  h3 { font-size: 1.05rem; margin: 0 0 10px; }
+  ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; }
+  label { display: flex; gap: 10px; align-items: start; cursor: pointer; }
+  input { accent-color: var(--accent); width: 18px; height: 18px; margin-top: 3px; flex: none; }
+  input:checked + span { color: var(--muted); text-decoration: line-through; }
+  .count { margin: 12px 0 0; font: .8rem var(--font-mono); color: var(--muted); }
+  .complete .count { color: #4ade80; }
+</style>

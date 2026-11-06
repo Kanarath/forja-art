@@ -1,0 +1,38 @@
+---
+// Uno de los 6 bloques fijos de una lección (ver PRD §4.2).
+// Uso en MDX: <Block kind="guiada"> … </Block>
+const KINDS = {
+  pieza: { n: 1, title: "La pieza", hint: "Lo que vas a forjar" },
+  concepto: { n: 2, title: "El concepto", hint: "Qué es y por qué importa" },
+  guiada: { n: 3, title: "Forja guiada", hint: "Paso a paso en el programa" },
+  version: { n: 4, title: "Tu versión", hint: "Aplica lo aprendido a tu manera" },
+  errores: { n: 5, title: "Errores típicos", hint: "Lo que suele salir mal y cómo arreglarlo" },
+  calidad: { n: 6, title: "Control de calidad", hint: "Comprueba tu pieza antes de darla por buena" },
+} as const;
+
+interface Props { kind: keyof typeof KINDS; title?: string }
+const { kind, title } = Astro.props;
+const k = KINDS[kind];
+---
+
+<section class="block" id={`b-${kind}`} data-kind={kind}>
+  <header>
+    <span class="num">{k.n}</span>
+    <div>
+      <small>{k.hint}</small>
+      <h2>{title ?? k.title}</h2>
+    </div>
+  </header>
+  <div class="content"><slot /></div>
+</section>
+
+<style>
+  .block { margin: 48px 0; scroll-margin-top: 80px; }
+  header { display: flex; gap: 14px; align-items: center; padding-bottom: 10px; border-bottom: 1px solid var(--line); margin-bottom: 18px; }
+  .num { flex: none; width: 40px; height: 40px; display: grid; place-items: center; font: 600 1rem var(--font-mono); background: var(--accent); color: #0e0f14; }
+  :global([data-discipline="pixel"]) .num { box-shadow: 3px 3px 0 #000; }
+  small { font: .7rem var(--font-mono); color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+  /* !important: la página de lección da margen y borde a todos los h2 del contenido */
+  h2 { font-size: 1.5rem; margin: 0 !important; border: 0 !important; padding: 0 !important; }
+  .content :global(> p:first-child) { margin-top: 0; }
+</style>

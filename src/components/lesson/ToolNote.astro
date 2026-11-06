@@ -1,0 +1,8 @@
+---
+// Equivalencia en otro programa. Uso: <ToolNote tool="pixelorama"> … </ToolNote>
+import Note from "./Note.astro";
+const names: Record<string, string> = { pixelorama: "Pixelorama", libresprite: "LibreSprite", aseprite: "Aseprite", blender: "Blender", goxel: "Goxel" };
+const { tool } = Astro.props;
+---
+
+<Note variant="tool" label={`Si usas ${names[tool] ?? tool}`}><slot /></Note>

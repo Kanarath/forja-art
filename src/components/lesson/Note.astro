@@ -1,0 +1,26 @@
+---
+// Nota destacada. Base de <Why>, <Tip>, <Warn> y <ToolNote>.
+interface Props { variant: "why" | "tip" | "warn" | "tool"; label: string }
+const { variant, label } = Astro.props;
+const icon = { why: "?", tip: "✦", warn: "!", tool: "⇄" }[variant];
+---
+
+<aside class={`note ${variant}`}>
+  <span class="icon" aria-hidden="true">{icon}</span>
+  <div>
+    <strong class="label">{label}</strong>
+    <slot />
+  </div>
+</aside>
+
+<style>
+  .note { display: flex; gap: 12px; padding: 12px 16px; margin: 14px 0; border-left: 3px solid var(--c); background: color-mix(in srgb, var(--c) 7%, var(--panel)); }
+  .why { --c: var(--accent); }
+  .tip { --c: #4ade80; }
+  .warn { --c: #ff6b4a; }
+  .tool { --c: #8f7bff; }
+  .icon { flex: none; width: 24px; height: 24px; display: grid; place-items: center; background: var(--c); color: #0e0f14; font: 700 .85rem var(--font-mono); }
+  .label { display: block; font: 600 .78rem var(--font-mono); text-transform: uppercase; letter-spacing: .06em; color: var(--c); margin-bottom: 2px; }
+  .note :global(p) { margin: 0 0 6px; }
+  .note :global(p:last-child) { margin: 0; }
+</style>
