@@ -27,3 +27,12 @@ npm run preview  # sirve dist/ en local
 ## Despliegue
 
 Cada push a `main` ejecuta [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml): construye con Astro y publica en GitHub Pages.
+
+## Añadir una lección
+
+1. Crea `src/content/lessons/<pixel|voxel|fundamentos>/<id>-<nombre>.mdx`.
+2. Rellena el frontmatter (el esquema está en [`src/content.config.ts`](src/content.config.ts)); copia una lección existente como plantilla.
+3. Empieza con `status: borrador`: solo se ve en local (`npm run dev`).
+4. `revisada` la muestra también en la web con la etiqueta «En prueba»; `publicada` exige `review.examplesChecked` y `review.testedByLearner`.
+
+Si algo del frontmatter está mal (un campo, un prerrequisito inexistente, la XP mal repartida…), `npm run build` falla y te dice qué y dónde.

@@ -4,9 +4,14 @@
 // Pixel, Voxel y Fundamentos usan el mismo componente; solo cambian los datos y el tema.
 import type { Discipline } from "../data/disciplines";
 import LevelStrip from "./LevelStrip.astro";
+import { lessonsOf } from "../lib/lessons";
+import { url } from "../lib/url";
 
 interface Props { d: Discipline; done: number; percent: number }
 const { d, done, percent } = Astro.props;
+// Las lecciones salen del contenido (src/content/lessons), no de este componente.
+const lessons = await lessonsOf(d.id);
+const lessonsAt = (n: number) => lessons.filter((l) => l.data.level === n);
 const prefix = d.id === "fundamentos" ? "F" : "N";
 const current = d.levels.find((l) => l.n === done + 1);
 const labelOf = (n: number) => `${prefix}${d.id === "fundamentos" ? String(n).padStart(2, "0") : n}`;
@@ -50,6 +55,19 @@ const labelOf = (n: number) => `${prefix}${d.id === "fundamentos" ? String(n).pa
           </div>
           <p>{l.summary}</p>
           <p class="piece">◆ Pieza: {l.piece}</p>
+          {lessonsAt(l.n).length > 0 && (
+            <ul class="lessons">
+              {lessonsAt(l.n).map((x) => (
+                <li>
+                  <a href={url(`${x.data.discipline}/${x.data.id}/`)}>
+                    <span class="lid">{x.data.id.toUpperCase()}</span> {x.data.title}
+                    <span class="dur">{x.data.duration} min</span>
+                    {x.data.status !== "publicada" && <span class="st">{x.data.status === "borrador" ? "borrador" : "en prueba"}</span>}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </li>
     );
@@ -72,7 +90,7 @@ const labelOf = (n: number) => `${prefix}${d.id === "fundamentos" ? String(n).pa
 
   .map { list-style: none; padding: 0; margin: 0; position: relative; }
   .map::before { content: ""; position: absolute; left: 23px; top: 8px; bottom: 8px; width: 2px; background: repeating-linear-gradient(var(--line) 0 6px, transparent 6px 10px); }
-  .map li { display: grid; grid-template-columns: 48px 1fr; gap: 16px; margin-bottom: 12px; position: relative; }
+  .map > li { display: grid; grid-template-columns: 48px 1fr; gap: 16px; margin-bottom: 12px; position: relative; }
   .node { width: 48px; height: 48px; display: grid; place-items: center; font: 600 .85rem var(--font-mono); background: var(--bg); border: 2px solid var(--line); color: var(--muted); z-index: 1; }
   :global([data-discipline="pixel"]) .node { box-shadow: 3px 3px 0 #000; }
   :global([data-discipline="voxel"]) .node { box-shadow: 0 8px 18px -8px color-mix(in srgb, var(--accent) 60%, transparent); }
@@ -87,6 +105,12 @@ const labelOf = (n: number) => `${prefix}${d.id === "fundamentos" ? String(n).pa
   .now .state, .done .state { color: var(--accent); }
   .card p { margin: 6px 0 0; color: var(--muted); font-size: .92rem; }
   .card .piece { color: var(--text); font-size: .85rem; }
+  .lessons { list-style: none; padding: 0; margin: 12px 0 0; display: grid; gap: 4px; }
+  .lessons a { display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; text-decoration: none; padding: 8px 10px; background: var(--panel-2); border-left: 2px solid var(--accent); font-size: .92rem; }
+  .lessons a:hover { background: color-mix(in srgb, var(--accent) 12%, var(--panel-2)); }
+  .lid { font: 600 .75rem var(--font-mono); color: var(--accent); }
+  .dur { margin-left: auto; font: .72rem var(--font-mono); color: var(--muted); }
+  .st { font: .68rem var(--font-mono); color: var(--accent); border: 1px dashed var(--accent); padding: 0 6px; }
   @media (max-width: 860px) {
     .d-hero { grid-template-columns: 1fr; }
     .d-art { min-height: 200px; order: -1; }

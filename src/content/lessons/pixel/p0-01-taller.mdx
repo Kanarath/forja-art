@@ -1,0 +1,49 @@
+---
+id: p0-01
+discipline: pixel
+level: 0
+order: 1
+title: "El taller de Aseprite"
+summary: "Instala Aseprite, prepara un lienzo de pixel art y exporta tu primer sprite sin que se vea borroso."
+duration: 35
+status: borrador
+objectives:
+  - "Tener Aseprite instalado (comprado o compilado gratis)"
+  - "Configurar rejilla, modo pixel-perfect y fondo de transparencia"
+  - "Exportar un sprite escalado ×N sin desenfoque"
+tools: [aseprite]
+piece:
+  name: "Lienzo plantilla 16×16"
+  canvas: "16x16"
+xp: { concept: 10, guided: 20, piece: 50 }
+---
+
+> **Esqueleto de prueba (tarea 1.4).** El contenido real de esta lección se escribe en la fase 2.
+
+## La pieza
+
+Un lienzo de 16×16 configurado como lo usarás el resto del curso, y un PNG exportado a ×8.
+
+## El concepto
+
+Un píxel de un sprite no es un píxel de tu pantalla: al ampliar, cada píxel debe convertirse en un bloque nítido, nunca en una mancha difuminada.
+
+## Forja guiada
+
+1. Instalar Aseprite.
+2. `File → New`: 16×16, RGB, fondo transparente.
+3. `View → Grid` y configurar la rejilla a 1 px.
+4. Exportar con `File → Export As…` y escala ×8.
+
+## Tu versión
+
+Crea un segundo lienzo de 32×32 y compáralo con el de 16×16.
+
+## Errores típicos
+
+Exportar a escala no entera (×1,5) o ampliar en otro programa con suavizado.
+
+## Control de calidad
+
+- El PNG ampliado tiene bordes nítidos.
+- El fondo es transparente.
