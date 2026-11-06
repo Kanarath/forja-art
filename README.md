@@ -52,3 +52,22 @@ No hace falta importarlos en el `.mdx`:
 | `<Mistake title="…">` con `slot="wrong"` y `slot="right"` | Comparativa error / corrección |
 | `<Checklist items={[…]} />` | Comprobación de la pieza |
 | `<Quiz q="…" options={[…]} answer={n}>` | Pregunta con explicación |
+
+## Sprites de ejemplo
+
+Los sprites didácticos son **datos**, no imágenes: `art-src/sprites/<nombre>.sprite.json`.
+
+```json
+{
+  "name": "gem",
+  "description": "Gema facetada de 9×7…",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": ["prop"],
+  "palette": { "1": "#1b1030", "3": "#ff4fa3" },
+  "rows": ["..11111..", ".1333331."]
+}
+```
+
+- `.` es transparente; cada otro carácter es una clave de `palette`; todas las filas miden lo mismo.
+- `npm run sprites` valida todos y genera `public/assets/sprites/<nombre>.png` y `<nombre>@8x.png` (se ejecuta solo antes de `dev` y `build`; los PNG no se suben al repo).
+- En una lección: `<Sprite name="gem" />`.

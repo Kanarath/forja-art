@@ -1,0 +1,26 @@
+{
+  "name": "slime",
+  "description": "Slime verde de 10×8 con ojos y brillo.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "criatura",
+    "enemigo"
+  ],
+  "palette": {
+    "o": "#1b1030",
+    "g": "#4ade80",
+    "G": "#1f8a4c",
+    "h": "#d8ffe6",
+    "e": "#1b1030"
+  },
+  "rows": [
+    "...oooo...",
+    "..oghggo..",
+    ".oghggggo.",
+    ".ogeggego.",
+    "oggggggggo",
+    "oggggggGGo",
+    "oGGGGGGGGo",
+    ".oooooooo."
+  ]
+}

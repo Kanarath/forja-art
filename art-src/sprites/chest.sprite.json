@@ -1,0 +1,28 @@
+{
+  "name": "chest",
+  "description": "Cofre de madera de 12×9 con bandas y cerradura doradas.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "prop",
+    "cofre"
+  ],
+  "palette": {
+    "o": "#1b1030",
+    "l": "#d08a50",
+    "w": "#a0603a",
+    "W": "#6b3d2e",
+    "y": "#f2b33d",
+    "Y": "#a8661c"
+  },
+  "rows": [
+    ".oooooooooo.",
+    "ollllyylllwo",
+    "owwwwyywwwWo",
+    "oooooyyooooo",
+    "owwwoyyowwWo",
+    "owwwoYYowwWo",
+    "owwwwoowwwWo",
+    "oWWWWWWWWWWo",
+    "oooooooooooo"
+  ]
+}

@@ -1,86 +1,17 @@
-// Arte de DEMOSTRACIÓN para las maquetas (tarea 1.2).
-// Todo son datos: los sprites son paletas + filas de índices y los modelos voxel
-// son listas de vóxeles en una rejilla 3D. Nada es una imagen pixelada ni una malla voxelizada.
+// Arte de DEMOSTRACIÓN para el dashboard y las maquetas.
+// Los SPRITES viven ahora en art-src/sprites/*.sprite.json (tarea 1.6); aquí solo se
+// reexportan con su nombre para las páginas que ya los usaban.
+// Los modelos VOXEL siguen aquí como rejillas 3D generadas por código; en la tarea 2.2
+// pasarán a archivos .vox reales.
+import { getSprite } from "./sprites";
 
-export interface SpriteData {
-  palette: Record<string, string>;
-  rows: string[];
-}
+export type { SpriteData } from "./sprites";
 
-const OUT = "#1b1030";
-
-export const gem: SpriteData = {
-  palette: { "1": OUT, "2": "#c2186b", "3": "#ff4fa3", "4": "#ffd6ec" },
-  rows: ["..11111..", ".1343321.", "133332221", ".1332221.", "..13221..", "...121...", "....1...."],
-};
-
-export const potion: SpriteData = {
-  palette: { o: OUT, k: "#5a3a28", c: "#8a5a3c", g: "#cfe8ff", h: "#ffffff", r: "#e0245e", d: "#8a1040" },
-  rows: [
-    "...okko...",
-    "...occo...",
-    "..oooooo..",
-    "...oggo...",
-    "..oghggo..",
-    ".ohgggggo.",
-    "ohrrrrrrdo",
-    "ohrrrrrddo",
-    "orrrrrrddo",
-    "orrrrrdddo",
-    ".orrrdddo.",
-    "..oooooo..",
-  ],
-};
-
-export const sword: SpriteData = {
-  palette: { o: OUT, s: "#eef3f8", m: "#8fa3b8", y: "#f2b33d", Y: "#a8661c", b: "#6b3d2e" },
-  rows: [
-    "...o...",
-    "..oso..",
-    ".ossmo.",
-    ".ossmo.",
-    ".ossmo.",
-    ".ossmo.",
-    ".ossmo.",
-    ".ossmo.",
-    ".ossmo.",
-    "ooooooo",
-    "oyyyyYo",
-    "ooobooo",
-    "..obo..",
-    "..oyo..",
-    "...o...",
-  ],
-};
-
-export const chest: SpriteData = {
-  palette: { o: OUT, l: "#d08a50", w: "#a0603a", W: "#6b3d2e", y: "#f2b33d", Y: "#a8661c" },
-  rows: [
-    ".oooooooooo.",
-    "ollllyylllwo",
-    "owwwwyywwwWo",
-    "oooooyyooooo",
-    "owwwoyyowwWo",
-    "owwwoYYowwWo",
-    "owwwwoowwwWo",
-    "oWWWWWWWWWWo",
-    "oooooooooooo",
-  ],
-};
-
-export const slime: SpriteData = {
-  palette: { o: OUT, g: "#4ade80", G: "#1f8a4c", h: "#d8ffe6", e: OUT },
-  rows: [
-    "...oooo...",
-    "..oghggo..",
-    ".oghggggo.",
-    ".ogeggego.",
-    "oggggggggo",
-    "oggggggGGo",
-    "oGGGGGGGGo",
-    ".oooooooo.",
-  ],
-};
+export const gem = getSprite("gem");
+export const potion = getSprite("potion");
+export const sword = getSprite("sword");
+export const chest = getSprite("chest");
+export const slime = getSprite("slime");
 
 // ---------- VOXEL ----------
 export interface Voxel { x: number; y: number; z: number; c: string }

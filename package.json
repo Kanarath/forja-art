@@ -5,7 +5,10 @@
   "type": "module",
   "description": "FORJA//ART — academia personal de Pixel Art y Voxel Art",
   "scripts": {
+    "sprites": "node tools/build-sprites.mjs",
+    "predev": "npm run sprites",
     "dev": "astro dev",
+    "prebuild": "npm run sprites",
     "build": "astro build",
     "preview": "astro preview"
   },

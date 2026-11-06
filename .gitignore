@@ -6,3 +6,6 @@ dist/
 .DS_Store
 Thumbs.db
 .claude/
+
+# Derivados: se generan desde art-src/ con npm run sprites
+public/assets/sprites/

@@ -1,0 +1,24 @@
+{
+  "name": "gem",
+  "description": "Gema facetada de 9×7 con contorno, sombra, luz y brillo.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "prop",
+    "gema"
+  ],
+  "palette": {
+    "1": "#1b1030",
+    "2": "#c2186b",
+    "3": "#ff4fa3",
+    "4": "#ffd6ec"
+  },
+  "rows": [
+    "..11111..",
+    ".1343321.",
+    "133332221",
+    ".1332221.",
+    "..13221..",
+    "...121...",
+    "....1...."
+  ]
+}

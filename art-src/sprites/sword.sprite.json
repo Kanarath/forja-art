@@ -1,0 +1,33 @@
+{
+  "name": "sword",
+  "description": "Espada vertical de 7×15 con guarda dorada y empuñadura.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "arma"
+  ],
+  "palette": {
+    "o": "#1b1030",
+    "s": "#eef3f8",
+    "m": "#8fa3b8",
+    "y": "#f2b33d",
+    "Y": "#a8661c",
+    "b": "#6b3d2e"
+  },
+  "rows": [
+    "...o...",
+    "..oso..",
+    ".ossmo.",
+    ".ossmo.",
+    ".ossmo.",
+    ".ossmo.",
+    ".ossmo.",
+    ".ossmo.",
+    ".ossmo.",
+    "ooooooo",
+    "oyyyyYo",
+    "ooobooo",
+    "..obo..",
+    "..oyo..",
+    "...o..."
+  ]
+}

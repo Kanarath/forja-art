@@ -1,0 +1,32 @@
+{
+  "name": "potion",
+  "description": "Poción roja de 10×12 con corcho, cristal y brillo.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "prop",
+    "consumible"
+  ],
+  "palette": {
+    "o": "#1b1030",
+    "k": "#5a3a28",
+    "c": "#8a5a3c",
+    "g": "#cfe8ff",
+    "h": "#ffffff",
+    "r": "#e0245e",
+    "d": "#8a1040"
+  },
+  "rows": [
+    "...okko...",
+    "...occo...",
+    "..oooooo..",
+    "...oggo...",
+    "..oghggo..",
+    ".ohgggggo.",
+    "ohrrrrrrdo",
+    "ohrrrrrddo",
+    "orrrrrrddo",
+    "orrrrrdddo",
+    ".orrrdddo.",
+    "..oooooo.."
+  ]
+}
