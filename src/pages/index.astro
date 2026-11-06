@@ -24,8 +24,8 @@ const first = nextLesson((await buildCatalog()).lessons, emptyState(), ROUTE);
   <section class="hero">
     <div class={`next ${first ? "" : "is-empty"}`} data-next="global">
       <p class="eyebrow">Bienvenido al taller</p>
+      <h1><span class="has">Hoy forjas: <em data-next-piece>{first?.piece}</em></span><span class="none">La forja se está <em>encendiendo</em></span></h1>
       <div class="has">
-        <h1>Hoy forjas: <em data-next-piece>{first?.piece}</em></h1>
         <p class="lead"><b data-next-id>{first?.id.toUpperCase()}</b> · <span data-next-title>{first?.title}</span><br /><span class="muted" data-next-meta></span></p>
         <div class="cta">
           <a class="btn" data-next-link href={first?.href ?? "#"}>Continuar →</a>
@@ -33,7 +33,6 @@ const first = nextLesson((await buildCatalog()).lessons, emptyState(), ROUTE);
         </div>
       </div>
       <div class="none">
-        <h1>La forja se está <em>encendiendo</em></h1>
         <p class="lead">Las primeras lecciones están en preparación. Mientras tanto, explora las rutas y los fundamentos.</p>
         <div class="cta"><a class="btn" href={`${base}pixel/`}>Ver Pixel Forge →</a><a class="btn-ghost" href={`${base}voxel/`}>Ver Voxel Forge</a></div>
       </div>

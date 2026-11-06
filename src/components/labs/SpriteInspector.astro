@@ -17,7 +17,7 @@ const data = sprite ? getSprite(sprite) : null;
   </header>
   <div class="body">
     <div class="stage">
-      <canvas aria-label="Sprite ampliado. Pasa el ratón para ver cada píxel."></canvas>
+      <canvas tabindex="0" role="img" aria-label="Sprite ampliado. Pasa el ratón, o enfoca y usa las flechas, para ver cada píxel."></canvas>
       <p class="empty" hidden={!!data}>Sube un PNG exportado a 1× (sin ampliar) para analizarlo.</p>
     </div>
     <aside class="side">
@@ -37,7 +37,7 @@ const data = sprite ? getSprite(sprite) : null;
       <label class="zoom">Zoom <input type="range" name="zoom" min="2" max="40" value="16" /></label>
       {upload && <label class="upload">Tu PNG <input type="file" accept="image/png,image/gif,image/webp" /></label>}
       <dl class="stats" aria-live="polite"></dl>
-      <p class="hover mono" aria-live="off">Pasa el ratón por un píxel</p>
+      <p class="hover mono" aria-live="polite">Pasa el ratón por un píxel (o usa las flechas)</p>
     </aside>
   </div>
 </section>
@@ -57,6 +57,7 @@ const data = sprite ? getSprite(sprite) : null;
     const hover = root.querySelector<HTMLElement>(".hover")!;
     let sprite: Sprite | null = root.dataset.sprite ? JSON.parse(root.dataset.sprite) : null;
     let info = sprite ? analyzeSprite(sprite) : null;
+    let cursor: { x: number; y: number } | null = null;
 
     const opt = () => ({
       view: (form.querySelector<HTMLInputElement>("input[name=view]:checked")?.value ?? "normal") as "normal" | "silhouette" | "gray",
@@ -107,6 +108,14 @@ const data = sprite ? getSprite(sprite) : null;
       };
       if (o.orphans) mark(info.orphans, "#ff3b3b");
       if (o.loose) mark(info.loose, "#ffd23b");
+      if (cursor) {
+        // cursor de teclado: un marco blanco con borde negro, visible sobre cualquier color
+        g.lineWidth = 2;
+        g.strokeStyle = "#000";
+        g.strokeRect(cursor.x * k + 1, cursor.y * k + 1, k - 2, k - 2);
+        g.strokeStyle = "#fff";
+        g.strokeRect(cursor.x * k + 3, cursor.y * k + 3, k - 6, k - 6);
+      }
       paint(one, sprite, 1, o.view);
       paint(two, sprite, 2, o.view);
       stats.innerHTML = `
@@ -117,16 +126,30 @@ const data = sprite ? getSprite(sprite) : null;
         <dt>Clusters</dt><dd>${info.clusters} <small>(${info.tinyClusters} de 1–2 px)</small></dd>`;
     }
 
-    canvas.addEventListener("mousemove", (e) => {
+    const describe = (x: number, y: number) => {
       if (!sprite) return;
-      const r = canvas.getBoundingClientRect();
-      const x = Math.floor(((e.clientX - r.left) / r.width) * sprite.rows[0].length);
-      const y = Math.floor(((e.clientY - r.top) / r.height) * sprite.rows.length);
       const ch = sprite.rows[y]?.[x];
       if (ch === undefined) return;
       hover.textContent = ch === "." ? `(${x}, ${y}) · transparente` : `(${x}, ${y}) · ${sprite.palette[ch]} · valor ${Math.round((luma(sprite.palette[ch]) / 255) * 100)} %`;
+    };
+    canvas.addEventListener("mousemove", (e) => {
+      if (!sprite) return;
+      const r = canvas.getBoundingClientRect();
+      describe(Math.floor(((e.clientX - r.left) / r.width) * sprite.rows[0].length), Math.floor(((e.clientY - r.top) / r.height) * sprite.rows.length));
     });
-    canvas.addEventListener("mouseleave", () => (hover.textContent = "Pasa el ratón por un píxel"));
+    canvas.addEventListener("mouseleave", () => { if (!cursor) hover.textContent = "Pasa el ratón por un píxel (o usa las flechas)"; });
+    // teclado: con el lienzo enfocado, las flechas recorren los píxeles uno a uno
+    canvas.addEventListener("focus", () => { if (sprite && !cursor) { cursor = { x: 0, y: 0 }; draw(); describe(0, 0); } });
+    canvas.addEventListener("blur", () => { cursor = null; draw(); });
+    canvas.addEventListener("keydown", (e) => {
+      if (!sprite || !cursor) return;
+      const d = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] }[e.key];
+      if (!d) return;
+      e.preventDefault();
+      cursor = { x: Math.max(0, Math.min(sprite.rows[0].length - 1, cursor.x + d[0])), y: Math.max(0, Math.min(sprite.rows.length - 1, cursor.y + d[1])) };
+      draw();
+      describe(cursor.x, cursor.y);
+    });
     let autoZoom = true;
     form.querySelector("input[name=zoom]")!.addEventListener("input", () => (autoZoom = false));
     form.addEventListener("input", draw);
@@ -161,13 +184,13 @@ const data = sprite ? getSprite(sprite) : null;
   .tag { font: 600 .7rem var(--font-mono); color: #0e0f14; background: var(--accent); padding: 2px 8px; }
   .lab-head b { font: 600 .95rem var(--font-head); }
   .body { display: grid; grid-template-columns: 1fr 230px; }
-  .stage { min-height: 260px; display: grid; place-items: center; padding: 12px; overflow: auto; background: conic-gradient(#5a5e6e 25%, #4a4d5b 0 50%, #5a5e6e 0 75%, #4a4d5b 0) 0 0 / 16px 16px; }
+  .stage { min-height: 260px; display: grid; place-items: center; padding: 12px; overflow: auto; background: conic-gradient(var(--checker-a) 25%, var(--checker-b) 0 50%, var(--checker-a) 0 75%, var(--checker-b) 0) 0 0 / 16px 16px; }
   .stage canvas { image-rendering: pixelated; cursor: crosshair; max-width: 100%; }
   .empty { color: #fff; background: #0008; padding: 10px 14px; }
   .side { padding: 12px 14px; border-left: 1px solid var(--line); display: grid; gap: 10px; align-content: start; font-size: .85rem; }
   .real { display: flex; gap: 8px; align-items: end; flex-wrap: wrap; }
   .real span { width: 100%; font: .7rem var(--font-mono); color: var(--muted); text-transform: uppercase; }
-  .real canvas { image-rendering: pixelated; background: #4a4d5b; padding: 4px; }
+  .real canvas { image-rendering: pixelated; background: var(--checker-b); padding: 4px; }
   fieldset { border: 1px solid var(--line); padding: 6px 10px; display: grid; gap: 2px; margin: 0; }
   legend { font: .7rem var(--font-mono); color: var(--muted); text-transform: uppercase; padding: 0 4px; }
   input { accent-color: var(--accent); }

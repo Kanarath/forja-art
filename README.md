@@ -23,8 +23,8 @@ npm install
 npm run dev      # http://localhost:4321/forja-art/
 npm run build    # genera dist/
 npm run preview  # sirve dist/ en local
-npm test         # tests de la lógica (progreso, logros, zip)
-npm run validate # compila también los borradores y revisa enlaces, alt y tamaños
+npm test         # tests: progreso, logros, zip, .vox, sprites, rampas, dithering, luz y contraste WCAG
+npm run validate # compila también los borradores y revisa enlaces, alt, accesibilidad y tamaños
 npm run check    # test + validate: lo mismo que hace GitHub Actions antes de publicar
 ```
 
@@ -93,3 +93,7 @@ Los sprites didácticos son **datos**, no imágenes: `art-src/sprites/<nombre>.s
 
 - **Logros** en `src/data/achievements.ts`. Sin `rules`, los desbloquea la pieza de la lección que los declara (`achievements: [id]` en su frontmatter; el build comprueba que exista). Con `rules`, se desbloquean cuando se cumplen todas (piezas, versiones, lecciones o encargos).
 - **Encargos** en `src/content/commissions/*.md`: proyectos libres con brief, restricciones, nº de piezas y XP. Se completan registrando piezas asociadas al encargo desde el portfolio.
+
+## Créditos
+
+Licencias del arte, las tipografías y el software en [`CREDITS.md`](CREDITS.md).

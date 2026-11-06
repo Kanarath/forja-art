@@ -1,0 +1,30 @@
+---
+// Página 404: GitHub Pages la sirve cuando una dirección no existe.
+// La ilustración es el slime en silueta: un objeto que «no se reconoce». Es un guiño a la lección de siluetas.
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Sprite from "../components/lesson/Sprite.astro";
+import { url } from "../lib/url";
+---
+
+<BaseLayout title="Página no encontrada" description="Esta página no existe en FORJA//ART.">
+  <section class="nf">
+    <Sprite name="slime" view="silhouette" scale={14} />
+    <div>
+      <p class="eyebrow">Error 404</p>
+      <h1>Esta pieza no está en la forja</h1>
+      <p class="lead">La página que buscas no existe o ha cambiado de sitio. Si venías de una lección en borrador, recuerda que los borradores solo se ven en local.</p>
+      <div class="cta">
+        <a class="btn" href={url("")}>Volver al Taller</a>
+        <a class="btn-ghost" href={url("pixel/")}>Pixel Forge</a>
+        <a class="btn-ghost" href={url("voxel/")}>Voxel Forge</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .nf { display: flex; gap: 40px; align-items: center; flex-wrap: wrap; padding: 40px 0; }
+  h1 { font-size: clamp(2rem, 4.5vw, 3rem); }
+  .cta { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+  .cta .btn { background: var(--fund); color: #1a1400; }
+</style>

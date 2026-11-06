@@ -16,6 +16,11 @@
 
   --accent: var(--fund);
 
+  /* damero de transparencia detrás de los sprites: gris medio, como en Aseprite,
+     para que se lean igual los contornos oscuros y los brillos claros */
+  --checker-a: #a3a6b3;
+  --checker-b: #8e919e;
+
   --font-head: "Chakra Petch", "Segoe UI", sans-serif;
   --font-body: "Inter", "Segoe UI", sans-serif;
   --font-mono: "JetBrains Mono", Consolas, monospace;

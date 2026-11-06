@@ -46,6 +46,20 @@
 
 **Fase 4 · Art Labs: completada.** A los 4 labs del MVP se suman el comparador de siluetas, el lab de dithering (5 métodos, a 1× y ampliado) y el lab de luz y sombra (esfera cuantizada en N tonos, con luz rebotada). Los 7 están en /labs/ y disponibles en las lecciones; el comparador de siluetas ya se usa en P1-02 y F02-01.
 
+**Fase 5 · Calidad y pulido: completada.**
+- **Rendimiento:**
+  - Los visores 3D solo dibujan mientras están en pantalla.
+  - three.js pesa 556 KB (136 KB con gzip). Se descarga una vez y la caché lo reutiliza en todas las lecciones de voxel. Importar solo algunas clases no lo reduce, porque WebGLRenderer necesita casi toda la librería.
+- **Accesibilidad:**
+  - Test de contraste WCAG de los colores del diseño (13 pares, todos ≥ 4,5:1).
+  - El validador comprueba el idioma, que haya un único h1, los saltos de título y el nombre accesible de botones, enlaces y campos.
+  - Corregido: dos h1 en el Taller y dos campos sin etiqueta en el portfolio.
+  - El inspector se usa con teclado: foco en el lienzo y flechas, y anuncia cada píxel.
+- **Visual:**
+  - Damero más claro (tokens --checker-a/b), para que se lean los contornos oscuros.
+  - Distancia mínima de la cámara en modelos pequeños.
+- **Página 404 propia y CREDITS.md** con las licencias.
+
 **Lecciones aprendidas durante la fase 1:**
 - **`BASE_URL` sin barra final.** Astro 7 da `BASE_URL` sin barra final, así que hay que usar siempre `src/lib/url.ts`. El validador detecta enlaces sin la base.
 - **Colecciones nuevas en local.** El servidor de desarrollo no ve colecciones de contenido nuevas: hay que reiniciarlo (`npx astro dev --force`).

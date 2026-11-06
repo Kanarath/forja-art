@@ -97,8 +97,8 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
           <dl data-pv-dl></dl>
           <form class="add-version" data-form-version>
             <h3>Añadir versión</h3>
-            <input type="file" name="image" accept="image/png,image/gif,image/webp,image/jpeg" required />
-            <input name="note" placeholder="Qué has cambiado" maxlength="200" />
+            <input type="file" name="image" accept="image/png,image/gif,image/webp,image/jpeg" required aria-label="Imagen de la nueva versión" />
+            <input name="note" placeholder="Qué has cambiado" maxlength="200" aria-label="Nota de la versión: qué has cambiado" />
             <button class="btn" type="submit">Guardar versión</button>
             <p class="error" data-version-error></p>
           </form>
@@ -399,7 +399,7 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
   .filters span { font-family: var(--font-mono); font-size: .75rem; margin-left: 4px; color: var(--muted); }
   .empty h2 { font-size: 1.2rem; }
   .empty p { color: var(--muted); margin: 0; }
-  .checker-light { background: conic-gradient(#5a5e6e 25%, #4a4d5b 0 50%, #5a5e6e 0 75%, #4a4d5b 0) 0 0 / 16px 16px; }
+  .checker-light { background: conic-gradient(var(--checker-a) 25%, var(--checker-b) 0 50%, var(--checker-a) 0 75%, var(--checker-b) 0) 0 0 / 16px 16px; }
   :global(.pf-head ~ * img), .dlg img { image-rendering: pixelated; }
 
   .timeline { display: flex; gap: 6px; overflow-x: auto; padding: 10px; background: #111219; border: 1px solid var(--line); }
@@ -432,7 +432,7 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
   .tools legend { padding: 0 4px; }
   .tools label { color: var(--text); }
   .preview { margin: -4px 0 12px; }
-  .preview img { max-height: 160px; max-width: 100%; background: #4a4d5b; }
+  .preview img { max-height: 160px; max-width: 100%; background: var(--checker-b); }
   .error { color: #ff6b4a; font-size: .85rem; min-height: 1em; margin: 0; }
   .warn { color: var(--pixel-2); font-size: .9rem; }
   .dlg-actions { display: flex; justify-content: end; gap: 10px; margin-top: 8px; }
@@ -450,7 +450,7 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
   .versions { list-style: none; padding: 0; margin: 14px 0 0; display: grid; gap: 6px; max-height: 220px; overflow: auto; }
   .versions :global(li) { display: grid; grid-template-columns: 56px 1fr; gap: 10px; align-items: center; font-size: .82rem; color: var(--muted); }
   .versions :global(li.sel) { color: var(--text); }
-  .versions :global(button) { width: 56px; height: 56px; padding: 4px; background: #4a4d5b; border: 1px solid var(--line); cursor: pointer; }
+  .versions :global(button) { width: 56px; height: 56px; padding: 4px; background: var(--checker-b); border: 1px solid var(--line); cursor: pointer; }
   .versions :global(li.sel button) { border-color: var(--fund); }
   .versions :global(img) { width: 100%; height: 100%; object-fit: contain; }
   .pv-side dl { display: grid; gap: 2px; font-size: .88rem; }

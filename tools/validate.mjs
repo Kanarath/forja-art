@@ -12,6 +12,7 @@
 import { readFileSync, readdirSync, statSync, existsSync } from "node:fs";
 import { join, extname, relative, dirname } from "node:path";
 import { spawnSync } from "node:child_process";
+import { parseHTML } from "linkedom";
 
 const OUT = ".validate-dist";
 const BASE = "/forja-art/";
@@ -84,6 +85,7 @@ for (const page of pages) {
   for (const m of html.matchAll(/\shref="(\/(?!forja-art\/|\/)[^"]*)"/g)) errors.push(`${name}: enlace sin la base /forja-art/ → ${m[1]}`);
   // imágenes sin alt (alt="" está permitido para imágenes decorativas)
   for (const m of html.matchAll(/<img\b(?![^>]*\salt=)[^>]*>/g)) errors.push(`${name}: <img> sin atributo alt → ${m[0].slice(0, 80)}`);
+  if (!name.startsWith("/maquetas/")) a11y(name, html); // las maquetas son referencia archivada
   // peso de la página: HTML + CSS + JS + imágenes que referencia
   let js = 0, total = size(page);
   for (const u of new Set(refs)) {
@@ -108,6 +110,36 @@ console.log("\nPáginas más pesadas:");
 for (const r of rows.slice(0, 5)) console.log(`  ${r.name.padEnd(28)} HTML ${kb(r.html).padStart(9)} · JS ${kb(r.js).padStart(9)} · total ${kb(r.total).padStart(9)}`);
 console.log(`\n${pages.length} páginas revisadas (incluidos borradores).`);
 report();
+
+/**
+ * Accesibilidad básica sobre el HTML generado (lo que se puede comprobar sin navegador):
+ * idioma, un único h1, títulos sin saltos de nivel, y nombre accesible en botones,
+ * enlaces y campos de formulario. Los elementos que crea JavaScript no se ven aquí.
+ */
+function a11y(name, html) {
+  const { document } = parseHTML(html);
+  const text = (el) => (el.textContent || "").replace(/\s+/g, " ").trim();
+  const named = (el) => text(el) || el.getAttribute("aria-label") || el.getAttribute("title") || el.querySelector("img[alt]:not([alt=''])") || el.querySelector("svg[aria-label]");
+  const short = (el) => el.outerHTML.replace(/\s+/g, " ").slice(0, 90);
+
+  if (!document.documentElement.getAttribute("lang")) errors.push(`${name}: <html> sin atributo lang`);
+  const h1 = document.querySelectorAll("h1").length;
+  if (h1 !== 1) (h1 === 0 ? errors : warnings).push(`${name}: ${h1} elementos <h1> (debe haber exactamente uno)`);
+  let prev = 1;
+  for (const h of document.querySelectorAll("main h1, main h2, main h3, main h4, main h5, main h6")) {
+    const lvl = Number(h.tagName[1]);
+    if (lvl > prev + 1) warnings.push(`${name}: salto de título h${prev} → h${lvl} («${text(h).slice(0, 40)}»)`);
+    prev = lvl;
+  }
+  for (const b of document.querySelectorAll("button")) if (!named(b)) errors.push(`${name}: botón sin nombre accesible → ${short(b)}`);
+  for (const a of document.querySelectorAll("a[href]")) if (!named(a)) errors.push(`${name}: enlace sin texto → ${short(a)}`);
+  for (const f of document.querySelectorAll("input, select, textarea")) {
+    if (f.getAttribute("type") === "hidden" || f.hasAttribute("hidden")) continue;
+    const id = f.getAttribute("id");
+    const labelled = f.getAttribute("aria-label") || f.getAttribute("aria-labelledby") || f.closest("label") || (id && document.querySelector(`label[for="${id}"]`));
+    if (!labelled) errors.push(`${name}: campo sin etiqueta → ${short(f)}`);
+  }
+}
 
 function report() {
   if (warnings.length) console.log(`\n⚠ Avisos (${warnings.length}):\n  - ${warnings.join("\n  - ")}`);

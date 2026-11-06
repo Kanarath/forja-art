@@ -35,7 +35,8 @@ const stages = m.stages.map((s, i) => ({ label: s.label, note: s.note, src: url(
 </section>
 
 <script>
-  import * as THREE from "three";
+  // Importamos solo lo que usamos: el empaquetador descarta el resto de three.js.
+  import { BufferGeometry, Color, DoubleSide, Float32BufferAttribute, GridHelper, Group, LineBasicMaterial, LineSegments, Mesh, MeshBasicMaterial, PerspectiveCamera, Scene, WebGLRenderer } from "three";
   import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
   import { readVox } from "../../lib/voxel/vox.mjs";
 
@@ -62,7 +63,7 @@ const stages = m.stages.map((s, i) => ({ label: s.label, note: s.note, src: url(
     const vox = model.voxels.filter((v) => v.z < maxLayer);
     const filled = new Set(vox.map((v) => `${v.x},${v.z},${v.y}`));
     const pos: number[] = [], col: number[] = [], nor: number[] = [], idx: number[] = [], lines: number[] = [];
-    const color = new THREE.Color();
+    const color = new Color();
     const ox = model.size.x / 2, oz = model.size.y / 2;
     for (const v of vox) {
       const [X, Y, Z] = [v.x, v.z, v.y];
@@ -82,15 +83,15 @@ const stages = m.stages.map((s, i) => ({ label: s.label, note: s.note, src: url(
         }
       }
     }
-    const g = new THREE.BufferGeometry();
-    g.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3));
-    g.setAttribute("normal", new THREE.Float32BufferAttribute(nor, 3));
-    g.setAttribute("color", new THREE.Float32BufferAttribute(col, 3));
+    const g = new BufferGeometry();
+    g.setAttribute("position", new Float32BufferAttribute(pos, 3));
+    g.setAttribute("normal", new Float32BufferAttribute(nor, 3));
+    g.setAttribute("color", new Float32BufferAttribute(col, 3));
     g.setIndex(idx);
-    const mesh = new THREE.Mesh(g, new THREE.MeshBasicMaterial({ vertexColors: true, side: THREE.DoubleSide, polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 1 }));
-    const lg = new THREE.BufferGeometry();
-    lg.setAttribute("position", new THREE.Float32BufferAttribute(lines, 3));
-    const edges = new THREE.LineSegments(lg, new THREE.LineBasicMaterial({ color: 0x0e0f14, transparent: true, opacity: 0.35 }));
+    const mesh = new Mesh(g, new MeshBasicMaterial({ vertexColors: true, side: DoubleSide, polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 1 }));
+    const lg = new BufferGeometry();
+    lg.setAttribute("position", new Float32BufferAttribute(lines, 3));
+    const edges = new LineSegments(lg, new LineBasicMaterial({ color: 0x0e0f14, transparent: true, opacity: 0.35 }));
     return { mesh, edges, count: vox.length };
   }
 
@@ -107,15 +108,15 @@ const stages = m.stages.map((s, i) => ({ label: s.label, note: s.note, src: url(
     let model: Model | null = null;
     let started = false;
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    const renderer = new WebGLRenderer({ antialias: true, alpha: true });
     renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 500);
+    const scene = new Scene();
+    const camera = new PerspectiveCamera(35, 1, 0.1, 500);
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
-    const grid = new THREE.GridHelper(40, 40, 0x39424f, 0x232733);
+    const grid = new GridHelper(40, 40, 0x39424f, 0x232733);
     scene.add(grid);
-    let group = new THREE.Group();
+    let group = new Group();
     scene.add(group);
 
     const resize = () => {
@@ -128,7 +129,7 @@ const stages = m.stages.map((s, i) => ({ label: s.label, note: s.note, src: url(
     function rebuild(frame = false) {
       if (!model) return;
       scene.remove(group);
-      group = new THREE.Group();
+      group = new Group();
       const { mesh, edges, count } = buildMesh(model, Number(slice.value));
       group.add(mesh);
       if (edgesBox.checked) group.add(edges);
@@ -137,7 +138,8 @@ const stages = m.stages.map((s, i) => ({ label: s.label, note: s.note, src: url(
       const s = stages[current];
       note.innerHTML = `<b>${current + 1} · ${s.label}</b> — ${s.note} <span class="mono">${model.size.x}×${model.size.y}×${model.size.z} · ${count} vóxeles · ${model.colors.length} colores</span>`;
       if (frame) {
-        const r = Math.max(model.size.x, model.size.y, model.size.z);
+        // distancia mínima: los modelos pequeños (6³) no deben llenar todo el visor
+        const r = Math.max(model.size.x, model.size.y, model.size.z, 10);
         // vista de 3/4 desde el frente: en los modelos, el frente está en el lado Y negativo de MagicaVoxel
         camera.position.set(r * 1.15, r * 0.95, -r * 1.35);
         controls.target.set(0, model.size.z / 2.4, 0);
@@ -162,19 +164,25 @@ const stages = m.stages.map((s, i) => ({ label: s.label, note: s.note, src: url(
       wrap.replaceChildren(renderer.domElement);
       resize();
       new ResizeObserver(resize).observe(wrap);
-      renderer.setAnimationLoop(() => {
-        if (spinBox.checked) group.rotation.y += 0.01;
-        controls.update();
-        renderer.render(scene, camera);
-      });
       show(current, true);
     }
+
+    const loop = () => {
+      if (spinBox.checked) group.rotation.y += 0.01;
+      controls.update();
+      renderer.render(scene, camera);
+    };
 
     root.querySelectorAll<HTMLButtonElement>(".stages button").forEach((b) => b.addEventListener("click", () => show(Number(b.dataset.i))));
     slice.addEventListener("input", () => rebuild());
     edgesBox.addEventListener("change", () => rebuild());
-    // solo arrancamos WebGL cuando el visor entra en pantalla (ahorra batería y memoria)
-    new IntersectionObserver((es) => es.some((e) => e.isIntersecting) && start(), { rootMargin: "200px" }).observe(root);
+    // WebGL arranca la primera vez que el visor entra en pantalla, y solo dibuja mientras
+    // está visible: con varios visores en una lección, los que no ves no gastan batería.
+    new IntersectionObserver((es) => {
+      const visible = es.some((e) => e.isIntersecting);
+      if (visible) start();
+      renderer.setAnimationLoop(visible ? loop : null);
+    }, { rootMargin: "200px" }).observe(root);
   }
 </script>
 

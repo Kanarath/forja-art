@@ -57,7 +57,7 @@ const { limit = 8 } = Astro.props;
   .tl-head a { color: var(--fund); text-decoration: none; }
   .frames { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; }
   .frames :global(.frame) { flex: none; width: 112px; text-decoration: none; color: var(--muted); }
-  .frames :global(.frame img) { display: block; width: 112px; height: 100px; object-fit: contain; padding: 10px; image-rendering: pixelated; border: 1px solid var(--line); border-bottom: 2px solid var(--c, var(--line)); background: conic-gradient(#5a5e6e 25%, #4a4d5b 0 50%, #5a5e6e 0 75%, #4a4d5b 0) 0 0 / 16px 16px; }
+  .frames :global(.frame img) { display: block; width: 112px; height: 100px; object-fit: contain; padding: 10px; image-rendering: pixelated; border: 1px solid var(--line); border-bottom: 2px solid var(--c, var(--line)); background: conic-gradient(var(--checker-a) 25%, var(--checker-b) 0 50%, var(--checker-a) 0 75%, var(--checker-b) 0) 0 0 / 16px 16px; }
   .frames :global(.frame span) { display: block; font: .66rem var(--font-mono); margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .frames :global(.pixel) { --c: var(--pixel); }
   .frames :global(.voxel) { --c: var(--voxel); }

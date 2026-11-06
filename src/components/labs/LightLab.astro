@@ -76,7 +76,7 @@ const { base = "#c2186b", tones = 4 } = Astro.props;
   .lab-head { display: flex; gap: 12px; align-items: baseline; padding: 10px 14px; border-bottom: 1px solid var(--line); }
   .tag { font: 600 .7rem var(--font-mono); color: #0e0f14; background: var(--accent); padding: 2px 8px; }
   .body { display: grid; grid-template-columns: minmax(0, 1fr) 250px; }
-  .stage { position: relative; min-height: 300px; display: grid; place-items: center; padding: 20px; background: conic-gradient(#5a5e6e 25%, #4a4d5b 0 50%, #5a5e6e 0 75%, #4a4d5b 0) 0 0 / 16px 16px; overflow: hidden; }
+  .stage { position: relative; min-height: 300px; display: grid; place-items: center; padding: 20px; background: conic-gradient(var(--checker-a) 25%, var(--checker-b) 0 50%, var(--checker-a) 0 75%, var(--checker-b) 0) 0 0 / 16px 16px; overflow: hidden; }
   canvas { image-rendering: pixelated; display: block; }
   .sun { position: absolute; width: 20px; height: 20px; border-radius: 50%; background: #ffe58a; box-shadow: 0 0 16px 6px #ffe58a88; }
   .side { padding: 12px 14px; display: grid; gap: 8px; align-content: start; font-size: .85rem; border-left: 1px solid var(--line); }
@@ -86,7 +86,7 @@ const { base = "#c2186b", tones = 4 } = Astro.props;
   .side input[type=color] { width: 40px; height: 28px; border: 1px solid var(--line); background: none; padding: 0; }
   .real { display: flex; gap: 8px; align-items: end; flex-wrap: wrap; }
   .real span { width: 100%; font: .7rem var(--font-mono); color: var(--muted); text-transform: uppercase; }
-  .real canvas { background: #4a4d5b; padding: 4px; }
+  .real canvas { background: var(--checker-b); padding: 4px; }
   .ramp { display: flex; height: 22px; border: 1px solid #000; }
   .ramp :global(i) { flex: 1; }
   .hint { margin: 0; padding: 10px 14px; font-size: .85rem; color: var(--muted); border-top: 1px solid var(--line); }
