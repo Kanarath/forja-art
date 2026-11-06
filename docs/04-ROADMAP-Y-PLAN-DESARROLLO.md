@@ -5,9 +5,7 @@
 
 ## Estado (2026-11-06)
 
-**Fase 1 · Foundation: completada en código**, a falta de dos cosas:
-- **Publicación en GitHub Pages:** bloqueada por un bloqueo de facturación de la cuenta de GitHub. Hay un ticket abierto con soporte y el workflow está listo.
-- **Revisión visual de las pantallas con progreso, portfolio y logros:** pendiente. Están verificadas funcionalmente en el navegador.
+**Fase 1 · Foundation: completada**, a falta de la publicación en GitHub Pages: está bloqueada por un bloqueo de facturación de la cuenta de GitHub. Hay un ticket abierto con soporte y el workflow está listo. La revisión visual se hizo junto con la de la fase 2 (ver abajo).
 
 | Tarea | Estado | Commit |
 |---|---|---|
@@ -42,7 +40,7 @@
 - zoom automático del inspector;
 - cámara del visor (ahora se ve el frente de los modelos);
 - solapamiento del animador;
--  anulado por  en el portfolio vacío;
+- `hidden` anulado por `display: flex` en el portfolio vacío;
 - desbordamiento horizontal de los visores 3D en móvil;
 - dos comparativas de V1-02 cuya imagen contradecía el texto.
 
