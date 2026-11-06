@@ -10,7 +10,6 @@ import LevelStrip from "../components/LevelStrip.astro";
 import AchievementPalette from "../components/AchievementPalette.astro";
 import RecentPieces from "../components/RecentPieces.astro";
 import { PIXEL, VOXEL, FUNDAMENTOS } from "../data/disciplines";
-import { ACHIEVEMENTS } from "../data/achievements";
 import { gem, potion, sword, chest, slime, islandDiorama, voxelChest, voxelTower } from "../data/demo-art";
 import { buildCatalog } from "../lib/catalog";
 import { emptyState, nextLesson } from "../lib/game/core";
@@ -18,7 +17,7 @@ import { ROUTE } from "../data/route";
 import { BASE as base } from "../lib/url";
 
 // estado inicial para el HTML (antes de leer tu progreso): la primera lección de la ruta
-const first = nextLesson(await buildCatalog(), emptyState(), ROUTE);
+const first = nextLesson((await buildCatalog()).lessons, emptyState(), ROUTE);
 ---
 
 <BaseLayout title="Taller">
@@ -88,7 +87,7 @@ const first = nextLesson(await buildCatalog(), emptyState(), ROUTE);
         ))}
       </ul>
     </div>
-    <div class="panel ach"><AchievementPalette items={ACHIEVEMENTS} /></div>
+    <div class="panel ach"><AchievementPalette /></div>
   </section>
 
   <h3 class="section-title">Últimas piezas forjadas</h3>

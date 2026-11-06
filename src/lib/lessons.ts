@@ -2,6 +2,7 @@
 // Si algo no cuadra, lanza un error y el build se detiene con un mensaje claro.
 import { getCollection, type CollectionEntry } from "astro:content";
 import { DISCIPLINES, type DisciplineId } from "../data/disciplines";
+import { ACHIEVEMENTS } from "../data/achievements";
 
 export type Lesson = CollectionEntry<"lessons">;
 
@@ -48,6 +49,10 @@ function validate(list: Lesson[]) {
     // el nivel debe existir en el registro de la disciplina
     const d = DISCIPLINES.find((x) => x.id === discipline)!;
     if (!d.levels.some((x) => x.n === level)) errors.push(`${where}: ${d.name} no tiene nivel ${level}`);
+
+    // los logros citados deben existir en src/data/achievements.ts
+    for (const a of l.data.achievements)
+      if (!ACHIEVEMENTS.some((x) => x.id === a)) errors.push(`${where}: logro «${a}» no existe en src/data/achievements.ts`);
 
     // los fundamentos citados (f01, f02…) deben existir
     for (const f of fundamentals) {

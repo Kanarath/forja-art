@@ -1,21 +1,114 @@
 ---
+// LOGROS — rangos, logros de habilidad y encargos (proyectos libres).
+// Todo el estado (conseguido, progreso) se rellena en el navegador con tu progreso.
+import { getCollection, render } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import PlannedPage from "../../components/PlannedPage.astro";
+import XpBar from "../../components/XpBar.astro";
 import AchievementPalette from "../../components/AchievementPalette.astro";
 import { ACHIEVEMENTS } from "../../data/achievements";
+import { allLessons } from "../../lib/lessons";
+import { url } from "../../lib/url";
+
+const lessons = await allLessons();
+// para cada logro de lección, qué lección lo da
+const fromLesson = (id: string) => lessons.find((l) => l.data.achievements.includes(id));
+const commissions = (await getCollection("commissions")).sort((a, b) => a.data.id.localeCompare(b.data.id));
+const rendered = await Promise.all(commissions.map(async (c) => ({ c, Content: (await render(c)).Content })));
+const DNAME = { pixel: "Pixel", voxel: "Voxel", fundamentos: "Fundamentos" } as const;
+const TOOL = { aseprite: "Aseprite", pixelorama: "Pixelorama", magicavoxel: "MagicaVoxel", blender: "Blender", godot: "Godot" } as const;
+const how = (a: (typeof ACHIEVEMENTS)[number]) => {
+  if (a.rules?.length) return "Se consigue con tu portfolio";
+  const l = fromLesson(a.id);
+  return l ? `Pieza de ${l.data.id.toUpperCase()} · ${l.data.title}` : "Llegará con su lección";
+};
 ---
 
-<BaseLayout title="Logros" description="Rangos, logros y encargos de FORJA//ART.">
-  <PlannedPage
-    eyebrow="Progresión"
-    title="Logros y rangos"
-    lead="Los logros representan habilidades demostradas con piezas reales, no clics. Sin rachas ni penalizaciones."
-    items={[
-      { name: "Rangos", text: "Un rango por disciplina y un rango global de la Forja, calculados a partir de tus lecciones y piezas.", when: "tarea 1.7" },
-      { name: "Logros de habilidad", text: "Se desbloquean solo al registrar la pieza que demuestra la habilidad.", when: "tarea 1.9" },
-      { name: "Encargos", text: "Proyectos libres no ligados a una lección, como «forja 5 pociones con la misma paleta».", when: "tarea 1.9" },
-    ]}
-  >
-    <div class="panel" style="max-width:520px"><AchievementPalette items={ACHIEVEMENTS} /></div>
-  </PlannedPage>
+<BaseLayout title="Logros" description="Rangos, logros de habilidad y encargos de FORJA//ART.">
+  <p class="eyebrow">Progresión</p>
+  <h1>Logros, rangos y encargos</h1>
+  <p class="lead">Los logros representan habilidades demostradas con piezas reales, no clics. Sin rachas ni penalizaciones.</p>
+
+  <h2 class="section-title">Tus rangos</h2>
+  <div class="ranks">
+    <div class="panel"><XpBar scope="global" label="Global" /></div>
+    <div class="panel" data-discipline="pixel"><XpBar scope="pixel" label="Pixel Forge" /></div>
+    <div class="panel" data-discipline="voxel"><XpBar scope="voxel" label="Voxel Forge" /></div>
+    <div class="panel" data-discipline="fundamentos"><XpBar scope="fundamentos" label="Fundamentos" /></div>
+  </div>
+
+  <h2 class="section-title">Logros</h2>
+  <div class="ach-layout">
+    <div class="panel"><AchievementPalette /></div>
+    <ul class="ach-list">
+      {ACHIEVEMENTS.map((a) => (
+        <li data-ach={a.id} style={`--c:${a.color}`}>
+          <span class="sw" aria-hidden="true"></span>
+          <div>
+            <b>{a.name}</b>
+            <p>{a.description}</p>
+            <small>{how(a)}</small>
+          </div>
+          <span class="state"><span class="no">Pendiente</span><span class="yes">✓ Conseguido</span></span>
+        </li>
+      ))}
+    </ul>
+  </div>
+
+  <h2 class="section-title" id="encargos">Encargos <span class="muted mono">proyectos libres · no dependen de ninguna lección</span></h2>
+  <div class="commissions">
+    {rendered.map(({ c, Content }) => (
+      <article class="panel commission" id={c.data.id} data-commission={c.data.id} data-discipline={c.data.discipline}>
+        <header>
+          <small>{DNAME[c.data.discipline]} · {c.data.difficulty} · +{c.data.xp} XP</small>
+          <h3>{c.data.title}</h3>
+        </header>
+        <p class="brief">{c.data.brief}</p>
+        <ul class="constraints">{c.data.constraints.map((x) => <li>{x}</li>)}</ul>
+        <div class="desc"><Content /></div>
+        <p class="tools">Herramientas: {c.data.tools.map((t) => TOOL[t]).join(", ")}</p>
+        <div class="progress">
+          <div class="bar"><i data-commission-bar></i></div>
+          <span class="mono"><span data-commission-count>0/{c.data.count}</span> piezas</span>
+        </div>
+        <a class="btn" href={url(`portfolio/?nueva=1&encargo=${c.data.id}`)}>Registrar pieza →</a>
+        <span class="done-msg">✓ Encargo cumplido</span>
+      </article>
+    ))}
+  </div>
 </BaseLayout>
+
+<style>
+  h1 { font-size: clamp(2rem, 4.5vw, 3rem); }
+  .section-title .mono { font-size: .75rem; font-weight: 400; }
+  .ranks { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+  .ranks .panel { padding: 16px; }
+  .ach-layout { display: grid; grid-template-columns: 300px 1fr; gap: 20px; align-items: start; }
+  .ach-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+  .ach-list li { display: grid; grid-template-columns: 40px 1fr auto; gap: 14px; align-items: center; background: var(--panel); border: 1px solid var(--line); padding: 12px 14px; }
+  .sw { width: 40px; height: 40px; background: repeating-linear-gradient(45deg, #ffffff10 0 3px, transparent 3px 6px); border: 1px solid var(--line); }
+  .ach-list li:global(.got) { border-color: var(--c); }
+  .ach-list li:global(.got) .sw { background: var(--c); border-color: #000; box-shadow: inset -4px -4px 0 #0004, inset 4px 4px 0 #fff3; }
+  .ach-list b { font-family: var(--font-head); }
+  .ach-list p { margin: 2px 0; color: var(--muted); font-size: .9rem; }
+  .ach-list small { font: .72rem var(--font-mono); color: var(--muted); }
+  .state { font: .75rem var(--font-mono); color: var(--muted); white-space: nowrap; }
+  .state .yes { display: none; color: var(--c); }
+  .ach-list li:global(.got) .state .no { display: none; }
+  .ach-list li:global(.got) .state .yes { display: inline; }
+  .commissions { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+  .commission { border-top: 3px solid var(--accent); display: flex; flex-direction: column; gap: 6px; scroll-margin-top: 80px; }
+  .commission small { font: .7rem var(--font-mono); color: var(--accent); text-transform: uppercase; letter-spacing: .06em; }
+  .commission h3 { font-size: 1.25rem; margin: 4px 0 0; }
+  .brief { margin: 4px 0; }
+  .constraints { margin: 0; padding-left: 1.2em; color: var(--muted); font-size: .9rem; }
+  .desc :global(p) { color: var(--muted); font-size: .88rem; margin: 6px 0; }
+  .tools { font: .75rem var(--font-mono); color: var(--muted); margin: 0; }
+  .progress { display: flex; gap: 10px; align-items: center; margin: 8px 0; font-size: .8rem; color: var(--muted); }
+  .bar { flex: 1; height: 8px; background: var(--panel-2); }
+  .bar i { display: block; height: 100%; width: 0; background: var(--accent); }
+  .commission .btn { align-self: flex-start; margin-top: auto; }
+  .done-msg { display: none; font: 600 .85rem var(--font-mono); color: #4ade80; }
+  .commission:global(.is-done) { border-color: #4ade80; }
+  .commission:global(.is-done) .done-msg { display: block; }
+  @media (max-width: 860px) { .ach-layout { grid-template-columns: 1fr; } }
+</style>

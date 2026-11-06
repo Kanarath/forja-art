@@ -62,4 +62,21 @@ const lessons = defineCollection({
     }),
 });
 
-export const collections = { lessons };
+// ENCARGOS: proyectos libres que no dependen de una lección. Se completan registrando
+// `count` piezas asociadas al encargo en el portfolio.
+const commissions = defineCollection({
+  loader: glob({ pattern: "**/*.md", base: "./src/content/commissions" }),
+  schema: z.object({
+    id: z.string().regex(/^c-[a-z0-9-]+$/, "El id de un encargo empieza por c-"),
+    title: z.string().min(4),
+    discipline: z.enum(["pixel", "voxel", "fundamentos"]),
+    count: z.number().int().min(1).max(20),
+    xp: z.number().int().min(10).max(500),
+    difficulty: z.enum(["inicio", "medio", "avanzado"]),
+    brief: z.string().min(10),
+    constraints: z.array(z.string()).min(1),
+    tools: z.array(z.enum(TOOLS)).min(1),
+  }),
+});
+
+export const collections = { lessons, commissions };

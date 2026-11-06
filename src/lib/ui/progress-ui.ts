@@ -9,20 +9,26 @@
 //   data-levels="pixel|…" + hijos [data-n]    → tiras y mapas de niveles
 //   data-lesson-item="p0-01"                  → una lección en una lista
 //   data-next="global|pixel|…"                → tarjeta «siguiente lección»
-import { xpBy, rankFor, disciplineStats, nextLesson, isComplete, isStarted, type CatalogLesson, type DisciplineId, type ProgressState } from "../game/core";
+//   data-ach="id" · data-ach-count            → logros (paleta y lista)
+//   data-commission="id" + [data-commission-count] → encargos
+import { xpBy, rankFor, disciplineStats, nextLesson, isComplete, isStarted, unlockedAchievements, commissionPieces, isCommissionDone, type Catalog, type DisciplineId, type ProgressState } from "../game/core";
+import { ACHIEVEMENTS } from "../../data/achievements";
+import { toast } from "./toast";
 import { onProgress } from "../store/progress";
 import { RANKS } from "../../data/ranks";
 import { ROUTE } from "../../data/route";
 import { DISCIPLINES } from "../../data/disciplines";
 
-const catalog: CatalogLesson[] = JSON.parse(document.getElementById("forja-catalog")?.textContent || "[]");
+const cat: Catalog = { lessons: [], commissions: [], ...JSON.parse(document.getElementById("forja-catalog")?.textContent || "{}") };
+const catalog = cat.lessons;
+const SEEN_KEY = "forja-art:achievements-seen";
 const LEVELS = Object.fromEntries(DISCIPLINES.map((d) => [d.id, d.levels.map((l) => l.n)])) as Record<DisciplineId, number[]>;
 const NAMES = Object.fromEntries(DISCIPLINES.map((d) => [d.id, d.name])) as Record<DisciplineId, string>;
 const $$ = <T extends Element = HTMLElement>(sel: string) => [...document.querySelectorAll<T>(sel)];
 const scopeRanks = (scope: string) => RANKS[(scope === "total" ? "global" : scope) as keyof typeof RANKS];
 
 function render(s: ProgressState) {
-  const xp = xpBy(catalog, s);
+  const xp = xpBy(catalog, s, cat.commissions);
 
   for (const el of $$("[data-xp]")) el.textContent = String(xp[el.dataset.xp as keyof typeof xp] ?? 0);
   for (const el of $$("[data-rank]")) {
@@ -80,4 +86,40 @@ function render(s: ProgressState) {
   }
 }
 
-onProgress(render);
+function renderCommissions(s: ProgressState) {
+  for (const el of $$("[data-commission]")) {
+    const c = cat.commissions.find((x) => x.id === el.dataset.commission);
+    if (!c) continue;
+    const n = Math.min(commissionPieces(c, s), c.count);
+    el.classList.toggle("is-done", isCommissionDone(c, s));
+    el.querySelectorAll("[data-commission-count]").forEach((e) => (e.textContent = `${n}/${c.count}`));
+    el.querySelectorAll<HTMLElement>("[data-commission-bar]").forEach((e) => (e.style.width = `${(n / c.count) * 100}%`));
+  }
+}
+
+function renderAchievements(s: ProgressState) {
+  const got = unlockedAchievements(ACHIEVEMENTS, s, cat);
+  for (const el of $$("[data-ach]")) {
+    const on = got.has(el.dataset.ach!);
+    el.classList.toggle("got", on);
+    const def = ACHIEVEMENTS.find((a) => a.id === el.dataset.ach);
+    if (def) el.title = on ? `${def.name} ✓` : `${def.name} (pendiente): ${def.description}`;
+  }
+  for (const el of $$("[data-ach-count]")) el.textContent = `${got.size}/${ACHIEVEMENTS.length}`;
+
+  // aviso solo para logros NUEVOS: los ya vistos se recuerdan para no repetirlo
+  let seen: string[] | null = null;
+  try { seen = JSON.parse(localStorage.getItem(SEEN_KEY) || "null"); } catch { /* sin almacenamiento */ }
+  const fresh = seen ? [...got].filter((id) => !seen!.includes(id)) : [];
+  try { localStorage.setItem(SEEN_KEY, JSON.stringify([...got])); } catch { /* sin almacenamiento */ }
+  for (const id of fresh) {
+    const a = ACHIEVEMENTS.find((x) => x.id === id)!;
+    toast({ kicker: "¡Logro desbloqueado!", title: a.name, text: a.description, color: a.color });
+  }
+}
+
+onProgress((s) => {
+  render(s);
+  renderAchievements(s);
+  renderCommissions(s);
+});

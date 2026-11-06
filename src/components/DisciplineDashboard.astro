@@ -19,7 +19,7 @@ const lessons = await lessonsOf(d.id);
 const lessonsAt = (n: number) => lessons.filter((l) => l.data.level === n);
 const prefix = d.id === "fundamentos" ? "F" : "N";
 const labelOf = (n: number) => `${prefix}${d.id === "fundamentos" ? String(n).padStart(2, "0") : n}`;
-const first = nextLesson(await buildCatalog(), emptyState(), ROUTE, d.id);
+const first = nextLesson((await buildCatalog()).lessons, emptyState(), ROUTE, d.id);
 const firstLevel = d.levels[0].n;
 ---
 

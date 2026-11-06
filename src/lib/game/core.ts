@@ -20,12 +20,33 @@ export interface CatalogLesson {
   piece: string;
   prerequisites: string[];
   xp: Record<Part, number>;
+  achievements: string[]; // logros que se desbloquean al registrar la pieza de esta lección
+}
+
+/** Un encargo: proyecto libre que se completa registrando `count` piezas asociadas. */
+export interface CatalogCommission {
+  id: string;
+  title: string;
+  discipline: DisciplineId;
+  count: number;
+  xp: number;
+  href: string;
+}
+
+export interface Catalog { lessons: CatalogLesson[]; commissions: CatalogCommission[] }
+
+/** Resumen del portfolio que el portfolio escribe en el progreso al cambiar. */
+export interface PortfolioSummary {
+  pieces: Record<DisciplineId, number>;
+  maxVersions: number;
+  commissions: Record<string, number>; // piezas registradas por encargo
 }
 
 /** Lo único que se guarda. */
 export interface ProgressState {
   version: 1;
   lessons: Record<string, { parts: Partial<Record<Part, string>>; checks?: number[] }>; // fecha ISO de cada parte
+  portfolio?: PortfolioSummary;
 }
 
 export const emptyState = (): ProgressState => ({ version: 1, lessons: {} });
@@ -40,13 +61,21 @@ export function lessonXp(l: CatalogLesson, s: ProgressState): number {
 export const isComplete = (l: CatalogLesson, s: ProgressState) => PARTS.every((p) => !!s.lessons[l.id]?.parts[p]);
 export const isStarted = (l: CatalogLesson, s: ProgressState) => PARTS.some((p) => !!s.lessons[l.id]?.parts[p]);
 
-export function xpBy(catalog: CatalogLesson[], s: ProgressState) {
+export const commissionPieces = (c: CatalogCommission, s: ProgressState) => s.portfolio?.commissions[c.id] ?? 0;
+export const isCommissionDone = (c: CatalogCommission, s: ProgressState) => commissionPieces(c, s) >= c.count;
+
+export function xpBy(catalog: CatalogLesson[], s: ProgressState, commissions: CatalogCommission[] = []) {
   const out: Record<DisciplineId | "total", number> = { pixel: 0, voxel: 0, fundamentos: 0, total: 0 };
   for (const l of catalog) {
     const x = lessonXp(l, s);
     out[l.discipline] += x;
     out.total += x;
   }
+  for (const c of commissions)
+    if (isCommissionDone(c, s)) {
+      out[c.discipline] += c.xp;
+      out.total += c.xp;
+    }
   return out;
 }
 
@@ -105,8 +134,49 @@ export function parseState(raw: string | null): ProgressState {
   try {
     const s = JSON.parse(raw);
     if (s?.version !== 1 || typeof s.lessons !== "object" || s.lessons === null) return emptyState();
+    if (s.portfolio && typeof s.portfolio !== "object") delete s.portfolio;
     return s as ProgressState;
   } catch {
     return emptyState();
   }
+}
+
+// ---------- LOGROS ----------
+// Cada logro tiene reglas; se desbloquea cuando TODAS se cumplen.
+export type Rule =
+  | { type: "pieces"; count: number; discipline?: DisciplineId } // N piezas registradas
+  | { type: "versions"; count: number } // alguna pieza con N versiones o más
+  | { type: "lessons"; count: number; discipline?: DisciplineId } // N lecciones completas
+  | { type: "commissions"; count: number }; // N encargos completados
+
+export interface AchievementDef {
+  id: string;
+  name: string;
+  description: string;
+  color: string;
+  rules?: Rule[]; // si no tiene reglas, lo desbloquea la pieza de alguna lección (frontmatter)
+}
+
+function ruleMet(r: Rule, s: ProgressState, cat: Catalog): boolean {
+  const pf = s.portfolio;
+  switch (r.type) {
+    case "pieces": {
+      const n = !pf ? 0 : r.discipline ? pf.pieces[r.discipline] ?? 0 : Object.values(pf.pieces).reduce((a, b) => a + b, 0);
+      return n >= r.count;
+    }
+    case "versions":
+      return (pf?.maxVersions ?? 0) >= r.count;
+    case "lessons":
+      return cat.lessons.filter((l) => (!r.discipline || l.discipline === r.discipline) && isComplete(l, s)).length >= r.count;
+    case "commissions":
+      return cat.commissions.filter((c) => isCommissionDone(c, s)).length >= r.count;
+  }
+}
+
+/** Ids de los logros desbloqueados con el estado actual. */
+export function unlockedAchievements(defs: AchievementDef[], s: ProgressState, cat: Catalog): Set<string> {
+  const out = new Set<string>();
+  for (const l of cat.lessons) if (s.lessons[l.id]?.parts.piece) l.achievements.forEach((a) => out.add(a));
+  for (const d of defs) if (d.rules?.length && d.rules.every((r) => ruleMet(r, s, cat))) out.add(d.id);
+  return new Set([...out].filter((id) => defs.some((d) => d.id === id)));
 }

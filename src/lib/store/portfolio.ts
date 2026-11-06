@@ -3,7 +3,7 @@
 //   pieces → metadatos de cada pieza (nombre, disciplina, técnicas, lecciones, versiones…)
 //   images → los archivos de imagen (Blob), uno por versión
 // Separarlos permite listar piezas rápido sin cargar todas las imágenes.
-import { setPart } from "./progress";
+import { setPortfolioSummary } from "./progress";
 
 export type Discipline = "pixel" | "voxel" | "fundamentos";
 
@@ -16,6 +16,7 @@ export interface Piece {
   techniques: string[];
   tools: string[];
   lessons: string[]; // ids de lección relacionadas (p0-01…)
+  commission?: string; // id del encargo al que pertenece (c-botica…)
   notes: string;
   createdAt: string;
   updatedAt: string;
@@ -97,7 +98,7 @@ export async function createPiece(data: Omit<Piece, "id" | "createdAt" | "update
     t.objectStore("images").put({ id: imageId, blob: image, type: image.type } satisfies StoredImage);
     t.objectStore("pieces").put(piece);
   });
-  for (const l of piece.lessons) setPart(l, "piece", true); // registrar la pieza completa esa parte de la lección
+  await syncProgress(); // registrar la pieza completa la parte «pieza» de su lección
   notify();
   return piece;
 }
@@ -115,6 +116,7 @@ export async function addVersion(pieceId: string, image: Blob, note: string): Pr
     t.objectStore("images").put({ id: imageId, blob: image, type: image.type } satisfies StoredImage);
     t.objectStore("pieces").put(piece);
   });
+  await syncProgress();
   notify();
   return piece;
 }
@@ -122,7 +124,7 @@ export async function addVersion(pieceId: string, image: Blob, note: string): Pr
 export async function updatePiece(piece: Piece): Promise<void> {
   piece.updatedAt = new Date().toISOString();
   await tx(["pieces"], "readwrite", (t) => { t.objectStore("pieces").put(piece); });
-  await syncLessonParts();
+  await syncProgress();
   notify();
 }
 
@@ -134,16 +136,29 @@ export async function deletePiece(id: string): Promise<void> {
     for (const v of piece.versions) t.objectStore("images").delete(v.imageId);
     t.objectStore("pieces").delete(id);
   });
-  await syncLessonParts(piece.lessons);
+  await syncProgress(piece.lessons);
   notify();
 }
 
-/** La parte «pieza» de una lección está hecha si y solo si hay alguna pieza asociada a ella. */
-async function syncLessonParts(candidates?: string[]) {
+/**
+ * Escribe en el progreso el resumen del portfolio:
+ * - la parte «pieza» de una lección está hecha si y solo si hay alguna pieza asociada a ella;
+ * - cuántas piezas hay por disciplina y por encargo, y el máximo de versiones (para los logros).
+ * `candidates`: lecciones que podrían haberse quedado sin pieza (al borrar).
+ */
+export async function syncProgress(candidates: string[] = []) {
   const pieces = await listPieces();
-  const linked = new Set(pieces.flatMap((p) => p.lessons));
-  for (const l of linked) setPart(l, "piece", true);
-  for (const l of candidates ?? []) if (!linked.has(l)) setPart(l, "piece", false);
+  const summary = {
+    pieces: { pixel: 0, voxel: 0, fundamentos: 0 },
+    maxVersions: 0,
+    commissions: {} as Record<string, number>,
+  };
+  for (const p of pieces) {
+    summary.pieces[p.discipline]++;
+    summary.maxVersions = Math.max(summary.maxVersions, p.versions.length);
+    if (p.commission) summary.commissions[p.commission] = (summary.commissions[p.commission] ?? 0) + 1;
+  }
+  setPortfolioSummary(summary, new Set(pieces.flatMap((p) => p.lessons)), candidates);
 }
 
 /** Borra todo el portfolio (se usa al importar una copia). */
@@ -157,6 +172,7 @@ export async function putAll(pieces: Piece[], images: StoredImage[]) {
     for (const i of images) t.objectStore("images").put(i);
     for (const p of pieces) t.objectStore("pieces").put(p);
   });
+  await syncProgress();
   notify();
 }
 

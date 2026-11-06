@@ -84,3 +84,8 @@ Los sprites didácticos son **datos**, no imágenes: `art-src/sprites/<nombre>.s
 - Cada pieza puede tener varias versiones; el detalle incluye un comparador antes/después.
 - Registrar una pieza asociada a una lección completa la parte «pieza» de esa lección (y su XP). Si la borras, la pierdes.
 - **Exportar copia** descarga un `.zip` (portfolio + imágenes + progreso). **Importar copia** lo restaura, sustituyendo lo actual. El zip se escribe sin dependencias (`src/lib/zip.ts`) y se abre con cualquier descompresor.
+
+## Logros y encargos
+
+- **Logros** en `src/data/achievements.ts`. Sin `rules`, los desbloquea la pieza de la lección que los declara (`achievements: [id]` en su frontmatter; el build comprueba que exista). Con `rules`, se desbloquean cuando se cumplen todas (piezas, versiones, lecciones o encargos).
+- **Encargos** en `src/content/commissions/*.md`: proyectos libres con brief, restricciones, nº de piezas y XP. Se completan registrando piezas asociadas al encargo desde el portfolio.

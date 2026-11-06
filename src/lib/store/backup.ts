@@ -50,10 +50,10 @@ export async function inspectBackup(file: Blob) {
 /** Sustituye el portfolio y el progreso actuales por los de la copia. */
 export async function applyBackup(data: Awaited<ReturnType<typeof inspectBackup>>) {
   await clearPortfolio();
-  await putAll(data.manifest.pieces, data.images);
   try {
     localStorage.setItem(PROGRESS_KEY, JSON.stringify(parseState(JSON.stringify(data.manifest.progress))));
   } catch { /* sin almacenamiento */ }
+  await putAll(data.manifest.pieces, data.images); // también recalcula el resumen del portfolio
   window.dispatchEvent(new CustomEvent("forja:progress"));
 }
 

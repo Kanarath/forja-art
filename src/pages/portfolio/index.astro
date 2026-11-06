@@ -57,6 +57,9 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
           <select name="lesson" data-lesson-select><option value="">Ninguna · proyecto libre</option></select>
         </label>
       </div>
+      <label class="field">Encargo
+        <select name="commission" data-commission-select><option value="">Ninguno</option></select>
+      </label>
       <label class="field">Descripción<textarea name="description" rows="2" maxlength="500"></textarea></label>
       <label class="field">Técnicas <small>(separadas por comas)</small><input name="techniques" placeholder="silueta, hue shifting, dithering" /></label>
       <fieldset class="field tools">
@@ -122,11 +125,12 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 <script>
   import { listPieces, getImage, createPiece, addVersion, deletePiece, getPiece, onPortfolio, type Piece } from "../../lib/store/portfolio";
   import { exportBackup, inspectBackup, applyBackup, lastBackup, download } from "../../lib/store/backup";
-  import type { CatalogLesson } from "../../lib/game/core";
+  import type { Catalog } from "../../lib/game/core";
 
   const $ = <T extends Element = HTMLElement>(s: string, root: ParentNode = document) => root.querySelector<T>(s)!;
   const $$ = <T extends Element = HTMLElement>(s: string, root: ParentNode = document) => [...root.querySelectorAll<T>(s)];
-  const catalog: CatalogLesson[] = JSON.parse(document.getElementById("forja-catalog")?.textContent || "[]");
+  const cat: Catalog = { lessons: [], commissions: [], ...JSON.parse(document.getElementById("forja-catalog")?.textContent || "{}") };
+  const catalog = cat.lessons;
   const DNAME = { pixel: "Pixel", voxel: "Voxel", fundamentos: "Fundamentos" } as const;
   const fmt = (iso: string) => new Date(iso).toLocaleDateString("es-ES", { day: "numeric", month: "short", year: "numeric" });
 
@@ -192,16 +196,24 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
   const formNew = $<HTMLFormElement>("[data-form-new]");
   const lessonSel = $<HTMLSelectElement>("[data-lesson-select]");
   for (const l of catalog) lessonSel.add(new Option(`${l.id.toUpperCase()} · ${l.title}`, l.id));
+  const commissionSel = $<HTMLSelectElement>("[data-commission-select]");
+  for (const c of cat.commissions) commissionSel.add(new Option(`${c.title} (${c.count} piezas)`, c.id));
 
-  function openNew(prefill: { lesson?: string } = {}) {
+  function openNew(prefill: { lesson?: string; commission?: string } = {}) {
     formNew.reset();
     $("[data-new-error]").textContent = "";
     $("[data-new-preview]").hidden = true;
+    const discipline = formNew.elements.namedItem("discipline") as HTMLSelectElement;
     const l = catalog.find((x) => x.id === prefill.lesson);
     if (l) {
       lessonSel.value = l.id;
-      (formNew.elements.namedItem("discipline") as HTMLSelectElement).value = l.discipline;
+      discipline.value = l.discipline;
       (formNew.elements.namedItem("name") as HTMLInputElement).value = l.piece;
+    }
+    const c = cat.commissions.find((x) => x.id === prefill.commission);
+    if (c) {
+      commissionSel.value = c.id;
+      discipline.value = c.discipline;
     }
     dlgNew.showModal();
   }
@@ -231,6 +243,7 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
           techniques: String(fd.get("techniques") ?? "").split(",").map((s) => s.trim()).filter(Boolean),
           tools: fd.getAll("tools").map(String),
           lessons: fd.get("lesson") ? [String(fd.get("lesson"))] : [],
+          commission: fd.get("commission") ? String(fd.get("commission")) : undefined,
           notes: String(fd.get("notes") ?? "").trim(),
         },
         image,
@@ -264,6 +277,7 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
     const lessonName = (lid: string) => catalog.find((l) => l.id === lid)?.title ?? "";
     const rows: [string, string][] = [
       ["Lección", p.lessons.map((l) => `${l.toUpperCase()} ${lessonName(l)}`).join(", ") || "Proyecto libre"],
+      ["Encargo", cat.commissions.find((c) => c.id === p.commission)?.title ?? ""],
       ["Técnicas", p.techniques.join(", ")],
       ["Herramientas", p.tools.join(", ")],
       ["Notas", p.notes],
@@ -367,7 +381,7 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 
   // abrir el formulario si venimos de una lección: ?nueva=1&lesson=p0-01
   const params = new URLSearchParams(location.search);
-  if (params.get("nueva")) openNew({ lesson: params.get("lesson") ?? undefined });
+  if (params.get("nueva")) openNew({ lesson: params.get("lesson") ?? undefined, commission: params.get("encargo") ?? undefined });
 </script>
 
 <style>

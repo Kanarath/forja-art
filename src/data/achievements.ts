@@ -1,12 +1,21 @@
-// Logros de habilidad. Se desbloquean al registrar la pieza que los demuestra (tarea 1.9).
-// Por ahora todos aparecen pendientes: no hay logros de ejemplo.
-export const ACHIEVEMENTS = [
-  { id: "primera-silueta", name: "Primera silueta", color: "#ff4fa3", got: false },
-  { id: "rampa-hue", name: "Rampa con hue shifting", color: "#ffb84d", got: false },
-  { id: "primer-render", name: "Primer render", color: "#38e1ff", got: false },
-  { id: "prop-coherente", name: "Prop coherente", color: "#2ec4a6", got: false },
-  { id: "valor-3", name: "Valor en 3 tonos", color: "#e6c35c", got: false },
-  { id: "ciclo-4", name: "Ciclo de 4 frames", color: "#8f7bff", got: false },
-  { id: "tileset", name: "Tileset sin costuras", color: "#4ade80", got: false },
-  { id: "diorama", name: "Primer diorama", color: "#ff6b4a", got: false },
+// Logros de habilidad: representan algo que HAS HECHO, no clics.
+// - Sin `rules`: los desbloquea la pieza de una lección que lo declare en su frontmatter
+//   (achievements: [id]). El build comprueba que el id exista aquí.
+// - Con `rules`: se desbloquean cuando se cumplen todas (ver Rule en src/lib/game/core.ts).
+// El color es la «muestra» que se pinta en la paleta de logros.
+import type { AchievementDef } from "../lib/game/core";
+
+export const ACHIEVEMENTS: AchievementDef[] = [
+  // --- generales (portfolio y encargos)
+  { id: "primera-pieza", name: "Primera pieza forjada", description: "Registra tu primera pieza en el portfolio.", color: "#e6c35c", rules: [{ type: "pieces", count: 1 }] },
+  { id: "iterar", name: "Iterar es forjar", description: "Guarda 3 versiones de una misma pieza.", color: "#ffd36e", rules: [{ type: "versions", count: 3 }] },
+  { id: "doble-forja", name: "Doble forja", description: "Ten al menos una pieza de pixel y otra de voxel.", color: "#c58cff", rules: [{ type: "pieces", count: 1, discipline: "pixel" }, { type: "pieces", count: 1, discipline: "voxel" }] },
+  { id: "primer-encargo", name: "Encargo cumplido", description: "Completa tu primer encargo.", color: "#ff8f5a", rules: [{ type: "commissions", count: 1 }] },
+  // --- de lección (se desbloquean con la pieza de la lección que los declara)
+  { id: "taller-listo", name: "Taller listo", description: "Configura Aseprite y exporta tu primer sprite nítido (P0-01).", color: "#ffb84d" },
+  { id: "primera-silueta", name: "Primera silueta", description: "Un objeto que se lee a 1×, sin zoom (P1-01).", color: "#ff4fa3" },
+  { id: "primer-render", name: "Primer render", description: "Tu primer modelo renderizado en MagicaVoxel (V0-01).", color: "#38e1ff" },
+  { id: "valor-3", name: "Valor en 3 tonos", description: "Una pieza que se lee en escala de grises (F01).", color: "#cfcfcf" },
+  { id: "linea-limpia", name: "Línea limpia", description: "Líneas pixel-perfect sin jaggies (P2-01).", color: "#ff6fb8" },
+  { id: "prop-coherente", name: "Prop coherente", description: "Un prop voxel con escala y paleta coherentes.", color: "#2ec4a6" },
 ];

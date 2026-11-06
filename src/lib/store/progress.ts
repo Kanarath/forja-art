@@ -3,7 +3,7 @@
 //   sin guardar: nunca rompe la página.
 // - Cada cambio emite el evento "forja:progress" para que la interfaz se actualice,
 //   también entre pestañas abiertas (evento "storage").
-import { parseState, type Part, type ProgressState } from "../game/core";
+import { parseState, type Part, type PortfolioSummary, type ProgressState } from "../game/core";
 
 const KEY = "forja-art:progress";
 export const PROGRESS_EVENT = "forja:progress";
@@ -36,6 +36,16 @@ export function setPart(lessonId: string, part: Part, done: boolean) {
 export function setChecks(lessonId: string, checks: number[]) {
   const s = loadProgress();
   (s.lessons[lessonId] ??= { parts: {} }).checks = checks;
+  save(s);
+}
+
+/** El portfolio guarda aquí su resumen para que logros y encargos se calculen sin IndexedDB. */
+export function setPortfolioSummary(summary: PortfolioSummary, lessonsWithPiece: Set<string>, candidates: string[] = []) {
+  const s = loadProgress();
+  s.portfolio = summary;
+  const now = new Date().toISOString();
+  for (const id of lessonsWithPiece) (s.lessons[id] ??= { parts: {} }).parts.piece ??= now;
+  for (const id of candidates) if (!lessonsWithPiece.has(id) && s.lessons[id]) delete s.lessons[id].parts.piece;
   save(s);
 }
 
