@@ -3,6 +3,31 @@
 > Borrador v1. Cada tarea sigue el ciclo: **explicar qué y por qué → implementar → comprobar → resumir 3–5 puntos clave → cómo probarlo tú**.
 > Nada se implementa hasta que apruebes este plan.
 
+## Estado (2026-11-06)
+
+**Fase 1 · Foundation: completada en código**, a falta de dos cosas:
+- **Publicación en GitHub Pages:** bloqueada por un bloqueo de facturación de la cuenta de GitHub. Hay un ticket abierto con soporte y el workflow está listo.
+- **Revisión visual de las pantallas con progreso, portfolio y logros:** pendiente. Están verificadas funcionalmente en el navegador.
+
+| Tarea | Estado | Commit |
+|---|---|---|
+| 1.1 Repo + esqueleto + deploy | ✅ (deploy bloqueado por GitHub) | `70f526c` |
+| 1.2 Identidad visual y maquetas | ✅ Elegida A + toques de B (D13) | `52d5844` |
+| 1.3 Layouts y navegación | ✅ | `6d85b94` |
+| 1.4 Esquema de contenido | ✅ (D14) | `756c69b` |
+| 1.5 Componentes de lección | ✅ | `4590b30` |
+| 1.6 Pipeline de sprites | ✅ | `67e7677` |
+| 1.7 Progreso y XP | ✅ | `b2aabfe` |
+| 1.8 Portfolio y copia de seguridad | ✅ | `42ebe86` |
+| 1.9 Logros y encargos | ✅ | `75d4d5e` |
+| 1.10 Validación en CI | ✅ | este commit |
+
+**Lecciones aprendidas durante la fase 1:**
+- **`BASE_URL` sin barra final.** Astro 7 da `BASE_URL` sin barra final, así que hay que usar siempre `src/lib/url.ts`. El validador detecta enlaces sin la base.
+- **Colecciones nuevas en local.** El servidor de desarrollo no ve colecciones de contenido nuevas: hay que reiniciarlo (`npx astro dev --force`).
+- **Borradores.** El build normal no compila los borradores: por eso existe `npm run validate`.
+- **`npm ci` en Windows.** Falla si `npm run dev` está abierto, porque bloquea archivos de `node_modules`.
+
 ## Roadmap
 
 | Fase | Objetivo | Resultado visible |

@@ -19,10 +19,13 @@ export function allLessons(): Promise<Lesson[]> {
   return cache;
 }
 
+/** El validador pone FORJA_INCLUDE_DRAFTS=1 para compilar también los borradores. */
+const INCLUDE_DRAFTS = (globalThis as { process?: { env?: Record<string, string | undefined> } }).process?.env?.FORJA_INCLUDE_DRAFTS === "1";
+
 /** Lecciones visibles en el entorno actual. */
 export async function visibleLessons(): Promise<Lesson[]> {
   const list = await allLessons();
-  return import.meta.env.PROD ? list.filter((l) => VISIBLE_IN_PROD.has(l.data.status)) : list;
+  return import.meta.env.PROD && !INCLUDE_DRAFTS ? list.filter((l) => VISIBLE_IN_PROD.has(l.data.status)) : list;
 }
 
 export async function lessonsOf(discipline: DisciplineId) {

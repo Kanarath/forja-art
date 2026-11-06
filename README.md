@@ -6,12 +6,13 @@ Web: https://kanarath.github.io/forja-art/
 
 ## Estado
 
-Fase 1 · Foundation. Ver [`docs/`](docs/):
+Fase 1 · Foundation completada (ver estado en el [roadmap](docs/04-ROADMAP-Y-PLAN-DESARROLLO.md)). Documentos en [`docs/`](docs/):
 
 - [PRD](docs/01-PRD.md)
 - [Arquitectura](docs/02-ARQUITECTURA.md)
 - [Currículos y plan de contenidos](docs/03-PLAN-CONTENIDOS.md)
 - [Roadmap y plan de desarrollo](docs/04-ROADMAP-Y-PLAN-DESARROLLO.md)
+- [Registro de decisiones](docs/05-DECISIONES.md)
 
 ## Desarrollo local
 
@@ -22,11 +23,14 @@ npm install
 npm run dev      # http://localhost:4321/forja-art/
 npm run build    # genera dist/
 npm run preview  # sirve dist/ en local
+npm test         # tests de la lógica (progreso, logros, zip)
+npm run validate # compila también los borradores y revisa enlaces, alt y tamaños
+npm run check    # test + validate: lo mismo que hace GitHub Actions antes de publicar
 ```
 
 ## Despliegue
 
-Cada push a `main` ejecuta [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml): construye con Astro y publica en GitHub Pages.
+Cada push a `main` ejecuta [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml): primero **tests y validación**; si pasan, construye con Astro y publica en GitHub Pages. En los pull requests solo se comprueba, no se publica.
 
 ## Añadir una lección
 

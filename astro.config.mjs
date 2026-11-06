@@ -9,4 +9,6 @@ export default defineConfig({
   base: "/forja-art",
   trailingSlash: "ignore",
   integrations: [mdx()],
+  // el validador (tools/validate.mjs) construye en otra carpeta para no pisar dist/
+  outDir: process.env.FORJA_OUT_DIR || "./dist",
 });
