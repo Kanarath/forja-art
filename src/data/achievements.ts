@@ -30,5 +30,12 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   { id: "material-render", name: "Metal, cristal y luz", description: "Un render con materiales Metal, Glass y Emit (V3-02).", color: "#9fd8ff" },
   { id: "temperatura", name: "Temperatura de color", description: "Una pieza con luces cálidas y sombras frías en las dos disciplinas (F03).", color: "#ff8f5a" },
   { id: "luz-dos-mundos", name: "Una luz, dos mundos", description: "El mismo objeto iluminado desde la misma dirección en pixel y en voxel (F05).", color: "#ffe58a" },
+  { id: "heroe-chibi", name: "Héroe chibi", description: "Un personaje de 16×24 con proporciones chibi que se lee a 1× (P5-01).", color: "#3b6fd1" },
+  { id: "cinco-caras", name: "Cinco caras", description: "Cinco expresiones de la misma cabeza que se distinguen (P5-02).", color: "#f2c29b" },
+  { id: "bestiario", name: "Bestiario", description: "Dos criaturas cuyo carácter se lee por su forma (P5-03).", color: "#5b4a7a" },
+  { id: "kit-taller", name: "Kit de taller", description: "Tres props voxel con la misma escala y paleta (V4-01).", color: "#8a92a3" },
+  { id: "arma-voxel", name: "Arma voxel", description: "Un arma voxel del blockout al detalle (V4-02).", color: "#d49a2a" },
+  { id: "armonia", name: "Armonía", description: "Una paleta propia construida con una armonía de color (F04).", color: "#c58cff" },
+  { id: "personaje-2d-3d", name: "Personaje en dos mundos", description: "El mismo personaje diseñado en pixel y en voxel (F09).", color: "#ff6fb8" },
   { id: "forma-primero", name: "Forma antes que detalle", description: "Un modelo voxel con su blockout guardado como primera versión (V2-01).", color: "#38e1ff" },
 ];

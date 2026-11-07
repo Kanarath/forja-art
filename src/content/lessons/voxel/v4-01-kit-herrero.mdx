@@ -1,0 +1,181 @@
+---
+id: v4-01
+discipline: voxel
+level: 4
+order: 1
+title: "Props: el kit del herrero"
+summary: "Forja tres props que parecen del mismo taller: la misma escala, la misma paleta, el mismo nivel de detalle y la misma luz. El yunque manda."
+duration: 45
+status: borrador
+prerequisites: [v3-02]
+fundamentals: [f02]
+objectives:
+  - "Entender qué hace que varios props parezcan del mismo mundo"
+  - "Usar una pieza de referencia para fijar la escala del resto"
+  - "Compartir una paleta de hierros y maderas entre varios modelos"
+  - "Montar los tres props en una misma escena de MagicaVoxel y renderizarlos con una sola luz"
+tools: [magicavoxel]
+piece:
+  name: "Yunque, martillo y cubo con la misma escala y paleta"
+  canvas: "16x16x16"
+xp: { concept: 10, guided: 20, piece: 70 }
+achievements: [kit-taller]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Hoy forjas un **kit de tres props** para la forja de un herrero: un yunque, un martillo y un cubo de agua. Por separado son sencillos. El reto es que, juntos, parezcan **del mismo taller**.
+
+<VoxViewer model="kit-herrero" stage={0} title="El kit del herrero: yunque, martillo y cubo" />
+
+Recorre las tres etapas del visor. Fíjate en lo que se repite: los mismos grises de hierro, la misma madera, vóxels del mismo tamaño.
+
+Este kit es también la base del encargo [«La mesa del herrero»](/forja-art/logros/#c-mesa-herrero).
+</Block>
+
+<Block kind="concepto">
+En Blender, un kit coherente sale casi solo: modelas en metros reales. En voxel no hay metros. **La unidad es el vóxel.** Si cada prop usa un vóxel de tamaño distinto, el kit se rompe aunque cada pieza esté bien.
+
+Una colección se lee como de un mismo mundo cuando comparte cuatro cosas:
+
+1. **Escala:** un vóxel mide lo mismo en todos los props.
+2. **Paleta:** los mismos hierros y las mismas maderas, no «parecidos».
+3. **Nivel de detalle:** si el yunque tiene tres tonos de hierro, el martillo no lleva diez.
+4. **Luz:** una sola dirección de luz en el render para todo el kit.
+
+<Why title="¿Por qué una pieza de referencia?">
+Porque la escala necesita un ancla. Modelas primero **el yunque**, el prop más grande y más importante, y mides todo lo demás contra él. Es lo mismo que la silueta de F02: el ojo compara formas, y si el martillo es casi tan grande como el yunque, la escena miente.
+</Why>
+
+**Las medidas reales del kit** (en vóxels):
+
+- **Yunque:** 14 de largo × 6 de fondo × 8 de alto; cabe de sobra en 16³. Base en hierro oscuro `#3b3f4a`, cintura y mesa en hierro medio `#5c6270`, y la superficie de trabajo en hierro claro `#8a92a3`, porque recibe la luz. Un cuerno de 2×2 sale por un lado.
+- **Martillo:** 8 × 4 × 13. Mango de 2×2 vóxels y 10 de alto en roble `#8a5a3c`, con la empuñadura más oscura `#6b4430`. La cabeza, de 8×4×3, usa **los mismos** hierro medio y claro del yunque.
+- **Cubo de agua:** un cilindro de unos 10 vóxels de diámetro y 8 de alto. Paredes de roble, dos aros de hierro medio y el agua en azul `#38b6ff`.
+
+<Tip>
+Cuenta los tonos: el kit entero usa **seis colores**. Tres hierros, dos maderas y el agua. Esa paleta corta es lo que lo cohesiona.
+</Tip>
+
+<Warn title="Una licencia de estilo">
+El martillo mide 13 vóxels de alto y el yunque, 8. En un taller real el yunque sería más alto que el martillo. Aquí el mango se exagera para que se lea a distancia. Si tu kit busca proporciones realistas, acórtalo: lo importante es que la decisión sea consciente y la mantengas en todos los props.
+</Warn>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Crea la paleta del kit antes de modelar">
+1. Abre una escena nueva en MagicaVoxel.
+2. En la **paleta** de la izquierda, elige una fila libre.
+3. Pon en ella, seguidos: `#3b3f4a`, `#5c6270`, `#8a92a3` (hierros), `#6b4430`, `#8a5a3c` (maderas) y `#38b6ff` (agua).
+
+<Why>
+La paleta se decide una vez y la usan todos los props. Si eliges colores prop a prop, acabarás con tres hierros «casi iguales» y el kit dejará de leerse como uno.
+</Why>
+</Step>
+
+<Step n={2} title="Modela el yunque: la pieza de referencia">
+1. Pon el tamaño del modelo a 16×16×16.
+2. En modo **Attach** con el pincel **Box**, levanta la base (8×6, 2 de alto) en hierro oscuro.
+3. Encima, la cintura más estrecha (4×4, 3 de alto) y la mesa ancha (12×6, 2 de alto) en hierro medio.
+4. Añade encima de la mesa una capa de hierro claro (la superficie de trabajo) y el cuerno de 2×2×2 a un lado.
+
+<Tip>
+Compara con la etapa «Yunque» del visor y usa el corte por capas para ver cada altura.
+</Tip>
+</Step>
+
+<Step n={3} title="Pasa a la vista de mundo y añade un modelo">
+1. Cambia a la vista de mundo (**World**): ahí ves todos los modelos de la escena a la vez.
+2. Crea un modelo nuevo junto al yunque y entra a editarlo.
+3. Repite para el tercero. Tendrás tres modelos en una sola escena.
+
+<Why>
+La paleta pertenece a la **escena**, no a cada modelo. Los tres props usan por fuerza los mismos colores, y si retocas un hierro, cambia en los tres.
+</Why>
+</Step>
+
+<Step n={4} title="Modela el martillo midiendo contra el yunque">
+1. Mango: 2×2 vóxels y 10 de alto en roble; las 2 capas de abajo, en madera oscura.
+2. Cabeza: un bloque de 8×4×3 en hierro medio, con la capa de arriba en hierro claro.
+3. Vuelve a **World** y ponlo junto al yunque. ¿El tamaño relativo es creíble?
+
+<Warn>
+No cambies el tamaño del vóxel para «encajar» el martillo. Si no cabe, cambia la forma, nunca la escala.
+</Warn>
+</Step>
+
+<Step n={5} title="Modela el cubo de agua">
+1. Un cilindro hueco de unos 10 vóxels de diámetro y 8 de alto, con paredes de 1 vóxel en roble.
+2. En modo **Paint**, pinta dos aros de hierro medio: en la tercera y en la séptima capa.
+3. Rellena el interior con agua hasta dos capas por debajo del borde.
+
+<Tip>
+Activa los botones **Mirror** X e Y y modela un cuarto del círculo: los otros tres se completan solos y el cubo sale simétrico.
+</Tip>
+</Step>
+
+<Step n={6} title="Renderiza el kit con una sola luz">
+1. Desde **World**, coloca los tres props como en una mesa de trabajo.
+2. Pulsa **Render** y elige una dirección de sol para toda la escena.
+3. Guarda `kit_herrero_v1.vox` y exporta un PNG del render.
+
+<Why>
+Una sola luz para todos. Si renderizas cada prop por separado con el sol en otra posición, el kit vuelve a parecer de mundos distintos.
+</Why>
+</Step>
+
+<Warn title="Verifica en tu versión">
+El nombre y la ubicación de la vista de mundo (**World**), la forma de crear un modelo nuevo dentro de ella y los controles del sol en **Render** cambian entre versiones de MagicaVoxel. Comprueba también los nombres de **Attach**/**Erase**/**Paint** y de los pinceles.
+</Warn>
+</Block>
+
+<Block kind="version">
+Añade **un cuarto prop** al kit del herrero, con la misma escala y la misma paleta. Elige un reto:
+
+- **Tenazas:** dos brazos de hierro finos. ¿Cómo las haces finas sin bajar de 1 vóxel?
+- **Fragua:** un bloque de piedra con brasas. Puedes añadir **una** rampa nueva, pero los hierros siguen siendo los del kit.
+- **Estante de herramientas:** madera del kit y tres herramientas pequeñas colgadas.
+
+Antes de dar por bueno el cuarto prop, ponlo en **World** junto al yunque y pregúntate: ¿parece del mismo taller?
+</Block>
+
+<Block kind="errores">
+<Warn title="Error típico: escalas mezcladas">
+Modelas el martillo en un lienzo de 32³ «para tener más detalle» y lo colocas junto a un yunque de 16³. Sus vóxels miden la mitad: el martillo parece de otro juego. **Corrección:** fija el vóxel con el yunque y mide todo contra él. Si un prop necesita más detalle, simplifícalo; no lo hagas a otra resolución.
+</Warn>
+
+<Mistake title="Paleta por prop" wrongLabel="Cada uno a su aire" rightLabel="Paleta compartida">
+  <p slot="wrong">El yunque usa un gris azulado; el martillo, un gris cálido; los aros del cubo, un tercer gris. Tres hierros que no lo son.</p>
+  <p slot="right">Tres hierros, dos maderas y el agua, en una fila de la paleta de la escena. Todos los props los usan.</p>
+
+Si cada prop elige sus colores, el ojo los separa aunque la escala sea correcta. Decide la paleta antes del primer vóxel y no añadas colores sin una razón.
+</Mistake>
+
+<Mistake title="Detalle desigual" wrongLabel="Un prop sobrecargado" rightLabel="Mismo nivel de detalle">
+  <p slot="wrong">El yunque es sobrio, pero al martillo le has puesto remaches, grabados y cinco tonos de madera.</p>
+  <p slot="right">Los tres props usan dos o tres tonos por material y el mismo tipo de detalle.</p>
+
+El prop recargado llama la atención y rompe el conjunto. El nivel de detalle es parte del estilo: mantenlo constante en todo el kit.
+</Mistake>
+</Block>
+
+<Block kind="calidad">
+<Checklist items={[
+  "El yunque cabe en 16³ y es mi pieza de referencia",
+  "Los tres props usan vóxels del mismo tamaño",
+  "Toda la escena usa la misma fila de paleta: tres hierros, dos maderas y el agua",
+  "El nivel de detalle es parecido en los tres",
+  "Los tres están en la misma escena (World) y renderizados con una sola luz",
+  "He guardado kit_herrero_v1.vox y un render en mi portfolio",
+]} />
+
+<Quiz q="Tu martillo no cabe bien junto al yunque. ¿Qué haces?" options={["Lo modelo a más resolución, con vóxels más pequeños", "Cambio su forma o su tamaño en vóxels, sin tocar la escala del vóxel", "Lo renderizo aparte con otra luz"]} answer={1}>
+La escala del vóxel es común a todo el kit. Se ajusta la forma del prop, nunca el tamaño de su unidad.
+</Quiz>
+
+<Quiz q="En una escena de MagicaVoxel con tres modelos, editas el color del hierro medio en la paleta. ¿Qué pasa?" options={["Solo cambia el modelo que estás editando", "Cambia en los tres modelos, porque la paleta es de la escena", "No cambia nada hasta que vuelves a pintar"]} answer={1}>
+La paleta es compartida por la escena: un hierro editado cambia en todos los props que lo usan. Es la ventaja de trabajar el kit en un solo archivo.
+</Quiz>
+</Block>

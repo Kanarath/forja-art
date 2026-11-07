@@ -1,0 +1,170 @@
+---
+id: p5-01
+discipline: pixel
+level: 5
+order: 1
+title: "Proporciones chibi: un héroe de 16×24"
+summary: "A baja resolución las proporciones realistas no caben: la cara desaparece. El chibi exagera la cabeza y los ojos, acorta cuerpo y piernas, se construye por bloques y su silueta se lee a 1×."
+duration: 40
+status: borrador
+objectives:
+  - "Entender por qué las proporciones realistas fallan a 16×24"
+  - "Repartir la altura chibi: cabeza casi la mitad, torso y piernas cortos"
+  - "Construir el personaje con un blockout por bloques antes del detalle"
+  - "Comprobar que la silueta del personaje se lee en negro a 1×"
+prerequisites: [p4-03]
+fundamentals: [f02]
+tools: [aseprite]
+piece:
+  name: "Tu héroe de 16×24 con proporciones chibi"
+  canvas: "16x24"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [heroe-chibi]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Vas a forjar **tu héroe de 16×24**. Cabeza grande, ojos que se leen, cuerpo y piernas cortos. Un personaje que se reconoce aunque mida lo que un icono.
+
+<Sprite name="hero-chibi" scale={10} caption="Héroe chibi de 16×24: pelo con luz, ojos de 2 píxeles de alto, túnica azul con cinturón y botas" />
+</Block>
+
+<Block kind="concepto">
+**En 24 píxeles de alto, la anatomía real no cabe.** Una persona mide unas siete cabezas y media. A esta escala eso deja una cabeza de 4 píxeles. Ahí no entran ojos, boca ni expresión.
+
+<Sprite name="hero-realistic" scale={10} caption="El mismo héroe con proporciones realistas: la cabeza mide 4 píxeles y la cara es una sola fila de piel. Las piernas se llevan casi la mitad del lienzo" />
+
+<Why>
+Lo que identifica a un personaje (quién es, cómo se siente) está en la cara. Si la cara mide 4 píxeles, el personaje es un palo con pelo. El chibi no es solo un estilo «mono»: es **dónde gastas tus píxeles**.
+</Why>
+
+**El chibi reparte la altura al revés que la anatomía:**
+
+- **Cabeza: casi la mitad.** En `hero-chibi` ocupa 11 filas de las 21 que mide el personaje.
+- **Ojos grandes.** Aquí miden 1×2 píxeles y van separados: con eso basta para que mire.
+- **Torso corto:** 5 filas, con los brazos pegados al cuerpo y un cinturón que marca la cintura.
+- **Piernas cortas:** 5 filas, con un hueco de un píxel entre ellas y botas oscuras abajo.
+
+<Tip title="Compáralos en silueta">
+<Sprite name="hero-chibi" scale={8} view="silhouette" caption="Chibi: una masa grande arriba y dos piernas cortas" />
+<Sprite name="hero-realistic" scale={8} view="silhouette" caption="Realista: un palo largo con una bolita" />
+
+En negro, el chibi sigue pareciendo un personaje. El realista podría ser una farola.
+</Tip>
+
+**Primero bloques, luego detalle.** Igual que un blockout en Blender: cabeza, torso y piernas como masas de color plano. Si el reparto funciona en bloques, el detalle lo remata. Si no funciona, ningún detalle lo salva.
+
+Abre el héroe en el inspector. Mira la silueta y bájalo a 1×: la cabeza y las dos piernas se siguen leyendo.
+
+<Inspector sprite="hero-chibi" />
+
+Y ahora a ciegas. Tres sprites en negro y sin nombre: ¿cuál es un personaje?
+
+<SilhouetteLab sprites="hero-chibi,hero-realistic,slime" title="¿Quién es el héroe?" />
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Lienzo y guías de altura">
+1. <Keys k="Ctrl+N" />: 16×24, modo RGBA, fondo transparente. Activa *View → Grid*.
+2. Deja 2–3 filas libres arriba (para pelo o casco más adelante).
+3. Decide el reparto: unas **11 filas de cabeza**, **5 de torso** y **5 de piernas**.
+
+<Tip>
+Pinta en una capa aparte una marca de color en el borde izquierdo donde acaba cada zona. Bórrala al final.
+</Tip>
+</Step>
+
+<Step n={2} title="Blockout: tres masas planas">
+Con la selección rectangular (<Keys k="M" />) y el cubo (<Keys k="G" />), o con el lápiz (<Keys k="B" />):
+
+1. Cabeza: un bloque ancho de color piel y pelo, casi todo el ancho del lienzo.
+2. Torso: un bloque más estrecho del color de la ropa.
+3. Piernas: dos columnas cortas con **un píxel de hueco** entre ellas.
+
+<Why>
+Así juzgas solo proporción y silueta, sin distraerte con ojos ni brillos. Es el mismo orden que en un modelo hard surface: volumen primero.
+</Why>
+</Step>
+
+<Step n={3} title="Comprueba la silueta a 1×">
+Aleja el zoom con la rueda del ratón hasta ver el sprite pequeño, o rellénalo entero de negro en una copia. Debe leerse una cabeza grande sobre un cuerpo con dos piernas.
+
+<Warn>
+Si en negro no distingues cabeza de cuerpo, no sigas. Ensancha la cabeza o estrecha el cuello antes de pasar al detalle.
+</Warn>
+</Step>
+
+<Step n={4} title="Cara: ojos grandes y separados">
+1. Baja el pelo como un flequillo sobre la frente.
+2. Ojos de 1×2 píxeles en el tono más oscuro, a media altura de la cabeza y con 3 píxeles de piel entre ellos.
+3. Un tono de piel más oscuro en mejillas y barbilla para cerrar la cara.
+
+<Tip>
+No pintes boca todavía. En 16×24, los ojos solos ya dan expresión; la boca la verás en P5-02.
+</Tip>
+</Step>
+
+<Step n={5} title="Cuerpo y contorno">
+1. Brazos de un píxel a los lados del torso, con un píxel de piel abajo para las manos.
+2. Una fila de cinturón que separe torso y piernas.
+3. Botas en el tono más oscuro en la fila de abajo.
+4. Contorno oscuro alrededor de todo, con *Pixel-perfect* activado en el lápiz.
+</Step>
+
+<Step n={6} title="Luz y exportar">
+Dos o tres píxeles más claros en el pelo, arriba a la izquierda, y un tono más oscuro en el lado derecho de la ropa. Guarda con <Keys k="Ctrl+S" /> y exporta con *File → Export → Export As*, PNG, **Resize** 800 %, más una copia al 100 %.
+</Step>
+</Block>
+
+<Block kind="version">
+Ahora a tu manera. Mantén el reparto: cabeza casi la mitad.
+
+- **Otro oficio:** una maga con sombrero puntiagudo o un herrero con delantal. La silueta debe cambiar, no solo el color.
+- **Equipado:** dale una espada o un escudo pegados al cuerpo sin romper la lectura a 1×.
+- **Un enemigo humanoide:** mismas proporciones chibi, pero formas más angulosas (el triángulo dice «peligro»).
+</Block>
+
+<Block kind="errores">
+<Mistake title="Proporciones realistas a baja resolución" wrongLabel="Cabeza de 4 píxeles: sin cara" rightLabel="Cabeza de 11 filas: cara legible">
+  <Sprite slot="wrong" name="hero-realistic" scale={8} />
+  <Sprite slot="right" name="hero-chibi" scale={8} />
+
+La anatomía real se come el lienzo en piernas y deja la cara en una fila. Agranda la cabeza hasta casi la mitad y acorta las piernas.
+</Mistake>
+
+<Mistake title="Silueta que no se lee" wrongLabel="Un palo con una bolita" rightLabel="Cabeza, cuerpo y dos piernas">
+  <Sprite slot="wrong" name="hero-realistic" scale={8} view="silhouette" />
+  <Sprite slot="right" name="hero-chibi" scale={8} view="silhouette" />
+
+Si en negro no hay masas distintas, el detalle no lo arregla. Vuelve al blockout: cabeza ancha, torso estrecho y hueco entre las piernas.
+</Mistake>
+
+<Warn title="Detalle antes que blockout">
+Empezar por los ojos o el brillo del pelo y descubrir después que la cabeza es pequeña obliga a repintarlo todo. Bloques primero.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+Sube tu héroe **a 1×** y míralo en silueta.
+
+<Inspector upload title="Revisa tu héroe" />
+
+<Checklist items={[
+  "El lienzo mide 16×24",
+  "La cabeza ocupa casi la mitad de la altura del personaje",
+  "Los ojos se ven a 1× y están separados",
+  "Torso y piernas son cortos, con hueco entre las piernas",
+  "En silueta se distinguen cabeza, cuerpo y piernas",
+  "Hiciste el blockout por bloques antes del detalle",
+]} />
+
+<Quiz q="¿Por qué se usan proporciones chibi en un sprite de 16×24?" options={["Porque es el único estilo bonito", "Porque con proporciones reales la cara no cabe", "Porque así se anima más rápido"]} answer={1}>
+Con siete cabezas y media de altura, la cabeza mide unos 4 píxeles. El chibi gasta los píxeles donde se lee el personaje: la cara.
+</Quiz>
+
+<Quiz q="¿Qué haces antes de pintar los ojos?" options={["El brillo del pelo", "El contorno completo", "El blockout de cabeza, torso y piernas, y comprobar la silueta"]} answer={2}>
+Si el reparto falla en bloques, el detalle no lo salva. Primero masas, luego silueta a 1×, luego detalle.
+</Quiz>
+</Block>

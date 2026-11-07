@@ -1,0 +1,204 @@
+---
+id: f04-01
+discipline: fundamentos
+level: 4
+order: 1
+title: "Paletas y armonías"
+summary: "Una paleta limitada da coherencia: armonías clásicas, rampas por material, un color de acento y la regla 60-30-10, en pixel y en voxel."
+duration: 45
+status: borrador
+prerequisites: [f03-01]
+fundamentals: [f01]
+objectives:
+  - "Elegir una armonía (análoga, complementaria, triádica o monocromática) con criterio"
+  - "Organizar una paleta en rampas por material más un color de acento"
+  - "Usar la misma paleta de 16 colores en Aseprite y en MagicaVoxel"
+tools: [aseprite, magicavoxel]
+piece:
+  name: "Una paleta propia de 16 colores con una armonía, usada en un sprite y en un modelo"
+  canvas: "16x16"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [armonia]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Hoy forjas **tu propia paleta de 16 colores** y la usas dos veces:
+
+- En **Aseprite**: un sprite de 16×16 pintado solo con esa paleta.
+- En **MagicaVoxel**: un modelo pequeño con los mismos 16 colores, renderizado.
+
+Una paleta, dos mundos. Si las dos piezas parecen del mismo juego, lo has conseguido.
+
+<Sprite name="slime" scale={10} caption="slime: verdes, la masa del mundo" />
+<Sprite name="gem" scale={10} caption="gem: magenta, el acento que se ve de lejos" />
+</Block>
+
+<Block kind="concepto">
+### Menos colores, más coherencia
+
+Con 16 colores no puedes ir improvisando. Cada color se repite en muchos objetos y eso los **une**: parecen del mismo mundo.
+
+<Why title="Por qué limitar">
+Una paleta limitada obliga a reutilizar. La hierba, el slime y la tela verde comparten rampa, así que la escena se lee como un todo. Con 200 colores sueltos cada objeto parece de un juego distinto.
+</Why>
+
+### Cuatro armonías clásicas
+
+Piensa en el círculo cromático como un reloj de 360°.
+
+- **Monocromática**: un solo tono en varios valores. Es lo que ya hace una rampa.
+- **Análoga**: tonos vecinos, a unos 30° entre sí. Tranquila y natural: un bosque.
+- **Complementaria**: tonos opuestos, a 180°. Máximo contraste: el acento salta a la vista.
+- **Triádica**: tres tonos a 120°. Viva y variada; difícil de equilibrar.
+
+Tu tono base aquí es el verde `#3fbf7f` (150°). Este lab construye su rampa: eso ya es una paleta **monocromática**.
+
+<RampLab base="#3fbf7f" steps={5} sprite="slime" />
+
+Su vecino turquesa, `#3fbfbf` (180°), está a 30°: juntos forman una armonía **análoga**. Otro vecino sería `#3fbf3f` (120°), al otro lado.
+
+<RampLab base="#3fbfbf" steps={5} sprite="slime" />
+
+Y el opuesto del verde, a 180° (150 + 180 = 330°), es el magenta `#c2186b`: la **complementaria**. Es justo el color de la gema.
+
+<RampLab base="#c2186b" steps={4} sprite="gem" />
+
+<Tip>
+La **triádica** de este verde serían el violeta `#7f3fbf` (270°) y el naranja `#bf7f3f` (30°). Pruébalos en el selector del lab si quieres verlos.
+</Tip>
+
+### Una paleta de juego: rampas por material más un acento
+
+Una paleta útil no es una lista de colores bonitos. Se organiza en **rampas**, una por material:
+
+- piel o follaje (3–4 tonos);
+- piedra o metal (3–4 tonos);
+- madera o tela (3 tonos);
+- un **contorno** casi negro compartido;
+- y **un color de acento**, complementario de la masa, solo para lo importante.
+
+`gem` y `potion` son acentos de manual: magenta y rojo frambuesa (unos 330–340°), opuestos a un mundo verde.
+
+<Sprite name="potion" scale={8} caption="potion: el rojo se reserva para lo que el jugador debe ver" />
+
+### La regla 60-30-10
+
+Una guía, no una ley:
+
+- **60 %** color dominante (la masa: hierba, piedra);
+- **30 %** color secundario (su vecino análogo);
+- **10 %** acento (gemas, pociones, ojos).
+
+<Why title="El acento funciona porque es escaso">
+Si el magenta ocupa la mitad de la escena, ya no es acento: es ruido. El ojo va a lo raro, y solo puede ser raro lo que es poco.
+</Why>
+
+### La misma paleta en pixel y en voxel
+
+- En **Aseprite**, la paleta va **por archivo**: cada `.aseprite` guarda la suya. Puedes cargar un `.gpl` en cualquier archivo.
+- En **MagicaVoxel**, la paleta va **por escena**: los 256 colores de la izquierda los comparten todos los modelos del `.vox`.
+
+Si los dos programas usan los mismos 16 códigos, el sprite y el modelo son del mismo juego.
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Elige base y armonía">
+Decide el ambiente: ¿bosque tranquilo (análoga) o mazmorra con tesoros que brillan (complementaria)? Elige un color base y calcula sus compañeros en grados: vecinos a ±30°, opuesto a +180°, tríada a ±120°.
+
+<Tip>
+El selector de color de Aseprite muestra el tono en grados en su modo HSV. Úsalo para comprobar las distancias.
+</Tip>
+</Step>
+
+<Step n={2} title="Construye las rampas en el lab">
+En el `RampLab`, genera una rampa de 4 tonos por material: dominante, secundario y piedra o madera. Descarga cada una en `.gpl`. Reserva 2 colores para el acento y 1 para el contorno.
+
+<Why>
+Comprueba la fila **En grises** de cada rampa. Si dos rampas comparten exactamente los mismos valores, la escena se aplana: varía un poco el contraste entre materiales.
+</Why>
+</Step>
+
+<Step n={3} title="Monta los 16 colores en Aseprite">
+1. <Keys k="Ctrl+N" />: 16×16, fondo transparente. Activa *View → Grid*.
+2. Carga o pega los colores de tus rampas en la paleta del archivo, ordenados por rampa: de oscuro a claro.
+3. Cuenta: 16 colores exactos. Si sobran, funde los dos más parecidos.
+4. Guarda la paleta también como archivo para reutilizarla.
+
+<Warn title="Verifica en tu versión">
+Cargar y guardar paletas se hace desde el menú de opciones del panel de paleta; el nombre exacto de las opciones puede variar entre versiones de Aseprite.
+</Warn>
+</Step>
+
+<Step n={4} title="Pinta el sprite con la regla 60-30-10">
+Lápiz (<Keys k="B" />) con *Pixel-perfect* y cuentagotas (<Keys k="I" />). Pinta un pequeño escenario o personaje con un objeto de acento (una gema, una poción, unos ojos). Masa dominante, secundario alrededor, acento solo en el objeto. Guarda con <Keys k="Ctrl+S" />.
+
+<Tip>
+Al terminar, mira el sprite de lejos o a 1×. Si el acento no salta a la vista, o hay demasiado o no es lo bastante opuesto.
+</Tip>
+</Step>
+
+<Step n={5} title="Los mismos 16 colores en MagicaVoxel">
+1. Crea una escena nueva. En la **paleta de la izquierda**, sustituye los primeros 16 colores por tus códigos, en el mismo orden.
+2. Modela un objeto pequeño (una roca con cristal, un cofre, una seta) en modo *Attach* con el pincel *Voxel* o *Box*.
+3. Repinta con el modo *Paint*: la masa con la rampa dominante y el acento en un único detalle.
+4. Pulsa *Render* y guarda el PNG.
+
+<Why>
+La paleta de MagicaVoxel es de la escena: si mañana ajustas el verde, cambian todos los modelos de ese `.vox` a la vez. Es tu paleta de juego viva.
+</Why>
+
+<Warn title="Verifica en tu versión">
+La forma de editar un color de la paleta (y de importarla) puede variar entre versiones de MagicaVoxel.
+</Warn>
+</Step>
+</Block>
+
+<Block kind="version">
+Elige una armonía y hazla tuya:
+
+- **Bosque análogo**: verdes y turquesas, acento magenta en una sola flor.
+- **Mazmorra complementaria**: azules fríos de piedra y un acento naranja de antorcha.
+- **Feria triádica**: tres tonos a 120°, uno dominante y los otros dos rebajados de saturación.
+</Block>
+
+<Block kind="errores">
+<Mistake title="Tonos al azar, todos a tope" wrongLabel="Tres tonos sin relación" rightLabel="Un tono, varios valores">
+  <Sprite slot="wrong" name="gem-samevalue" scale={10} caption="gem-samevalue: magenta, naranja y azul saturados" />
+  <Sprite slot="right" name="gem" scale={10} caption="gem: una rampa monocromática" />
+
+Elegir colores «porque quedan bien» lleva a un objeto sin armonía: todo compite y nada es acento. **Corrección**: elige primero la armonía y saca cada color de una rampa. Deja la saturación alta solo para el acento.
+</Mistake>
+
+<Mistake title="Una paleta sin escalones de valor" wrongLabel="Mismos valores" rightLabel="Valores separados">
+  <Sprite slot="wrong" name="gem-samevalue" scale={10} view="gray" />
+  <Sprite slot="right" name="gem" scale={10} view="gray" />
+
+Una armonía bonita no sirve si todos los colores tienen el mismo valor: en grises desaparece la forma. **Corrección**: cada rampa de tu paleta debe ir de oscuro a claro, y el contorno debe ser el color más oscuro.
+</Mistake>
+
+<Warn title="Acento por todas partes">
+Si pintas el magenta en la gema, en la ropa y en el suelo, deja de ser acento. Respeta el 10 %.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+<Checklist items={[
+  "Mi paleta tiene exactamente 16 colores, ordenados por rampas",
+  "Puedo decir qué armonía uso y a cuántos grados están sus tonos",
+  "Hay un único color de acento y ocupa poco",
+  "Cada rampa pasa la prueba de grises",
+  "El sprite de 16×16 y el modelo de MagicaVoxel usan los mismos 16 códigos",
+  "He guardado la paleta, el .aseprite, el .vox y los PNG en mi portfolio",
+]} />
+
+<Quiz q="Tu tono base es un verde a 150°. ¿Cuál es su complementario?" options={["Un verde amarillento a 120°", "Un magenta a 330°", "Un azul a 210°"]} answer={1}>
+El complementario está a 180°: 150 + 180 = 330°, un magenta como el de la gema.
+</Quiz>
+
+<Quiz q="En MagicaVoxel, ¿a qué pertenece la paleta?" options={["A cada modelo por separado", "A la escena: todos los modelos del .vox la comparten", "Al render"]} answer={1}>
+La paleta es de la escena. En Aseprite, en cambio, cada archivo guarda la suya.
+</Quiz>
+</Block>

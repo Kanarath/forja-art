@@ -1,0 +1,26 @@
+{
+  "name": "bat",
+  "description": "Murciélago enemigo de 12×8: alas en picos y ojos rojos. Formas triangulares: se lee como amenaza aunque sea pequeño.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "criatura",
+    "enemigo"
+  ],
+  "palette": {
+    "o": "#1b1030",
+    "w": "#5b4a7a",
+    "b": "#3a2d52",
+    "R": "#ff4f4f"
+  },
+  "rows": [
+    "o....oo....o",
+    "oo..obbo..oo",
+    "owo.oRRo.owo",
+    "owwoobboowwo",
+    "owwwwbbwwwwo",
+    ".owwwbbwwwo.",
+    "..oowoowoo..",
+    "....o..o...."
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "name": "face-sorpresa",
+  "description": "Sorpresa: ojos más altos (3 px) y la boca abierta en una O.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "expresión"
+  ],
+  "palette": {
+    "o": "#1b1030",
+    "s": "#f2c29b",
+    "S": "#c98f6b",
+    "h": "#6b3d2e",
+    "H": "#a0603a"
+  },
+  "rows": [
+    "..oooooooo..",
+    ".ohhHHHhhho.",
+    "ohhhhhhhhhho",
+    "ohhsssssshho",
+    "ohsossssoSho",
+    "ohsossssoSho",
+    "ohsossssoSho",
+    "oSsssssssSSo",
+    "oSsssoossSSo",
+    ".oSSsoossSo.",
+    "..oooooooo.."
+  ]
+}

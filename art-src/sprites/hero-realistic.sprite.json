@@ -1,0 +1,47 @@
+{
+  "name": "hero-realistic",
+  "description": "El mismo héroe con proporciones realistas en 16×24: la cabeza mide 4 px y no cabe una cara. A esta resolución se pierde el personaje.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "personaje",
+    "error"
+  ],
+  "palette": {
+    "o": "#1b1030",
+    "s": "#f2c29b",
+    "h": "#6b3d2e",
+    "t": "#3b6fd1",
+    "T": "#26489a",
+    "b": "#6b3d2e",
+    "p": "#4a4560",
+    "P": "#2f2b40",
+    "B": "#3b2418"
+  },
+  "rows": [
+    "......oooo......",
+    ".....ohhhho.....",
+    ".....oshsso.....",
+    ".....ossso......",
+    "......oso.......",
+    "....ootttoo.....",
+    "...osotttToso...",
+    "...osotttToso...",
+    "...osotttToso...",
+    "...osotttToso...",
+    "....obbbbbo.....",
+    "....otttttTo....",
+    "....oppppPo.....",
+    "....opPoopPo....",
+    "....opPoopPo....",
+    "....opPoopPo....",
+    "....opPoopPo....",
+    "....opPoopPo....",
+    "....opPoopPo....",
+    "....opPoopPo....",
+    "....opPoopPo....",
+    "....oBBooBBo....",
+    "....oooooooo....",
+    "................"
+  ]
+}

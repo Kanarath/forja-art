@@ -1,0 +1,184 @@
+---
+id: f09-01
+discipline: fundamentos
+level: 9
+order: 1
+title: "Diseño de personajes en 2D y 3D"
+summary: "Diseña un personaje por capas de lectura (silueta, forma, color y detalle) y llévalo a pixel art y a voxel con la misma proporción chibi y la misma paleta."
+duration: 45
+status: borrador
+prerequisites: [f04-01]
+fundamentals: [f02]
+objectives:
+  - "Diseñar un personaje en cuatro capas: silueta, forma, color y detalle"
+  - "Usar el lenguaje de formas para separar héroe y enemigo"
+  - "Trasladar proporción y paleta de un sprite 16×24 a un modelo voxel"
+  - "Comprobar la silueta del modelo 3D desde varias cámaras"
+tools: [aseprite, magicavoxel]
+piece:
+  name: "Tu personaje en pixel (16×24) y en voxel (chibi), con la misma paleta"
+  canvas: "16x24"
+xp: { concept: 10, guided: 20, piece: 70 }
+achievements: [personaje-2d-3d]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Hoy forjas **un personaje dos veces**: un sprite de **16×24** en Aseprite y un **modelo voxel chibi** en MagicaVoxel. Mismas proporciones, misma paleta, mismo carácter.
+
+<Sprite name="hero-chibi" scale={8} caption="Pixel: héroe chibi de 16×24" />
+
+<VoxViewer model="chibi" stage={1} title="Voxel: el mismo héroe, con los mismos colores" />
+</Block>
+
+<Block kind="concepto">
+Un personaje se lee **por capas**, de lejos a cerca. Diséñalo en ese mismo orden:
+
+1. **Silueta**: ¿se reconoce en negro?
+2. **Forma**: ¿qué dice? Formas estables y redondas para el héroe; picos para el enemigo.
+3. **Color**: una paleta corta del personaje y **un color de identidad**.
+4. **Detalle**: ojos, cinturón, botas. Lo último, y solo si cabe.
+
+<Sprite name="hero-chibi" scale={6} view="silhouette" caption="1 · Silueta: cabeza, cuerpo, dos piernas" />
+<Sprite name="hero-chibi" scale={6} view="gray" caption="3 · Valor: la cara clara destaca sobre pelo y túnica" />
+<Sprite name="hero-chibi" scale={6} caption="4 · Detalle: ojos de 2 px, cinturón y botas" />
+
+**Héroe frente a enemigo.** El héroe se apoya en bloques anchos y redondeados: estable, fiable. El murciélago es todo picos: amenaza aunque mida 12×8. El slime, redondo: amable.
+
+<Sprite name="bat" scale={8} view="silhouette" caption="Picos: peligro" />
+<Sprite name="slime" scale={8} view="silhouette" caption="Curvas: amable" />
+
+**La proporción chibi.** En `hero-chibi` la cabeza ocupa unas 11 de las 21 filas dibujadas. Parece exagerado, pero es lo que permite que quepan **ojos de 2 px** y una cara. Con proporción realista la cabeza mide 4 px y la cara desaparece.
+
+<Why title="Por qué chibi a baja resolución">
+Las emociones viven en la cara. A 16×24 solo hay píxeles para una cara si la cabeza es grande. Agrandar la cabeza no es estilo «mono»: es una decisión de legibilidad.
+</Why>
+
+**Color de identidad.** La paleta de este héroe es corta: piel, marrones cálidos (pelo, cinturón, botas) y **un azul** en la túnica. Ese azul es lo que recuerdas de él. El enemigo usa otro acento: los ojos **rojos** del murciélago.
+
+**Del 2D al 3D.** El modelo `chibi` usa **exactamente los mismos hexadecimales** que el sprite (piel `#f2c29b`, pelo `#6b3d2e`, túnica `#3b6fd1`). La cabeza ocupa 8 de sus 15 vóxels de altura. Pero ojo: en 3D la silueta **no es una**. Cambia con la cámara.
+
+<VoxViewer model="chibi" stage={0} title="Blockout: tres bloques. Gíralo: de frente, de lado y desde arriba" />
+
+De frente ves cabeza, cuerpo y piernas. De lado, los brazos se esconden tras el cuerpo. Desde arriba, solo un cuadrado de pelo.
+
+<Why title="Por qué la cámara importa">
+El jugador verá tu modelo desde la cámara del juego. Si es una vista cenital, el pelo y los hombros son la silueta. Diseña la lectura para **esa** cámara.
+</Why>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Silueta en negro (Aseprite)">
+1. <Keys k="Ctrl+N" />: lienzo de **16×24**, fondo transparente.
+2. *View → Grid* y amplía con la rueda.
+3. Lápiz (<Keys k="B" />) con **Pixel-perfect**, en negro. Bloquea la cabeza en las filas de arriba (unas 10–11 filas), luego el cuerpo y dos piernas separadas.
+4. Rellena con <Keys k="G" />.
+
+<Tip>
+Deja un hueco de 1 px entre las piernas. Ese hueco es lo que hace que la silueta se lea como «alguien de pie».
+</Tip>
+</Step>
+
+<Step n={2} title="Forma: decide el carácter">
+¿Héroe o enemigo? Ajusta el contorno: hombros y cabeza redondeados para un héroe; puntas (pelo en pico, orejas, capucha) para un villano. Cambia solo el borde, no el interior.
+
+<Why>
+El lenguaje de formas se lee antes que el color. Si la silueta ya dice «amable» o «peligro», el resto solo lo confirma.
+</Why>
+</Step>
+
+<Step n={3} title="Color: paleta del personaje">
+1. Elige **5–7 colores**: piel (con su sombra), pelo, ropa principal, ropa secundaria y botas, más un contorno oscuro.
+2. Escoge **un color de identidad** y dale la zona más grande (como la túnica azul).
+3. Pinta zonas planas con <Keys k="G" />; sombrea solo el lado contrario a la luz.
+4. Apunta los hexadecimales: los vas a reutilizar en voxel.
+
+<Warn>
+Si dos zonas vecinas tienen el mismo valor (pelo y túnica igual de oscuros), se funden. Compruébalo en grises antes de seguir.
+</Warn>
+</Step>
+
+<Step n={4} title="Detalle y exportación">
+1. Ojos de **2 px** de alto, cinturón, botas. Nada que no se vea a 1×.
+2. Guarda con <Keys k="Ctrl+S" />.
+3. *File → Export → Export As* en PNG con **Resize** 800 %.
+</Step>
+
+<Step n={5} title="Blockout chibi (MagicaVoxel)">
+1. Crea un modelo nuevo y, en la paleta de la izquierda, pon **los mismos hexadecimales** de tu sprite.
+2. Modo *Attach* y pincel *Box*: tres bloques. Cabeza (unos 8 vóxels de alto), cuerpo y piernas. La cabeza, casi la mitad de la altura.
+3. Gira con el **botón derecho** y comprueba la silueta de frente, de lado y desde arriba.
+
+<Why>
+Primero proporción, luego detalle: igual que en pixel. Si el blockout no es chibi, ningún ojo lo arreglará.
+</Why>
+</Step>
+
+<Step n={6} title="Detalle voxel">
+1. Modo *Erase* y pincel *Voxel*: separa las piernas.
+2. Modo *Paint*: pelo arriba y detrás, botas, cinturón.
+3. Modo *Attach*: brazos a los lados y ojos de **2 vóxels** en la cara.
+4. Pulsa *Render* y mira tu personaje desde la cámara que usaría tu juego.
+
+<Warn title="Verifica en tu versión">
+Los nombres de modos, pinceles y paneles de MagicaVoxel pueden variar entre versiones.
+</Warn>
+</Step>
+</Block>
+
+<Block kind="version">
+Ahora, a tu manera. Elige un reto:
+
+- **Su enemigo**: diseña el villano del mismo mundo, con picos y otro color de identidad. Misma altura, carácter opuesto.
+- **Misma silueta, otra paleta**: recolorea tu héroe con otro acento. ¿Sigue siendo él?
+- **Cámara del juego**: renderiza tu voxel desde arriba en diagonal. Si la silueta se pierde, exagera pelo u hombros.
+
+**Prueba de lectura.** Sube tu sprite a 1× y compáralo en negro con el héroe y los dos bichos. ¿Se adivina quién es el bueno?
+
+<SilhouetteLab sprites="hero-chibi,bat,slime" title="Tu personaje frente al héroe, el murciélago y el slime" />
+</Block>
+
+<Block kind="errores">
+<Mistake title="Proporción realista a baja resolución" wrongLabel="Cabeza de 4 px" rightLabel="Cabeza chibi">
+  <Sprite slot="wrong" name="hero-realistic" scale={8} />
+  <Sprite slot="right" name="hero-chibi" scale={8} />
+
+Con proporción realista la cabeza mide 4 px y no cabe una cara: el personaje pierde expresión. Corrígelo agrandando la cabeza hasta casi la mitad de la altura y encogiendo cuerpo y piernas.
+</Mistake>
+
+<Mistake title="Héroe con forma de enemigo" wrongLabel="Picos" rightLabel="Formas estables">
+  <Sprite slot="wrong" name="bat" scale={8} view="silhouette" />
+  <Sprite slot="right" name="hero-chibi" scale={8} view="silhouette" />
+
+Si tu héroe acumula puntas, la silueta grita «amenaza». Reserva los picos para enemigos y construye al protagonista con bloques anchos y bordes redondeados.
+</Mistake>
+
+<Warn title="Paletas que no coinciden">
+Elegir los colores del voxel «a ojo» es el error típico del paso a 3D: el azul se vuelve morado y ya no es el mismo personaje. Copia los hexadecimales del sprite a la paleta de MagicaVoxel. Y gira siempre el modelo: una silueta perfecta de frente puede ser un cuadrado sin carácter desde arriba.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+Sube tu sprite **a 1×** y revísalo en silueta y en grises.
+
+<Inspector upload title="Comprueba tu personaje" />
+
+<Checklist items={[
+  "Mi sprite mide 16×24 y la cabeza ocupa casi la mitad de la altura",
+  "La silueta se reconoce en negro a 1×, con las piernas separadas",
+  "Las formas dicen lo que quiero: estables si es héroe, con picos si es enemigo",
+  "Hay un color de identidad y la paleta es corta",
+  "El modelo voxel usa los mismos hexadecimales que el sprite",
+  "He girado el modelo y su silueta se lee desde la cámara del juego",
+]} />
+
+<Quiz q="¿En qué orden se lee (y se diseña) un personaje?" options={["Detalle, color, forma, silueta", "Silueta, forma, color, detalle", "Color, detalle, silueta, forma"]} answer={1}>
+De lejos a cerca: primero la silueta, luego lo que dicen sus formas, después el color y por último el detalle.
+</Quiz>
+
+<Quiz q="¿Por qué el héroe de 16×24 tiene una cabeza tan grande?" options={["Porque es más mono", "Para que quepa una cara legible con ojos de 2 px", "Para ahorrar píxeles en el cuerpo"]} answer={1}>
+A esta resolución, una cabeza realista mide 4 px y no deja sitio para la cara. La proporción chibi es una decisión de legibilidad.
+</Quiz>
+</Block>

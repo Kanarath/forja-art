@@ -1,0 +1,176 @@
+---
+id: p5-03
+discipline: pixel
+level: 5
+order: 3
+title: "Criaturas y enemigos: el carácter está en la forma"
+summary: "Aplica el lenguaje de formas a criaturas: redondo para lo amable, picos para la amenaza, un acento de color en los ojos y una lectura clara a 1× junto al héroe."
+duration: 40
+status: borrador
+prerequisites: [p5-02]
+fundamentals: [f02]
+objectives:
+  - "Elegir la forma dominante de una criatura según su carácter"
+  - "Usar un color de acento en los ojos para dirigir la mirada"
+  - "Comprobar que un enemigo pequeño se lee a 1× y contrasta con el héroe"
+  - "Crear variantes de un enemigo cambiando solo la paleta"
+tools: [aseprite]
+piece:
+  name: "Dos criaturas: una amable y una amenazante"
+  canvas: "12x8"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [bestiario]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Hoy forjas **dos criaturas pequeñas**: una amable y una amenazante. Las dos caben en unos 12×8 píxeles. Sin leer ningún texto, el jugador debe saber cuál le da un abrazo y cuál le muerde.
+
+<Sprite name="slime" scale={10} caption="Amable: un slime de 10×8" />
+<Sprite name="bat" scale={10} caption="Amenazante: un murciélago de 12×8" />
+</Block>
+
+<Block kind="concepto">
+Ya conoces el lenguaje de formas (F02). En una criatura funciona igual, pero con **menos píxeles** y **más prisa**: el jugador la ve moviéndose.
+
+<Sprite name="shape-circle" scale={6} caption="Círculo: amable" />
+<Sprite name="slime" scale={6} caption="El slime es una cúpula: ninguna punta" />
+<Sprite name="shape-triangle" scale={6} caption="Triángulo: amenaza" />
+<Sprite name="bat" scale={6} caption="El murciélago: picos en las alas y en las orejas" />
+
+**Mira los píxeles:**
+
+- **Slime**: contorno redondeado con tramos ordenados, base plana y un brillo claro arriba a la izquierda. Sus ojos son oscuros, del mismo color que el contorno: no inquietan.
+- **Murciélago**: las alas terminan en puntas en las esquinas de arriba, dos orejas en el centro y pequeños picos abajo. Sus ojos son **dos píxeles rojos** (`#ff4f4f`) sobre un cuerpo morado oscuro.
+
+<Why title="Por qué los ojos rojos">
+El ojo humano va primero al punto de **más contraste** y al color más saturado. En el murciélago todo es morado y apagado, salvo los ojos. Así, la mirada del jugador cae justo donde está la «cara» del enemigo. Un solo acento basta. Si pones rojo en todas partes, ya no es acento.
+</Why>
+
+**Pequeño, pero legible.** Un enemigo de 12×8 junto a un héroe de 16×24 ocupa un tercio de su altura. Debe leerse a 1× por su silueta y diferenciarse del héroe por forma **y** por color: el héroe es azul y marrón; el slime, verde; el murciélago, morado con rojo.
+
+<Sprite name="hero-chibi" scale={4} caption="Héroe chibi de 16×24" />
+<Sprite name="slime" scale={4} caption="Slime a la misma escala" />
+<Sprite name="bat" scale={4} caption="Murciélago a la misma escala" />
+
+<Why title="Palette swap: un enemigo, varios">
+Muchos juegos clásicos reutilizan el mismo dibujo con otra paleta: el slime verde es débil y uno rojo, más duro. Cambias solo los colores, no los píxeles. Ahorras trabajo y el jugador aprende la regla: **mismo cuerpo, otro color, otro peligro**. Para que funcione, cada color de la paleta debe tener un papel claro (contorno, base, sombra, brillo).
+</Why>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Dos lienzos pequeños">
+1. <Keys k="Ctrl+N" />: lienzo de **12×8**, fondo transparente. Crea otro igual.
+2. Activa *View → Grid* y amplía con la rueda del ratón.
+3. Pon el héroe de la lección P5-01 a la vista: lo usarás para comparar.
+
+<Why>
+Un lienzo justo te obliga a decidir. En 12×8 no hay sitio para detalles: solo cabe la forma y un acento.
+</Why>
+</Step>
+
+<Step n={2} title="Criatura amable: empieza por la silueta">
+1. Lápiz (<Keys k="B" />) con **Pixel-perfect** activado y un color oscuro de contorno.
+2. Traza una forma redonda: cúpula, gota o bola. Base ancha y plana, como el slime.
+3. Rellena con el cubo (<Keys k="G" />) en negro y aleja el zoom. ¿Se lee blanda?
+
+<Tip>
+Tramos ordenados en la curva: 4, 2, 1, 1… Un escalón fuera de orden parece un bulto o un pico, y un pico ya no es amable.
+</Tip>
+</Step>
+
+<Step n={3} title="Criatura amenazante: picos hacia fuera">
+1. En el segundo lienzo, traza una forma con **puntas**: alas, cuernos, colmillos o espinas.
+2. Lleva las puntas al **contorno**, sobre todo en las esquinas superiores, como las alas del murciélago.
+3. Usa diagonales limpias (1:1 o 2:1) y rellena en negro con <Keys k="G" />.
+
+<Warn>
+Una punta de un solo píxel suelto a 1× desaparece. Apóyala sobre una base de dos o tres píxeles, como el ala del murciélago, que se ensancha hacia el cuerpo.
+</Warn>
+</Step>
+
+<Step n={4} title="Color: base apagada y un acento">
+1. Pinta cada criatura con 3–4 colores: contorno, base, sombra y brillo.
+2. En la amenazante, deja el cuerpo **oscuro y poco saturado** y pon los ojos de un color vivo (rojo, amarillo). Dos píxeles bastan.
+3. En la amable, ojos oscuros y un brillo claro arriba: transmite blandura.
+4. Toma colores con el cuentagotas (<Keys k="I" />) para no crear tonos de más.
+
+Inspecciona el murciélago: activa la vista de grises y fíjate en que los ojos son lo único claro de la cara.
+
+<Inspector sprite="bat" title="El murciélago: dónde está el acento" />
+</Step>
+
+<Step n={5} title="Prueba a 1× junto al héroe">
+1. Aleja el zoom hasta ver los lienzos a tamaño real.
+2. Comprueba las siluetas junto al héroe en el laboratorio: ¿distingues las tres sin pensar?
+
+<SilhouetteLab sprites="slime,bat,hero-chibi" title="Slime, murciélago y héroe en negro" />
+
+<Why>
+En el juego, el enemigo y el héroe se cruzan rápido. Si sus siluetas se parecen, el jugador duda un instante: y ese instante es un golpe recibido.
+</Why>
+</Step>
+
+<Step n={6} title="Guarda y exporta">
+1. Guarda cada criatura con <Keys k="Ctrl+S" />.
+2. Exporta con *File → Export → Export As* en PNG, con **Resize** 800 %.
+</Step>
+</Block>
+
+<Block kind="version">
+Ahora, a tu manera. Elige un reto:
+
+- **Palette swap**: duplica tu criatura amenazante y cambia solo los colores para crear una versión «élite». Mismos píxeles, otro peligro.
+- **Mismo animal, dos caracteres**: un murciélago amable (cuerpo redondo, alas romas) y uno amenazante (alas en picos).
+- **Mezcla con intención**: un slime con un cuerno o una cresta de pinchos. La forma dominante sigue siendo redonda; el pico es el acento que avisa.
+
+<Tip title="Palette swap en Aseprite">
+Lo más seguro: duplica el archivo y repinta cada color con el cubo (<Keys k="G" />) con la opción de rellenar todos los píxeles del mismo color (desactiva *Contiguous* en la barra de contexto). Así cambias un color entero de una vez.
+</Tip>
+
+**Compara.** Sube tus dos criaturas a 1× al laboratorio de siluetas de arriba y míralas junto al héroe.
+</Block>
+
+<Block kind="errores">
+<Mistake title="Un enemigo «peligroso» con forma de pelota" wrongLabel="Se lee amable" rightLabel="Se lee amenaza">
+  <Sprite slot="wrong" name="slime" scale={8} view="silhouette" />
+  <Sprite slot="right" name="bat" scale={8} view="silhouette" />
+
+Si tu enemigo duro es redondo y liso, la silueta dice «inofensivo» por mucho que lo pintes de rojo. Corrígelo llevando picos al contorno: alas, cuernos, espinas.
+</Mistake>
+
+<Mistake title="Una mascota «amable» llena de puntas" wrongLabel="Picos: amenaza" rightLabel="Redonda: amable">
+  <Sprite slot="wrong" name="shape-triangle" scale={8} view="silhouette" />
+  <Sprite slot="right" name="shape-circle" scale={8} view="silhouette" />
+
+El error contrario: quieres una criatura amiga y la construyes con aristas y puntas. La silueta grita «peligro». Redondea el contorno y deja, como mucho, un pico pequeño de acento.
+</Mistake>
+
+<Warn title="Todo grita, nada destaca">
+Si el cuerpo entero es tan vivo como los ojos, la mirada no sabe dónde ir. Apaga la base (oscura, poco saturada) y reserva el color vivo para los ojos, como en el murciélago.
+</Warn>
+
+<Warn title="Enemigo que se confunde con el héroe">
+Si tu criatura usa los mismos azules y marrones que el héroe, o tiene su misma altura y silueta, el jugador tardará en distinguirlos. Cambia la familia de color y el tamaño.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+<Checklist items={[
+  "Tengo dos criaturas de unos 12×8: una amable y una amenazante",
+  "La amable es redonda y sin puntas; la amenazante lleva picos en el contorno",
+  "La amenazante tiene un único acento de color vivo en los ojos",
+  "Las dos se leen en negro a 1× y se distinguen del héroe",
+  "He exportado los PNG a ×8",
+]} />
+
+<Quiz q="¿Por qué los ojos del murciélago son rojos y el resto del cuerpo morado oscuro?" options={["Porque el rojo es el color de los enemigos", "Para que el contraste lleve la mirada a la cara", "Para ahorrar colores"]} answer={1}>
+El ojo va al punto de más contraste y saturación. Con el cuerpo apagado, el rojo de los ojos es un acento que dirige la mirada.
+</Quiz>
+
+<Quiz q="Quieres un slime más fuerte sin dibujarlo de nuevo. ¿Qué haces?" options={["Le añades más píxeles", "Cambias su paleta: palette swap", "Lo escalas al 200 %"]} answer={1}>
+Con el mismo dibujo y otra paleta, el jugador reconoce al enemigo y entiende que es una variante distinta.
+</Quiz>
+</Block>

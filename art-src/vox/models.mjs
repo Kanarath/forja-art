@@ -146,7 +146,83 @@ const panes = [];
 for (let z = 1; z <= 5; z++) for (const [x, y] of [[1, 0], [2, 0], [3, 0], [1, 4], [2, 4], [3, 4], [0, 1], [0, 2], [0, 3], [4, 1], [4, 2], [4, 3]]) panes.push({ x, y, z, c: GLASS });
 const flame = [...box(2, 2, 1, 2, 2, 1, IRON), { x: 2, y: 2, z: 2, c: FLAME }, { x: 2, y: 2, z: 3, c: FLAME_C }];
 
+// ---------- KIT DEL HERRERO: tres props con la misma escala y paleta (yunque 16³ de referencia)
+const IRON_D = "#3b3f4a", IRON_M = "#5c6270", IRON_H = "#8a92a3", OAK = "#8a5a3c", OAK_D = "#6b4430", WATER_B = "#38b6ff";
+const anvil = [
+  ...box(4, 5, 0, 11, 10, 1, IRON_D), // base
+  ...box(6, 6, 2, 9, 9, 4, IRON_M), // cintura
+  ...box(2, 5, 5, 13, 10, 6, IRON_M), // mesa
+  ...box(2, 5, 7, 13, 10, 7, IRON_H), // superficie de trabajo (más clara: recibe la luz)
+  ...box(14, 7, 6, 15, 8, 7, IRON_M), // cuerno
+];
+const hammer = [
+  ...box(7, 7, 0, 8, 8, 9, OAK), // mango
+  ...box(7, 7, 0, 8, 8, 1, OAK_D), // empuñadura más oscura
+  ...box(4, 6, 10, 11, 9, 12, IRON_M), // cabeza
+  ...box(4, 6, 12, 11, 9, 12, IRON_H),
+];
+const bucket = [];
+for (let x = 3; x <= 12; x++) for (let y = 3; y <= 12; y++) for (let z = 0; z <= 7; z++) {
+  const d = Math.hypot(x - 7.5, y - 7.5);
+  if (d > 4.8) continue;
+  const wall = d > 3.8 || z === 0;
+  if (wall) bucket.push({ x, y, z, c: z === 2 || z === 6 ? IRON_M : OAK });
+  else if (z <= 5) bucket.push({ x, y, z, c: WATER_B });
+}
+
+// ---------- ESPADA: blockout → guarda y empuñadura → filo y detalle
+const swordBlock = [...box(7, 7, 0, 8, 8, 4, OAK), ...box(5, 7, 5, 10, 8, 5, IRON_M), ...box(7, 7, 6, 8, 8, 17, IRON_M)];
+const swordGuard = [
+  ...box(7, 7, 0, 8, 8, 4, OAK), ...box(7, 7, 0, 8, 8, 0, "#f2c14e"), // pomo dorado
+  ...box(4, 7, 5, 11, 8, 5, "#d49a2a"), ...box(4, 7, 6, 4, 8, 6, "#d49a2a"), ...box(11, 7, 6, 11, 8, 6, "#d49a2a"),
+  ...box(7, 7, 6, 8, 8, 17, IRON_M),
+];
+const swordFinal = [
+  // de la etapa anterior quitamos solo la HOJA (columnas 7–8 desde z=6); las puntas de la guarda se quedan
+  ...swordGuard.filter((v) => !(v.x >= 7 && v.x <= 8 && v.z >= 6)),
+  ...box(7, 7, 6, 8, 8, 16, IRON_M).map((v) => ({ ...v, c: v.x === 7 ? IRON_H : IRON_M })), // filo claro a un lado
+  { x: 7, y: 7, z: 17, c: IRON_H }, { x: 7, y: 8, z: 17, c: IRON_H }, // punta
+  ...box(7, 7, 2, 8, 8, 2, OAK_D), // vendaje en la empuñadura
+];
+
+// ---------- PERSONAJE CHIBI: cabeza grande (casi la mitad de la altura)
+const SKIN = "#f2c29b", HAIR = "#6b3d2e", TUNIC = "#3b6fd1", PANTS = "#4a4560", BOOT = "#3b2418";
+const chibiBlock = [...box(2, 2, 7, 9, 9, 14, SKIN), ...box(3, 3, 2, 8, 8, 6, TUNIC), ...box(3, 4, 0, 8, 7, 1, PANTS)];
+const chibiDetail = [
+  ...box(3, 4, 0, 4, 7, 0, BOOT), ...box(7, 4, 0, 8, 7, 0, BOOT), // botas
+  ...box(3, 4, 1, 4, 7, 1, PANTS), ...box(7, 4, 1, 8, 7, 1, PANTS), // piernas separadas
+  ...box(3, 3, 2, 8, 8, 6, TUNIC), ...box(3, 3, 3, 8, 8, 3, "#6b3d2e"), // túnica y cinturón
+  ...box(1, 5, 3, 2, 6, 5, SKIN), ...box(9, 5, 3, 10, 6, 5, SKIN), // brazos
+  ...box(2, 2, 7, 9, 9, 12, SKIN), // cara
+  ...box(2, 2, 12, 9, 9, 14, HAIR), ...box(2, 9, 8, 9, 9, 12, HAIR), // pelo arriba y detrás
+  { x: 4, y: 1, z: 10, c: "#1b1030" }, { x: 4, y: 1, z: 9, c: "#1b1030" }, // ojo izquierdo (2 vóxels)
+  { x: 7, y: 1, z: 10, c: "#1b1030" }, { x: 7, y: 1, z: 9, c: "#1b1030" }, // ojo derecho
+];
+
 export const MODELS = {
+  "kit-herrero": {
+    description: "Kit del herrero: tres props con la misma escala y paleta",
+    stages: [
+      { label: "Yunque", note: "La pieza de referencia: cabe en 16×16×16. Hierro en tres tonos; la superficie de trabajo, la más clara.", voxels: anvil },
+      { label: "Martillo", note: "La misma escala (un vóxel = la misma medida) y los mismos hierros que el yunque; el mango, de la madera del kit.", voxels: hammer },
+      { label: "Cubo de agua", note: "Madera y aros de hierro de la misma paleta: los tres props parecen del mismo taller.", voxels: bucket },
+    ],
+  },
+  espada: {
+    description: "Espada voxel: del blockout al detalle",
+    stages: [
+      { label: "Blockout", note: "Tres bloques: empuñadura, guarda y hoja. La proporción (hoja larga, guarda ancha) ya dice «espada».", voxels: swordBlock },
+      { label: "Guarda y pomo", note: "Guarda dorada con las puntas dobladas y un pomo: el detalle va donde mira la vista, en el centro.", voxels: swordGuard },
+      { label: "Filo y punta", note: "Un lado de la hoja más claro (el filo que recibe la luz), punta y vendaje en la empuñadura.", voxels: swordFinal },
+    ],
+  },
+  chibi: {
+    description: "Personaje chibi voxel",
+    stages: [
+      { label: "Blockout", note: "Tres bloques: cabeza grande (casi la mitad de la altura), cuerpo y piernas. Las proporciones chibi se deciden aquí.", voxels: chibiBlock },
+      { label: "Detalle", note: "Pelo, ojos de 2 vóxels, brazos, cinturón y botas: los mismos colores que el héroe chibi de pixel art.", voxels: chibiDetail },
+    ],
+  },
   roca: {
     description: "Roca: del color plano a la rampa con hue shifting",
     stages: [

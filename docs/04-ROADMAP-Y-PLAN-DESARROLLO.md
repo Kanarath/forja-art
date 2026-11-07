@@ -76,6 +76,13 @@
 - **Logros:** 7 nuevos.
 - **Pendiente:** un set de iconos de ejemplo realmente coherente para P4-02. La lección hoy audita las incoherencias de los sprites del curso.
 
+**Contenido · cuarto bloque: 7 lecciones más (30 en total).**
+- **Pixel nivel 5:** P5-01 Proporciones chibi, P5-02 Expresiones, P5-03 Criaturas y enemigos.
+- **Voxel nivel 4:** V4-01 Kit del herrero, V4-02 Armas voxel.
+- **Fundamentos:** F04-01 Paletas y armonías, F09-01 Diseño de personajes.
+- **Arte nuevo:** héroe chibi frente a realista (16×24), 5 expresiones sobre la misma cabeza y un murciélago; modelos voxel «kit-herrero», «espada» y «chibi».
+- **Corregido durante la revisión:** la etapa final de la espada perdía las puntas de la guarda, y la sonrisa de face-alegre tocaba el ojo.
+
 **Lecciones aprendidas durante la fase 1:**
 - **`BASE_URL` sin barra final.** Astro 7 da `BASE_URL` sin barra final, así que hay que usar siempre `src/lib/url.ts`. El validador detecta enlaces sin la base.
 - **Colecciones nuevas en local.** El servidor de desarrollo no ve colecciones de contenido nuevas: hay que reiniciarlo (`npx astro dev --force`).

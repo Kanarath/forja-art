@@ -1,0 +1,176 @@
+---
+id: v4-02
+discipline: voxel
+level: 4
+order: 2
+title: "Armas voxel: del blockout a la espada"
+summary: "Construye una espada voxel en tres etapas: proporción con bloques, detalle en la guarda y el pomo, y un filo más claro que sugiere el brillo."
+duration: 40
+status: borrador
+prerequisites: [v4-01]
+fundamentals: [f02]
+objectives:
+  - "Leer un arma por su silueta y su proporción: hoja larga, guarda ancha"
+  - "Modelar un objeto fino de 2 vóxels de grosor cuidando la silueta lateral"
+  - "Concentrar el detalle en el punto focal: guarda y pomo"
+  - "Sugerir el brillo del metal con un filo más claro"
+  - "Guardar las tres etapas como versiones v1, v2 y v3"
+tools: [magicavoxel]
+piece:
+  name: "Una espada (u otra arma) voxel en 3 etapas guardadas como versiones"
+  canvas: "8x2x18"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [arma-voxel]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Hoy forjas una **espada voxel** en tres etapas: blockout, guarda y pomo, filo y punta. Cada etapa se guarda como una versión.
+
+<VoxViewer model="espada" title="Tu pieza: la espada en 3 etapas (8×2×18 al final)" />
+
+Pulsa las etapas del visor. La espada mide 18 vóxels de alto y solo 2 de grosor. Es casi un dibujo en 3D.
+</Block>
+
+<Block kind="concepto">
+Un arma se reconoce por su **silueta** antes que por su detalle (F02). Una espada es una cruz alargada: una hoja larga y una guarda ancha que la corta.
+
+Las medidas reales del modelo, etapa a etapa:
+
+- **Blockout:** empuñadura de 2×2 y 5 de alto, guarda de 6×2 y 1 de alto, hoja de 2×2 y 12 de alto. Tres bloques, 18 de altura.
+- **Guarda y pomo:** la guarda crece a 8 de ancho, con las puntas dobladas hacia arriba un vóxel. El pomo es la capa inferior de la empuñadura, en dorado.
+- **Filo y punta:** la hoja tiene un lado más claro, la punta se estrecha a 1 vóxel de ancho y un vendaje oscuro cruza la empuñadura.
+
+<Why>
+La hoja ocupa 12 de 18 capas, dos tercios de la altura. La guarda es 4 veces más ancha que la hoja. Esas dos proporciones gritan «espada» incluso con tres bloques grises.
+</Why>
+
+**Objetos finos.** Con 2 vóxels de grosor, el volumen casi no existe: lo que el ojo lee es la **silueta lateral**, la que ves de frente. Cada vóxel del contorno cuenta como un píxel de un sprite.
+
+**El punto focal.** La mirada va al cruce de la hoja con la guarda. Ahí, y en el pomo, va el detalle: oro, puntas dobladas, vendaje. La hoja se queda limpia.
+
+**El brillo sin render.** Un lado de la hoja va en un gris más claro (el filo que recibe la luz) y el otro en el gris medio. Dos valores bastan para que se lea metal, incluso en el visor web, que no simula materiales.
+
+**La misma espada en 2D.** Mira el sprite de pixel art: la misma lógica, en un plano.
+
+<Sprite name="sword" scale={8} caption="sword (7×15): hoja con un lado claro y otro medio, guarda dorada ancha, empuñadura y pomo" />
+
+<Why>
+En el sprite, la hoja tiene una columna clara y otra media, igual que la espada voxel. La guarda ocupa las 7 columnas y la hoja solo 3 por dentro del contorno. Proporción, punto focal y filo claro: los mismos principios, en 2D o en 3D.
+</Why>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Prepara un modelo de 8×2×18">
+1. Crea un modelo nuevo en MagicaVoxel.
+2. En los campos de **tamaño**, escribe 8, 2 y 18 (la Z es la altura).
+3. Elige en la **paleta** un marrón para la madera y un gris medio para el hierro.
+
+<Why>
+Solo 2 de fondo: el tamaño ya te obliga a pensar la espada como una silueta, igual que en Blender cuando bloqueas una hoja con un plano grueso.
+</Why>
+</Step>
+
+<Step n={2} title="Blockout: tres bloques">
+1. Modo **Attach**, pincel **Box**.
+2. Empuñadura: marrón, 2×2, de la capa 1 a la 5, centrada (deja 3 columnas libres a cada lado).
+3. Guarda: gris, 6×2, una sola capa encima.
+4. Hoja: gris, 2×2, 12 capas encima de la guarda.
+5. Guarda como `espada_v1.vox`.
+
+<Tip>
+Gira la cámara con el botón derecho y mírala de frente. Si con tres bloques grises no se lee «espada», el problema es la proporción, no la falta de detalle.
+</Tip>
+</Step>
+
+<Step n={3} title="Guarda y pomo: el punto focal">
+1. Elige un dorado en la paleta.
+2. Alarga la guarda un vóxel por lado (8 de ancho) y píntala dorada con **Paint**.
+3. Añade con **Attach** un vóxel encima de cada punta: la guarda se dobla hacia arriba.
+4. Pinta dorada la capa inferior de la empuñadura: el pomo.
+5. Guarda como `espada_v2.vox`.
+
+<Why>
+El oro solo aparece en la guarda y el pomo. El contraste de color marca el punto focal y deja la hoja como zona de descanso.
+</Why>
+</Step>
+
+<Step n={4} title="Filo claro y punta">
+1. Elige un gris más claro que el de la hoja.
+2. Con **Paint** y el pincel **Voxel** (o **Face** sobre la cara lateral), pinta la columna izquierda de la hoja en el gris claro.
+3. En la capa superior, borra con **Erase** los vóxels de la columna oscura: la punta queda de 1 de ancho.
+4. Pinta una capa de la empuñadura en un marrón más oscuro: el vendaje.
+5. Guarda como `espada_v3.vox`.
+
+<Warn>
+No pintes rayas ni ruido en la hoja. Dos valores limpios, uno por lado, se leen como metal; diez se leen como suciedad.
+</Warn>
+</Step>
+
+<Step n={5} title="Compara y renderiza">
+1. Abre las tres versiones y míralas de frente, una al lado de otra.
+2. Pulsa **Render** y exporta una imagen de cada etapa para tu portfolio.
+
+<Tip>
+Si quieres que el metal brille de verdad, asigna al gris de la hoja el material *Metal* en el panel de materiales y mira el resultado en **Render**.
+</Tip>
+</Step>
+
+<Warn title="Verifica en tu versión">
+Los nombres y la posición de los modos (**Attach**/**Erase**/**Paint**), los pinceles (**Box**/**Voxel**/**Face**), los campos de tamaño y el panel de materiales pueden variar entre versiones de MagicaVoxel.
+</Warn>
+</Block>
+
+<Block kind="version">
+Forja **tu propia arma** en tres versiones, con las mismas reglas: proporción en el blockout, detalle en el punto focal, un lado claro para el brillo. Elige un reto:
+
+- **Daga:** hoja de 6, guarda de 4. ¿Sigue leyéndose arma y no cuchillo de cocina?
+- **Hacha:** mango largo y cabeza ancha arriba. El punto focal se va a la cabeza.
+- **Lanza:** asta muy larga y una punta pequeña. La proporción extrema hace todo el trabajo.
+
+Guarda v1, v2 y v3 por separado. Haz un render de frente en un solo color: si se reconoce, la silueta funciona.
+</Block>
+
+<Block kind="errores">
+<Mistake title="Guarda tan estrecha como la hoja" wrongLabel="Guarda de 2" rightLabel="Guarda de 6 a 8">
+  <p slot="wrong">Hoja y guarda del mismo ancho: la silueta es un palo, se lee bastón o barra.</p>
+  <p slot="right">Una guarda 3 o 4 veces más ancha que la hoja forma la cruz: se lee espada.</p>
+
+Sin la cruz, la espada pierde su silueta. Exagera el ancho de la guarda en el blockout y compruébalo de frente antes de añadir nada.
+</Mistake>
+
+<Mistake title="Detalle repartido por toda el arma" wrongLabel="Detalle en todas partes" rightLabel="Detalle en el centro">
+  <p slot="wrong">Runas en la hoja, oro en la punta, rayas en el mango: la vista no sabe dónde mirar.</p>
+  <p slot="right">Oro y formas solo en guarda y pomo; la hoja, limpia con dos valores.</p>
+
+Compara las etapas 2 y 3 del visor: casi todo el color nuevo está en el cruce y en el pomo. Si todo es detalle, nada destaca.
+</Mistake>
+
+<Warn title="Error típico: hoja de un solo gris">
+Una hoja plana, sin lado claro, se lee como plástico o madera gris. Pinta un lado un tono más claro: es el brillo más barato que existe.
+</Warn>
+
+<Warn title="Error típico: una sola versión">
+Si pintas el detalle encima de `espada_v1.vox`, pierdes el blockout. Guarda cada etapa con su número.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+<Checklist items={[
+  "Mi arma tiene 2 vóxels de grosor y se lee de frente",
+  "La hoja ocupa unos dos tercios de la altura y la guarda es mucho más ancha que la hoja",
+  "El detalle y el color fuerte están en la guarda y el pomo",
+  "Un lado de la hoja es más claro que el otro",
+  "He guardado v1, v2 y v3 por separado y un render de cada una",
+]} />
+
+<Quiz q="En un arma de 2 vóxels de grosor, ¿qué decide sobre todo su lectura?" options={["El volumen interior", "La silueta vista de frente", "El material de render"]} answer={1}>
+Con tan poco fondo, el volumen casi no existe: la silueta lateral funciona como un sprite.
+</Quiz>
+
+<Quiz q="¿Cómo sugiere la espada el brillo del metal sin render?" options={["Con ruido en la hoja", "Con un lado de la hoja más claro que el otro", "Con la punta dorada"]} answer={1}>
+Dos valores limpios, filo claro y lado medio, bastan para leer metal. El sprite `sword` hace lo mismo en 2D.
+</Quiz>
+</Block>

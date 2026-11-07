@@ -292,6 +292,108 @@ add("mat-wood", "Tablón de madera de 16×10: tres tonos cálidos y vetas horizo
     "oooooooooooooooo",
   ]);
 
+// ---------- personajes: héroe chibi 16×24 frente a proporciones realistas
+const HERO = {
+  o: "#1b1030", s: "#f2c29b", S: "#c98f6b", h: "#6b3d2e", H: "#a0603a",
+  t: "#3b6fd1", T: "#26489a", b: "#6b3d2e", p: "#4a4560", P: "#2f2b40", B: "#3b2418",
+};
+add("hero-chibi", "Héroe chibi de 16×24: la cabeza ocupa casi la mitad de la altura. Caben ojos de 2 px, pelo con luz y una silueta clara de cuerpo y piernas.", ["personaje"], HERO, [
+  "................",
+  "................",
+  "................",
+  "....oooooooo....",
+  "...ohhHHHhhho...",
+  "..ohhHHHHHhhhho.",
+  "..ohhhhhhhhhhho.",
+  "..ohhsssssssshho".slice(0, 16),
+  "..ohssssssssSho.",
+  "..ohsosssosssho.",
+  "..ohsosssosssho.",
+  "..oSssssssssSSo.",
+  "...oSSsssssSSo..",
+  "....oooooooo....",
+  "...otttttttto...",
+  "..ostttttttTso..",
+  "..ostttttttTso..",
+  "..oSbbbbbbbbSo..",
+  "...otttttttTo...",
+  "...opppppppPo...",
+  "...oppPo.opPPo..",
+  "...oppPo.opPPo..",
+  "...oBBBo.oBBBo..",
+  "...ooooo.ooooo..",
+].map((r) => r.padEnd(16, ".").slice(0, 16)));
+add("hero-realistic", "El mismo héroe con proporciones realistas en 16×24: la cabeza mide 4 px y no cabe una cara. A esta resolución se pierde el personaje.", ["personaje", "error"],
+  { o: HERO.o, s: HERO.s, h: HERO.h, t: HERO.t, T: HERO.T, b: HERO.b, p: HERO.p, P: HERO.P, B: HERO.B }, [
+  "......oooo......",
+  ".....ohhhho.....",
+  ".....oshsso.....",
+  ".....ossso......",
+  "......oso.......",
+  "....ootttoo.....",
+  "...osotttToso...",
+  "...osotttToso...",
+  "...osotttToso...",
+  "...osotttToso...",
+  "....obbbbbo.....",
+  "....otttttTo....",
+  "....oppppPo.....",
+  "....opPoopPo....",
+  "....opPoopPo....",
+  "....opPoopPo....",
+  "....opPoopPo....",
+  "....opPoopPo....",
+  "....opPoopPo....",
+  "....opPoopPo....",
+  "....opPoopPo....",
+  "....oBBooBBo....",
+  "....oooooooo....",
+  "................",
+]);
+
+// ---------- expresiones: la misma cabeza de 12×11, solo cambian cejas, ojos y boca
+const FACE_BASE = [
+  "..oooooooo..",
+  ".ohhHHHhhho.",
+  "ohhhhhhhhhho",
+  "ohhsssssshho",
+  "ohsssssssSho",
+  "ohsssssssSho",
+  "ohsssssssSho",
+  "oSsssssssSSo",
+  "oSsssssssSSo",
+  ".oSSsssssSo.",
+  "..oooooooo..",
+];
+function face(marks) {
+  const g = FACE_BASE.map((r) => [...r]);
+  for (const [x, y] of marks) g[y][x] = "o";
+  return g.map((r) => r.join(""));
+}
+const FACE_PAL = { o: HERO.o, s: HERO.s, S: HERO.S, h: HERO.h, H: HERO.H };
+const EXPRESSIONS = {
+  neutral: { d: "Neutral: ojos de 2 px y una boca corta y recta.", m: [[3, 5], [3, 6], [8, 5], [8, 6], [5, 8], [6, 8]] },
+  // la sonrisa va una fila más abajo que en el primer intento: así el arco del ojo no toca la comisura
+  alegre: { d: "Alegre: ojos en arco (^ ^) y la boca con las comisuras hacia arriba.", m: [[3, 5], [2, 6], [4, 6], [8, 5], [7, 6], [9, 6], [4, 8], [7, 8], [5, 9], [6, 9]] },
+  enfado: { d: "Enfado: cejas que bajan hacia el centro, ojos fijos y la boca recta y apretada.", m: [[2, 4], [4, 5], [9, 4], [7, 5], [3, 6], [8, 6], [4, 8], [5, 8], [6, 8], [7, 8]] },
+  triste: { d: "Triste: cejas que suben hacia el centro y la boca con las comisuras hacia abajo.", m: [[4, 4], [2, 5], [7, 4], [9, 5], [3, 6], [8, 6], [5, 8], [6, 8], [4, 9], [7, 9]] },
+  sorpresa: { d: "Sorpresa: ojos más altos (3 px) y la boca abierta en una O.", m: [[3, 4], [3, 5], [3, 6], [8, 4], [8, 5], [8, 6], [5, 8], [6, 8], [5, 9], [6, 9]] },
+};
+for (const [k, e] of Object.entries(EXPRESSIONS)) add(`face-${k}`, e.d, ["expresión"], FACE_PAL, face(e.m));
+
+// ---------- enemigo: murciélago (formas angulosas) frente al slime (formas redondas)
+add("bat", "Murciélago enemigo de 12×8: alas en picos y ojos rojos. Formas triangulares: se lee como amenaza aunque sea pequeño.", ["criatura", "enemigo"],
+  { o: "#1b1030", w: "#5b4a7a", b: "#3a2d52", R: "#ff4f4f" }, [
+  "o....oo....o",
+  "oo..obbo..oo",
+  "owo.oRRo.owo",
+  "owwoobboowwo",
+  "owwwwbbwwwwo",
+  ".owwwbbwwwo.",
+  "..oowoowoo..",
+  "....o..o....",
+]);
+
 // ---------- escribir y validar
 let bad = 0;
 for (const s of out) {

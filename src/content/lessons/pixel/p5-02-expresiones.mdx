@@ -1,0 +1,178 @@
+---
+id: p5-02
+discipline: pixel
+level: 5
+order: 2
+title: "Expresiones: una cara que se lee en 12 píxeles"
+summary: "Con pocos píxeles, la expresión vive en tres sitios: cejas, ojos y boca. Un par de píxeles cambia la emoción, así que hay que exagerar. Una cabeza base y una capa por expresión."
+duration: 40
+status: borrador
+objectives:
+  - "Saber que a baja resolución la expresión vive en cejas, ojos y boca"
+  - "Inclinar las cejas hacia el centro para el enfado y hacia fuera para la tristeza"
+  - "Subir o bajar las comisuras con un solo píxel cada una"
+  - "Usar ojos en arco para la alegría y ojos más altos para la sorpresa"
+  - "Trabajar con una cabeza base y una capa por expresión en Aseprite"
+prerequisites: [p5-01]
+fundamentals: [f02]
+tools: [aseprite]
+piece:
+  name: "Cinco expresiones de la cabeza de tu héroe"
+  canvas: "12x11"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [cinco-caras]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Vas a forjar **cinco caras de la misma cabeza**: neutral, alegre, enfado, tristeza y sorpresa. El pelo, el contorno y la piel no se mueven. Solo cambian **cejas, ojos y boca**.
+
+<Sprite name="face-neutral" scale={10} caption="Neutral: ojos de 1×2 píxeles y una boca recta de 2 píxeles. No hay cejas" />
+
+<Sprite name="face-alegre" scale={10} caption="Alegre: cada ojo es un arco de 3 píxeles en forma de ^ y la boca suma dos comisuras una fila más arriba" />
+</Block>
+
+<Block kind="concepto">
+**En 12×11 no hay músculos: hay tres sitios.** Cejas, ojos y boca. Todo lo demás es la cabeza base, igual en las cinco.
+
+**Un píxel es mucho.** Compara la boca neutral con la alegre y la triste. El centro es el mismo par de píxeles. Lo único que cambia es **dónde va cada comisura**: un píxel a cada lado.
+
+<Sprite name="face-alegre" scale={10} caption="Alegre: comisuras una fila por ENCIMA del centro de la boca. Se lee como una U: sonrisa" />
+
+<Sprite name="face-triste" scale={10} caption="Triste: las mismas comisuras, pero una fila por DEBAJO, sobre la sombra de la barbilla. Se lee como una U invertida" />
+
+<Why>
+El ojo humano busca caras en todo, y lee primero la dirección de las líneas. Un píxel arriba o abajo cambia la dirección de la boca, y con ella la emoción. Por eso, a esta escala, cada píxel de la cara es una decisión.
+</Why>
+
+**Las cejas: el ángulo lo es todo.** Cada ceja son dos píxeles separados en diagonal.
+
+- **Hacia el centro y hacia abajo:** enfado. El píxel exterior está alto y el interior, una fila más bajo, pegado al ojo.
+- **Hacia el centro y hacia arriba:** tristeza. Es el mismo dibujo con las filas cambiadas.
+
+<Sprite name="face-enfado" scale={10} caption="Enfado: cejas que bajan hacia el centro, ojos de 1 píxel (párpado caído) y la boca recta y apretada de 4 píxeles" />
+
+<Sprite name="face-triste" scale={10} caption="Triste: las mismas cejas, invertidas: suben hacia el centro. Ojos de 1 píxel y comisuras abajo" />
+
+**Los ojos también hablan.**
+
+- **En arco (^ ^):** alegría. Los ojos se cierran al sonreír.
+- **Más altos:** sorpresa. Pasan de 2 a 3 píxeles.
+- **Más bajos:** enfado o tristeza. Se quedan en 1 píxel, como un párpado que cae.
+
+<Sprite name="face-sorpresa" scale={10} caption="Sorpresa: ojos de 3 píxeles de alto y la boca abierta, un bloque de 2×2" />
+
+**Hay que exagerar.** Una ceja «un poquito inclinada» no existe en 12 píxeles: o está inclinada, o no lo está. Lo que en un render de Blender sería un matiz, aquí tiene que ser un gesto.
+
+<Tip title="Lo honesto: el enfado y la tristeza son sutiles">
+A 12 px, el enfado y la tristeza se parecen mucho. Tienen los mismos ojos de 1 píxel y las cejas en las mismas columnas. Lo que los distingue es el **orden de las filas** de las cejas y la boca. A 1× cuesta leerlos. Abre el enfado en el inspector, míralo a 1× y compáralo de memoria con la tristeza.
+</Tip>
+
+<Inspector sprite="face-enfado" />
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="La cabeza base, sin cara">
+1. Abre la cabeza de tu héroe de P5-01, o empieza con <Keys k="Ctrl+N" />: 12×11, RGBA, fondo transparente. Activa *View → Grid*.
+2. Pinta contorno, pelo y piel. **No pintes ojos, cejas ni boca.**
+3. Guarda con <Keys k="Ctrl+S" /> como `cabeza-base`.
+
+<Why>
+Si la base no se toca, las cinco caras comparten silueta y luz. Así solo comparas la expresión, como en los sprites de esta lección.
+</Why>
+</Step>
+
+<Step n={2} title="Una capa por expresión">
+Crea una capa nueva encima de la base con *Layer → New Layer*. Llámala `neutral`. Repite para `alegre`, `enfado`, `triste` y `sorpresa`. Para ver solo una cara, oculta las demás con el icono del ojo del panel de capas.
+
+<Warn title="Verifica en tu versión">
+El menú *Layer → New Layer* y el icono del ojo existen en Aseprite, pero su sitio exacto puede variar entre versiones.
+</Warn>
+</Step>
+
+<Step n={3} title="Neutral: la referencia">
+En la capa `neutral`, con el lápiz (<Keys k="B" />), pon dos ojos de 1×2 píxeles en el color del contorno y una boca recta de 2 píxeles, centrada, dos filas por debajo.
+
+<Tip>
+Esta cara es tu regla. Todas las demás se miden contra ella: ¿qué píxel se ha movido?
+</Tip>
+</Step>
+
+<Step n={4} title="Alegre y sorpresa">
+1. **Alegre:** convierte cada ojo en un arco ^ de 3 píxeles. Copia la boca neutral y añade una comisura a cada lado, una fila **más arriba**.
+2. **Sorpresa:** alarga los ojos a 3 píxeles de alto y haz la boca un bloque de 2×2.
+
+<Why>
+Al sonreír, las mejillas suben y cierran los ojos. Por eso el arco dice «alegría» aunque no haya boca.
+</Why>
+</Step>
+
+<Step n={5} title="Enfado y tristeza: las cejas">
+1. **Enfado:** ojos de 1 píxel. Encima, cada ceja con dos píxeles: el exterior alto y el interior una fila más bajo, hacia la nariz. Boca recta de 4 píxeles.
+2. **Tristeza:** duplica la capa de enfado y cambia las cejas de fila: el interior arriba y el exterior abajo. La boca neutral con las comisuras una fila **más abajo**.
+
+<Warn>
+Si dudas, borra con <Keys k="E" /> y prueba otra fila. Corrige con <Keys k="Ctrl+Z" /> sin miedo: a esta escala se itera píxel a píxel.
+</Warn>
+</Step>
+
+<Step n={6} title="Revisar a 1× y exportar">
+Mira cada capa con la rueda del ratón al mínimo. Si dos caras se confunden, exagera la que falla. Exporta cada una con *File → Export → Export As*, PNG, **Resize** 800 %, y una copia al 100 %.
+</Step>
+</Block>
+
+<Block kind="version">
+Ahora con tu héroe. Elige uno:
+
+- **Exagera el enfado y la tristeza:** sube las cejas a 3 píxeles, mueve la boca o añade una lágrima. Que se distingan a 1× sin dudar.
+- **Una sexta cara:** dormido, asustado o pícaro (una ceja arriba y otra abajo).
+- **Un parpadeo animado:** en el mini-animador, pinta una cara, duplica el frame y cierra los ojos con una línea. Pon el frame abierto largo y el cerrado corto.
+
+<Animator preset="blank" />
+</Block>
+
+<Block kind="errores">
+<Mistake title="Expresión tímida" wrongLabel="Neutral: ¿enfadado o no?" rightLabel="Cejas inclinadas: enfado">
+  <Sprite slot="wrong" name="face-neutral" scale={8} />
+  <Sprite slot="right" name="face-enfado" scale={8} />
+
+Si «insinúas» el enfado con un píxel que casi no se mueve, la cara se queda neutral. A 12 px no hay matices: inclina la ceja una fila entera, encoge el ojo y aprieta la boca.
+</Mistake>
+
+<Mistake title="Sorpresa sin abrir la cara" wrongLabel="Ojos de 2 px y boca cerrada" rightLabel="Ojos de 3 px y boca de 2×2">
+  <Sprite slot="wrong" name="face-neutral" scale={8} />
+  <Sprite slot="right" name="face-sorpresa" scale={8} />
+
+La sorpresa abre la cara entera. Si dejas los ojos en 2 píxeles y la boca en una línea, nadie la ve. Un píxel más de ojo y una boca en bloque bastan.
+</Mistake>
+
+<Warn title="Cambiar la cabeza en cada cara">
+Si retocas el pelo o el contorno en cada expresión, ya no comparas emociones: comparas cabezas. Trabaja sobre una base fija y toca solo las capas de expresión.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+Sube tus cinco caras **a 1×** y revisa una por una.
+
+<Inspector upload title="Revisa tus cinco expresiones" />
+
+<Checklist items={[
+  "Las cinco caras comparten la misma cabeza base, sin retoques",
+  "Cada expresión está en su propia capa",
+  "Alegre: ojos en arco y comisuras arriba",
+  "Enfado: cejas que bajan hacia el centro",
+  "Tristeza: cejas que suben hacia el centro y comisuras abajo",
+  "Sorpresa: ojos más altos y boca abierta",
+  "A 1×, alguien que no sabe cuál es cuál las distingue",
+]} />
+
+<Quiz q="¿Qué cejas leemos como enfado?" options={["Las que suben hacia el centro", "Las que bajan hacia el centro", "Las rectas"]} answer={1}>
+Las cejas que bajan hacia la nariz fruncen el ceño. Si suben hacia el centro, la cara se lee triste.
+</Quiz>
+
+<Quiz q="La boca neutral tiene 2 píxeles. ¿Qué la convierte en sonrisa?" options={["Hacerla más ancha en la misma fila", "Una comisura a cada lado, una fila más arriba", "Pintarla de rojo"]} answer={1}>
+La dirección de la línea es la emoción. Dos comisuras hacia arriba bastan: es lo que hace `face-alegre`.
+</Quiz>
+</Block>
