@@ -216,9 +216,9 @@ function dome(rx, h) {
     if (Math.hypot(x / rx, y / rx, z / h) <= 1.02) v.push({ x, y, z, c: SLIME.mid });
   return v;
 }
-function slimeDetail(vox, eyeZ) {
+function slimeDetail(vox, eyeZ, eyeX = 2) {
   const minY = (x, z) => Math.min(...vox.filter((v) => v.x === x && v.z === z).map((v) => v.y));
-  const eyes = new Set([-2, 2].flatMap((x) => eyeZ.map((z) => `${x},${minY(x, z)},${z}`)));
+  const eyes = new Set([-eyeX, eyeX].flatMap((x) => eyeZ.map((z) => `${x},${minY(x, z)},${z}`)));
   const top = Math.max(...vox.map((v) => v.z));
   return vox.map((v) => {
     if (eyes.has(`${v.x},${v.y},${v.z}`)) return { ...v, c: SLIME.eye };
@@ -350,7 +350,103 @@ const cartFinal = [
   ...box(21, 2, 4, 21, 5, 4, METAL.mid), // travesaño de la lanza
 ];
 
+// ---------- ÁRBOL ORGÁNICO: un tronco que se curva, ramas en diagonal y una copa en grupos
+// Lo orgánico en vóxels es romper la simetría con pasos de 1: el tronco se desplaza, nunca gira de golpe.
+const trunkX = (z) => Math.round(1.6 * Math.sin(z / 3.2)); // desplazamiento lateral del tronco
+const orgTrunk = [];
+for (let z = 0; z < 12; z++) {
+  const t = z < 4 ? 2 : 1; // más grueso abajo
+  const ox = 7 + trunkX(z);
+  for (let x = 0; x < t; x++) for (let y = 0; y < t; y++) orgTrunk.push({ x: ox + x, y: 7 + y, z, c: z % 3 === 0 ? WOOD.dark : WOOD.mid });
+  if (z === 0) orgTrunk.push(...box(ox - 1, 6, 0, ox + 2, 9, 0, WOOD.dark)); // raíces: la base se ensancha
+  // en cada desplazamiento, un vóxel de «escalón» en la posición anterior: así cada capa toca a la de abajo por una CARA
+  const prev = 7 + trunkX(z - 1);
+  if (z > 0 && prev !== ox) for (let y = 0; y < t; y++) orgTrunk.push({ x: prev, y: 7 + y, z, c: WOOD.mid });
+}
+// una rama avanza en diagonal, pero se construye vóxel a vóxel (primero de lado, luego hacia arriba): siempre unida por caras
+function branch(x, y, z, dx, dy, n) {
+  const v = [];
+  let p = { x, y, z };
+  for (let i = 0; i < n; i++) {
+    const t = { x: x + Math.round(dx * (i + 1)), y: y + Math.round(dy * (i + 1)), z: z + i };
+    while (p.x !== t.x) { p = { ...p, x: p.x + Math.sign(t.x - p.x) }; v.push({ ...p, c: WOOD.mid }); }
+    while (p.y !== t.y) { p = { ...p, y: p.y + Math.sign(t.y - p.y) }; v.push({ ...p, c: WOOD.mid }); }
+    if (p.z !== t.z) { p = { ...p, z: t.z }; v.push({ ...p, c: WOOD.mid }); }
+  }
+  return v;
+}
+const orgBranchList = [branch(7 + trunkX(6), 7, 6, -1.2, 0.3, 5), branch(8 + trunkX(7), 7, 7, 1.2, -0.5, 5), branch(7 + trunkX(9), 7, 9, 0.2, 1.2, 4)];
+const orgBranches = orgBranchList.flat();
+const tips = [...orgBranchList.map((b) => b[b.length - 1]), { x: 7 + trunkX(11), y: 7, z: 11 }];
+const orgCanopy = [];
+tips.forEach((p, i) => {
+  const r = [2.7, 2.5, 2.3, 3.0][i];
+  for (let x = -4; x <= 4; x++) for (let y = -4; y <= 4; y++) for (let z = -3; z <= 4; z++) {
+    if (Math.hypot(x, y, z * 1.25) > r) continue;
+    orgCanopy.push({ x: p.x + x, y: p.y + y, z: p.z + 1 + z, c: z >= 2 ? LEAF.light : z <= -1 ? LEAF.dark : LEAF.mid });
+  }
+});
+
+// ---------- HABITACIÓN en corte: suelo y dos paredes (fondo e izquierda); el frente y la derecha, abiertos a la cámara
+const FLOOR = { a: "#a0603a", b: "#8a5030" }, WALL = "#c9b8a0", WALL_D = "#a8967e", RUG = "#9c2f2c", RUG_L = "#c2413b", LINEN = "#e8dcc0";
+const roomBox = [
+  ...box(0, 0, 0, 13, 13, 0, null).map((v) => ({ ...v, c: v.x % 2 ? FLOOR.a : FLOOR.b })), // tablas del suelo a lo largo de Y
+  ...box(0, 13, 1, 13, 13, 10, WALL), ...box(0, 0, 1, 0, 12, 10, WALL), // pared del fondo y pared izquierda
+  ...box(0, 13, 1, 13, 13, 1, WALL_D), ...box(0, 0, 1, 0, 12, 1, WALL_D), // rodapié más oscuro
+];
+const bed = [...box(1, 8, 1, 5, 12, 2, WOOD.mid), ...box(1, 8, 3, 5, 12, 3, LINEN), ...box(1, 11, 4, 5, 12, 4, "#ffffff"), ...box(1, 12, 3, 5, 12, 5, WOOD.dark)];
+const table = [...box(8, 7, 4, 11, 9, 4, WOOD.light), ...[[8, 7], [11, 7], [8, 9], [11, 9]].flatMap(([x, y]) => box(x, y, 1, x, y, 3, WOOD.dark))];
+const chair = [...box(9, 4, 3, 10, 5, 3, WOOD.mid), ...[[9, 4], [10, 4], [9, 5], [10, 5]].flatMap(([x, y]) => box(x, y, 1, x, y, 2, WOOD.dark)), ...box(9, 3, 4, 10, 3, 6, WOOD.mid)];
+const roomFurniture = [...roomBox, ...bed, ...table, ...chair];
+const roomDetail = [
+  // la alfombra va antes que los muebles: si coinciden, gana la pata de la silla
+  ...box(4, 3, 1, 9, 6, 1, RUG).map((v) => ({ ...v, c: v.x === 4 || v.x === 9 || v.y === 3 || v.y === 6 ? RUG_L : RUG })), // alfombra con borde
+  ...roomFurniture,
+  ...box(7, 13, 5, 10, 13, 8, "#9fd8ff").map((v) => ({ ...v, c: v.x === 8 || v.z === 7 ? WOOD.dark : "#9fd8ff" })), // ventana con cruceta
+  ...box(1, 3, 6, 1, 6, 6, WOOD.dark), // estante que sale 1 vóxel de la pared izquierda
+  ...[[1, 3, "#3b6fd1"], [1, 4, "#c2413b"], [1, 5, "#3fa45b"]].flatMap(([x, y, c]) => box(x, y, 7, x, y, 8, c)), // libros
+  { x: 10, y: 8, z: 5, c: "#f4e6c8" }, { x: 10, y: 8, z: 6, c: "#ffd36e" }, // vela sobre la mesa (llama en Emit)
+];
+
+// ---------- SALTO DEL SLIME en vóxels: los mismos cuatro tiempos que el sprite de P6-03, como etapas
+function blob(rx, h, z0) {
+  const v = [];
+  for (let x = -rx; x <= rx; x++) for (let y = -rx; y <= rx; y++) for (let z = 0; z < h; z++)
+    if (Math.hypot(x / rx, y / rx, (z - (h - 1) / 2) / (h / 2)) <= 1.02) v.push({ x, y, z: z + z0, c: SLIME.mid });
+  return v;
+}
+// todas las etapas sobre el mismo disco de suelo de 13×13: así los cuatro .vox miden lo mismo en planta y
+// el slime no «salta» de sitio al renderizarlos con la misma cámara
+const jumpGround = []; for (let x = -6; x <= 6; x++) for (let y = -6; y <= 6; y++) if (Math.hypot(x, y) <= 6.3) jumpGround.push({ x, y, z: 0, c: STONE.dark });
+const onGround = (vox) => [...jumpGround, ...move(vox, 0, 0, 1)];
+const slimeJump = [
+  { label: "Reposo", note: "La cúpula de 11×11×7 de V5-01, con ojos y brillo, sobre un disco de piedra de 13×13 que comparten las cuatro etapas.", voxels: onGround(slimeDetail(dome(5, 7), [3, 4])) },
+  { label: "Anticipación", note: "Aplastado: 13 de ancho y 5 de alto. Ocupa casi lo mismo: el volumen se conserva, como en el sprite.", voxels: onGround(slimeDetail(dome(6, 5), [2, 3])) },
+  { label: "Estirado", note: "Una elipse estrecha y alta (7 de ancho, 10 de alto) separada 2 vóxels del suelo; los ojos se juntan porque la cara es más estrecha.", voxels: onGround(slimeDetail(blob(3, 10, 2), [7, 8], 1)) },
+  { label: "Punto alto", note: "Redondo otra vez (9 de ancho, 8 de alto) y 6 vóxels por encima del suelo. Renderiza las cuatro etapas con la MISMA cámara y tendrás los frames del sprite.", voxels: onGround(slimeDetail(blob(4, 8, 6), [9, 10])) },
+];
+
 export const MODELS = {
+  "arbol-organico": {
+    description: "Árbol orgánico: tronco curvo, ramas y copa en grupos",
+    stages: [
+      { label: "Tronco curvo", note: "El tronco se desplaza como mucho un vóxel por capa, con un vóxel de escalón en cada desplazamiento para que siga unido por caras. 2×2 abajo, 1×1 arriba y raíces en la base. Nada es recto, pero nada salta.", voxels: orgTrunk },
+      { label: "Ramas", note: "Tres ramas en diagonal, a alturas distintas y hacia lados distintos, construidas vóxel a vóxel (de lado y luego arriba) para que no queden unidas solo por aristas. La asimetría es lo que lo hace orgánico.", voxels: [...orgTrunk, ...orgBranches] },
+      { label: "Copa en grupos", note: "Cuatro masas de hojas de tamaños distintos al final de cada rama, con tres verdes: claro arriba, oscuro abajo. Grupos, no una bola.", voxels: [...orgTrunk, ...orgBranches, ...orgCanopy] },
+    ],
+  },
+  habitacion: {
+    description: "Habitación en corte: suelo, dos paredes y muebles",
+    stages: [
+      { label: "Caja", note: "Suelo de 14×14 con tablas en dos tonos y dos paredes (fondo e izquierda) de 10 de alto con rodapié. El frente y la derecha quedan abiertos: es un corte, como una casa de muñecas.", voxels: roomBox },
+      { label: "Muebles", note: "Cama en el rincón del fondo, mesa y silla delante. Todo a la escala de una puerta de 4 vóxels: la mesa a 4 de alto, el asiento a 3.", voxels: roomFurniture },
+      { label: "Detalle y luz", note: "Alfombra con borde, ventana con cruceta, un estante con tres libros y una vela en la mesa (llama en Emit). Los detalles dicen quién vive aquí.", voxels: roomDetail },
+    ],
+  },
+  "slime-salto": {
+    description: "Salto del slime en vóxels: cuatro etapas para renderizar como frames",
+    stages: slimeJump,
+  },
   terreno: {
     description: "Terreno: terrazas, estratos y un río",
     stages: [

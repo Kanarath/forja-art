@@ -1,0 +1,43 @@
+{
+  "name": "slash-2",
+  "description": "Tajo, frame 2: el smear completo. Un arco grueso desde arriba a la derecha hasta abajo a la izquierda: dibuja en UN frame todo el recorrido de la espada. Blanco en el borde exterior, azul claro en medio y más oscuro hacia la cola.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "vfx",
+    "animación",
+    "smear"
+  ],
+  "palette": {
+    "w": "#ffffff",
+    "c": "#bfe9ff",
+    "b": "#6fb8ff",
+    "B": "#2a6fc9"
+  },
+  "rows": [
+    "........................",
+    "..............w.........",
+    "...............Bcw......",
+    "................Bcw.....",
+    "................BBcw....",
+    ".................Bccw...",
+    ".................BBcww..",
+    "..................Bccw..",
+    "..................Bccw..",
+    "..................BBcww.",
+    "..................BBccw.",
+    "..................BBccw.",
+    ".................bbbccw.",
+    ".................bbccww.",
+    "................bbbccww.",
+    "................bbbccw..",
+    "...............bbbccww..",
+    "..w...........bbbcccww..",
+    "...c.........bbbcccww...",
+    "....b.......bbbcccww....",
+    ".....cbbbbbbbccccww.....",
+    "......wccccccccwww......",
+    ".........wwwwww.........",
+    "........................"
+  ]
+}

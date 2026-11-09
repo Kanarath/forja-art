@@ -60,5 +60,10 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   { id: "variantes", name: "Variantes", description: "Tres variantes de un enemigo con palette swap que se leen en grises (P5-04).", color: "#e8484f" },
   { id: "terreno", name: "Terreno", description: "Un terreno voxel en terrazas con estratos y agua (V6-02).", color: "#3fbf7f" },
   { id: "hora-del-dia", name: "Hora del día", description: "La misma escena de día y de noche, con la luz como foco (P8-02).", color: "#26489a" },
+  { id: "tipografia", name: "Tipografía", description: "Una fuente pixel propia con altura, grosor y espaciado constantes (P2-04).", color: "#fff3c4" },
+  { id: "organico", name: "Forma orgánica", description: "Un árbol o una criatura voxel sin simetría rígida y con masas agrupadas (V2-03).", color: "#6ee59f" },
+  { id: "voxel-sprite", name: "Del voxel al sprite", description: "Una animación hecha con renders voxel y montada como spritesheet (V5-02).", color: "#4ade80" },
+  { id: "tajo", name: "Tajo", description: "Un ataque con smear: el recorrido de la espada en un frame (P6-05).", color: "#bfe9ff" },
+  { id: "interior", name: "Interior", description: "Una habitación voxel en corte con muebles a escala y una luz (V7-02).", color: "#c9b8a0" },
   { id: "forma-primero", name: "Forma antes que detalle", description: "Un modelo voxel con su blockout guardado como primera versión (V2-01).", color: "#38e1ff" },
 ];

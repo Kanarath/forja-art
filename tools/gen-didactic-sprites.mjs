@@ -798,6 +798,83 @@ relight("scene-final", "scene-final-dark", "Error: la «noche» hecha solo bajan
   return "#" + [n >> 16, (n >> 8) & 255, n & 255].map((v) => Math.round(v * 0.4).toString(16).padStart(2, "0")).join("");
 }, ["escena", "luz", "error"]);
 
+// ---------- tipografía: una fuente de 3×5 dibujada a mano (# = trazo)
+const GLYPHS = {
+  A: [".#.", "#.#", "###", "#.#", "#.#"], B: ["##.", "#.#", "##.", "#.#", "##."], C: [".##", "#..", "#..", "#..", ".##"],
+  D: ["##.", "#.#", "#.#", "#.#", "##."], E: ["###", "#..", "##.", "#..", "###"], F: ["###", "#..", "##.", "#..", "#.."],
+  G: [".##", "#..", "#.#", "#.#", ".##"], H: ["#.#", "#.#", "###", "#.#", "#.#"], I: ["###", ".#.", ".#.", ".#.", "###"],
+  J: ["..#", "..#", "..#", "#.#", ".#."], K: ["#.#", "#.#", "##.", "#.#", "#.#"], L: ["#..", "#..", "#..", "#..", "###"],
+  M: ["#.#", "###", "###", "#.#", "#.#"], N: ["##.", "#.#", "#.#", "#.#", "#.#"], O: [".#.", "#.#", "#.#", "#.#", ".#."],
+  P: ["##.", "#.#", "##.", "#..", "#.."], Q: [".#.", "#.#", "#.#", "##.", ".##"], R: ["##.", "#.#", "##.", "#.#", "#.#"],
+  S: [".##", "#..", ".#.", "..#", "##."], T: ["###", ".#.", ".#.", ".#.", ".#."], U: ["#.#", "#.#", "#.#", "#.#", "###"],
+  V: ["#.#", "#.#", "#.#", "#.#", ".#."], W: ["#.#", "#.#", "###", "###", "#.#"], X: ["#.#", "#.#", ".#.", "#.#", "#.#"],
+  Y: ["#.#", "#.#", ".#.", ".#.", ".#."], Z: ["###", "..#", ".#.", "#..", "###"],
+  0: ["###", "#.#", "#.#", "#.#", "###"], 1: [".#.", "##.", ".#.", ".#.", "###"], 2: ["##.", "..#", ".#.", "#..", "###"],
+  3: ["##.", "..#", ".#.", "..#", "##."], 4: ["#.#", "#.#", "###", "..#", "..#"], 5: ["###", "#..", "##.", "..#", "##."],
+  6: [".##", "#..", "###", "#.#", "###"], 7: ["###", "..#", ".#.", ".#.", ".#."], 8: ["###", "#.#", "###", "#.#", "###"],
+  9: ["###", "#.#", "###", "..#", "##."], " ": ["...", "...", "...", "...", "..."],
+};
+// escribe un texto: cada letra mide 3 de ancho y va separada por `gaps[i]` píxeles (1 por defecto)
+function typeset(text, { gaps = [], shadow = false, ink = "w", shade = "d" } = {}) {
+  const chars = [...text];
+  const W = chars.reduce((a, _, i) => a + 3 + (i < chars.length - 1 ? gaps[i] ?? 1 : 0), 0) + (shadow ? 1 : 0), H = 5 + (shadow ? 1 : 0);
+  const g = Array.from({ length: H }, () => Array(W).fill("."));
+  let x0 = 0;
+  chars.forEach((ch, i) => {
+    GLYPHS[ch].forEach((r, y) => [...r].forEach((p, x) => {
+      if (p !== "#") return;
+      if (shadow && g[y + 1][x0 + x + 1] === ".") g[y + 1][x0 + x + 1] = shade;
+      g[y][x0 + x] = ink;
+    }));
+    x0 += 3 + (gaps[i] ?? 1);
+  });
+  return g.map((r) => r.join(""));
+}
+const TXT = { w: "#fff3c4", d: "#5b4a7a" };
+{
+  const lines = ["ABCDEFGHIJKLM", "NOPQRSTUVWXYZ", "0123456789"].map((t) => typeset(t));
+  const W = Math.max(...lines.map((l) => l[0].length));
+  const rows = lines.flatMap((l, i) => [...l.map((r) => r.padEnd(W, ".")), ...(i < lines.length - 1 ? [".".repeat(W)] : [])]);
+  add("font-3x5", "Fuente de 3×5 dibujada a mano: las 26 letras y los 10 números, cada uno en 3 de ancho y 5 de alto, separados por 1 píxel. Todas comparten la misma altura, el mismo grosor (1 píxel) y la misma separación.", ["tipografía"], { w: TXT.w }, rows);
+}
+add("text-forja", "«FORJA ART» con la fuente de 3×5 y una sombra de 1 píxel abajo a la derecha, en un violeta oscuro. La sombra separa el texto de cualquier fondo sin engordar las letras.", ["tipografía"], TXT, typeset("FORJA ART", { shadow: true }));
+add("text-spacing-bad", "Error: el mismo texto con el espaciado a ojo (0, 2, 1, 0, 3, 1, 0, 2 píxeles). Las letras se pegan o se separan al azar y la palabra se rompe en trozos.", ["tipografía", "error"], TXT, typeset("FORJA ART", { shadow: true, gaps: [0, 2, 1, 0, 3, 1, 0, 2] }));
+
+// ---------- smears: el tajo de una espada en 3 frames (24×24). Un arco grueso que «arrastra» el movimiento
+const SLASH = { w: "#ffffff", c: "#bfe9ff", b: "#6fb8ff", B: "#2a6fc9" };
+function slashFrame(a0, a1, rIn, colors) {
+  const deg = (dx, dy) => (Math.atan2(dy, dx) * 180) / Math.PI;
+  return Array.from({ length: 24 }, (_, y) => Array.from({ length: 24 }, (_, x) => {
+    const dx = x + 0.5 - 12, dy = y + 0.5 - 12, d = Math.hypot(dx, dy), a = deg(dx, dy);
+    if (d > 11 || a < a0 || a > a1) return ".";
+    const t = (a - a0) / (a1 - a0); // 0 = cola, 1 = punta (por donde va la espada)
+    const inner = rIn + (11 - rIn) * (1 - Math.sin(Math.PI * Math.min(1, t * 1.1))) * 0.9; // más grueso en el centro del arco
+    if (d < inner) return ".";
+    const k = (d - inner) / (11 - inner); // 0 borde interior → 1 borde exterior
+    return colors(k, t);
+  }).join(""));
+}
+const usedOnly = (pal, rows) => Object.fromEntries(Object.entries(pal).filter(([k]) => rows.some((r) => r.includes(k))));
+const slashes = [
+  slashFrame(-80, -20, 8.5, (k) => (k > 0.6 ? "w" : "c")),
+  slashFrame(-80, 150, 5, (k, t) => (k > 0.75 ? "w" : k > 0.4 ? "c" : t < 0.35 ? "B" : "b")),
+  slashFrame(70, 150, 9, (k) => (k > 0.5 ? "b" : "B")),
+];
+const SLASH_D = [
+  "Tajo, frame 1: el arranque. Un trozo corto de arco arriba a la derecha, blanco por fuera: la espada acaba de empezar a moverse.",
+  "Tajo, frame 2: el smear completo. Un arco grueso desde arriba a la derecha hasta abajo a la izquierda: dibuja en UN frame todo el recorrido de la espada. Blanco en el borde exterior, azul claro en medio y más oscuro hacia la cola.",
+  "Tajo, frame 3: la estela. Solo queda la cola del arco abajo a la izquierda, fina y en azules oscuros: el movimiento se apaga.",
+];
+slashes.forEach((rows, i) => add(`slash-${i + 1}`, SLASH_D[i], ["vfx", "animación", "smear"], usedOnly(SLASH, rows), rows));
+{
+  // error: el mismo recorrido como una línea de 1 píxel (sin arrastre): se lee como un dibujo, no como un golpe
+  const rows = Array.from({ length: 24 }, (_, y) => Array.from({ length: 24 }, (_, x) => {
+    const dx = x + 0.5 - 12, dy = y + 0.5 - 12, d = Math.hypot(dx, dy), a = (Math.atan2(dy, dx) * 180) / Math.PI;
+    return Math.abs(d - 10) < 0.5 && a >= -80 && a <= 150 ? "c" : ".";
+  }).join(""));
+  add("slash-thin", "Error: el mismo recorrido como una línea fina de 1 píxel. Tiene la forma del arco, pero no el peso: a la velocidad del juego desaparece y no se siente el golpe.", ["vfx", "animación", "error"], { c: SLASH.c }, rows);
+}
+
 // ---------- escribir y validar
 let bad = 0;
 for (const s of out) {

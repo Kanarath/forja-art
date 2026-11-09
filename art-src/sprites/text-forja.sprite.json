@@ -1,0 +1,21 @@
+{
+  "name": "text-forja",
+  "description": "«FORJA ART» con la fuente de 3×5 y una sombra de 1 píxel abajo a la derecha, en un violeta oscuro. La sombra separa el texto de cualquier fondo sin engordar las letras.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "tipografía"
+  ],
+  "palette": {
+    "w": "#fff3c4",
+    "d": "#5b4a7a"
+  },
+  "rows": [
+    "www..w..ww....w..w.......w..ww..www.",
+    "wdddw.w.wdw...wdw.w.....w.w.wdw..wdd",
+    "ww..wdwdww.d..wdwwwd....wwwdww.d.wd.",
+    "wdd.wdwdwdw.w.wdwdwd....wdwdwdw..wd.",
+    "wd...w.dwdwd.w.dwdwd....wdwdwdwd.wd.",
+    ".d....d..d.d..d..d.d.....d.d.d.d..d."
+  ]
+}

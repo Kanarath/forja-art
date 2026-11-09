@@ -134,6 +134,14 @@
   - modelos «terreno» (mapa de alturas en terrazas) y «carro» (blockout, paneles y herrajes).
 - **Ruta:** las lecciones nuevas se intercalan junto a las de su nivel, no al final.
 
+**Contenido · noveno bloque: 5 lecciones más (58 en total).**
+- **Pixel:** P2-04 Tipografía pixel (una fuente de 3×5), P6-05 Smears (el tajo de la espada).
+- **Voxel:** V2-03 Formas orgánicas, V5-02 Del voxel al sprite (renders como frames), V7-02 Interiores (una habitación en corte).
+- **Arte nuevo:**
+  - fuente de 3×5 con letras y números, un texto con sombra y otro con espaciado roto;
+  - tajo en tres frames (arranque, smear y estela) y su versión de línea fina;
+  - modelos «arbol-organico», «habitacion» y «slime-salto» (cuatro etapas sobre el mismo disco, para renderizarlas como frames).
+
 **Lecciones aprendidas durante la fase 1:**
 - **`BASE_URL` sin barra final.** Astro 7 da `BASE_URL` sin barra final, así que hay que usar siempre `src/lib/url.ts`. El validador detecta enlaces sin la base.
 - **Colecciones nuevas en local.** El servidor de desarrollo no ve colecciones de contenido nuevas: hay que reiniciarlo (`npx astro dev --force`).

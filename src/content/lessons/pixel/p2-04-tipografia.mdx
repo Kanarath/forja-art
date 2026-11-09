@@ -1,0 +1,222 @@
+---
+id: p2-04
+discipline: pixel
+level: 2
+order: 4
+title: "Tipografía pixel: una fuente de 3×5"
+summary: "Diseña tu propia fuente de 3×5 como un sistema de reglas: altura, trazo y espaciado fijos, letras que no se confunden y una sombra de 1 px para leer sobre cualquier fondo."
+duration: 40
+status: borrador
+objectives:
+  - "Entender una fuente pixel como un sistema: altura, trazo, ancho y espaciado fijos"
+  - "Distinguir letras y números parecidos (B/8, O/0, S/5, I/1) cambiando un píxel"
+  - "Espaciar el texto con una separación constante antes de retocar formas"
+  - "Separar el texto de cualquier fondo con una sombra o contorno de 1 px"
+  - "Dibujar una fuente propia con las letras de tu nombre y los números"
+prerequisites: [p2-01]
+fundamentals: [f02]
+tools: [aseprite]
+piece:
+  name: "Fuente propia de 3×5 (o 4×6) con tu nombre y los números, y una palabra sobre dos fondos"
+  canvas: "64x32"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [tipografia]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Vas a forjar **tu propia fuente pixel de 3×5**: como mínimo las letras de tu nombre y los diez números. Después escribirás una palabra con ella y la probarás **sobre dos fondos**, uno claro y uno oscuro.
+
+<Sprite name="font-3x5" scale={8} caption="La meta: un alfabeto completo y los números en 3×5. Mismo alto, mismo trazo de 1 px, misma separación" />
+
+<Sprite name="text-forja" scale={10} caption="«FORJA ART» con esa fuente y una sombra violeta de 1 px abajo a la derecha" />
+</Block>
+
+<Block kind="concepto">
+Una fuente pixel no es un dibujo de 36 letras. Es **un sistema de reglas** que todas cumplen:
+
+- **Altura fija:** aquí, 5 píxeles. Ninguna letra sube ni baja.
+- **Trazo fijo:** 1 píxel de grosor, siempre. Nada de trazos dobles en una sola letra.
+- **Ancho fijo o casi:** en `font-3x5` todas miden 3 de ancho, también la M y la W.
+- **Espaciado constante:** 1 píxel entre letras. Entre palabras, el hueco de una letra entera más sus dos separaciones: 5 píxeles.
+
+<Why>
+El ojo no lee letra a letra: lee **la forma de la palabra**. Si todas las letras comparten alto, grosor y separación, forman una línea regular y la diferencia entre ellas destaca. Es la misma idea que los tramos iguales de P2-01: el ritmo regular se lee como orden, lo irregular llama la atención. Y es silueta pura (f02): cada letra tiene que reconocerse en un color, sin sombreado que ayude.
+</Why>
+
+**3×5: el mínimo legible.** Con 3 de ancho tienes una columna izquierda, una central y una derecha. Con 5 de alto, arriba, medio y abajo, más una fila entre cada par. Es lo justo para que la E tenga tres brazos y la B dos barrigas. Por debajo, por ejemplo en 3×4, la E y la B pierden la fila de aire entre sus brazos y se convierten en manchas.
+
+<Inspector sprite="font-3x5" title="Recorre la fuente con la rejilla: cuenta altos, anchos y separaciones" />
+
+**Letras que se confunden.** En 3×5 no hay sitio para curvas: muchas letras y números salen casi iguales. La regla es: **la letra se redondea y el número se cierra en cuadro**. Mira en `font-3x5` cómo lo resuelve:
+
+- **B y 8:** el 8 tiene las tres filas llenas (arriba, en medio y abajo). La B deja vacía la columna derecha en esas tres filas: sus barrigas quedan redondeadas. Tres píxeles de diferencia.
+- **O y 0:** la O tiene las cuatro esquinas vacías y se ve redonda. El 0 las llena y se ve como un rectángulo. Cuatro píxeles.
+- **S y 5:** el 5 tiene la fila de arriba completa y el centro en «##.»: un ángulo recto. La S vacía la esquina de arriba a la izquierda y el centro es un solo píxel en medio: una diagonal. Dos píxeles.
+- **I y 1:** la I tiene un travesaño de 3 arriba y otro abajo. El 1 solo tiene base: arriba es un píxel central y, debajo, un píxel a la izquierda que hace de «bandera».
+- **Z y 2:** aquí la diferencia es **un solo píxel**, la esquina de arriba a la derecha. La Z la tiene llena; el 2 la deja vacía y se redondea.
+
+<Tip>
+No hace falta que cada letra sea bonita por separado. Hace falta que **no se confunda con su pareja**. Diseña siempre en parejas: B junto a 8, O junto a 0.
+</Tip>
+
+**El espaciado importa más que la forma.** Una letra un poco fea en una palabra bien espaciada se lee. Una letra perfecta mal espaciada rompe la palabra en trozos.
+
+<Mistake title="El mismo texto, otro espaciado" wrongLabel="Separaciones 0, 2, 1, 0, 3, 1, 0, 2" rightLabel="Siempre 1 píxel">
+  <Sprite slot="wrong" name="text-spacing-bad" scale={8} />
+  <Sprite slot="right" name="text-forja" scale={8} />
+
+Las letras son exactamente las mismas. A la izquierda, la F y la O están pegadas, igual que la J y la A, y la A y la R de «ART»: se funden en una mancha. Entre la O y la R hay 2 píxeles y entre las dos palabras, 7 en vez de 5. El ojo agrupa por cercanía y lee «FO RJA AR T».
+</Mistake>
+
+<Why>
+En tipografía «de verdad», el **kerning** ajusta pares concretos (AV, To). En 3×5 apenas hay margen para eso: con letras de 3 de ancho, la separación fija de 1 píxel ya hace casi todo el trabajo. Si algún par se ve raro, ajústalo con cuidado, y nunca en más de un píxel.
+</Why>
+
+**Leer sobre cualquier fondo.** Un texto crema se lee sobre un fondo oscuro, pero se pierde sobre uno claro. La solución es una **sombra de 1 píxel** (abajo a la derecha, como en `text-forja`) o un **contorno de 1 píxel** alrededor. Fíjate en que la sombra no pisa la letra: solo ocupa los píxeles vacíos, también los de dentro de la A o la O.
+
+<Sprite name="text-forja" scale={10} view="gray" caption="En grises: la tinta clara y la sombra oscura siguen separadas en valor. Sobre un fondo claro, la sombra dibuja la letra; sobre uno oscuro, lo hace la tinta" />
+
+**Escalar: solo a enteros y sin suavizado.** Un texto de 5 píxeles de alto es lo más frágil del juego. Si lo amplías con suavizado (o a un factor no entero), los trazos de 1 píxel se emborronan y la letra desaparece.
+
+<Mistake title="Ampliar el texto con suavizado" wrongLabel="Suavizado" rightLabel="Escala entera, sin filtro">
+  <Sprite slot="wrong" name="text-forja" scale={10} view="smooth" />
+  <Sprite slot="right" name="text-forja" scale={10} />
+
+La misma imagen. A la izquierda, los bordes se difuminan y la sombra se mezcla con la tinta: los huecos de 1 píxel, como el de dentro de la A, dejan de verse claros. A la derecha, cada píxel sigue siendo un cuadrado nítido.
+</Mistake>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Lienzo y rejilla de letra">
+<Keys k="Ctrl+N" />: 64×32, fondo transparente. Activa *View → Grid*.
+
+Vas a dibujar las letras en fila, cada una en una caja de 3×5 y separadas por 1 píxel. Cada letra ocupa 4 columnas (3 de letra y 1 de aire).
+
+<Tip>
+Si puedes ajustar el tamaño de la rejilla en tu versión, ponla en 4×6: cada celda será una letra con su columna y su fila de aire, y verás de un vistazo si alguna se sale. Si no, cuenta con la rejilla de 1 píxel.
+</Tip>
+</Step>
+
+<Step n={2} title="Las letras de tu nombre">
+Lápiz con <Keys k="B" />, un solo color claro. Dibuja primero las letras de tu nombre, una por caja. Empieza por las de trazos rectos (E, L, T, H) y deja para el final las de diagonales (S, Z, K, R).
+
+<Why>
+Las rectas fijan el sistema: con la E decides dónde va el brazo del medio (la fila 2), y todas las demás letras con barra central (A, B, F, H, P, R) la ponen en la misma fila. Así la fuente se ve coherente.
+</Why>
+
+<Warn>
+No subas ninguna letra a 6 píxeles «porque no cabe». Si no cabe, simplifica: la M y la W de `font-3x5` caben en 3 de ancho llenando el centro. Si de verdad necesitas más sitio, pasa **toda** la fuente a 4×6, no solo esa letra.
+</Warn>
+</Step>
+
+<Step n={3} title="Los números, en parejas">
+En una segunda línea (deja 1 fila de aire), dibuja del 0 al 9. Pon cada número junto a la letra con la que se puede confundir y compara: 0 con O, 1 con I, 2 con Z, 5 con S, 8 con B.
+
+<Tip>
+La regla rápida: **letras redondeadas, números en cuadro**. Si dos se parecen, vacía una esquina en la letra o llénala en el número. Un píxel basta.
+</Tip>
+</Step>
+
+<Step n={4} title="Prueba palabras reales">
+Debajo, escribe tu nombre y dos o tres palabras más con tus letras: copia cada letra con la selección rectangular (<Keys k="M" />) y pégala a 1 píxel de la anterior. Entre palabras, deja 5 píxeles.
+
+Aléjate con la rueda del ratón hasta verlo pequeño. Si una letra salta a la vista, o dos parecen una, ese es el fallo.
+
+<Why>
+Una letra se ve bien sola y mal al lado de otra. Solo las palabras reales enseñan los pares problemáticos: una L seguida de una T deja un hueco mayor que dos H juntas.
+</Why>
+</Step>
+
+<Step n={5} title="Sombra de 1 píxel">
+Elige un segundo color, oscuro y con mucho contraste de valor con la tinta. Con el lápiz, pon un píxel de sombra abajo a la derecha de cada píxel de letra, **solo donde esté vacío**.
+
+<Tip>
+Atajo de trabajo: copia la palabra en una capa nueva (*Layer → New Layer*), repinta esa copia en el color oscuro, muévela 1 píxel abajo y 1 a la derecha, y deja la capa de sombra debajo de la de tinta. Lo que asome por debajo es exactamente la sombra.
+</Tip>
+</Step>
+
+<Step n={6} title="Dos fondos y exportar">
+Debajo de la palabra pinta dos rectángulos, uno claro y uno oscuro, y copia la palabra con su sombra encima de cada uno. Las dos deben leerse.
+
+Guarda con <Keys k="Ctrl+S" /> y exporta con *File → Export → Export As*, PNG: una copia al 100 % y otra con **Resize** 400 % u 800 %. Siempre a un entero.
+</Step>
+
+<ToolNote tool="aseprite">
+**Opcional.** Aseprite tiene una herramienta de texto y puede usar fuentes de mapa de bits, así que más adelante podrías convertir tu fuente en un archivo que Aseprite escriba por ti. No hace falta para esta lección: dibujar la fuente a mano es justo lo que enseña.
+</ToolNote>
+
+<Tip title="Dónde acabará: Godot">
+En Godot, una fuente bitmap se importa como una textura de letras. Necesita el mismo filtro **Nearest** que configuraste en P9-01 (y escala entera de ventana): con el filtro por defecto, verías el error del suavizado de arriba.
+</Tip>
+
+<Warn title="Verifica en tu versión">
+La herramienta de texto de Aseprite, el formato de fuente de mapa de bits que acepta y si permite ajustar el tamaño de la rejilla dependen de tu versión. En Godot, el tipo de recurso para fuentes bitmap y sus opciones de importación también cambian entre versiones.
+</Warn>
+</Block>
+
+<Block kind="version">
+Lleva tu fuente a tu manera. Elige uno:
+
+- **Fuente de 4×6:** con una columna más, la M, la W y la N respiran. Comprueba que las parejas siguen distinguiéndose y que el trazo sigue siendo de 1 píxel.
+- **Contorno en vez de sombra:** rodea cada letra con un contorno de 1 píxel en los cuatro lados. Ahora deja al menos 2 píxeles entre letras, para que cada una tenga su propio contorno y no se fundan.
+- **Un rótulo de juego:** escribe «GAME OVER» o «NIVEL 1» sobre el panel de P4-04, centrado y con sombra.
+</Block>
+
+<Block kind="errores">
+<Mistake title="Espaciado a ojo" wrongLabel="Letras pegadas y huecos irregulares" rightLabel="1 píxel siempre, 5 entre palabras">
+  <Sprite slot="wrong" name="text-spacing-bad" scale={8} />
+  <Sprite slot="right" name="text-forja" scale={8} />
+
+Si colocas las letras a mano sin contar, las separaciones salen de 0, 2, 3… Cuenta los píxeles entre cada par, o usa las cajas de 4 columnas del paso 1 para que la separación sea automática.
+</Mistake>
+
+<Mistake title="Escalar con suavizado o a un factor no entero" wrongLabel="Suavizado: trazos borrosos" rightLabel="Entero y nítido">
+  <Sprite slot="wrong" name="text-forja" scale={8} view="smooth" />
+  <Sprite slot="right" name="text-forja" scale={8} />
+
+Al exportar, usa siempre *Resize* a un entero (200 %, 400 %, 800 %). En el motor, filtro Nearest. Un trazo de 1 píxel no aguanta ni un poco de mezcla.
+</Mistake>
+
+<Warn title="Letras y números gemelos">
+Si tu O y tu 0 son idénticos, nadie sabrá si tiene «10» o «1O» monedas. Pon cada pareja una junto a otra y cambia al menos un píxel: esquinas vacías para la letra, llenas para el número.
+</Warn>
+
+<Warn title="Trazo que cambia de grosor">
+Una barra de 2 píxeles en la B y de 1 en la E rompe el sistema: esa letra parecerá en negrita. Todas las letras, 1 píxel.
+</Warn>
+
+<Warn title="Texto sin sombra sobre fondo claro">
+La tinta crema desaparece sobre un cielo o una pared clara. Prueba siempre tu texto sobre los dos fondos. Si no tienes sitio para una sombra, cambia el color del texto según el fondo, nunca su forma.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+Sube a 1× tu hoja de letras y tu palabra sobre los dos fondos. Revísalas con la rejilla y en grises.
+
+<Inspector upload title="Revisa tu fuente y tu palabra" />
+
+<Checklist items={[
+  "Todas las letras y números miden lo mismo de alto (5, o 6 si hiciste 4×6)",
+  "El trazo es de 1 píxel en todas las letras",
+  "Están las letras de mi nombre y los diez números",
+  "O/0, I/1, S/5, B/8 y Z/2 se distinguen al menos por un píxel",
+  "La separación entre letras es la misma en toda la palabra",
+  "La palabra se lee sobre el fondo claro y sobre el oscuro",
+  "Exporté a 1× y a una escala entera, sin suavizado",
+]} />
+
+<Quiz q="En 3×5, ¿cómo distingues la O del 0?" options={["Haciendo el 0 más alto", "Vaciando las esquinas de la O y llenándolas en el 0", "Poniendo el 0 en otro color"]} answer={1}>
+La altura debe ser la misma en todas. Con las esquinas vacías la O se lee redonda; con las esquinas llenas, el 0 se lee como un rectángulo.
+</Quiz>
+
+<Quiz q="Una palabra se lee rota en trozos aunque cada letra está bien dibujada. ¿Qué falla?" options={["La forma de las letras", "El espaciado entre letras", "El color"]} answer={1}>
+El ojo agrupa por cercanía. Con separaciones irregulares, las letras pegadas se funden y los huecos grandes cortan la palabra.
+</Quiz>
+
+<Quiz q="¿Qué hace la sombra de 1 píxel abajo a la derecha?" options={["Engorda las letras para que se vean más", "Separa la tinta de cualquier fondo, claro u oscuro, sin cambiar la forma", "Sustituye al espaciado"]} answer={1}>
+La sombra solo ocupa píxeles vacíos. Sobre un fondo claro dibuja el borde de la letra; sobre uno oscuro, lo hace la tinta.
+</Quiz>
+</Block>

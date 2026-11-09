@@ -1,0 +1,31 @@
+{
+  "name": "font-3x5",
+  "description": "Fuente de 3×5 dibujada a mano: las 26 letras y los 10 números, cada uno en 3 de ancho y 5 de alto, separados por 1 píxel. Todas comparten la misma altura, el mismo grosor (1 píxel) y la misma separación.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "tipografía"
+  ],
+  "palette": {
+    "w": "#fff3c4"
+  },
+  "rows": [
+    ".w..ww...ww.ww..www.www..ww.w.w.www...w.w.w.w...w.w",
+    "w.w.w.w.w...w.w.w...w...w...w.w..w....w.w.w.w...www",
+    "www.ww..w...w.w.ww..ww..w.w.www..w....w.ww..w...www",
+    "w.w.w.w.w...w.w.w...w...w.w.w.w..w..w.w.w.w.w...w.w",
+    "w.w.ww...ww.ww..www.w....ww.w.w.www..w..w.w.www.w.w",
+    "...................................................",
+    "ww...w..ww...w..ww...ww.www.w.w.w.w.w.w.w.w.w.w.www",
+    "w.w.w.w.w.w.w.w.w.w.w....w..w.w.w.w.w.w.w.w.w.w...w",
+    "w.w.w.w.ww..w.w.ww...w...w..w.w.w.w.www..w...w...w.",
+    "w.w.w.w.w...ww..w.w...w..w..w.w.w.w.www.w.w..w..w..",
+    "w.w..w..w....ww.w.w.ww...w..www..w..w.w.w.w..w..www",
+    "...................................................",
+    "www..w..ww..ww..w.w.www..ww.www.www.www............",
+    "w.w.ww....w...w.w.w.w...w.....w.w.w.w.w............",
+    "w.w..w...w...w..www.ww..www..w..www.www............",
+    "w.w..w..w.....w...w...w.w.w..w..w.w...w............",
+    "www.www.www.ww....w.ww..www..w..www.ww............."
+  ]
+}

@@ -1,0 +1,271 @@
+---
+id: v7-02
+discipline: voxel
+level: 7
+order: 2
+title: "Interiores: una habitación en corte"
+summary: "Monta una habitación en corte: suelo y dos paredes, muebles a la escala de la puerta, el centro libre, detalles que cuentan quién vive ahí y una vela como luz interior."
+duration: 45
+status: borrador
+prerequisites: [v7-01]
+fundamentals: [f10]
+objectives:
+  - "Usar el corte (suelo y dos paredes) para enseñar un interior, eligiendo las paredes según la cámara"
+  - "Medir todos los muebles con la puerta de 4 vóxels de V6"
+  - "Distribuir: muebles grandes contra las paredes y el centro libre"
+  - "Dar poco contraste a suelo y paredes para que destaquen los muebles"
+  - "Contar quién vive ahí con detalles y una luz interior en Emit"
+tools: [magicavoxel]
+piece:
+  name: "Una habitación propia en corte con al menos tres muebles a escala, un detalle que cuente algo y un render con la luz interior"
+  canvas: "suelo de 14x14 a 20x20"
+xp: { concept: 10, guided: 20, piece: 70 }
+achievements: [interior]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+En [V7-01](/forja-art/voxel/v7-01/) recortaste un trozo de mundo **por fuera**. Hoy entras en la casa. Vas a forjar **una habitación en corte**: el suelo y dos paredes, como una casa de muñecas a la que le falta el frente.
+
+<VoxViewer model="habitacion" stage={2} title="La habitación terminada: caja, muebles, detalle y luz" />
+
+Gírala y recorre las tres etapas del visor:
+
+1. **Caja:** suelo de 14×14 y dos paredes de 10 de alto, la del fondo y la izquierda. El frente y la derecha, abiertos.
+2. **Muebles:** una cama en el rincón del fondo, una mesa y una silla.
+3. **Detalle y luz:** alfombra, ventana, un estante con tres libros y una vela sobre la mesa.
+
+Tu pieza final: **tu propia habitación en corte**, con un suelo de entre 14×14 y 20×20, **al menos tres muebles a escala**, **un detalle que cuente algo** de quien vive ahí y **un render** con la luz interior encendida.
+</Block>
+
+<Block kind="concepto">
+### 1. El corte: quita las paredes que estorban
+
+Una habitación de verdad tiene cuatro paredes y un techo. Si las modelas todas, la cámara solo ve **una caja cerrada**. Nadie sabe qué hay dentro.
+
+La convención del voxel art (y de las casas de muñecas, y de muchos juegos) es **el corte**: te quedas con el suelo y **dos paredes**, y quitas las que darían a la cámara.
+
+<VoxViewer model="habitacion" stage={0} title="Caja: suelo de tablas y dos paredes con rodapié" />
+
+Fíjate en lo que tiene la caja del visor:
+
+- **El suelo:** 14×14 y 1 de grosor, con tablas en dos marrones, `#a0603a` y `#8a5030`, alternando a lo largo de la habitación.
+- **La pared del fondo y la izquierda:** 10 vóxels de alto en un beis `#c9b8a0`.
+- **Un rodapié:** la primera fila de las dos paredes, en un beis más oscuro, `#a8967e`.
+- **Sin techo**, sin pared delante y sin pared a la derecha.
+
+<Why title="¿Por qué dos paredes y no una ni tres?">
+Con **una** pared, el suelo parece una tarima en mitad de la nada: no hay rincón y no se lee «habitación». Con **tres**, una de ellas tapa media escena desde casi cualquier ángulo. Dos paredes que se juntan en un **rincón** dan el espacio cerrado y dejan la vista libre. El ojo completa las otras dos.
+</Why>
+
+**Qué dos paredes se quedan: lo decide la cámara.** Quedan las dos que están **enfrente** de la cámara, al fondo de la imagen. Si vas a renderizar desde delante a la derecha, como el visor, quedan la del fondo y la izquierda. Si la cámara va delante a la izquierda, quedan la del fondo y la **derecha**.
+
+<Tip>
+Decide el ángulo del render **antes** de levantar paredes. Coloca la cámara, mira qué esquina del suelo queda al fondo de la imagen y levanta las paredes que se juntan en esa esquina.
+</Tip>
+
+### 2. La escala manda: todo se mide con la puerta
+
+<VoxViewer model="habitacion" stage={1} title="Muebles: cama en el rincón, mesa y silla" />
+
+En V6 la puerta de la casa modular medía **4 vóxels de alto**: es la altura de una persona en este mundo. Dentro de casa, la regla sigue siendo la misma. Mira los muebles del visor:
+
+- **La mesa** mide **4** de alto: tablero claro de 4×3 sobre cuatro patas oscuras de 3.
+- **El asiento de la silla** está a **3**, un vóxel por debajo del tablero. El respaldo sube hasta 6.
+- **La cama** mide 5×5 en planta; el colchón (lino claro) queda a **3** de alto, la almohada blanca a 4 y el cabecero oscuro a 5.
+
+Cama a 3 o 4, asiento a 3, mesa a 4. Como en la vida real: la mesa llega a la cadera de quien cruza la puerta y la silla queda por debajo.
+
+<Why>
+Dentro de una habitación no hay árbol ni casa para comparar: **los muebles se comparan entre sí**. Si la mesa mide 6 y la silla 2, el ojo no sabe cuál de los dos está mal, pero sabe que algo falla. Y si un día pones la habitación dentro de la casa de V6, los muebles tienen que caber por su puerta.
+</Why>
+
+### 3. Distribución: grande contra la pared, el centro libre
+
+Mira cómo está colocada la habitación del visor, vista desde arriba:
+
+- **La cama**, el mueble más grande, va **en el rincón del fondo**, pegada a las dos paredes.
+- **La mesa** está bajo la ventana del fondo, con **la silla delante**, mirando a la mesa. Las dos forman un grupo: una cosa se usa con la otra.
+- **Entre la cama y la mesa queda un pasillo de 2 vóxels**, el ancho de la puerta de V6.
+- **El centro y el frente quedan libres.** En la etapa Detalle, ahí va la alfombra.
+
+<Why title="El espacio libre también es un mueble">
+Una habitación se lee como **un sitio donde se puede estar**. Si todo se pega a las paredes en fila, parece un almacén; si todo flota en el centro, parece una tienda de muebles. Lo grande contra la pared deja el centro libre, y ese vacío dice «aquí se camina». Es el descanso de la composición de [F07](/forja-art/fundamentos/f07-01/), en una planta.
+</Why>
+
+### 4. Suelo y paredes tranquilos, muebles con contraste
+
+Las dos maderas del suelo se parecen mucho entre sí; las dos beis de la pared, también. **Las superficies grandes tienen poco contraste interno.** Los muebles, en cambio, juegan con tres maderas, de la clara del tablero a la oscura de las patas, más el lino claro de la cama.
+
+<Why>
+El suelo y las paredes ocupan la mayor parte de la imagen. Si las tablas tienen un contraste fuerte o la pared lleva un dibujo llamativo, el ojo se queda en el fondo y los muebles se pierden. El fondo es escenario, como el suelo tranquilo de F07: **el contraste se guarda para lo que importa.**
+</Why>
+
+<Warn title="Cuidado con repetir un color">
+En el modelo, el marco de la cama usa la misma madera `#a0603a` que una de las tablas del suelo. Se lee porque encima va el lino claro y detrás el cabecero oscuro. En tu habitación, si un mueble comparte color con el suelo, ponle algo que lo separe: una pata oscura, un borde claro, un colchón.
+</Warn>
+
+### 5. Detalles que cuentan quién vive ahí
+
+Vuelve al visor de arriba, en la etapa **Detalle y luz**. No hay ningún mueble nuevo; hay pistas, como en [Storytelling (F10-01)](/forja-art/fundamentos/f10-01/):
+
+- **Un estante con tres libros** (azul, rojo y verde) en la pared izquierda: alguien lee.
+- **Una vela sobre la mesa**: alguien escribe o lee de noche.
+- **Una alfombra roja con borde más claro** en el centro: alguien cuida esta habitación.
+- **La ventana con cruceta** en la pared del fondo: hay un fuera.
+
+<Sprite name="scene-story" scale={5} caption="F10: los objetos y su estado cuentan qué ha pasado. En una habitación, cuentan quién vive ahí" />
+
+<Why title="Una habitación es un retrato">
+No ves a nadie, pero sabes cosas de quien vive ahí: lee, trabaja de noche, tiene una cama de una persona. Un objeto **en su sitio** dice algo de una costumbre; uno **fuera de su sitio** (un libro abierto sobre la cama, una silla apartada) dice qué acaba de pasar. Elige qué quieres contar antes de añadir nada.
+</Why>
+
+### 6. Dos luces: la vela y la ventana
+
+Una habitación cerrada por dos lados tiene **luz propia**. La del modelo tiene dos fuentes:
+
+- **La vela** es la luz principal: un vóxel de cera `#f4e6c8` y encima la llama `#ffd36e`. En el render, la llama lleva el material **Emit** y alumbra la mesa y lo que la rodea.
+- **La ventana** es la segunda luz: un cristal azul claro `#9fd8ff` con cruceta de madera oscura. Dice de dónde llega la luz de fuera.
+
+<Why>
+Una luz cálida y cercana (la vela) frente a una fría y lejana (la ventana) es la temperatura de [F03](/forja-art/fundamentos/f03-01/) dentro de una habitación. La vela además hace de **punto focal**: es lo más brillante del render, y está sobre la mesa, donde pasa la historia.
+</Why>
+
+<Warn title="El visor no simula los materiales">
+En el visor, la llama es solo un vóxel amarillo y la ventana solo un azul. El brillo de la vela (Emit) y el cristal (Glass) los verás en el modo **Render** de MagicaVoxel, como en [el farol (V3-02)](/forja-art/voxel/v3-02/).
+</Warn>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Decide quién vive ahí y desde dónde miras">
+Antes de abrir MagicaVoxel, escribe dos cosas:
+
+1. **Quién vive ahí**, en una frase: «un aprendiz de herrero que lee de noche», «una alquimista desordenada».
+2. **Desde qué esquina mira la cámara**: delante a la derecha o delante a la izquierda.
+
+<Why>
+La frase decide los muebles y los detalles; la esquina decide qué dos paredes levantas. Si lo dejas para el final, acabarás borrando una pared con todo lo que le hayas colgado.
+</Why>
+</Step>
+
+<Step n={2} title="El suelo y las dos paredes">
+1. Crea un modelo nuevo con una planta de entre **14×14 y 20×20** y unos **11 de alto** (el del visor es 14×14×11). Guárdalo como `habitacion_v1.vox`.
+2. En modo **Attach**, con el pincel **Box**, rellena la capa de abajo: es el suelo.
+3. Con **Box**, levanta las dos paredes que dan al fondo de la imagen, de 1 vóxel de grosor y **10 de alto**, juntas en un rincón.
+4. Pasa a **Paint** y pinta tablas alternas en dos marrones **parecidos**, y la primera fila de las paredes un poco más oscura: el rodapié.
+5. Gira la cámara con el botón derecho: desde tu ángulo, tienes que ver el rincón y el suelo entero, sin ninguna pared delante.
+
+<Tip>
+Elige los colores de suelo y pared pensando en su valor, como en [F01](/forja-art/fundamentos/f01-01/): los dos tonos del suelo, muy cerca en valor; la pared, más clara que el suelo, pero lisa.
+</Tip>
+</Step>
+
+<Step n={3} title="Una persona de referencia">
+1. Con el pincel **Box**, levanta en el centro del suelo una columna de **1×1 y 4 de alto** en un color chillón. Es la puerta de V6 convertida en persona.
+2. Déjala ahí mientras amueblas. La borrarás al final con **Erase**.
+
+<Why>
+Medir con números se olvida; medir con una figura al lado no. Cada vez que pongas un mueble, mira la columna: ¿se podría sentar en esa silla? ¿Cabe tumbada en esa cama?
+</Why>
+</Step>
+
+<Step n={4} title="Los muebles grandes, contra las paredes">
+1. Empieza por el más grande (la cama, un armario, un horno): **contra una pared o en el rincón**.
+2. Luego el segundo: una mesa de **4 de alto**, con un tablero más claro que las patas.
+3. Luego el que se usa con él: una silla con el asiento a **3**, junto a la mesa y con el respaldo en el lado contrario.
+4. Deja al menos **un pasillo de 2 vóxels** libre desde el frente abierto hasta el fondo, y el centro sin muebles.
+
+<Warn>
+No modeles un mueble aparte y lo escales para que encaje. Escalar un modelo voxel duplica los vóxels y rompe las medidas. Si la silla ha salido grande, rehazla: son una docena de vóxels.
+</Warn>
+</Step>
+
+<Step n={5} title="Detalles que cuenten algo">
+1. Vuelve a tu frase. Añade **dos o tres** detalles que la cuenten: libros en un estante, una alfombra, una herramienta colgada, una jarra en la mesa.
+2. Colócalos **cerca de los muebles**, no repartidos por las paredes: el estante sobre la cama, la jarra en la mesa.
+3. Pon una **ventana** en una de las dos paredes: un rectángulo de cristal con una cruceta oscura, pintado con **Paint** sobre la pared.
+4. Pregúntate por cada detalle: «¿qué dice de quien vive aquí?». Si no dice nada, bórralo.
+</Step>
+
+<Step n={6} title="La luz interior">
+1. Modela una vela (o un farol, o una chimenea) sobre un mueble: un vóxel claro de cera y encima uno amarillo de llama.
+2. Selecciona en la paleta **el color de la llama** y, en el panel de materiales, dale el tipo **Emit**.
+3. Selecciona el color del cristal de la ventana y prueba el tipo **Glass**, o un **Emit** muy suave, para que la ventana sea la segunda luz.
+4. Borra la columna de referencia con **Erase**.
+
+<Tip>
+Los materiales van **por color de la paleta**, no por vóxel: si otro vóxel usa el amarillo de la llama, también brillará. Usa para la llama un color que no esté en ningún otro sitio.
+</Tip>
+</Step>
+
+<Step n={7} title="Renderiza">
+1. Pulsa **Render** y coloca la cámara en la esquina que elegiste: tienen que verse el rincón, el suelo y los muebles enteros.
+2. Prueba los modos de proyección (perspectiva, ortográfica, isométrica). En un interior, la ortográfica o la isométrica suelen enseñar mejor la distribución.
+3. Baja la luz del cielo hasta que la vela se note: tiene que ser el punto más brillante y alumbrar la mesa.
+4. Guarda la imagen del render y `habitacion_v1.vox` en tu portfolio.
+</Step>
+
+<Warn title="Verifica en tu versión">
+Los nombres de **Attach**, **Erase**, **Paint** y del pincel **Box**, y la forma de fijar el tamaño de un modelo nuevo, pueden variar entre versiones de MagicaVoxel. El panel de materiales (tipos **Emit** y **Glass** y sus deslizadores de intensidad o transparencia) y, en el modo **Render**, los ajustes de luz del cielo, de proyección de la cámara y el botón para guardar la imagen cambian de nombre y de sitio: búscalos por su función.
+</Warn>
+</Block>
+
+<Block kind="version">
+Ahora, **tu** habitación. Misma receta: corte con dos paredes, escala de la puerta, grande contra la pared y centro libre, fondo tranquilo, detalles con intención y una luz. Elige un reto:
+
+- **El taller del herrero por dentro:** el yunque del [kit del herrero (V4-01)](/forja-art/voxel/v4-01/) como mueble grande en el rincón, la forja como luz interior (brasas en **Emit**) y herramientas colgadas en la pared.
+- **El cuarto de la alquimista:** estantes con frascos de colores, una mesa con un caldero y una vela. El detalle está en el desorden: un libro abierto en el suelo, un frasco volcado (F10).
+- **La misma habitación, de noche y de día:** dos renders con la misma cámara. De día manda la ventana; de noche, la vela. Compara qué cuenta cada uno.
+
+Antes de darla por buena, mira el render en pequeño: ¿se ve en un segundo dónde está la luz y qué tipo de persona vive ahí?
+</Block>
+
+<Block kind="errores">
+<Mistake title="Muebles a escalas distintas" wrongLabel="Cada mueble a su aire" rightLabel="Todo medido con la puerta">
+  <p slot="wrong">La mesa mide 6 de alto, la silla 2 y la cama 7. Cada mueble está bien hecho solo, pero juntos no pueden ser de la misma persona.</p>
+  <p slot="right">Mesa a 4, asiento a 3, cama a 3 o 4, todo comparado con una persona de 4 vóxels. Se lee como una habitación de verdad.</p>
+
+Deja una columna de 1×1×4 en el suelo mientras amueblas y compara cada mueble con ella. Si uno no encaja, rehazlo a su medida: no lo escales.
+</Mistake>
+
+<Mistake title="Las cuatro paredes cerradas" wrongLabel="Una caja" rightLabel="Un corte">
+  <p slot="wrong">La habitación tiene cuatro paredes, y la de delante lo tapa todo. Desde la cámara solo se ve una caja beis.</p>
+  <p slot="right">Solo quedan las dos paredes del fondo de la imagen, juntas en un rincón. El frente y el otro lado, abiertos: se ve todo el interior.</p>
+
+Decide primero desde dónde mira la cámara y levanta solo las dos paredes que quedan enfrente. En el visor, la etapa «Caja» muestra el corte limpio.
+</Mistake>
+
+<Warn title="Error típico: todo pegado o todo flotando">
+Todos los muebles en fila contra las paredes, sin agrupar, parecen un almacén; todos en el centro, sin tocar ninguna pared, parecen un escaparate. **Corrección:** lo grande contra la pared o en el rincón, lo que se usa junto se agrupa (mesa y silla) y el centro queda libre, con un pasillo de al menos 2 vóxels.
+</Warn>
+
+<Warn title="Error típico: las paredes con más detalle que los muebles">
+Ladrillos en tres tonos, un papel pintado a rayas, un suelo de damero muy contrastado. El fondo grita y los muebles se pierden. **Corrección:** suelo y paredes con dos tonos muy parecidos y, como mucho, un rodapié. El contraste fuerte, en los muebles y en la luz.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+<Checklist items={[
+  "Mi habitación tiene un suelo de entre 14×14 y 20×20 y solo dos paredes, juntas en un rincón al fondo de la imagen",
+  "Hay al menos tres muebles, todos a la escala de una persona de 4 vóxels (mesa a 4, asiento a 3, cama a 3–4)",
+  "Los muebles grandes están contra las paredes y el centro queda libre, con un pasillo de al menos 2 vóxels",
+  "El suelo y las paredes tienen poco contraste; los muebles destacan sobre ellos",
+  "Hay al menos un detalle que cuenta algo de quien vive ahí",
+  "Hay una luz interior en Emit y se ve en el render como el punto más brillante",
+  "He guardado habitacion_v1.vox y un render en mi portfolio",
+]} />
+
+<Quiz q="Vas a renderizar tu habitación desde delante a la izquierda. ¿Qué dos paredes levantas?" options={["La del fondo y la izquierda", "La de delante y la izquierda", "La del fondo y la derecha"]} answer={2}>
+Quedan las dos paredes que están enfrente de la cámara, al fondo de la imagen. Si miras desde delante a la izquierda, esas son la del fondo y la derecha. La izquierda quedaría entre la cámara y los muebles.
+</Quiz>
+
+<Quiz q="Con una puerta de 4 vóxels como referencia, ¿qué medidas tienen sentido para una mesa y el asiento de una silla?" options={["Mesa a 6 y asiento a 4", "Mesa a 4 y asiento a 3", "Mesa a 2 y asiento a 2"]} answer={1}>
+La mesa queda a la altura de la cintura de una persona de 4 y el asiento, un vóxel por debajo del tablero, como en el modelo del visor.
+</Quiz>
+
+<Quiz q="Tu suelo de damero en blanco y negro hace que los muebles no se vean. ¿Qué cambias?" options={["Pinto el suelo con dos tonos muy parecidos y guardo el contraste para los muebles", "Añado más muebles para tapar el suelo", "Subo la luz de la vela"]} answer={0}>
+Las superficies grandes son el fondo. Con poco contraste interno, dejan que los muebles y la luz sean lo que el ojo mira primero.
+</Quiz>
+</Block>

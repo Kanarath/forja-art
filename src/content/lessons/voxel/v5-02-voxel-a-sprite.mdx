@@ -1,0 +1,266 @@
+---
+id: v5-02
+discipline: voxel
+level: 5
+order: 2
+title: "Del voxel al sprite: animar con renders"
+summary: "Renderiza las etapas de un salto voxel con la misma cámara, luz y resolución, móntalas como frames en Aseprite, límpialas a mano y exporta un spritesheet."
+duration: 45
+status: borrador
+prerequisites: [v5-01, p6-03]
+fundamentals: []
+objectives:
+  - "Entender por qué muchos juegos 2D sacan sus sprites de modelos 3D o voxel"
+  - "Preparar una etapa por frame con el mismo tamaño de modelo en planta"
+  - "Renderizar todos los frames con la misma cámara, la misma luz y la misma resolución"
+  - "Reducir a escala entera, montar los PNG como frames en Aseprite y ajustar el timing"
+  - "Limpiar a mano contorno y antialiasing hasta que el render sea pixel art"
+tools: [magicavoxel, aseprite]
+piece:
+  name: "El salto (o el idle) de tu personaje voxel en 4 o más frames renderizados, montado en Aseprite y exportado como spritesheet"
+  canvas: "16x16x16"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [voxel-sprite]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Hoy juntas tus dos disciplinas. Vas a forjar **un sprite animado que sale de un modelo voxel**: el salto de tu criatura (o de tu chibi) en 4 o más frames, cada uno un render de MagicaVoxel, montados en Aseprite y exportados como **spritesheet**.
+
+Este es tu material de partida: el salto del slime en vóxels, en cuatro etapas.
+
+<VoxViewer model="slime-salto" stage={0} title="Salto del slime: Reposo, Anticipación, Estirado y Punto alto" />
+
+Pasa por las cuatro etapas. Son **los mismos tiempos** del salto que animaste a mano en [P6-03](/forja-art/pixel/p6-03/). Y este es el resultado que buscas, el sprite de aquella lección:
+
+<Animator sprites={["slime-rest", "slime-squash", "slime-stretch", "slime-apex", "slime-stretch", "slime-squash"]} durations={[300, 120, 80, 200, 80, 120]} />
+
+Cuatro modelos, cuatro renders, seis frames. El estirado y el aplastado se usan dos veces, igual que en pixel.
+</Block>
+
+<Block kind="concepto">
+### Por qué sacar sprites de un modelo
+
+Muchos juegos que ves como «2D» están hechos así: el artista modela (en 3D o en vóxels), renderiza y convierte los renders en sprites. Es un flujo clásico de los 90 y sigue vivo en juegos voxel e isométricos.
+
+- **Volumen y luz coherentes gratis.** El render calcula qué cara está a la luz en cada frame. No tienes que inventar el sombreado cada vez.
+- **Varias vistas del mismo modelo.** Giras la cámara 90° y tienes el personaje de lado con las mismas proporciones.
+- **Cambios baratos.** Si cambias el color de la paleta, vuelves a renderizar y tienes todos los frames nuevos.
+
+Pero hay una trampa: **un render no es pixel art**. Es una imagen calculada, con bordes suavizados y tonos intermedios. El último paso, la limpieza a mano, es el que lo convierte en sprite.
+
+### Una etapa por frame
+
+En pixel art redibujas cada frame. Aquí **modelas cada pose**: cada etapa del visor es un `.vox` distinto.
+
+- **Reposo:** la cúpula de 11×11 y 7 de alto de V5-01.
+- **Anticipación:** aplastada, 13 de ancho y 5 de alto. El volumen se conserva.
+- **Estirado:** 7 de ancho y 10 de alto, **separado 2 vóxels** del disco: ya ha despegado.
+- **Punto alto:** redonda otra vez, 9 de ancho y 8 de alto, **6 vóxels por encima** del disco.
+
+Es el mismo guion que el sprite: aplastar para coger impulso, estirar en el aire, redondear arriba.
+
+<VoxViewer model="slime-salto" stage={2} title="Estirado: mira la separación con el disco y cómo se juntan los ojos" />
+
+### El disco de 13×13: mismo tamaño en planta
+
+Fíjate en que las cuatro etapas están sobre **el mismo disco de piedra de 13×13**. No es decoración.
+
+Cada etapa tiene una forma distinta: el aplastado es más ancho, el estirado más alto. Si cada `.vox` midiera lo que mide su slime, los cuatro modelos tendrían tamaños distintos, y el centro de cada uno caería en otro sitio. Al renderizarlos, el slime **cambiaría de sitio** en la imagen aunque no tocaras la cámara.
+
+Con el disco común, los cuatro modelos ocupan lo mismo en planta y el slime siempre está sobre el mismo punto.
+
+<Why title="Por qué todo tiene que ser igual menos la pose">
+Un frame se compara con el anterior. El ojo detecta cualquier diferencia y la lee como **movimiento**. Si entre dos frames cambia la cámara, la luz o el encuadre, el ojo ve temblar al personaje, parpadear la luz o saltar el fondo. Lo único que puede cambiar entre frames es lo que quieres animar: la pose.
+</Why>
+
+### Las cuatro constantes
+
+Para que los renders funcionen como frames, fija esto **una vez** y no lo toques:
+
+1. **La misma cámara:** posición, ángulo, zoom y proyección. Mejor **ortográfica**: sin perspectiva, un vóxel mide lo mismo arriba que abajo.
+2. **La misma luz:** dirección, altura e intensidad del sol, y el cielo.
+3. **La misma resolución** de imagen.
+4. **El mismo fondo:** un color liso que no esté en tu personaje, para poder borrarlo luego.
+
+### Resolución: pequeña y entera
+
+Tu sprite final mide poco: el de P6-03 cabe en 16×20. Hay dos caminos:
+
+- **Renderizar pequeño:** pon directamente una resolución pequeña en el render.
+- **Renderizar grande y reducir a escala entera:** por ejemplo, renderizas a 4 veces el tamaño final y en Aseprite lo reduces exactamente al 25 %. Nunca a un 37 % ni «a ojo».
+
+<Why title="Por qué escala entera (otra vez)">
+Es la misma regla de siempre en pixel art, pero al revés. Si reduces a una escala no entera, unos vóxels acaban en 2 píxeles y otros en 3: las formas se deforman y aparecen píxeles irregulares. Y como cada frame tiene una pose distinta, el error cae en sitios distintos en cada frame: la animación **vibra**.
+</Why>
+
+### La limpieza: donde nace el pixel art
+
+Un render reducido tiene **antialiasing**: píxeles de tonos intermedios en los bordes, mezcla del slime y del fondo. A 1× se ve borroso y sucio. Compara el sprite limpio con su versión suavizada:
+
+<Sprite name="slime-rest" scale={8} view="smooth" caption="Así se ve un render reducido con suavizado: bordes borrosos y tonos que no están en tu paleta" />
+
+<Sprite name="slime-rest" scale={8} caption="Lo que buscas: cada píxel es un color de la paleta, contorno cerrado, brillo y ojos nítidos" />
+
+La limpieza es trabajo a mano en Aseprite:
+
+- **Quitar el fondo** y los píxeles de mezcla del borde.
+- **Cerrar el contorno** con un color oscuro de 1 px.
+- **Reducir los colores** a tu paleta: los tonos intermedios del render se sustituyen por el tono de la paleta más cercano.
+- **Retocar lo pequeño:** ojos y brillo, que a esta escala el render casi nunca resuelve bien.
+
+<Tip>
+El render te da la forma, el volumen y la luz. Tú pones la claridad. Hay estudios que dedican más horas a limpiar que a modelar.
+</Tip>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Prepara las etapas con el mismo tamaño">
+1. Descarga el `.vox` de las cuatro etapas desde el visor de arriba, o prepara las de tu criatura de V5-01.
+2. Si usas tu criatura: un `.vox` por pose (reposo, aplastado, estirado, punto alto) y **todos con el mismo tamaño de modelo**. Pon la misma base (un disco o una losa) en todos y deja aire arriba para el salto.
+3. Comprueba que la criatura apoya en el mismo sitio de la base en el reposo y en el aplastado.
+4. Guárdalos con nombres numerados: `salto_1.vox`, `salto_2.vox`, `salto_3.vox`, `salto_4.vox`.
+
+<Why>
+El tamaño del modelo decide dónde está su centro. Si es igual en los cuatro, la cámara mira siempre al mismo punto y el slime no se desplaza solo.
+</Why>
+</Step>
+
+<Step n={2} title="Fija cámara, luz y fondo con la primera etapa">
+1. Abre `salto_1.vox` y pulsa **Render** arriba.
+2. En los ajustes de cámara, elige la proyección **ortográfica** (o la isométrica, si tu juego lo es).
+3. Gira la vista con el **botón derecho** hasta la vista del juego: de frente o tres cuartos, un poco desde arriba. Encuadra con la rueda y el **botón central** dejando aire arriba para el punto alto.
+4. Pon el sol con dirección clara y lateral, como en V8-01. Fondo de color liso que no use tu personaje (un magenta, por ejemplo).
+5. Elige la **resolución** y **apúntala** junto con todos los ajustes de cámara y luz.
+
+<Tip>
+Comprueba el encuadre con la etapa más alta (el punto alto) antes de seguir. Si se corta por arriba, aleja ahora: después no podrás.
+</Tip>
+
+<Warn>
+Desde aquí, **no toques la cámara**. Ni un giro, ni un zoom. Si la mueves aunque sea un poco, el personaje temblará entre frames.
+</Warn>
+</Step>
+
+<Step n={3} title="Renderiza las cuatro etapas">
+1. Espera a que el render de `salto_1` se limpie y guarda la imagen: `salto_1.png`.
+2. Abre `salto_2.vox` **sin tocar la cámara ni la luz**. Comprueba que los ajustes siguen iguales que los apuntados.
+3. Render y guarda `salto_2.png`. Repite con la 3 y la 4.
+4. Pon los cuatro PNG en una carpeta y míralos seguidos en el visor de imágenes de tu sistema: el disco debe estar **en el mismo sitio** en los cuatro.
+
+<Why>
+Si el disco se mueve entre imágenes, algo ha cambiado: la cámara o el tamaño del modelo. Es tu prueba de que el encuadre es constante. Mejor descubrirlo aquí que en Aseprite.
+</Why>
+</Step>
+
+<Step n={4} title="Monta los PNG como frames en Aseprite">
+1. En Aseprite, abre `salto_1.png` con *File → Open*. Si los archivos están numerados, Aseprite puede preguntarte si quieres abrir **toda la secuencia como animación**: di que sí.
+2. Comprueba en la línea de tiempo (*Timeline*) que tienes **4 frames** en orden.
+3. Si renderizaste grande, reduce ahora el sprite entero a escala entera (por ejemplo al 25 %) con el método de **vecino más cercano**. Desde el menú *Sprite*, cambia el tamaño del sprite.
+4. Recorta el lienzo al tamaño final, el mismo para todos los frames (el lienzo es común en Aseprite, así que no se desalinean).
+
+<Warn>
+Reduce el sprite **una sola vez** y con todos los frames dentro. Si reduces cada imagen por separado y con porcentajes distintos, cada frame tendrá su propio error.
+</Warn>
+</Step>
+
+<Step n={5} title="Seis frames y su timing">
+1. Duplica frames hasta tener la secuencia del salto: **reposo, aplastado, estirado, punto alto, estirado, aplastado**. Son 6 frames hechos con 4 renders.
+2. Clic derecho sobre cada frame, *Frame Properties*, y pon las duraciones de P6-03: **300, 120, 80, 200, 80, 120** ms.
+3. Reproduce. Compara con el animador de la pieza.
+
+<Tip>
+Si no te convence, ajusta como en P6-03: el punto alto más largo flota más, la anticipación demasiado corta no se ve.
+</Tip>
+</Step>
+
+<Step n={6} title="Limpia a mano">
+Hazlo con *View → Grid* activado y mirando también a 1×.
+
+1. **Fondo:** borra el color liso del fondo en todos los frames con la goma (<Keys k="E" />) o seleccionándolo. Deja el disco si te sirve de suelo, o bórralo.
+2. **Bordes:** con el cuentagotas (<Keys k="I" />) y el lápiz (<Keys k="B" />) con *Pixel-perfect*, sustituye los píxeles de mezcla del borde por el color de dentro o bórralos.
+3. **Contorno:** cierra la silueta con un oscuro de 1 px, como el contorno de tu slime de P5-03.
+4. **Paleta:** reduce los tonos del interior a 3 o 4 por rampa. Lo que el render dejó en degradado se convierte en grupos limpios (clusters).
+5. **Detalle:** redibuja ojos y brillo si el render los dejó borrosos. Mismo tamaño y posición coherente en todos los frames.
+
+<Why>
+Limpia frame a frame pero con el onion skin activado. Así ves si el contorno o el ojo de un frame no casa con el anterior.
+</Why>
+</Step>
+
+<Step n={7} title="Etiqueta y exporta el spritesheet">
+1. Selecciona los 6 frames y crea una etiqueta (*tag*) `salto` desde el menú *Frame*.
+2. Guarda con <Keys k="Ctrl+S" /> como `slime-salto-render.aseprite`.
+3. *File → Export Sprite Sheet*: PNG a 1×, los frames en una fila. Exporta también el JSON con las duraciones, si tu versión lo ofrece.
+4. Para enseñarlo: *File → Export → Export As* en GIF con **Resize** al 400 % o más.
+</Step>
+
+<Warn title="Verifica en tu versión">
+En MagicaVoxel cambian entre versiones los nombres y la ubicación de los ajustes de cámara (proyección, zoom), de luz y de resolución del modo Render, y el botón de guardar la imagen. Comprueba también si los ajustes de cámara y de render se guardan con el `.vox` o se mantienen al abrir otro archivo: si no, apúntalos y vuelve a ponerlos idénticos. En Aseprite, comprueba cómo se abre una secuencia de imágenes como animación, la ruta del cambio de tamaño del sprite y su opción de vecino más cercano, el recorte del lienzo y las opciones de *Export Sprite Sheet*.
+</Warn>
+</Block>
+
+<Block kind="version">
+La pieza es tu personaje voxel animado en 4 o más frames renderizados con la misma cámara, montado en Aseprite y exportado como spritesheet. Elige un reto:
+
+- **Tu criatura, no el slime:** modela las cuatro poses de tu criatura de V5-01 sobre la misma base y repite el flujo.
+- **Idle en lugar de salto:** tu chibi respirando en 4 frames: el torso baja 1 vóxel, vuelve, y un parpadeo. Es el idle de P6-01, ahora desde el modelo.
+- **Dos vistas:** renderiza el mismo salto desde una segunda cámara (de lado) con la misma luz y la misma resolución. Tendrás dos filas de spritesheet coherentes.
+
+<Tip>
+Antes de limpiar, guarda una copia de los frames sin tocar. Comparar el render en bruto con tu versión limpia es la mejor forma de ver qué has aportado tú.
+</Tip>
+</Block>
+
+<Block kind="errores">
+<Mistake title="Mover la cámara entre frames" wrongLabel="Cámara retocada" rightLabel="Cámara fija">
+  <p slot="wrong">Renderizas la etapa 1, giras un poco para ver mejor la 3 y sigues. En la animación, el personaje tiembla y el disco baila.</p>
+  <p slot="right">Cámara fijada con la primera etapa, ajustes apuntados y sin tocar: el disco está en el mismo sitio en los cuatro PNG.</p>
+
+El ojo lee cualquier cambio entre frames como movimiento. **Corrección:** fija la cámara una vez y no la toques. Si se ha movido, vuelve a renderizar todas las etapas, no solo la afectada.
+</Mistake>
+
+<Warn title="Error típico: modelos de tamaño distinto">
+Cada pose en un `.vox` de su propio tamaño: el aplastado de 13 de ancho, el estirado de 7. Con la misma cámara, el encuadre cambia y el slime se desplaza de lado o hacia arriba sin motivo. **Corrección:** el mismo tamaño de modelo en planta para todas las etapas, con una base común, como el disco de 13×13 del visor.
+</Warn>
+
+<Warn title="Error típico: reducir a escala no entera">
+Reduces un render de 200 px a 32 px «porque es el tamaño del juego». Es un 16 %: unos vóxels quedan en 1 píxel y otros en 2, y el error cambia en cada frame. **Corrección:** renderiza a un múltiplo exacto del tamaño final (×2, ×4, ×8) y reduce a esa escala exacta con vecino más cercano.
+</Warn>
+
+<Mistake title="Esperar que el render ya sea pixel art" wrongLabel="Render reducido sin limpiar" rightLabel="Limpiado a mano">
+  <Sprite slot="wrong" name="slime-rest" scale={8} view="smooth" />
+  <Sprite slot="right" name="slime-rest" scale={8} />
+
+Un render reducido tiene bordes de mezcla, degradados sin rampa y ojos borrosos. A 1× parece una foto pequeña, no un sprite. **Corrección:** limpia a mano: fondo fuera, contorno de 1 px, colores reducidos a tu paleta y detalles redibujados.
+</Mistake>
+</Block>
+
+<Block kind="calidad">
+Reprodúcelo varias vueltas **a 1×**. Si algo tiembla, está mal alineado o la cámara se movió.
+
+<Checklist items={[
+  "Tengo al menos 4 etapas modeladas, una por pose, con el mismo tamaño de modelo en planta",
+  "Todas se renderizaron con la misma cámara, la misma luz, el mismo fondo y la misma resolución",
+  "La base (disco o losa) está en el mismo sitio en todos los PNG",
+  "La reducción, si la hice, fue a escala entera y con vecino más cercano",
+  "Los frames están montados en Aseprite con su timing (frames cortos en lo rápido y largos en lo lento)",
+  "He limpiado a mano: sin fondo, sin píxeles de mezcla en el borde, contorno cerrado y paleta reducida",
+  "El personaje no tiembla entre frames",
+  "He exportado el spritesheet a 1× con la etiqueta y las duraciones",
+]} />
+
+<Quiz q="¿Por qué las cuatro etapas del slime-salto comparten el disco de 13×13?" options={["Para que el slime tenga algo donde apoyarse en el render", "Para que los cuatro modelos midan lo mismo en planta y el encuadre no cambie", "Para que el render tarde menos"]} answer={1}>
+Si cada modelo midiera lo que su pose, el centro cambiaría y el slime se desplazaría en la imagen aunque la cámara estuviera quieta.
+</Quiz>
+
+<Quiz q="Renderizas a 128 px y tu sprite debe medir 32. ¿Cómo lo reduces?" options={["Al 25 % con vecino más cercano", "Al tamaño que se vea mejor, con suavizado", "Cada frame por separado y a ojo"]} answer={0}>
+128 entre 32 es 4: escala entera. Con vecino más cercano cada bloque de 4×4 se convierte en un píxel y no aparecen tonos inventados.
+</Quiz>
+
+<Quiz q="Tu render reducido ya se ve bien a 4×. ¿Está terminado?" options={["Sí: el render ya es pixel art", "No: falta la limpieza a mano de bordes, contorno y paleta", "Solo falta subir la resolución"]} answer={1}>
+El render da forma, volumen y luz. El antialiasing, los tonos intermedios y los detalles borrosos se limpian a mano: eso es lo que lo convierte en pixel art.
+</Quiz>
+</Block>

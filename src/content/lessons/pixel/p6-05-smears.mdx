@@ -1,0 +1,277 @@
+---
+id: p6-05
+discipline: pixel
+level: 6
+order: 5
+title: "Smears: el tajo de la espada"
+summary: "A pocos frames, un golpe rápido salta de sitio y el ojo lo pierde. El smear dibuja el recorrido en un solo frame: un arco grueso, breve y con el borde exterior más claro."
+duration: 40
+status: borrador
+objectives:
+  - "Entender por qué un movimiento rápido se pierde a pocos frames y cómo lo resuelve el smear"
+  - "Ordenar un ataque: anticipación, smear muy corto, estela y recuperación"
+  - "Dibujar un smear como un arco limpio: borde exterior claro, grueso en el centro y afilado en las puntas"
+  - "Animar el tajo en su propia capa de Aseprite, encima del personaje, y encadenar un impacto"
+prerequisites: [p6-04, p6-03]
+fundamentals: [f02]
+tools: [aseprite]
+piece:
+  name: "Un tajo propio de 3–4 frames en capa aparte, sobre tu héroe o sobre un fondo, con su timing"
+  canvas: "32x32"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [tajo]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Vas a forjar **un tajo de espada**: el arco blanco y azul que cruza la pantalla cuando el héroe ataca. Dura menos de 200 ms y, sin él, el golpe no se ve.
+
+Dale a *Reproducir*. Son 3 frames: arranque, smear y estela.
+
+<Animator sprites={["slash-1", "slash-2", "slash-3"]} durations={[40, 60, 90]} />
+
+El laboratorio lo repite en bucle para que lo estudies. En un juego se reproduce **una vez**, encima del personaje, y luego la capa queda vacía.
+
+<Sprite name="slash-2" scale={10} caption="slash-2 · El smear: un solo frame de 24×24 que dibuja todo el recorrido de la espada, desde arriba, por la derecha, hasta abajo a la izquierda" />
+</Block>
+
+<Block kind="concepto">
+### El problema: el ojo pierde lo rápido
+
+Un tajo real dura una fracción de segundo. Un juego de pixel art lo anima con **pocos frames**, a veces 3 o 4. Si dibujas solo la espada en cada posición, entre un frame y el siguiente salta media vuelta: arriba, y de pronto abajo. El ojo no ve un movimiento, ve **dos posiciones** sin nada entre ellas.
+
+El **smear** (manchado, arrastre) lo resuelve: en un solo frame dibuja **el recorrido entero**, como una mancha que deja la espada al pasar. El ojo ya no tiene que inventar el camino: lo tiene delante.
+
+<Why title="Por qué funciona">
+Es lo mismo que la estela borrosa de una foto con el obturador lento. El cerebro está acostumbrado a que lo que se mueve muy deprisa se vea **alargado** en la dirección del movimiento. Un smear de 60 ms no se ve como una forma: se siente como **velocidad**. Es el squash & stretch de P6-03 llevado al extremo: el stretch de algo que va tan rápido que se convierte en su trayectoria.
+</Why>
+
+### Los arcos
+
+Las cosas que se mueven de forma natural siguen **curvas**, no rectas. Un brazo gira en el hombro, la muñeca en el codo y la espada describe un **arco** alrededor del cuerpo. Por eso el smear es un arco: es el camino que de verdad recorre la hoja.
+
+### Los tres frames, uno a uno
+
+<Sprite name="slash-1" scale={10} caption="slash-1 · Arranque: 16 píxeles, un trozo corto de arco arriba a la derecha. Blanco por fuera y azul claro por dentro: la espada acaba de empezar a moverse" />
+
+<Sprite name="slash-2" scale={10} caption="slash-2 · Smear: 134 píxeles. El arco completo: blanco en el borde exterior, azul claro en medio y, por dentro, azul oscuro en el tramo de arriba (la cola) y azul medio en el resto" />
+
+<Sprite name="slash-3" scale={10} caption="slash-3 · Estela: 19 píxeles. Solo queda el final del recorrido, abajo a la izquierda, fino y en dos azules oscuros. Ya no hay blanco" />
+
+Fíjate en tres cosas del smear (`slash-2`):
+
+**1. El borde exterior es el más claro.** Toda la curva de fuera es blanca. La punta de la espada es la parte que más recorre en el mismo tiempo: es la que **va primero** y la más rápida. Por eso lleva el valor más alto, y el ojo la sigue.
+
+**2. El grosor crece hacia el centro y afila en las puntas.** Arriba empieza con un solo píxel blanco. En el centro del recorrido (el lado derecho y la parte de abajo) llega a 6–7 píxeles de grosor. Abajo a la izquierda vuelve a afilarse hasta una diagonal de 1 píxel. Es una **media luna**, no una banda de grosor fijo.
+
+**3. Se oscurece hacia la cola.** El tramo de arriba, por donde la espada ya pasó, tiene el borde interior en el azul más oscuro. La parte nueva, la que está más cerca de la espada, es más clara.
+
+<Why title="Silueta y valor (f02)">
+Un smear se ve 60 ms: no hay tiempo para leer detalle. Solo se lee la **silueta** (una media luna con dirección) y el **valor** (el borde blanco). Míralo en negro: la forma sola ya dice «tajo de arriba abajo».
+</Why>
+
+<Sprite name="slash-2" scale={6} view="silhouette" caption="slash-2 en silueta: una media luna gruesa en el centro y fina en las puntas. Se lee sin color" />
+
+### El ataque completo
+
+El smear es solo una parte del golpe. Un ataque entero tiene cuatro momentos:
+
+| Momento | Qué se ve | Duración orientativa |
+| --- | --- | --- |
+| Anticipación | El personaje echa el arma atrás (P6-03) | larga: 150–250 ms |
+| Smear | El arco completo, en un frame (con o sin arranque) | muy corta: 40–60 ms |
+| Estela | Lo que queda del arco, fino y oscuro | corta: 80–120 ms |
+| Recuperación | El personaje vuelve a su pose | larga: 150–300 ms |
+
+Es el mismo patrón que el impacto de P6-04: **rápido en el golpe, despacio en lo que deja detrás**. La anticipación avisa, el smear es casi invisible y la recuperación deja que el ojo entienda lo que pasó.
+
+<Tip title="Encadena el impacto">
+Si el tajo golpea a algo, el impacto de [P6-04](/forja-art/pixel/p6-04/) arranca justo cuando el smear toca al enemigo, normalmente en el frame del smear o en el de la estela. El tajo dice «golpe»; el impacto dice «ha dado».
+</Tip>
+
+### El mismo tajo, demasiado lento
+
+Estos son los mismos 3 dibujos, con 200, 400 y 300 ms:
+
+<Animator sprites={["slash-1", "slash-2", "slash-3"]} durations={[200, 400, 300]} />
+
+Ahora el smear se queda quieto el tiempo suficiente para que lo **mires**, y ya no parece movimiento: parece un **objeto**, una luna azul que aparece y desaparece. El smear solo funciona si casi no se ve.
+
+<Tip title="Experimenta en el primer animador">
+1. Sube el smear (frame 2) a 150 ms. Empieza a verse como una forma.
+2. Baja la estela (frame 3) a 40 ms. El golpe se corta seco y pierde el rastro.
+3. Baja el arranque (frame 1) y el smear a 40 ms los dos. Es el tajo más rápido que permite el animador.
+</Tip>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Lienzo y capas">
+1. <Keys k="Ctrl+N" />: **32×32**, fondo transparente. Activa *View → Grid*.
+2. Guarda con <Keys k="Ctrl+S" /> como `tajo.aseprite`.
+3. Desde el menú *Layer*, crea capas hasta tener **cuatro**. Renómbralas con doble clic sobre su nombre en la línea de tiempo. De abajo arriba:
+   - `fondo`: rellénala con el cubo (<Keys k="G" />) de un color medio, por ejemplo un verde hierba;
+   - `personaje`: pega tu héroe de 16×24 (P5-01) en el centro-izquierda, apoyado abajo;
+   - `guia`: aquí trazarás el recorrido, y no se exportará;
+   - `smear`: aquí va el tajo. Siempre **arriba del todo**.
+
+<Why>
+El smear en su propia capa se puede mover, reutilizar o borrar sin tocar al personaje. Y así llega al juego: un sprite aparte que se dibuja **encima** de quien ataca. Si pintas el arco sobre el héroe en la misma capa, ya no podrás separarlos.
+</Why>
+
+<Tip>
+Crea las capas **antes** de añadir frames: cada frame nuevo copia lo que hay en el actual, así que el fondo y el héroe aparecerán en todos.
+</Tip>
+</Step>
+
+<Step n={2} title="Cinco frames con su timing">
+Añade frames desde el menú *Frame* hasta tener **5**. Clic derecho sobre el número de cada frame, *Frame Properties*, y pon:
+
+- Frame 1 · anticipación: **200 ms**.
+- Frame 2 · arranque: **40 ms**.
+- Frame 3 · smear: **60 ms**.
+- Frame 4 · estela: **90 ms**.
+- Frame 5 · recuperación: **200 ms**.
+
+Si no quieres animar al héroe entero, basta con un detalle: en el frame 1, muévelo **1 píxel hacia atrás** (lejos de donde va a golpear) y en los frames 2–4, 1 píxel hacia delante. En el 5 vuelve a su sitio.
+
+<Why>
+El timing va **antes** del dibujo. En un tajo, el timing es casi todo el efecto: si cada vez que reproduces lo ves a su velocidad real, sabrás enseguida si el arco pesa o sobra.
+</Why>
+</Step>
+
+<Step n={3} title="La guía: un arco limpio">
+Ve al frame 3 y selecciona la capa `guia`. Con el lápiz (<Keys k="B" />) y *Pixel-perfect* activado, dibuja con un color cualquiera **una línea de 1 píxel** con el recorrido de la espada: un arco alrededor del héroe, por ejemplo de arriba a la derecha hasta abajo a la izquierda, delante de él.
+
+Revisa los tramos como en [P2-01](/forja-art/pixel/p2-01/): en una curva, los tramos crecen o decrecen **con orden** (1, 1, 2, 3… y vuelta a bajar). Ni escalones sueltos ni tramos rectos largos donde debería curvar.
+
+<Why>
+La guía es el **arco** del movimiento. Si la curva tiene jaggies, el smear entero los heredará, y a 60 ms un bulto se lee como un tirón de la espada. Corregir una línea de 1 píxel cuesta segundos; corregir una media luna de 130, mucho más.
+</Why>
+</Step>
+
+<Step n={4} title="Frame 3: el smear">
+Sigue en el frame 3 y cambia a la capa `smear`. Usa 3–4 colores fríos de valor muy distinto: un blanco, un azul claro, un azul medio y un azul oscuro.
+
+1. Repasa la guía en **blanco**: ese es el borde exterior.
+2. Engorda el arco **hacia dentro** (hacia el héroe) con el azul claro. Que el grosor crezca hacia el centro del recorrido, hasta 5–7 píxeles, y se afile en las dos puntas hasta 1 píxel.
+3. En el borde interior, pon el azul oscuro en el tramo de la **cola** (donde empezó el movimiento) y el azul medio en el resto.
+4. Oculta la capa `guia` con el icono del ojo y mira el resultado.
+
+<Why>
+El blanco va fuera porque por ahí pasa la punta de la espada: la parte que más recorre y la que **va primero**. El oscuro va en la cola porque es lo más viejo del movimiento: ya se está apagando.
+</Why>
+
+<Tip>
+Usa el cuentagotas (<Keys k="I" />) para coger siempre el mismo azul. Y no metas dithering ni píxeles sueltos: a 60 ms solo se ve ruido.
+</Tip>
+</Step>
+
+<Step n={5} title="Frames 2 y 4: arranque y estela">
+Activa el onion skin (el botón está en la línea de tiempo) para ver el smear del frame 3 en transparencia.
+
+1. **Frame 2 · arranque:** en la capa `smear`, dibuja solo el **principio** del arco, un trozo corto en la cola, con blanco fuera y azul claro dentro. Unos 15–20 píxeles.
+2. **Frame 4 · estela:** dibuja solo el **final** del recorrido, fino (1–2 píxeles) y con los dos azules oscuros. Sin blanco.
+3. **Frames 1 y 5:** la capa `smear` vacía. Si quedó algo, bórralo con la goma (<Keys k="E" />).
+
+<Why>
+El onion skin te asegura que arranque y estela caen **sobre el mismo arco** que el smear. Si se salen de su curva, el ojo ve tres formas distintas en vez de un solo tajo que aparece, pasa y se apaga.
+</Why>
+</Step>
+
+<Step n={6} title="Prueba y encadena el impacto">
+Reproduce (botón de *play* de la línea de tiempo) y deja correr varias vueltas a tamaño real.
+
+- ¿Se nota la anticipación antes del tajo?
+- ¿El smear se **siente** más que se ve?
+- ¿La estela deja un rastro antes de la recuperación?
+
+Si tienes tu impacto de P6-04, crea una capa `vfx` encima de `smear` y pega sus frames en el punto donde el arco toca al enemigo, empezando en el frame 3 o el 4. Tendrás que añadir frames al final para que el humo termine.
+
+<Warn>
+Si el smear sigue pareciendo una forma, **acórtalo** antes de redibujarlo. Casi siempre el problema es el tiempo, no el dibujo.
+</Warn>
+</Step>
+
+<Step n={7} title="Exporta solo el tajo">
+1. Para enseñarlo: deja visibles `fondo`, `personaje` y `smear`, y exporta con *File → Export → Export As*, formato **GIF**, **Resize** al 400 % o más.
+2. Para un juego: oculta todo menos `smear` y usa *File → Export → Export Sprite Sheet*, en una fila, PNG a 1× y fondo transparente. Apunta las duraciones o exporta también el JSON.
+</Step>
+
+<Warn title="Verifica en tu versión">
+Los nombres y la posición pueden variar según la versión de Aseprite: el menú *Layer*, el doble clic para renombrar, el icono del ojo, la opción de frame nuevo del menú *Frame*, *Frame Properties* (clic derecho sobre el frame), el botón de onion skin y las opciones de *Export Sprite Sheet* (qué capas exporta, salida JSON). Comprueba también que la exportación deja fuera las capas ocultas, sobre todo la `guia`.
+</Warn>
+</Block>
+
+<Block kind="version">
+Ahora a tu manera. Mantén el arco limpio, el borde exterior claro, el grosor de media luna, la capa aparte y el smear muy corto. Elige uno:
+
+- **Otro arma:** un hachazo vertical de arriba abajo, más grueso y en colores cálidos (blanco, amarillo, naranja), o una estocada recta hacia delante: ahí el smear es una cuña alargada, no un arco.
+- **Combo de dos tajos:** un tajo de arriba abajo y otro de vuelta, de abajo arriba, con una pausa corta entre ellos. El segundo puede ser más grande: es el remate.
+- **Otro elemento:** un tajo mágico en violetas que deja una estela más larga con dos o tres chispas, o un tajo de hielo con la estela en cristales pequeños.
+
+<Tip>
+Sea cual sea tu variante, el smear sigue durando 40–60 ms. Lo que cambias es el color, la forma y la estela, no la duración del frame clave.
+</Tip>
+</Block>
+
+<Block kind="errores">
+<Mistake title="Una línea fina sin peso" wrongLabel="slash-thin: 35 píxeles, 1 px de grosor" rightLabel="slash-2: 134 píxeles, media luna">
+  <Sprite slot="wrong" name="slash-thin" scale={8} />
+  <Sprite slot="right" name="slash-2" scale={8} />
+
+Los dos siguen el mismo recorrido. Pero la línea de 1 píxel (izquierda) tiene un solo color y el mismo grosor en todo el arco: a 60 ms casi desaparece y no se siente el golpe. Parece un dibujo de la trayectoria, no un arrastre. Corrígelo engordando el arco hacia dentro, más grueso en el centro y afilado en las puntas, con el borde exterior en blanco (derecha).
+</Mistake>
+
+<Mistake title="Un smear que dura demasiado" wrongLabel="200 + 400 + 300 ms" rightLabel="40 + 60 + 90 ms">
+  <p slot="wrong">El smear se queda casi medio segundo: el ojo lo mira, lo reconoce como una forma y el tajo se convierte en un objeto, una luna azul que aparece y se va.</p>
+  <p slot="right">El smear dura 60 ms: casi no se ve, se siente. La anticipación y la recuperación del personaje son las que duran.</p>
+
+Compara los dos animadores del concepto: son los mismos 3 dibujos. Corrígelo acortando el smear hasta que deje de verse como una forma. Si el ataque se siente rápido de más, alarga la anticipación o la recuperación, nunca el smear.
+</Mistake>
+
+<Mistake title="Un arco con jaggies" wrongLabel="Tramos desordenados" rightLabel="Tramos con orden">
+  <Sprite slot="wrong" name="circle-bumpy" scale={8} />
+  <Sprite slot="right" name="circle-clean" scale={8} />
+
+Un círculo con tramos desordenados (izquierda) se lee abollado. Un smear con el borde así se lee igual: la espada parece dar tirones en vez de girar. Corrígelo como en [P2-01](/forja-art/pixel/p2-01/): revisa la guía de 1 píxel y haz que los tramos crezcan y decrezcan con orden (derecha) antes de engordar el arco.
+</Mistake>
+
+<Warn title="Un arco recto">
+Si el smear es una banda recta o casi recta, la espada parece deslizarse sobre un raíl. Ningún brazo se mueve así: gira desde el hombro. Corrígelo curvando la guía alrededor del personaje. Solo una estocada hacia delante puede ser recta.
+</Warn>
+
+<Warn title="El smear en la capa del personaje">
+Si pintas el arco en la capa del héroe, no podrás quitarlo, moverlo ni reutilizarlo con otra arma, y al exportar el personaje saldrá con el tajo pegado. Corrígelo moviéndolo a una capa `smear` encima de todo.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+Juzga tu tajo **a 1×** y a su velocidad real. Si tienes que parar la animación para ver el arco, no pasa nada: el smear tiene que **sentirse**, no verse.
+
+<Checklist items={[
+  "El tajo tiene 3–4 frames en una capa propia, encima del personaje",
+  "Hay una anticipación antes y una recuperación después, más largas que el smear",
+  "El smear dura 60 ms o menos y la estela un poco más",
+  "El smear sigue un arco curvo, no una recta",
+  "La curva tiene tramos ordenados, sin jaggies",
+  "El borde exterior es el más claro",
+  "El arco es más grueso en el centro y se afila en las dos puntas",
+  "El arranque y la estela caen sobre el mismo arco que el smear",
+  "En silueta, el smear se lee como una media luna con dirección",
+  "He exportado solo la capa del tajo, con fondo transparente, y he apuntado las duraciones",
+]} />
+
+<Quiz q="¿Para qué sirve un smear?" options={["Para dibujar en un solo frame el recorrido de un movimiento rápido que, si no, el ojo perdería", "Para que la espada tenga más detalle", "Para alargar la duración del ataque"]} answer={0}>
+A pocos frames, la espada salta de una posición a otra. El smear rellena el hueco con el camino entero, y el ojo lo lee como velocidad.
+</Quiz>
+
+<Quiz q="¿Qué parte del smear debe ser la más clara?" options={["El borde interior, junto al personaje", "La cola, donde empezó el movimiento", "El borde exterior, por donde pasa la punta"]} answer={2}>
+La punta de la espada es la que más recorre y la que va primero. El valor más alto marca el borde que lidera el movimiento.
+</Quiz>
+
+<Quiz q="Tu smear parece una luna azul que flota. ¿Qué cambias primero?" options={["Le añado más colores", "Acorto su duración", "Lo hago más fino"]} answer={1}>
+Un smear que se ve demasiado tiempo se convierte en un objeto. Bájalo a 40–60 ms antes de tocar el dibujo.
+</Quiz>
+</Block>

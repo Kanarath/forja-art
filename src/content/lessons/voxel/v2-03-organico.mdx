@@ -1,0 +1,206 @@
+---
+id: v2-03
+discipline: voxel
+level: 2
+order: 3
+title: "Formas orgánicas: un árbol que no es una piruleta"
+summary: "Lo orgánico en vóxels es romper la simetría con pasos de 1: un tronco que se curva, ramas en diagonal y una copa en grupos de tamaños distintos. Adiós al árbol piruleta."
+duration: 45
+status: borrador
+prerequisites: [v2-02]
+fundamentals: [f02]
+objectives:
+  - "Romper la simetría y la rectitud con desplazamientos de 1 vóxel, nunca con saltos"
+  - "Curvar y adelgazar un tronco capa a capa, con raíces que ensanchan la base"
+  - "Colocar ramas en diagonal a alturas y lados distintos"
+  - "Construir la copa con masas agrupadas de tamaños distintos en vez de una bola"
+  - "Pintar por grupos: verde claro arriba y oscuro abajo, sin ruido"
+tools: [magicavoxel]
+piece:
+  name: "Árbol (o roca, o raíz) orgánico propio en tres versiones"
+  canvas: "16x16x16"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [organico]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Hoy forjas **un árbol orgánico**: un tronco que se curva, dos o tres ramas y una copa hecha de grupos. Si prefieres, una roca o una raíz con las mismas reglas. Lo guardarás en **tres versiones**: tronco, ramas y copa.
+
+<VoxViewer model="arbol-organico" stage={2} title="Tu pieza: tronco curvo, ramas y copa en grupos" />
+
+Gíralo con el botón derecho. Mira desde cualquier lado: **no hay dos vistas iguales**. Pulsa las etapas 1 y 2 para ver cómo se construyó.
+</Block>
+
+<Block kind="concepto">
+En V1 hiciste este árbol. Funciona, pero es una **piruleta**: un palo recto y una bola encima.
+
+<VoxViewer model="arbol" stage={1} title="El árbol de V1 a 16³: un palo y una bola" />
+
+Gíralo: desde delante, desde un lado y desde detrás se ve **exactamente igual**. El tronco es un 2×2 recto. La copa es una esfera centrada. Nada en la naturaleza crece así.
+
+**Lo orgánico es romper la simetría y la rectitud.** Pero con una condición: **pasos de 1 vóxel**. Nunca saltos.
+
+<VoxViewer model="arbol-organico" stage={0} title="Tronco curvo: se desplaza, nunca salta" />
+
+Mueve el deslizador **Capas** y sube el tronco capa a capa. Fíjate en tres cosas:
+
+- **Se desplaza.** Sube recto, se va hacia un lado hasta 2 vóxels y vuelve. Entre una capa y la siguiente, como mucho **1 vóxel**.
+- **Adelgaza.** 2×2 en las cuatro capas de abajo, 1×1 arriba. Pesa abajo, se aligera arriba.
+- **Echa raíces.** La capa del suelo es un 4×4 oscuro: la base se ensancha y el árbol se agarra al suelo.
+
+<Why>
+El ojo lee una curva cuando el cambio es **gradual**. Es lo mismo que en el escalonado de V2-02: tramos que cambian con orden. Un desplazamiento de 1 por capa se lee como una curva; uno de 3 se lee como un tronco roto. Y además, en vóxels, si la capa de arriba no toca a la de abajo, **literalmente se separa**.
+</Why>
+
+**Ramas: diagonales y desiguales.** En la etapa Ramas hay tres, y ninguna se parece a otra:
+
+- salen a **alturas distintas** (capas 6, 7 y 9);
+- van hacia **lados distintos** (tres direcciones, ninguna opuesta exacta a otra);
+- suben **en diagonal**: cada vóxel de la rama está una capa más arriba que el anterior.
+
+**Copa: grupos, no una bola.** La copa son **cuatro masas** de hojas, una al final de cada rama y otra en la punta del tronco. Cada una tiene un tamaño distinto. Es la regla de las masas de F02: **grande, mediana, pequeña**. Tres tamaños dan ritmo; uno solo, monotonía.
+
+<Why>
+Una esfera es la forma más simétrica que existe. Por eso parece fabricada. Varias masas de tamaños distintos, solapadas, crean una silueta con entrantes y salientes: eso es lo que el ojo reconoce como «planta».
+</Why>
+
+**Color por grupos.** Cada masa usa los mismos tres verdes: **claro arriba, medio en el centro, oscuro abajo**. Es la rampa de valor de [V3-01](/forja-art/voxel/v3-01/) en pequeño, aplicada a cada grupo. El tronco hace lo mismo con la madera: una banda oscura cada tres capas.
+
+<Tip>
+En el árbol de V1 a 16³ hay vóxels oscuros salpicados por la copa siguiendo un patrón. Compáralo con la copa en grupos: allí el oscuro va **abajo de cada masa**, todo junto. Así dice «sombra»; salpicado solo dice «textura».
+</Tip>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Prepara el modelo y apaga el espejo">
+1. Crea un modelo nuevo en MagicaVoxel.
+2. En los campos de **tamaño**, escribe 16, 16 y 16.
+3. Comprueba que los botones **Mirror** X / Y / Z (en la barra de pinceles) están **desactivados**.
+
+<Why>
+En V1-02 el espejo era tu aliado. Aquí es tu enemigo: lo orgánico es justo lo que el espejo no puede hacer. Si se queda activado, cada rama tendrá una gemela y volverás a la piruleta.
+</Why>
+</Step>
+
+<Step n={2} title="Raíces y tronco grueso">
+1. Elige en la **paleta** de la izquierda un marrón oscuro.
+2. En modo **Attach**, con el pincel **Box**, dibuja en la capa del suelo un 4×4 cerca del centro: las raíces.
+3. Cambia a un marrón medio. Encima, con el pincel **Voxel**, levanta un tronco de 2×2 durante 3 o 4 capas.
+4. En la segunda o tercera capa, **desplaza** el 2×2 un vóxel hacia un lado.
+
+<Tip>
+Si quieres raíces más vivas, quita con **Erase** una o dos esquinas del 4×4. Una base irregular se lee más natural que un cuadrado perfecto.
+</Tip>
+</Step>
+
+<Step n={3} title="Curva y adelgaza">
+1. A partir de la capa 5, sigue con un tronco de **1×1**.
+2. Cada capa, decide: ¿sigue recto o se desplaza **1 vóxel**? Desplázalo hacia un lado unas capas y luego vuelve hacia el otro. Cuando lo desplaces, deja también un vóxel en la posición anterior (un **escalón**): así la capa nueva toca a la de abajo por una cara.
+3. Para hasta unas 12 capas de alto.
+4. Gira la cámara con el botón derecho y comprueba que cada vóxel **toca** al de abajo por una cara, no solo por una arista.
+
+Compara con el visor del tronco del bloque «El concepto»: se desplaza 0, 0, 1, 1, 2, 2, 2, 1, 1, 1, 0, 0 hacia un lado.
+
+<Warn>
+Nunca desplaces 2 o 3 de golpe: se ve roto. Y aunque desplaces solo 1, sin el escalón los dos vóxels se tocan solo por una arista: de cerca, el tronco parece partido.
+</Warn>
+</Step>
+
+<Step n={4} title="Ramas en diagonal">
+1. Elige una capa a media altura (por ejemplo la 6) y pon un vóxel pegado al tronco.
+2. Sube la rama en diagonal: un vóxel hacia fuera y después uno encima, y repite. Cada vóxel toca al anterior por una cara.
+3. Hazla de 4 o 5 vóxels.
+4. Repite con una segunda rama **más arriba** y hacia **otro lado**. Si quieres, una tercera, más corta.
+
+<VoxViewer model="arbol-organico" stage={1} title="Ramas: tres alturas, tres direcciones" />
+
+Mueve **Capas** en el visor y mira dónde nace cada rama.
+
+<Tip>
+Una rama en diagonal pura (cada vóxel uno arriba y uno fuera a la vez) une sus vóxels solo por las aristas: de lejos se lee, de cerca parece una cadena de cubos sueltos. Por eso las del visor se construyen de lado y luego arriba, con un vóxel en cada codo.
+</Tip>
+</Step>
+
+<Step n={5} title="Copa en grupos">
+1. Elige el verde medio.
+2. Al final de cada rama y en la punta del tronco, construye una **masa** de hojas redondeada: capas que crecen y luego se estrechan con orden, como el sombrero de la seta de V1-02, pero completa.
+3. Hazlas de **tamaños distintos**: una grande, una mediana, una o dos pequeñas.
+4. Deja que se **solapen** un poco, pero que cada una se distinga.
+
+<Why>
+Antes de pintar, mira la copa en un solo color y desde lejos (rueda del ratón para alejar). Si ves una bola, haz más pequeña alguna masa o sepáralas. Si ves bultos con ritmo, sigue.
+</Why>
+</Step>
+
+<Step n={6} title="Pinta por grupos y guarda tres versiones">
+1. Cambia al modo **Paint**.
+2. En cada masa, pinta la parte de **arriba** con el verde claro y la de **abajo** con el verde oscuro.
+3. En el tronco, pinta una banda oscura cada pocas capas si quieres marcar la corteza.
+4. Pulsa **Render** arriba y exporta una imagen para tu portfolio.
+
+<Tip>
+Las tres versiones se guardan sobre la marcha: al terminar cada fase, guarda el `.vox` con un nombre nuevo (por ejemplo `arbol_1.vox` con el tronco, `arbol_2.vox` con las ramas y `arbol_3.vox` con la copa pintada). Así no tienes que deshacer nada.
+</Tip>
+</Step>
+
+<Warn title="Verifica en tu versión">
+Los nombres y la posición de los botones (**Mirror**, **Attach** / **Erase** / **Paint**, los pinceles **Box** y **Voxel** y los campos de tamaño) pueden variar entre versiones de MagicaVoxel. Si tu versión trae generadores de formas o pinceles de esfera, puedes usarlos para las masas de la copa, pero revisa después que no queden todas iguales.
+</Warn>
+</Block>
+
+<Block kind="version">
+Aplica las mismas reglas **a tu manera**. Elige un reto:
+
+- **Árbol doblado por el viento:** el tronco se desplaza siempre hacia el mismo lado y las masas se cargan hacia ese lado.
+- **Roca orgánica:** tres bloques redondeados de tamaños distintos, solapados, con el claro arriba y el oscuro abajo. Sin tronco, las mismas masas.
+- **Raíz retorcida:** un tronco corto y grueso del que salen 3 o 4 raíces por el suelo, cada una en diagonal y de largo distinto.
+
+Antes de pintar, gira la pieza en un solo color. Si desde dos lados distintos se ve igual, rompe la simetría con un desplazamiento más.
+</Block>
+
+<Block kind="errores">
+<Warn title="Error típico: simetría perfecta con Mirror activado">
+Si dejas **Mirror** encendido desde la seta de V1-02, cada rama aparece duplicada al otro lado y la copa sale idéntica en las dos mitades. Se lee como un objeto fabricado, como el árbol de V1. Apaga el espejo **antes** del primer vóxel. Si ya lo tienes duplicado, borra con **Erase** una de las gemelas y rehazla a otra altura.
+</Warn>
+
+<Warn title="Error típico: una sola bola de hojas">
+Una esfera centrada sobre el tronco es la piruleta del bloque «El concepto». Aunque el tronco sea curvo, la copa sigue diciendo «juguete». Divide la bola en 3 o 4 masas de tamaños distintos, apoyadas en las puntas de las ramas. Compara el visor del árbol de V1 con el visor del bloque «La pieza».
+</Warn>
+
+<Mistake title="Un tronco que salta" wrongLabel="Saltos irregulares" rightLabel="Un paso cada vez">
+  <Sprite slot="wrong" name="line-jaggy" scale={8} caption="Tramos 1, 3, 1, 2, 4…: el ojo ve escalones sueltos." />
+  <Sprite slot="right" name="line-1-1" scale={8} caption="Un paso cada vez: se lee como una línea continua." />
+
+Visto de frente, un tronco es una línea, y pasa lo mismo que en el pixel art: los saltos grandes rompen el trazo. En vóxels es peor: si de una capa a otra desplazas 2 o 3, los cubos dejan de tocarse y el tronco se parte de verdad. Corrígelo con **Erase** y **Attach**: reparte el desplazamiento en varias capas, 1 vóxel por capa como mucho.
+</Mistake>
+
+<Mistake title="Ruido de colores al azar" wrongLabel="Tonos salpicados" rightLabel="Tonos por grupos">
+  <Sprite slot="wrong" name="rock-noisy" scale={8} caption="Tonos alternados sin orden: se pierde el volumen." />
+  <Sprite slot="right" name="rock-clean" scale={8} caption="Tonos en grupos: se leen la luz y la forma." />
+
+Salpicar tres verdes al azar parece «natural», pero el ojo solo ve ruido y la copa se aplana. Es el mismo error que en esta roca de pixel art. Con **Paint**, agrupa: claro en la parte de arriba de cada masa, oscuro en la de abajo, medio en medio. Como en la rampa de [V3-01](/forja-art/voxel/v3-01/).
+</Mistake>
+</Block>
+
+<Block kind="calidad">
+<Checklist items={[
+  "He modelado con Mirror desactivado y ninguna rama tiene gemela",
+  "El tronco se curva y cada capa se desplaza como mucho 1 vóxel",
+  "El tronco es más grueso abajo, con raíces que ensanchan la base",
+  "Tengo 2 o 3 ramas en diagonal, a alturas y hacia lados distintos",
+  "La copa son varias masas de tamaños distintos, no una bola",
+  "Cada masa va pintada clara arriba y oscura abajo, sin ruido",
+  "He guardado tres .vox (tronco, ramas, copa) y un render en mi portfolio",
+]} />
+
+<Quiz q="Quieres que el tronco se curve hacia la derecha. ¿Qué haces?" options={["Lo desplazo 3 vóxels en una sola capa", "Lo desplazo 1 vóxel cada una o dos capas", "Activo Mirror X para que quede equilibrado"]} answer={1}>
+Una curva es un cambio gradual. Con 1 vóxel por capa como mucho, los cubos siguen unidos (con un escalón, por una cara) y el ojo lee una curva; con 3 de golpe, un tronco roto.
+</Quiz>
+
+<Quiz q="¿Por qué la copa en grupos se lee más orgánica que una esfera?" options={["Porque tiene más vóxels", "Porque las masas de tamaños distintos rompen la simetría y dan ritmo a la silueta", "Porque usa un verde más claro"]} answer={1}>
+La esfera es perfectamente simétrica y parece fabricada. Masas grandes, medianas y pequeñas, solapadas, crean entrantes y salientes: eso es lo que el ojo reconoce como planta.
+</Quiz>
+</Block>
