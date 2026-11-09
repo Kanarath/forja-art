@@ -58,15 +58,20 @@ const stages = m.stages.map((s, i) => ({ label: s.label, note: s.note, src: url(
     { n: [0, 0, -1], c: [[0, 0, 0], [0, 1, 0], [1, 1, 0], [1, 0, 0]], shade: 0.65 },
   ];
 
-  /** Malla con solo las caras visibles. MagicaVoxel usa Z como altura; three usa Y: (x, z, y). */
+  /**
+   * Malla con solo las caras visibles. MagicaVoxel usa Z como altura; three usa Y.
+   * Pasar (x, y, z) → (x, z, y) a secas reflejaría el modelo (cambia la mano del sistema de ejes):
+   * lo de la izquierda saldría a la derecha. Por eso Y se invierte: (x, z, sy − 1 − y).
+   */
   function buildMesh(model: Model, maxLayer: number) {
     const vox = model.voxels.filter((v) => v.z < maxLayer);
-    const filled = new Set(vox.map((v) => `${v.x},${v.z},${v.y}`));
+    const flipY = (y: number) => model.size.y - 1 - y;
+    const filled = new Set(vox.map((v) => `${v.x},${v.z},${flipY(v.y)}`));
     const pos: number[] = [], col: number[] = [], nor: number[] = [], idx: number[] = [], lines: number[] = [];
     const color = new Color();
     const ox = model.size.x / 2, oz = model.size.y / 2;
     for (const v of vox) {
-      const [X, Y, Z] = [v.x, v.z, v.y];
+      const [X, Y, Z] = [v.x, v.z, flipY(v.y)];
       color.set(v.c);
       for (const f of FACES) {
         if (filled.has(`${X + f.n[0]},${Y + f.n[1]},${Z + f.n[2]}`)) continue; // cara tapada por un vecino
@@ -140,8 +145,9 @@ const stages = m.stages.map((s, i) => ({ label: s.label, note: s.note, src: url(
       if (frame) {
         // distancia mínima: los modelos pequeños (6³) no deben llenar todo el visor
         const r = Math.max(model.size.x, model.size.y, model.size.z, 10);
-        // vista de 3/4 desde el frente: en los modelos, el frente está en el lado Y negativo de MagicaVoxel
-        camera.position.set(r * 1.15, r * 0.95, -r * 1.35);
+        // vista de 3/4 desde el frente: en los modelos, el frente está en el lado Y negativo de MagicaVoxel,
+        // que tras invertir Y queda hacia +Z en three
+        camera.position.set(r * 1.15, r * 0.95, r * 1.35);
         controls.target.set(0, model.size.z / 2.4, 0);
         controls.update();
       }

@@ -13,9 +13,14 @@ interface Props {
   scale?: number;
   view?: "normal" | "silhouette" | "gray" | "smooth";
   caption?: string;
+  /** Repite el sprite en una cuadrícula de N×N (para ver cómo se comporta un tile). */
+  tile?: number;
 }
-const { name, scale = 8, view = "normal", caption } = Astro.props;
-const s = getSprite(name);
+const { name, scale = 8, view = "normal", caption, tile = 1 } = Astro.props;
+const base = getSprite(name);
+const s = tile > 1
+  ? { ...base, rows: Array.from({ length: tile }, () => base.rows.map((r) => r.repeat(tile))).flat() }
+  : base;
 
 const toGray = (hex: string) => {
   const n = parseInt(hex.slice(1, 7), 16);
@@ -32,14 +37,16 @@ const labels = { normal: "", silhouette: " (silueta)", gray: " (escala de grises
 
 <figure class={`sprite ${view}`}>
   <div class="frame" style={view === "smooth" ? `--blur:${(scale * 0.45).toFixed(1)}px` : undefined}>
-    <PixelSprite palette={palette} rows={s.rows} scale={scale} label={`Sprite «${name}»${labels[view]}`} />
+    <PixelSprite palette={palette} rows={s.rows} scale={scale} label={`Sprite «${name}»${labels[view]}${tile > 1 ? ` (repetido ${tile}×${tile})` : ""}`} />
   </div>
   {caption && <figcaption>{caption}</figcaption>}
 </figure>
 
 <style>
-  .sprite { margin: 0; display: inline-flex; flex-direction: column; align-items: center; gap: 6px; }
-  .frame { padding: 14px; line-height: 0; background: conic-gradient(var(--checker-a) 25%, var(--checker-b) 0 50%, var(--checker-a) 0 75%, var(--checker-b) 0) 0 0 / 16px 16px; overflow: hidden; }
+  .sprite { margin: 0; display: inline-flex; flex-direction: column; align-items: center; gap: 6px; max-width: 100%; min-width: 0; }
+  /* los sprites grandes (escenas, tiles repetidos) se encogen para caber en su columna */
+  .frame :global(svg) { max-width: 100%; height: auto; }
+  .frame { max-width: 100%; box-sizing: border-box; padding: 14px; line-height: 0; background: conic-gradient(var(--checker-a) 25%, var(--checker-b) 0 50%, var(--checker-a) 0 75%, var(--checker-b) 0) 0 0 / 16px 16px; overflow: hidden; }
   .smooth .frame :global(svg) { filter: blur(var(--blur)); }
   figcaption { font: .75rem var(--font-mono); color: var(--muted); text-align: center; max-width: 220px; }
 </style>

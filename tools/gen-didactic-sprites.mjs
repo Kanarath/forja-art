@@ -4,7 +4,7 @@
 // Algunos se construyen con reglas exactas (una línea 2:1 son tramos de 2 píxeles) y otros
 // están dibujados a mano aquí mismo, fila a fila. En ambos casos el resultado es DATO puro:
 // se puede abrir el JSON y contar los píxeles. Se ejecuta a mano; su salida se versiona.
-import { writeFileSync } from "node:fs";
+import { writeFileSync, readFileSync } from "node:fs";
 import { validateSprite } from "../src/lib/pixel/sprite.mjs";
 
 const LICENSE = "CC0 · creado como datos para FORJA//ART";
@@ -393,6 +393,107 @@ add("bat", "Murciélago enemigo de 12×8: alas en picos y ojos rojos. Formas tri
   "..oowoowoo..",
   "....o..o....",
 ]);
+
+// ---------- animación del héroe: respirar, parpadear y caminar (de frente)
+// Todos los frames salen del MISMO héroe chibi: así se ve qué píxeles cambian y cuáles no.
+const heroRows = out.find((s) => s.name === "hero-chibi").rows;
+const blankRow = ".".repeat(16);
+// respirar: cabeza y torso bajan 1 px (desaparece una fila de túnica); las piernas no se mueven
+add("hero-breathe", "Frame de respiración: cabeza y torso bajan 1 píxel y la túnica pierde una fila; las piernas quedan quietas. Alternado con el héroe base, es un idle.", ["personaje", "animación"], HERO,
+  [blankRow, ...heroRows.slice(0, 18), ...heroRows.slice(19)]);
+// parpadeo: el ojo de 2 px pasa a ser una línea de 1 px
+add("hero-blink", "Frame de parpadeo: cada ojo pasa de 2 píxeles de alto a 1. Dura muy poco (unos 100 ms).", ["personaje", "animación"], HERO,
+  heroRows.map((r, y) => (y === 9 ? r.slice(0, 5) + "s" + r.slice(6, 9) + "s" + r.slice(10) : r)));
+// paso: todo el héroe sube 1 px (el rebote) y una pierna se estira hasta el suelo mientras la otra queda levantada
+function walkStep(planted) {
+  const up = [...heroRows.slice(1), blankRow].map((r) => [...r]);
+  const [x0, x1] = planted === "left" ? [3, 7] : [9, 13];
+  for (let y = 19; y <= 23; y++) for (let x = x0; x <= x1; x++) up[y][x] = heroRows[Math.max(20, y)][x];
+  return up.map((r) => r.join(""));
+}
+add("hero-walk-a", "Paso con la pierna izquierda apoyada: el cuerpo sube 1 píxel y el pie derecho queda levantado. Va entre dos frames del héroe base.", ["personaje", "animación"], HERO, walkStep("left"));
+add("hero-walk-b", "Paso con la pierna derecha apoyada: el espejo del anterior. Base → paso A → base → paso B es un ciclo de caminar de 4 frames.", ["personaje", "animación"], HERO, walkStep("right"));
+
+// ---------- tiles de 16×16: costuras y repetición (envuelven: lo que sale por un borde entra por el otro)
+const GRASS = { g: "#3fa45b", d: "#2c7a48", l: "#6fd17f" };
+function grassTile({ bevel = false, flower = false } = {}) {
+  const g = Array.from({ length: 16 }, () => Array(16).fill("g"));
+  const set = (x, y, c) => { g[((y % 16) + 16) % 16][((x % 16) + 16) % 16] = c; };
+  // matas: un píxel claro arriba y dos oscuros abajo; algunas cruzan el borde a propósito
+  for (const [x, y] of [[2, 3], [9, 1], [13, 6], [5, 9], [11, 12], [15, 14], [1, 15], [7, 5]]) {
+    set(x + 1, y, "l"); set(x, y + 1, "d"); set(x + 2, y + 1, "d");
+  }
+  if (bevel) for (let i = 0; i < 16; i++) { g[0][i] = "l"; g[i][0] = "l"; g[15][i] = "d"; g[i][15] = "d"; }
+  const pal = { ...GRASS };
+  if (flower) {
+    Object.assign(pal, { w: "#fff3c4", y: "#ffb84d" });
+    for (const [x, y, c] of [[7, 6, "w"], [6, 7, "w"], [8, 7, "w"], [7, 8, "w"], [7, 7, "y"]]) g[y][x] = c;
+  }
+  return { pal, rows: g.map((r) => r.join("")) };
+}
+{
+  const t = grassTile();
+  add("tile-grass", "Tile de hierba de 16×16 sin costuras: las matas que salen por un borde entran por el opuesto y ninguna llama la atención. Repetido, se lee como un prado.", ["tile"], t.pal, t.rows);
+  const b = grassTile({ bevel: true });
+  add("tile-grass-bevel", "El mismo tile con los bordes iluminados arriba y a la izquierda y oscurecidos abajo y a la derecha. Solo, parece bonito; repetido, dibuja una cuadrícula.", ["tile", "error"], b.pal, b.rows);
+  const f = grassTile({ flower: true });
+  add("tile-grass-flower", "El tile sin costuras con una flor clara en el centro. No tiene costuras, pero repetido la flor forma una retícula: el ojo detecta el patrón.", ["tile", "error"], f.pal, f.rows);
+}
+
+// ---------- perspectivas: la misma caja de madera vista de lado, en 3/4 y en isométrica
+const CRATE = { o: "#1b1030", L: "#d08a50", M: "#a0603a", D: "#6b3d2e" };
+const frontFace = (h) => [ // cara frontal de 12 de ancho: marco oscuro y tablas horizontales
+  "oDDDDDDDDDDo",
+  ...Array.from({ length: h - 2 }, (_, i) => (i % 3 === 2 ? "oDDDDDDDDDDo" : "oDMMMMMMMMDo")),
+  "oooooooooooo",
+];
+add("view-side", "La caja vista de lado (vista lateral, como un plataformas): solo la cara frontal. No hay suelo visible: el suelo es una línea.", ["perspectiva"], { o: CRATE.o, M: CRATE.M, D: CRATE.D },
+  ["oooooooooooo", ...frontFace(11)]);
+add("view-34", "La misma caja en top-down 3/4 (la vista de los JRPG): se ve la tapa arriba y la cara frontal algo más baja que en la vista lateral.", ["perspectiva"], CRATE,
+  ["oooooooooooo", "oLLLLLLLLLLo", "oMMMMMMMMMMo", "oLLLLLLLLLLo", ...frontFace(8)]);
+{
+  // cubo isométrico 2:1 de 16×16: rombo de arriba, cara izquierda (media) y derecha (oscura)
+  const hw = (y) => (y < 4 ? 2 * (y + 1) : y < 12 ? 8 : 2 * (16 - y));
+  const inside = (x, y) => y >= 0 && y < 16 && x >= 8 - hw(y) && x <= 7 + hw(y);
+  const top = (x, y) => y < 8 && x >= 8 - (y < 4 ? 2 * (y + 1) : 2 * (8 - y)) && x <= 7 + (y < 4 ? 2 * (y + 1) : 2 * (8 - y));
+  const rows = [];
+  for (let y = 0; y < 16; y++) {
+    let r = "";
+    for (let x = 0; x < 16; x++) {
+      if (!inside(x, y)) { r += "."; continue; }
+      const edge = !inside(x - 1, y) || !inside(x + 1, y) || !inside(x, y - 1) || !inside(x, y + 1);
+      r += edge ? "o" : top(x, y) ? "L" : x < 8 ? "M" : "D";
+    }
+    rows.push(r);
+  }
+  add("view-iso", "La misma caja en isométrica de píxel (líneas 2:1): se ven la tapa y dos caras, cada una con su tono. Ninguna cara mira de frente.", ["perspectiva"], CRATE, rows);
+}
+
+// ---------- composición: la misma escena montada sin foco y con foco
+// Se compone a partir de sprites reales sobre la hierba; la paleta se reconstruye al final.
+const spriteByName = (n) => out.find((s) => s.name === n) ?? JSON.parse(readFileSync(`art-src/sprites/${n}.sprite.json`, "utf8"));
+function compose(w, h, groundPal, placements) {
+  const tile = grassTile();
+  const px = Array.from({ length: h }, (_, y) => Array.from({ length: w }, (_, x) => groundPal[tile.rows[y % 16][x % 16]]));
+  for (const [name, x0, y0] of placements) {
+    const s = spriteByName(name);
+    s.rows.forEach((r, y) => [...r].forEach((k, x) => { if (k !== "." && px[y0 + y]?.[x0 + x] !== undefined) px[y0 + y][x0 + x] = s.palette[k]; }));
+  }
+  const keys = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  const pal = {}, byHex = {};
+  const rows = px.map((r) => r.map((hex) => {
+    if (!byHex[hex]) { byHex[hex] = keys[Object.keys(pal).length]; pal[byHex[hex]] = hex; }
+    return byHex[hex];
+  }).join(""));
+  return { pal, rows };
+}
+{
+  const flat = compose(64, 40, GRASS, [["chest", 4, 4], ["mushroom8", 28, 4], ["rock-clean", 50, 4], ["hero-chibi", 24, 8], ["slime", 6, 28], ["potion", 50, 26]]);
+  add("scene-flat", "Escena de 64×40 sin foco: el héroe en el centro exacto y los demás elementos repartidos por igual, todos con el mismo contraste sobre una hierba de valor medio. El ojo no sabe dónde mirar.", ["escena", "composición", "error"], flat.pal, flat.rows);
+  const DARK = { g: "#24563a", d: "#1a4030", l: "#3a7a50" }; // la misma hierba, más oscura y menos saturada
+  const focus = compose(64, 40, DARK, [["rock-clean", 0, 32], ["mushroom8", 8, 31], ["hero-chibi", 18, 10], ["slime", 44, 22], ["rock-clean", 54, 0], ["mushroom8", 57, 9]]);
+  add("scene-focus", "La misma escena con foco: el héroe en el tercio izquierdo frente al slime, la hierba más oscura para que los personajes destaquen y rocas y setas en las esquinas enmarcando. Menos elementos, una historia.", ["escena", "composición"], focus.pal, focus.rows);
+}
 
 // ---------- escribir y validar
 let bad = 0;

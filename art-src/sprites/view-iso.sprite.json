@@ -1,0 +1,33 @@
+{
+  "name": "view-iso",
+  "description": "La misma caja en isométrica de píxel (líneas 2:1): se ven la tapa y dos caras, cada una con su tono. Ninguna cara mira de frente.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "perspectiva"
+  ],
+  "palette": {
+    "o": "#1b1030",
+    "L": "#d08a50",
+    "M": "#a0603a",
+    "D": "#6b3d2e"
+  },
+  "rows": [
+    "......oooo......",
+    "....ooLLLLoo....",
+    "..ooLLLLLLLLoo..",
+    "ooLLLLLLLLLLLLoo",
+    "oLLLLLLLLLLLLLLo",
+    "oMLLLLLLLLLLLLDo",
+    "oMMMLLLLLLLLDDDo",
+    "oMMMMMLLLLDDDDDo",
+    "oMMMMMMMDDDDDDDo",
+    "oMMMMMMMDDDDDDDo",
+    "oMMMMMMMDDDDDDDo",
+    "oMMMMMMMDDDDDDDo",
+    "ooMMMMMMDDDDDDoo",
+    "..ooMMMMDDDDoo..",
+    "....ooMMDDoo....",
+    "......oooo......"
+  ]
+}

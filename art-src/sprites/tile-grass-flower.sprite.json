@@ -1,0 +1,35 @@
+{
+  "name": "tile-grass-flower",
+  "description": "El tile sin costuras con una flor clara en el centro. No tiene costuras, pero repetido la flor forma una retícula: el ojo detecta el patrón.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "tile",
+    "error"
+  ],
+  "palette": {
+    "g": "#3fa45b",
+    "d": "#2c7a48",
+    "l": "#6fd17f",
+    "w": "#fff3c4",
+    "y": "#ffb84d"
+  },
+  "rows": [
+    "gdgdgggggggggggg",
+    "gggggggggglggggg",
+    "gggggggggdgdgggg",
+    "ggglgggggggggggg",
+    "ggdgdggggggggggg",
+    "gggggggglggggggg",
+    "gggggggwgdgggglg",
+    "ggggggwywggggdgd",
+    "gggggggwgggggggg",
+    "gggggglggggggggg",
+    "gggggdgdgggggggg",
+    "gggggggggggggggg",
+    "gggggggggggglggg",
+    "gggggggggggdgdgg",
+    "lggggggggggggggg",
+    "gdlggggggggggggd"
+  ]
+}

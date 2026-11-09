@@ -1,10 +1,12 @@
 ---
 // LAB · Mini-animador. NO es un editor: sirve para entender frames, timing y onion skin.
 // Uso en MDX:  <Animator preset="slime-idle" />   o   <Animator />  (lienzo vacío de 16×16)
+//   o con frames que son sprites del curso (mismo tamaño y misma paleta):
+//   <Animator sprites={["hero-chibi", "hero-walk-a", "hero-chibi", "hero-walk-b"]} durations={[180, 180, 180, 180]} />
 // Clic para pintar, clic derecho (o el color «goma») para borrar.
 import { getSprite } from "../../data/sprites";
-interface Props { preset?: "slime-idle" | "gem-shine" | "blank" }
-const { preset = "slime-idle" } = Astro.props;
+interface Props { preset?: "slime-idle" | "gem-shine" | "blank"; sprites?: string[]; durations?: number[] }
+const { preset = "slime-idle", sprites, durations: customDurations } = Astro.props;
 
 // Construimos los frames del ejemplo A PARTIR de sprites reales, transformándolos.
 type S = { palette: Record<string, string>; rows: string[] };
@@ -15,7 +17,15 @@ const squash = (s: S): string[] => {
   return [".".repeat(r[0].length), ...r];
 };
 let frames: string[][], palette: Record<string, string>, durations: number[];
-if (preset === "slime-idle") {
+if (sprites?.length) {
+  const list = sprites.map(getSprite);
+  const key = (x: S) => `${x.rows[0].length}×${x.rows.length} ${JSON.stringify(x.palette)}`;
+  if (list.some((x) => key(x) !== key(list[0])))
+    throw new Error(`Animator: los sprites ${sprites.join(", ")} deben tener el mismo tamaño y la misma paleta`);
+  frames = list.map((x) => x.rows);
+  palette = list[0].palette;
+  durations = sprites.map((_, i) => customDurations?.[i] ?? 150);
+} else if (preset === "slime-idle") {
   const sl = getSprite("slime");
   const pad = (rows: string[]) => [".".repeat(rows[0].length), ".".repeat(rows[0].length), ...rows];
   const blink = sl.rows.map((r) => r.replace(/e/g, "g"));

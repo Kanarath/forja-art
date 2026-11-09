@@ -1,0 +1,245 @@
+---
+id: v6-01
+discipline: voxel
+level: 6
+order: 1
+title: "Arquitectura modular: una casa con tres piezas"
+summary: "Modela tres módulos de pared de 8×1×8 con las mismas reglas y monta con ellos una casa entera, con tejado escalonado y un árbol al lado."
+duration: 55
+status: borrador
+prerequisites: [v2-02, v4-01]
+fundamentals: [f08]
+objectives:
+  - "Entender por qué los juegos construyen escenarios con módulos reutilizables"
+  - "Diseñar un módulo de pared que encaje en una rejilla de 8 vóxels"
+  - "Fijar reglas compartidas (zócalo, vigas, paleta) para que las variantes encajen entre sí"
+  - "Montar una casa duplicando módulos en el modo World y cuidar las esquinas"
+  - "Rematarla con un tejado escalonado y naturaleza alrededor"
+tools: [magicavoxel]
+piece:
+  name: "Casa con al menos 3 módulos de pared reutilizados, su tejado y un árbol o una roca"
+  canvas: "8x1x8 por módulo"
+xp: { concept: 10, guided: 20, piece: 70 }
+achievements: [casa-modular]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Hoy forjas **una casa entera** sin modelarla entera. Haces **tres piezas de pared** y las repites: la casa sale de combinarlas, como un juego de construcción.
+
+<VoxViewer model="casa-modular" stage={0} title="Tres módulos de pared: lisa, puerta y ventana" />
+
+Recorre las tres etapas del visor:
+
+1. **Tres módulos:** pared lisa, pared con puerta y pared con ventana. Las tres miden 8×1×8.
+2. **Paredes:** cuatro paredes hechas **solo** con esos módulos.
+3. **Tejado:** un tejado a dos aguas escalonado, como el de la torre de V2-02.
+
+Tu pieza final: una casa con **al menos 3 módulos reutilizados**, su tejado y **un árbol o una roca** al lado.
+</Block>
+
+<Block kind="concepto">
+En Blender, una casa suele ser una malla: la modelas de una vez. En un juego, casi nunca. Los escenarios se montan con **piezas que se repiten**: un trozo de pared, una esquina, un suelo.
+
+**¿Por qué modular?**
+
+- **Reutilizas.** Modelas una pared una vez y la usas veinte veces.
+- **Varías sin redibujar.** Con tres módulos montas muchas casas distintas: cambias el orden, no los vóxels.
+- **Es como se monta un juego.** En el nivel 9 llevarás estos módulos a Godot y los colocarás en una rejilla (con un *GridMap* y una *MeshLibrary*). Hoy no tocas Godot, pero ya modelas como si fueras a hacerlo.
+
+<Why title="¿Por qué funciona?">
+Porque el ojo lee **el conjunto**, no cada pieza. Si las piezas comparten medidas, colores y estilo, la casa parece una sola cosa aunque sean tres módulos repetidos. Es la misma idea del [kit del herrero (V4-01)](/forja-art/voxel/v4-01/), llevada a la arquitectura.
+</Why>
+
+**El módulo y la rejilla.** Un módulo es una pieza con **medidas fijas**. Aquí, cada pared mide **8 de ancho × 1 de grosor × 8 de alto**. Todo se coloca en saltos de 8 vóxels: así, cualquier módulo cabe donde cabía otro.
+
+<Tip>
+Elige una medida que se divida bien. Con 8 caben una puerta de 2 vóxels centrada (dejando 3 a cada lado) y una ventana de 4. Con 7, el centro cae en un solo vóxel y la puerta queda torcida o de 1.
+</Tip>
+
+**Las reglas compartidas.** Para que tres paredes distintas encajen, tienen que obedecer **las mismas reglas**. Abre el visor en la etapa «Tres módulos», baja el deslizador **Capas** y compruébalo:
+
+- **Zócalo:** la fila de abajo (altura 0) es siempre de piedra gris `#7d8698`.
+- **Vigas:** madera oscura `#6b3d2e` en las dos columnas de los extremos, en una viga a media altura (fila 4) y en otra arriba (fila 7).
+- **Revoco:** todo lo demás, en crema `#e8dcc0`.
+- **Paleta:** pocos colores y los mismos en las tres piezas.
+
+<Why title="Los bordes mandan">
+Lo que toca a la pieza de al lado son **los bordes**: el zócalo, las columnas de los extremos y la viga de arriba. Si los bordes son iguales en todos los módulos, cualquier pareja encaja. El centro puede cambiar libremente.
+</Why>
+
+**Las variantes.** Solo cambia el centro del módulo:
+
+- **Lisa:** el módulo base, sin nada más.
+- **Puerta:** una puerta de 2 de ancho × 4 de alto en madera `#a0603a`, apoyada en el zócalo, con un pomo dorado `#f2c14e`. Corta la viga de media altura.
+- **Ventana:** un marco de 4×4 en madera oscura (filas 2 a 5) con un cristal de 2×2 azul claro `#9fd8ff` en el centro.
+
+Ninguna variante toca las columnas de los extremos ni el zócalo. Por eso encajan.
+
+**Montar la casa.** La planta mide 8×8. Cuatro paredes, cuatro módulos:
+
+- **Fachada:** la pared con puerta.
+- **Laterales:** la ventana, **dos veces** (el mismo módulo, girado y colocado a cada lado).
+- **Fondo:** la lisa.
+
+<VoxViewer model="casa-modular" stage={2} title="La casa montada con los mismos módulos, y su tejado" />
+
+**Las esquinas.** Cada pared mide 8, y la planta también. Así que en cada esquina **dos módulos ocupan la misma columna**: la última de la fachada es la primera del lateral. En esta casa no se nota, porque en las dos piezas esa columna es **viga oscura con zócalo de piedra**. La regla de los bordes resuelve la esquina sola. Dentro queda un hueco de 6×6.
+
+<Warn title="Si los bordes no coinciden">
+Si un módulo tuviera revoco en el extremo y otro viga, en la esquina uno taparía al otro y verías un parche. O cambias el borde para que coincida, o haces los laterales de 6 de ancho y los metes entre la fachada y el fondo.
+</Warn>
+
+**El tejado escalonado.** Es lo que aprendiste en [Escalonado y detalle por capas (V2-02)](/forja-art/voxel/v2-02/), pero **solo en un eje**, como la tapa del cofre: así sale a dos aguas y no en pirámide como el de la torre.
+
+- Empieza justo encima de las paredes (altura 8).
+- La primera capa mide 10×10: sobresale **1 vóxel por cada lado** (el alero).
+- Cada capa entra 1 vóxel por delante y 1 por detrás: 10, 8, 6, 4 y 2 de fondo. Cinco capas.
+- A lo largo, las cinco miden 10: los hastiales (los lados en triángulo) quedan sobre las paredes con ventana.
+- Alterna dos rojos, `#c2413b` y `#9c2f2c`: son **los mismos de la torre**. Reutilizar colores también es modular.
+
+<Why>
+Con una entrada de 1 por capa, la pendiente es 1:1, a 45°. Ritmo constante: el ojo lee una rampa recta.
+</Why>
+
+**Naturaleza alrededor.** Una casa sola parece una maqueta. Un árbol o una roca al lado le dan **escala** y contexto.
+
+<VoxViewer model="arbol" stage={1} title="El árbol de 16³: casi tan alto como la casa" />
+
+El árbol de 16³ tiene un tronco de 2×2 y 6 de alto en `#6b3d2e`, **el mismo marrón que las vigas**, y una copa redonda en tres verdes. La casa mide 13 de alto (8 de pared y 5 de tejado), así que el árbol la supera un poco: se lee como un árbol de verdad, no como un arbusto.
+
+<Tip>
+Si prefieres una roca, usa los grises del zócalo. Compartir colores entre la casa y lo que la rodea la ancla al suelo.
+</Tip>
+</Block>
+
+
+<Block kind="guiada">
+<Step n={1} title="Prepara la paleta de la casa">
+1. Abre una escena nueva en MagicaVoxel.
+2. En la **paleta** de la izquierda, elige una fila libre.
+3. Pon en ella: `#7d8698` (zócalo), `#6b3d2e` (vigas), `#e8dcc0` (revoco), `#a0603a` (puerta), `#f2c14e` (pomo), `#9fd8ff` (cristal), `#c2413b` y `#9c2f2c` (tejado).
+4. Añade los verdes del árbol (o los grises de la roca) al lado.
+
+<Why>
+Como en el kit del herrero, la paleta es de la **escena**: todos los modelos la comparten. Si retocas el revoco, cambia en todas las paredes a la vez.
+</Why>
+</Step>
+
+<Step n={2} title="Modela el módulo liso">
+1. Pon el tamaño del modelo a 8×1×8.
+2. En modo **Attach**, con el pincel **Box**, rellena toda la pared en revoco.
+3. Cambia al modo **Paint**: pinta la fila de abajo en piedra (el zócalo).
+4. Pinta en madera oscura las dos columnas de los extremos, la fila 4 y la fila 7 (las vigas).
+
+Gira la cámara con el botón derecho y compárala con el primer módulo del visor.
+
+<Tip>
+Usa el corte por **Capas** del visor: la fila de abajo es piedra, la 4 y la 7 son vigas.
+</Tip>
+</Step>
+
+<Step n={3} title="Duplica el módulo y haz las variantes">
+1. Pasa al modo **World**: ahí ves todos los modelos de la escena.
+2. Selecciona el módulo liso y **duplícalo** dos veces.
+3. Edita la primera copia: en el centro, una puerta de 2×4 en madera clara apoyada en el zócalo y un pomo dorado.
+4. Edita la segunda: un marco de 4×4 en madera oscura (filas 2 a 5) y, dentro, un cristal de 2×2.
+
+<Why>
+Partir de una copia del liso garantiza que los bordes son idénticos. Si modelas cada variante desde cero, tarde o temprano una columna se desplaza un vóxel y deja de encajar.
+</Why>
+
+<Warn>
+No toques los bordes al hacer las variantes: ni las columnas de los extremos, ni el zócalo, ni la viga de arriba. Esa es la regla que hace que encajen.
+</Warn>
+</Step>
+
+<Step n={4} title="Monta las cuatro paredes">
+1. Sigue en **World**. Duplica módulos hasta tener cuatro: una puerta, dos ventanas y una lisa.
+2. Coloca la puerta delante y la lisa detrás, a 7 vóxels de distancia: la planta mide 8×8.
+3. Gira las dos ventanas 90° y ponlas a los lados.
+4. Mira cada esquina de cerca: las columnas de dos módulos deben coincidir en el mismo sitio.
+
+<Tip>
+Mira la casa desde arriba. Si las cuatro paredes forman un cuadrado de 8×8 sin huecos ni vóxels que sobresalgan, están bien colocadas.
+</Tip>
+</Step>
+
+<Step n={5} title="Añade el tejado escalonado">
+1. Crea un modelo nuevo para el tejado y colócalo justo encima de las paredes.
+2. Primera capa: 10×10, con 1 vóxel de alero por cada lado, en el rojo claro.
+3. Cada capa de encima entra 1 vóxel por delante y otro por detrás, pero no por los lados: 10, 8, 6, 4 y 2 de fondo.
+4. Alterna los dos rojos capa a capa con **Paint**.
+
+<Why>
+El tejado es **otro módulo**: va en su propio modelo. Así puedes quitarlo para ver el interior o ponerlo sobre otra casa de la misma planta.
+</Why>
+</Step>
+
+<Step n={6} title="Pon naturaleza alrededor y renderiza">
+1. Crea un modelo para un árbol (cabe en 16³) o una roca, y ponlo junto a la casa en **World**.
+2. Usa colores que ya estén en la casa: el marrón de las vigas para el tronco o los grises del zócalo para la roca.
+3. Pulsa **Render** y elige una sola dirección de sol para toda la escena.
+4. Guarda `casa_modular_v1.vox` y exporta un PNG del render.
+</Step>
+
+<Warn title="Verifica en tu versión">
+El nombre y la ubicación del modo **World**, la forma de **duplicar** un modelo, de **girarlo** 90° y de crear uno nuevo cambian entre versiones de MagicaVoxel. Comprueba también los nombres de **Attach**/**Paint**, del pincel **Box** y los controles del sol en **Render**. Si no encuentras cómo girar un modelo, modela la ventana lateral en un modelo de 1×8×8 con las mismas reglas: es más lento, pero el resultado es el mismo.
+</Warn>
+</Block>
+
+<Block kind="version">
+Monta **tu propia casa** con los mismos tres módulos (o con uno nuevo que siga las reglas). Elige un reto:
+
+- **Casa alargada:** planta de 16×8. Dos módulos por fachada (por ejemplo, puerta y ventana) y el tejado de 18 de largo.
+- **Cuarto módulo:** diseña una variante nueva, como una ventana doble o un balcón. Solo cambia el centro: bordes, zócalo y vigas, iguales.
+- **Calle:** tres casas distintas en fila, hechas con los mismos módulos en distinto orden. ¿Parecen del mismo pueblo?
+
+Antes de dar la casa por buena, quita el tejado y mírala desde arriba: ¿las paredes encajan en la rejilla de 8?
+</Block>
+
+<Block kind="errores">
+<Mistake title="Bordes distintos en cada módulo" wrongLabel="Cada módulo a su aire" rightLabel="Bordes comunes">
+  <p slot="wrong">La pared lisa termina en revoco; la de la ventana, en viga; la de la puerta no tiene zócalo. Al juntarlas, las vigas no continúan y en las esquinas aparecen parches.</p>
+  <p slot="right">Las tres comparten zócalo de piedra en la fila 0, columnas de viga en los extremos y vigas en las filas 4 y 7. Encajan en cualquier orden.</p>
+
+Lo que toca a la pieza vecina es el borde. Fija los bordes primero, en el módulo liso, y haz las variantes **duplicándolo**: así nunca se desajustan.
+</Mistake>
+
+<Mistake title="Módulos fuera de la rejilla" wrongLabel="Medidas sueltas" rightLabel="Todo en saltos de 8">
+  <p slot="wrong">La pared lisa mide 8, la de la puerta 9 «porque la puerta no cabía» y la de la ventana 7. La casa deja huecos o se solapa a medias.</p>
+  <p slot="right">Todos los módulos miden 8×1×8 y se colocan en saltos de 8. Si algo no cabe, cambias el diseño del centro, no la medida.</p>
+
+La rejilla es lo que hace modular a un módulo. Si una pieza la rompe, ya no puedes intercambiarla. Y en Godot, el *GridMap* del nivel 9 coloca las piezas en celdas iguales: una pieza de 9 no cabe.
+</Mistake>
+
+<Warn title="Error típico: la casa de un solo módulo">
+Usas la pared con ventana en las cuatro caras porque «ya está hecha». Funciona, pero la casa no tiene frente ni espalda y la repetición canta. **Corrección:** al menos tres módulos distintos, y la puerta en la fachada, que es donde mira el jugador.
+</Warn>
+
+<Warn title="Error típico: el tejado en pirámide">
+Si escalonas el tejado entrando 1 vóxel por los cuatro lados, como en la torre, te sale una pirámide. Para una casa a dos aguas, entra solo por delante y por detrás, y deja el largo completo.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+<Checklist items={[
+  "Tengo tres módulos de pared de 8×1×8: lisa, puerta y ventana",
+  "Los tres comparten zócalo, columnas de los extremos, vigas y paleta",
+  "Las variantes las hice duplicando el módulo liso",
+  "La casa usa al menos 3 módulos, con alguno repetido, y las esquinas no muestran parches",
+  "El tejado es escalonado, a dos aguas y con alero de 1 vóxel",
+  "Hay un árbol o una roca al lado que comparte colores con la casa",
+  "He guardado casa_modular_v1.vox y un render en mi portfolio",
+]} />
+
+<Quiz q="Quieres añadir un módulo de pared con balcón. ¿Qué no puedes cambiar?" options={["El color del cristal", "Los bordes: zócalo, columnas de los extremos y vigas, y la medida de 8×1×8", "Nada: cada módulo es independiente"]} answer={1}>
+El centro es libre. Los bordes y la medida son las reglas que permiten que el módulo encaje junto a cualquier otro.
+</Quiz>
+
+<Quiz q="En la esquina de la casa, la fachada y el lateral ocupan la misma columna. ¿Por qué no se nota?" options={["Porque MagicaVoxel la borra sola", "Porque en los dos módulos esa columna es igual: viga oscura con zócalo de piedra", "Porque el tejado la tapa"]} answer={1}>
+La regla de los bordes hace que las dos piezas pongan lo mismo en el mismo sitio. Por eso un borde común resuelve las esquinas sin módulos especiales.
+</Quiz>
+</Block>

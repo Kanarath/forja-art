@@ -83,6 +83,25 @@
 - **Arte nuevo:** héroe chibi frente a realista (16×24), 5 expresiones sobre la misma cabeza y un murciélago; modelos voxel «kit-herrero», «espada» y «chibi».
 - **Corregido durante la revisión:** la etapa final de la espada perdía las puntas de la guarda, y la sonrisa de face-alegre tocaba el ojo.
 
+**Contenido · quinto bloque: 7 lecciones más (37 en total).**
+- **Pixel:** P6-01 Frames y timing (idle), P6-02 Ciclo de caminar, P7-01 Tiles sin costuras.
+- **Voxel:** V5-01 Personajes y criaturas (forma y pose), V6-01 Arquitectura modular.
+- **Fundamentos:** F07-01 Composición, F08-01 Perspectivas.
+- **Arte nuevo:**
+  - frames del héroe (respirar, parpadear y dos pasos);
+  - tiles de hierba (bueno, con bisel y con patrón);
+  - la misma caja en lateral, 3/4 e isométrica;
+  - dos escenas de 64×40 compuestas con sprites del curso;
+  - modelos «chibi-pose», «slime-voxel» y «casa-modular».
+- **Componentes:**
+  - `<Sprite tile={3}>` repite un tile;
+  - `<Animator sprites={[…]}>` anima sprites del curso;
+  - PixelSprite dibuja un `<path>` por color en vez de un `<rect>` por píxel: las páginas con escenas pasaron de 1,6 MB a menos de 70 KB.
+- **Corregido durante la revisión:**
+  - **El visor 3D mostraba los modelos en espejo** respecto a MagicaVoxel: el cambio de Z-arriba a Y-arriba invertía la mano del sistema de ejes. Ahora invierte Y y la cámara mira desde el frente.
+  - **El Inspector con subida de imagen desbordaba la página** unos 40–60 px: un canvas vacío mide 300 px y el campo de archivo no encogía.
+  - **Los sprites grandes** se encogen a su columna.
+
 **Lecciones aprendidas durante la fase 1:**
 - **`BASE_URL` sin barra final.** Astro 7 da `BASE_URL` sin barra final, así que hay que usar siempre `src/lib/url.ts`. El validador detecta enlaces sin la base.
 - **Colecciones nuevas en local.** El servidor de desarrollo no ve colecciones de contenido nuevas: hay que reiniciarlo (`npx astro dev --force`).

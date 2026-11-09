@@ -1,0 +1,32 @@
+{
+  "name": "tile-grass",
+  "description": "Tile de hierba de 16×16 sin costuras: las matas que salen por un borde entran por el opuesto y ninguna llama la atención. Repetido, se lee como un prado.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "tile"
+  ],
+  "palette": {
+    "g": "#3fa45b",
+    "d": "#2c7a48",
+    "l": "#6fd17f"
+  },
+  "rows": [
+    "gdgdgggggggggggg",
+    "gggggggggglggggg",
+    "gggggggggdgdgggg",
+    "ggglgggggggggggg",
+    "ggdgdggggggggggg",
+    "gggggggglggggggg",
+    "gggggggdgdgggglg",
+    "gggggggggggggdgd",
+    "gggggggggggggggg",
+    "gggggglggggggggg",
+    "gggggdgdgggggggg",
+    "gggggggggggggggg",
+    "gggggggggggglggg",
+    "gggggggggggdgdgg",
+    "lggggggggggggggg",
+    "gdlggggggggggggd"
+  ]
+}

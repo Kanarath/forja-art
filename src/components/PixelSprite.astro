@@ -1,8 +1,9 @@
 ---
 // Dibuja un sprite a partir de DATOS: una paleta y filas de índices.
 // Cada carácter de `rows` es un índice de `palette` ("." = transparente).
-// Se genera un <rect> por píxel, así que el sprite es exacto a cualquier escala
-// y se puede inspeccionar píxel a píxel (principio de calidad de FORJA//ART).
+// Se genera un <path> por color, con un rectángulo por cada tramo horizontal de
+// píxeles iguales: el sprite es exacto a cualquier escala y pesa poco aunque sea grande
+// (una escena de 64×40 o un tile repetido 3×3).
 interface Props {
   palette: Record<string, string>;
   rows: string[];
@@ -12,9 +13,18 @@ interface Props {
 const { palette, rows, scale = 8, label } = Astro.props;
 const width = Math.max(...rows.map((r) => r.length));
 const height = rows.length;
-const pixels = rows.flatMap((row, y) =>
-  [...row].flatMap((ch, x) => (palette[ch] ? [{ x, y, fill: palette[ch] }] : [])),
-);
+const paths = new Map<string, string>(); // color → datos del path
+rows.forEach((row, y) => {
+  let x = 0;
+  while (x < row.length) {
+    const ch = row[x];
+    let n = 1;
+    while (row[x + n] === ch) n++;
+    const fill = palette[ch];
+    if (fill) paths.set(fill, (paths.get(fill) ?? "") + `M${x} ${y}h${n}v1h-${n}z`);
+    x += n;
+  }
+});
 ---
 
 <svg
@@ -26,5 +36,5 @@ const pixels = rows.flatMap((row, y) =>
   role="img"
   aria-label={label}
 >
-  {pixels.map((p) => <rect x={p.x} y={p.y} width="1" height="1" fill={p.fill} />)}
+  {[...paths].map(([fill, d]) => <path d={d} fill={fill} />)}
 </svg>

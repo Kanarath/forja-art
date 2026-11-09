@@ -37,5 +37,12 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   { id: "arma-voxel", name: "Arma voxel", description: "Un arma voxel del blockout al detalle (V4-02).", color: "#d49a2a" },
   { id: "armonia", name: "Armonía", description: "Una paleta propia construida con una armonía de color (F04).", color: "#c58cff" },
   { id: "personaje-2d-3d", name: "Personaje en dos mundos", description: "El mismo personaje diseñado en pixel y en voxel (F09).", color: "#ff6fb8" },
+  { id: "idle-vivo", name: "Idle vivo", description: "Un personaje que respira y parpadea en bucle, con su timing (P6-01).", color: "#9be7ff" },
+  { id: "primer-paso", name: "Primer paso", description: "Un ciclo de caminar de 4 frames con rebote (P6-02).", color: "#6fd17f" },
+  { id: "tile-infinito", name: "Tile infinito", description: "Un tile de 16×16 que se repite sin costuras ni patrón visible (P7-01).", color: "#3fa45b" },
+  { id: "criatura-voxel", name: "Criatura voxel", description: "Un personaje o criatura voxel con una pose que cuenta algo (V5-01).", color: "#4ade80" },
+  { id: "casa-modular", name: "Casa modular", description: "Una casa voxel construida con módulos reutilizados en rejilla (V6-01).", color: "#e8dcc0" },
+  { id: "foco", name: "Foco", description: "Una escena con un punto focal claro, comprobado en escala de grises (F07).", color: "#ff4fa3" },
+  { id: "tres-vistas", name: "Tres vistas", description: "El mismo objeto en vista lateral, 3/4 e isométrica (F08).", color: "#d08a50" },
   { id: "forma-primero", name: "Forma antes que detalle", description: "Un modelo voxel con su blockout guardado como primera versión (V2-01).", color: "#38e1ff" },
 ];

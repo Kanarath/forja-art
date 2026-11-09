@@ -183,29 +183,31 @@ const data = sprite ? getSprite(sprite) : null;
   .lab-head { display: flex; gap: 12px; align-items: baseline; padding: 10px 14px; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
   .tag { font: 600 .7rem var(--font-mono); color: #0e0f14; background: var(--accent); padding: 2px 8px; }
   .lab-head b { font: 600 .95rem var(--font-head); }
-  .body { display: grid; grid-template-columns: 1fr 230px; }
+  .body { display: grid; grid-template-columns: minmax(0, 1fr) 230px; }
   .stage { min-height: 260px; display: grid; place-items: center; padding: 12px; overflow: auto; background: conic-gradient(var(--checker-a) 25%, var(--checker-b) 0 50%, var(--checker-a) 0 75%, var(--checker-b) 0) 0 0 / 16px 16px; }
   .stage canvas { image-rendering: pixelated; cursor: crosshair; max-width: 100%; }
   .empty { color: #fff; background: #0008; padding: 10px 14px; }
-  .side { padding: 12px 14px; border-left: 1px solid var(--line); display: grid; gap: 10px; align-content: start; font-size: .85rem; }
+  .side { min-width: 0; padding: 12px 14px; border-left: 1px solid var(--line); display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; align-content: start; font-size: .85rem; }
   .real { display: flex; gap: 8px; align-items: end; flex-wrap: wrap; }
   .real span { width: 100%; font: .7rem var(--font-mono); color: var(--muted); text-transform: uppercase; }
-  .real canvas { image-rendering: pixelated; background: var(--checker-b); padding: 4px; }
+  .real canvas { image-rendering: pixelated; background: var(--checker-b); padding: 4px; max-width: 100%; }
+  /* sin imagen, un canvas mide 300×150 por defecto: no se muestra hasta que se dibuja algo */
+  .real canvas:not([width]) { display: none; }
   fieldset { border: 1px solid var(--line); padding: 6px 10px; display: grid; gap: 2px; margin: 0; }
   legend { font: .7rem var(--font-mono); color: var(--muted); text-transform: uppercase; padding: 0 4px; }
   input { accent-color: var(--accent); }
   .dot { display: inline-block; width: 10px; height: 10px; border: 2px solid; margin-right: 4px; vertical-align: -1px; }
   .dot.o { border-color: #ff3b3b; }
   .dot.l { border-color: #ffd23b; }
-  .zoom, .upload { display: grid; gap: 4px; }
-  .upload input { font-size: .8rem; max-width: 100%; }
+  .zoom, .upload { display: grid; grid-template-columns: minmax(0, 1fr); gap: 4px; }
+  .upload input { font-size: .8rem; width: 100%; min-width: 0; }
   .stats { display: grid; grid-template-columns: auto 1fr; gap: 2px 10px; margin: 0; }
   .stats :global(dt) { color: var(--muted); }
   .stats :global(dd) { margin: 0; font-family: var(--font-mono); }
   .stats :global(small) { color: var(--muted); }
   .hover { font-size: .75rem; color: var(--muted); min-height: 2.4em; margin: 0; }
   @media (max-width: 640px) {
-    .body { grid-template-columns: 1fr; }
+    .body { grid-template-columns: minmax(0, 1fr); }
     .side { border-left: 0; border-top: 1px solid var(--line); }
   }
 </style>

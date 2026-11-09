@@ -1,0 +1,29 @@
+{
+  "name": "view-34",
+  "description": "La misma caja en top-down 3/4 (la vista de los JRPG): se ve la tapa arriba y la cara frontal algo más baja que en la vista lateral.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "perspectiva"
+  ],
+  "palette": {
+    "o": "#1b1030",
+    "L": "#d08a50",
+    "M": "#a0603a",
+    "D": "#6b3d2e"
+  },
+  "rows": [
+    "oooooooooooo",
+    "oLLLLLLLLLLo",
+    "oMMMMMMMMMMo",
+    "oLLLLLLLLLLo",
+    "oDDDDDDDDDDo",
+    "oDMMMMMMMMDo",
+    "oDMMMMMMMMDo",
+    "oDDDDDDDDDDo",
+    "oDMMMMMMMMDo",
+    "oDMMMMMMMMDo",
+    "oDDDDDDDDDDo",
+    "oooooooooooo"
+  ]
+}

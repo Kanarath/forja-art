@@ -1,0 +1,237 @@
+---
+id: p6-01
+discipline: pixel
+level: 6
+order: 1
+title: "Frames y timing: un idle que respira"
+summary: "Un idle es un personaje quieto pero vivo. Anima a tu héroe con 3–4 frames: respiración de 1 píxel, un parpadeo corto y raro, y una duración distinta para cada frame."
+duration: 40
+status: borrador
+objectives:
+  - "Distinguir el frame (qué se dibuja) del timing (cuánto dura)"
+  - "Animar una respiración de 1 píxel moviendo solo cabeza y torso"
+  - "Colocar un parpadeo corto y poco frecuente"
+  - "Montar el idle en Aseprite con onion skin, duraciones, tag y exportación"
+prerequisites: [p5-01, p4-03]
+fundamentals: [f09]
+tools: [aseprite]
+piece:
+  name: "El idle de tu héroe 16×24 en 3–4 frames en bucle"
+  canvas: "16x24"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [idle-vivo]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Vas a forjar **el idle de tu héroe de 16×24**: la animación que se ve cuando el jugador no toca nada. El personaje no anda ni ataca. Solo respira y, de vez en cuando, parpadea.
+
+Dale a *Reproducir*. Son 4 frames hechos con solo 3 dibujos.
+
+<Animator sprites={["hero-chibi", "hero-breathe", "hero-chibi", "hero-blink"]} durations={[700, 600, 800, 100]} />
+
+Un sprite quieto parece un recorte de cartón. Con este bucle, el héroe parece estar esperando **contigo**.
+</Block>
+
+<Block kind="concepto">
+**Frame y timing son dos cosas distintas.**
+
+- **Frame:** cada dibujo de la secuencia.
+- **Timing:** cuánto tiempo se queda cada frame en pantalla, en milisegundos.
+
+Ya lo viste con el brillo de la gema en P4-03. Aquí la idea pesa más: con los mismos 3 dibujos puedes hacer un héroe tranquilo, uno nervioso o uno dormido. Solo cambian los números.
+
+Este es el mismo idle con **todos los frames a 250 ms**:
+
+<Animator sprites={["hero-chibi", "hero-breathe", "hero-chibi", "hero-blink"]} durations={[250, 250, 250, 250]} />
+
+<Why>
+El ritmo regular se lee como máquina. La respiración se vuelve un temblor y el parpadeo dura tanto que parece que el héroe se duerme. Los seres vivos tienen ritmos desiguales: pausas largas y gestos rápidos. Es el principio de **timing** de la animación clásica: el tiempo dice cuánto pesa algo y cómo se siente.
+</Why>
+
+### Respirar: 1 píxel basta
+
+Compara el frame base con el de respiración:
+
+<Sprite name="hero-chibi" scale={10} caption="hero-chibi: el héroe de P5-01. La cabeza empieza en la fila 4 y el personaje mide 21 filas" />
+<Sprite name="hero-breathe" scale={10} caption="hero-breathe: cabeza y torso bajan 1 píxel. El personaje mide 20 filas" />
+
+Qué cambia y qué no:
+
+- **Cabeza y torso bajan 1 píxel**, como un bloque: pelo, ojos, brazos y cinturón.
+- **La túnica pierde una fila:** la franja azul que había debajo del cinturón desaparece. Así el cuerpo «se encoge» al soltar el aire.
+- **Las piernas no se mueven:** las 5 filas de abajo (pantalón, piernas y botas) son idénticas en los dos frames. Los pies siguen clavados en el suelo.
+
+En total cambian 107 píxeles, todos de la cintura para arriba. Y ninguno se inventa: son los mismos píxeles, desplazados.
+
+<Tip title="Anima solo lo que cambia">
+Si las botas se movieran, el héroe parecería flotar o patinar. Los pies son el ancla: mientras no caminas, el peso está en el suelo y los pies no se despegan.
+</Tip>
+
+### Parpadear: corto y raro
+
+<Sprite name="hero-blink" scale={10} caption="hero-blink: cada ojo pasa de 2 píxeles de alto a 1. Solo cambian 2 píxeles en todo el sprite" />
+
+En `hero-chibi`, cada ojo es una columna de 2 píxeles oscuros. En `hero-blink` desaparece el de arriba y queda el de abajo: el párpado ha bajado. Todo lo demás es idéntico.
+
+- **Corto:** unos **100 ms**. Un parpadeo real es así de rápido. Si dura 250 ms o más, el personaje parece cansado o dormido.
+- **Raro:** una vez por vuelta del bucle, después de la pausa más larga. Si parpadea cada medio segundo, parece un tic nervioso.
+
+<Why>
+El ojo humano detecta el parpadeo de otro aunque sean 2 píxeles: es una señal de vida que reconocemos sin pensar. Por eso un cambio tan pequeño hace tanto. Y por eso tiene que ser breve: lo que dura poco se nota como gesto; lo que dura mucho se nota como estado.
+</Why>
+
+Vuelve al primer animador y prueba:
+
+1. Sube el frame 4 (parpadeo) a 400 ms. El héroe se adormila.
+2. Baja todos los frames a 150 ms. El héroe jadea, como si acabara de correr.
+3. Sube los frames 1 y 2 a 800 ms, el máximo del laboratorio. Un héroe muy tranquilo, casi aburrido.
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Parte de tu héroe">
+1. Abre el `.aseprite` de tu héroe de P5-01 (16×24). Si no lo tienes, <Keys k="Ctrl+N" />: 16×24, fondo transparente, y dibuja uno rápido por bloques.
+2. Guárdalo con otro nombre (por ejemplo, `heroe-idle.aseprite`) con *File → Save As*. A partir de ahí, guarda con <Keys k="Ctrl+S" />.
+3. Activa *View → Grid*.
+
+<Why>
+El frame base es el que más se ve. Si el héroe quieto no se lee, la animación solo moverá un problema.
+</Why>
+</Step>
+
+<Step n={2} title="Cuatro frames en la línea de tiempo">
+Abre la línea de tiempo (*Timeline*) si no la ves. Añade frames nuevos desde el menú *Frame* hasta tener **4 frames**. Cada frame nuevo copia el contenido del actual, así que empiezas con 4 héroes idénticos.
+
+El plan:
+
+- Frame 1: base.
+- Frame 2: respiración.
+- Frame 3: base otra vez.
+- Frame 4: parpadeo.
+
+<Tip>
+Los frames 1 y 3 son el mismo dibujo. Si los dejas idénticos, cualquier corrección del base tendrás que hacerla en los dos. Por eso conviene terminar bien el base **antes** de crear los frames.
+</Tip>
+</Step>
+
+<Step n={3} title="Respiración con onion skin">
+Ve al frame 2 y activa el onion skin (el botón está en la línea de tiempo). Verás el frame 1 en transparencia.
+
+1. Con la selección rectangular (<Keys k="M" />), selecciona todo lo que va **de la cintura para arriba**: cabeza, brazos, torso y cinturón.
+2. Bájalo **1 píxel** (arrastra la selección y fíjate en el onion skin).
+3. Al soltar, el cinturón cae sobre la fila de túnica que tenía debajo y la tapa. Comprueba que el cinturón queda justo encima del pantalón, sin una fila azul entre los dos.
+4. **No toques las piernas ni las botas.**
+
+<Why>
+El onion skin te dice exactamente cuánto has movido: si el fantasma del frame 1 asoma 1 píxel por encima de la cabeza, vas bien. Sin él, es fácil bajar 2 píxeles o desplazar algo de lado sin darte cuenta.
+</Why>
+
+<Warn>
+Revisa los bordes después de mover: el contorno de los hombros y de las manos debe seguir cerrado. Si queda un hueco o un píxel duplicado, el sprite «parpadea» en ese punto.
+</Warn>
+</Step>
+
+<Step n={4} title="Parpadeo">
+Ve al frame 4. Con el lápiz (<Keys k="B" />) y el cuentagotas (<Keys k="I" />) para coger el color de la piel, pinta de piel el píxel **de arriba** de cada ojo. Queda un ojo de 1 píxel de alto: el párpado bajado.
+
+Solo cambian 2 píxeles. No retoques nada más en este frame.
+</Step>
+
+<Step n={5} title="Duración de cada frame">
+Clic derecho sobre el número de cada frame en la línea de tiempo y abre *Frame Properties*. Pon:
+
+- Frame 1: **700 ms**.
+- Frame 2: **600 ms**.
+- Frame 3: **800 ms**.
+- Frame 4: **100 ms**.
+
+Reproduce (botón de *play* de la línea de tiempo) y déjalo correr varias vueltas.
+
+<Tip>
+El frame 3 es el más largo a propósito: es la pausa antes del parpadeo. Así el parpadeo llega por sorpresa, como en la gema de P4-03.
+</Tip>
+</Step>
+
+<Step n={6} title="Etiqueta la animación">
+Selecciona los 4 frames en la línea de tiempo y crea una etiqueta (*tag*) desde el menú *Frame*. Llámala `idle`.
+
+<Why>
+Ahora solo tienes una animación, pero en P6-02 añadirás el ciclo de caminar en el mismo archivo. Las etiquetas separan las animaciones: `idle`, `walk`… Los motores como Godot pueden leer esos nombres.
+</Why>
+</Step>
+
+<Step n={7} title="Exporta: GIF y spritesheet">
+1. Para enseñarlo: *File → Export → Export As*, formato **GIF**, con **Resize** al 400 % o más. El GIF guarda las duraciones.
+2. Para un juego: *File → Export → Export Sprite Sheet*, en una fila horizontal, PNG a 1×. Si te deja incluir los datos en JSON, actívalo: guarda las duraciones y las etiquetas.
+
+<Tip>
+Una spritesheet PNG sola **no guarda las duraciones**. Apúntalas (700, 600, 800, 100) o exporta también el JSON. En el nivel 9 llevarás esta tira a Godot (*AnimatedSprite2D* y *SpriteFrames*).
+</Tip>
+</Step>
+
+<Warn title="Verifica en tu versión">
+Los nombres y la posición pueden variar según la versión de Aseprite: el panel *Timeline*, las opciones de frame nuevo y de etiqueta del menú *Frame*, *Frame Properties* (clic derecho sobre el frame), el botón de onion skin y las opciones de *Export Sprite Sheet* (disposición, salida JSON con etiquetas). Si no encuentras algo, búscalo por nombre en los menús.
+</Warn>
+</Block>
+
+<Block kind="version">
+Ahora a tu manera. Mantén los pies quietos, la respiración de 1 píxel y un parpadeo corto. Elige uno:
+
+- **Otro carácter:** el mismo dibujo con otro timing. Un guardia alerta (pausas cortas, 300–400 ms) o un mago tranquilo (pausas largas, parpadeo tras la pausa más larga). Apunta tus duraciones.
+- **Tres frames:** quita el frame 3 y deja base, respiración y parpadeo. ¿Qué duraciones necesitas para que el parpadeo no parezca demasiado frecuente?
+- **Un detalle secundario:** que algo más acompañe a la respiración, como un mechón de pelo o la punta de una capa que baja 1 píxel **un frame después** que el cuerpo.
+</Block>
+
+<Block kind="errores">
+<Mistake title="Todos los frames con la misma duración" wrongLabel="4 × 250 ms" rightLabel="700 + 600 + 800 + 100 ms">
+  <p slot="wrong">Ritmo de metrónomo: la respiración tiembla y el parpadeo dura tanto que parece que el héroe se duerme.</p>
+  <p slot="right">Pausas largas y un parpadeo de 100 ms. El héroe respira tranquilo y parpadea de vez en cuando.</p>
+
+Compara los dos animadores del concepto: son los mismos 4 dibujos. Corrígelo dando a cada frame su duración: largas las poses de reposo, corto el parpadeo.
+</Mistake>
+
+<Mistake title="Moverlo todo, también los pies" wrongLabel="Todo el héroe baja 1 píxel" rightLabel="Bajan cabeza y torso; los pies se quedan">
+  <p slot="wrong">Si bajas el sprite entero, el héroe no respira: rebota o flota sobre el suelo. Las botas cambian de sitio en cada frame.</p>
+  <p slot="right">En hero-breathe solo cambian filas por encima de la cintura. Las 5 filas de las piernas son idénticas a las de hero-chibi.</p>
+
+El suelo no se mueve, así que los pies tampoco. Anima solo lo que cambia: en un idle, el pecho y lo que va encima.
+</Mistake>
+
+<Warn title="Píxeles que hierven (boiling)">
+Si redibujas cada frame a mano en vez de copiar y desplazar, los píxeles cambian de sitio sin motivo: un píxel del contorno aquí, una mota de luz allá. En bucle, el sprite «hierve»: tiembla por todas partes y el ojo no sabe qué se mueve de verdad. Corrígelo partiendo siempre de una copia del frame base y cambiando solo lo que la animación necesita. Usa el onion skin para comprobar que el resto coincide píxel a píxel.
+
+Ojo: en algunos juegos el temblor de línea es un **estilo** buscado (animación «dibujada a mano»), y es válido si es intencionado y constante. El error es el que aparece sin querer.
+</Warn>
+
+<Warn title="Parpadeo largo o demasiado frecuente">
+Un parpadeo de 300 ms o más se lee como sueño; uno cada medio segundo, como un tic. Déjalo en unos 100 ms y colócalo después de la pausa más larga.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+Juzga tu idle **a 1×** y deja que corra varias vueltas: a tamaño de juego, 1 píxel de respiración se nota de sobra.
+
+<Checklist items={[
+  "Tengo 3 o 4 frames en bucle, etiquetados como idle",
+  "Cada frame tiene su duración y no todas son iguales",
+  "La respiración mueve cabeza y torso 1 píxel; las piernas y las botas no se mueven",
+  "El parpadeo dura unos 100 ms y llega después de una pausa larga",
+  "Fuera de lo que anima, los frames coinciden píxel a píxel (sin boiling)",
+  "El contorno sigue cerrado en todos los frames",
+  "He exportado un GIF ampliado y una spritesheet PNG a 1× con sus duraciones apuntadas",
+]} />
+
+<Quiz q="Tienes los mismos 4 dibujos. ¿Qué cambia si pones todos los frames a 250 ms?" options={["Nada: la animación depende solo de los dibujos", "El carácter: se vuelve mecánico y el parpadeo parece sueño", "El tamaño del archivo exportado a PNG"]} answer={1}>
+El timing es la mitad de la animación. Con los mismos frames, otras duraciones dan otro personaje.
+</Quiz>
+
+<Quiz q="En el frame de respiración, ¿qué no debe moverse?" options={["Los ojos", "El cinturón", "Las piernas y las botas"]} answer={2}>
+Los pies son el ancla en el suelo. Si se mueven, el héroe flota o rebota en vez de respirar.
+</Quiz>
+
+<Quiz q="¿Cuánto debería durar el frame de parpadeo?" options={["Unos 100 ms", "Lo mismo que los demás", "Más de 500 ms, para que se vea bien"]} answer={0}>
+Corto y raro. Un parpadeo largo se lee como cansancio o sueño.
+</Quiz>
+</Block>

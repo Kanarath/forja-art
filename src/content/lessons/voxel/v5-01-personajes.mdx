@@ -1,0 +1,227 @@
+---
+id: v5-01
+discipline: voxel
+level: 5
+order: 1
+title: "Personajes y criaturas voxel: forma y pose"
+summary: "Modela tu chibi con simetría, rómpela para posarlo y forja una criatura cuyo carácter se lee por la forma: redonda, con ojos y aplastada."
+duration: 50
+status: borrador
+prerequisites: [v2-01, f09-01]
+fundamentals: [f02, f09]
+objectives:
+  - "Modelar un personaje chibi con Mirror y romper la simetría al final para posarlo"
+  - "Contar algo con una pose cambiando solo dos partes: un brazo y una pierna"
+  - "Elegir la forma de una criatura según su carácter: redondo, amable; picos, amenaza"
+  - "Posar una criatura sin brazos estirándola o aplastándola sin perder volumen"
+tools: [magicavoxel]
+piece:
+  name: "Tu chibi en una pose y una criatura cuyo carácter se lee por la forma"
+  canvas: "16x16x16"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [criatura-voxel]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Hoy forjas **dos modelos que hacen algo**. Tu personaje chibi, pero ya no de pie y quieto: **saludando**. Y una criatura que se lee como amable o como peligrosa **antes** de ver sus ojos.
+
+<VoxViewer model="chibi-pose" stage={1} title="Tu chibi en una pose: el saludo" />
+
+Pasa a la etapa «Pose neutra» y vuelve al «Saludo». Es el mismo modelo: solo han cambiado **un brazo y una pierna**.
+
+<VoxViewer model="slime-voxel" stage={2} title="Una criatura sin brazos que también posa: el slime aplastado" />
+</Block>
+
+<Block kind="concepto">
+**Repaso rápido: la proporción chibi.** Ya la diseñaste en [F09-01](/forja-art/fundamentos/f09-01/): cabeza casi la mitad de la altura para que quepa una cara. En el modelo `chibi` la cabeza ocupa **8 de 15 vóxels** de alto; el cuerpo, 5, y las piernas, 2. No la repetimos aquí: hoy partimos de ese cuerpo y le damos **intención**.
+
+**1 · Simetría para modelar, asimetría para posar.** Un personaje de frente es simétrico: brazos, piernas y ojos están a la misma distancia del centro. En el chibi neutro los brazos ocupan las columnas 1–2 y 9–10, las piernas 3–4 y 7–8, y los ojos, la 4 y la 7. Todo se refleja sobre el centro. Por eso se modela con **Mirror**: haces medio cuerpo y el otro medio sale solo.
+
+Pero un personaje perfectamente simétrico **no cuenta nada**: es un maniquí en pose de catálogo.
+
+<Why title="Por qué romper la simetría al final">
+Si posas pronto, cada corrección de proporción la tienes que hacer dos veces y de dos formas distintas. Termina el cuerpo con Mirror, comprueba la silueta y **solo entonces** apaga Mirror y mueve partes. En Blender harías lo mismo: modificador Mirror durante el modelado y aplicarlo antes de posar.
+</Why>
+
+**2 · La pose: dos partes bastan.** Compara las dos etapas de `chibi-pose`:
+
+- **Brazo:** el brazo de un lado (2×2×3 vóxels pegado al cuerpo) desaparece. En su lugar hay un **hombro** de 1×2×2 y un brazo de **1 vóxel de ancho** que sube 7 capas, pegado a la cabeza, hasta donde empieza el pelo.
+- **Pierna:** la pierna del **otro** lado avanza **un vóxel** hacia delante, hacia donde mira la cara.
+- **Todo lo demás**, igual: cabeza, ojos, túnica, cinturón, el otro brazo y la otra pierna.
+
+<VoxViewer model="chibi-pose" stage={0} title="Pose neutra frente a Saludo: cambia de etapa y busca las dos diferencias" />
+
+<Why title="Por qué brazo y pierna de lados opuestos">
+El brazo levantado va a un lado y la pierna adelantada, al otro. Así el peso visual se reparte en diagonal y el cuerpo parece en equilibrio. Si levantas brazo y pierna del mismo lado, el personaje parece a punto de caerse. Y basta **un vóxel** de paso: a esta escala, un vóxel es mucho.
+</Why>
+
+**3 · Criaturas: la forma es el carácter.** Es el lenguaje de formas de [P5-03](/forja-art/pixel/p5-03/), ahora en 3D: **redondo = amable**, **picos = amenaza**. En 2D lo veías en el slime y el murciélago:
+
+<Sprite name="slime" scale={6} caption="Slime: una cúpula sin puntas" />
+<Sprite name="bat" scale={6} caption="Murciélago: picos en alas y orejas" />
+
+En voxel la diferencia es que la forma se ve **desde todas las cámaras**. Mira las tres etapas de `slime-voxel`:
+
+<VoxViewer model="slime-voxel" stage={0} title="Slime voxel: Blockout, Color y ojos, Squash" />
+
+- **Blockout:** una cúpula de 11×11 vóxels de base y 7 de alto, en un solo verde. Sin ojos ya parece blanda: es la forma la que habla.
+- **Color y ojos:** las dos capas de abajo en verde oscuro (AO pintado, como en V3-01), un brillo claro en las dos capas de arriba, en el cuarto delantero izquierdo, y **dos ojos de 2 vóxels** de alto en la cara frontal.
+- **Squash:** la misma criatura, ahora de **13×13 y 5 de alto**. Mismos colores, mismo brillo y los ojos una capa más abajo.
+
+<Why title="Cómo posa algo sin brazos">
+Un slime no puede saludar. Su pose es **el cuerpo entero**: aplastarse (sorpresa, aterrizaje, miedo) o estirarse (salto, alerta). La regla es conservar el volumen: si baja, se ensancha. Haz la cuenta con base por altura: 11×11×7 es parecido a 13×13×5. Si se aplasta sin ensancharse, parece que encoge, no que se aplasta.
+</Why>
+
+<Tip>
+La pose también es forma. Un slime aplastado es aún más ancho y bajo: todavía más amable. Si quieres un slime que dé miedo, no lo aplastes: estíralo hacia arriba y sácale picos.
+</Tip>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Prepara la escena y la paleta">
+1. Abre MagicaVoxel y crea una escena nueva. Pon el modelo a **16×16×16**.
+2. En la **paleta** de la izquierda, pon en una fila los colores de tu personaje de F09-01: piel, pelo, ropa, pantalón, botas y el oscuro de los ojos.
+3. En la misma fila, deja sitio para la criatura: **tres tonos** de su color (oscuro, medio, claro).
+
+<Why>
+Personaje y criatura van a vivir en la misma escena. Si comparten paleta, parecen del mismo juego, igual que el kit del herrero de V4-01.
+</Why>
+</Step>
+
+<Step n={2} title="Modela el cuerpo con Mirror">
+1. Activa el botón **Mirror X**. Gira la cámara con el **botón derecho** hasta ver el modelo de frente y comprueba que el reflejo cae sobre el eje vertical del cuerpo.
+2. Modo **Attach**, pincel **Box**: piernas (2 capas), cuerpo (5 capas) y cabeza (8 capas). Haz solo un lado; el otro se completa solo.
+3. Modo **Paint**: botas, cinturón y pelo arriba y detrás.
+4. Pincel **Voxel**: un brazo de 2×2×3 a un lado del cuerpo y un ojo de 2 vóxels de alto en la cara. Mirror pone el otro brazo y el otro ojo.
+
+<Tip>
+Compara con la etapa «Pose neutra» del visor de arriba: usa el corte por capas para ver dónde empieza cada parte.
+</Tip>
+</Step>
+
+<Step n={3} title="Comprueba la silueta antes de romper nada">
+1. Gira el modelo: de frente, de lado y desde arriba.
+2. Si algo falla en proporción (cabeza pequeña, piernas largas), corrígelo **ahora**, con Mirror todavía encendido.
+3. Guarda una copia: `chibi_neutro.vox`.
+
+<Why>
+Es tu último momento simétrico. Después de posar, cada cambio de proporción cuesta el doble. Y la copia neutra te sirve de base para otras poses.
+</Why>
+</Step>
+
+<Step n={4} title="Apaga Mirror y posa: brazo y pierna">
+1. **Apaga Mirror X.** Desde aquí, cada vóxel es solo tuyo.
+2. Modo **Erase**, pincel **Voxel**: borra un brazo.
+3. Modo **Attach**: pon un hombro de 1×2×2 y un brazo de 1 vóxel de ancho que suba pegado a la cabeza. Usa el color de la piel.
+4. En la pierna **del otro lado**, borra sus vóxels y vuelve a ponerlos **un vóxel más adelante**, hacia donde mira la cara.
+5. Guarda como `chibi_saludo.vox`.
+
+<Warn>
+Si dejas Mirror encendido, levantarás los dos brazos a la vez: el personaje ya no saluda, se rinde. Comprueba el botón antes de tocar nada.
+</Warn>
+</Step>
+
+<Step n={5} title="Trabaja por partes en el modo World (opcional)">
+Posar borrando y volviendo a poner vóxels funciona en un chibi pequeño. Hay otra forma más cómoda para poses que vas a cambiar mucho:
+
+1. Pasa al modo **World**, donde ves todos los modelos de la escena.
+2. Separa el brazo en **un modelo propio**: crea un modelo nuevo, modela en él el brazo y bórralo del cuerpo. Tendrás un modelo para el cuerpo y otro para el brazo.
+3. Ahora puedes **mover y girar** solo el brazo sin borrar nada del cuerpo.
+
+<Why>
+Es la misma idea que separar piezas en Blender antes de posar. El cuerpo no se toca; cada pose es solo colocar las partes de otra manera.
+</Why>
+
+<Tip>
+Si giras una parte, comprueba que los vóxels siguen alineados con la rejilla del cuerpo. En voxel, un giro que no sea de 90° no queda limpio.
+</Tip>
+</Step>
+
+<Step n={6} title="La criatura: blockout, color y squash">
+1. Crea un modelo nuevo para la criatura (desde **World**, junto al chibi).
+2. **Blockout:** con **Mirror X** y **Mirror Y** encendidos, levanta una cúpula: base ancha, unos 11×11, y unos 7 de alto. Cada capa se estrecha hacia arriba. Un solo color.
+3. **Color y ojos:** modo **Paint**. Las 2 capas de abajo, en el tono oscuro; un brillo claro arriba, en un solo lado; apaga Mirror Y y pinta dos ojos de 2 vóxels en la cara frontal.
+4. Guarda `criatura_v1.vox`.
+5. **Squash:** en una copia, rehaz la cúpula **más baja y más ancha** (por ejemplo, 13×13 y 5 de alto) con los mismos colores. Los ojos bajan con ella.
+6. Guarda `criatura_squash.vox`.
+
+<Why>
+Con Mirror X e Y a la vez modelas un cuarto de la cúpula y los otros tres salen solos, igual que el cubo de agua de V4-01. Los ojos y el brillo van en un solo lado, así que ahí la simetría sobra.
+</Why>
+</Step>
+
+<Step n={7} title="Renderiza las dos piezas">
+1. En **World**, pon el chibi saludando junto a la criatura.
+2. Pulsa **Render** y elige una cámara que muestre la cara de los dos.
+3. Exporta un PNG del render.
+
+<Tip>
+Prueba también la cámara del juego que imaginas. Si el brazo levantado se esconde detrás de la cabeza desde esa cámara, llévalo un poco más hacia fuera.
+</Tip>
+</Step>
+
+<Warn title="Verifica en tu versión">
+Los nombres y la ubicación de **Mirror**, **Attach**/**Erase**/**Paint**, los pinceles y el modo **World** pueden variar entre versiones de MagicaVoxel. Comprueba sobre todo cómo se crea un modelo nuevo en **World** y cómo se mueve o se gira un modelo allí: es lo que más cambia de una versión a otra.
+</Warn>
+</Block>
+
+<Block kind="version">
+Ahora, a tu manera. Elige un reto:
+
+- **Otra pose, dos partes:** parte de `chibi_neutro.vox` y cuenta otra cosa cambiando solo un brazo y una pierna: señalar, levantar una espada, dar un paso de huida.
+- **La criatura contraria:** si tu criatura es amable, haz su versión amenazante con la misma paleta. Estírala hacia arriba y saca picos al contorno: orejas, espinas, alas como las del murciélago.
+- **Estirar en vez de aplastar:** haz la pose contraria al squash: **más alta y más estrecha**, como al saltar. Conserva el volumen: si sube, adelgaza.
+
+**Prueba de lectura.** Renderiza tu criatura en silueta (un solo color oscuro) desde la cámara del juego. Sin ojos ni color, ¿se adivina si es amable o peligrosa?
+</Block>
+
+<Block kind="errores">
+<Mistake title="Posar con Mirror encendido" wrongLabel="Pose simétrica" rightLabel="Pose asimétrica">
+  <p slot="wrong">Levantas un brazo con Mirror X encendido y se levantan los dos. Adelantas una pierna y avanzan las dos. El personaje se rinde o flota, no saluda.</p>
+  <p slot="right">Mirror para el cuerpo; apagado para posar. Un brazo arriba y la pierna del otro lado un vóxel adelante.</p>
+
+Una pose es, por definición, una ruptura de la simetría. Termina el cuerpo con Mirror, guarda la copia neutra y apágalo antes de mover nada.
+</Mistake>
+
+<Mistake title="Criatura «peligrosa» con forma amable" wrongLabel="Cúpula: se lee amable" rightLabel="Picos: se lee amenaza">
+  <Sprite slot="wrong" name="slime" scale={8} view="silhouette" />
+  <Sprite slot="right" name="bat" scale={8} view="silhouette" />
+
+Si tu enemigo es una cúpula lisa, la forma dice «inofensivo» aunque le pongas ojos rojos. En voxel pasa igual que en pixel: lleva picos al contorno (orejas, cuernos, espinas) y comprueba que se ven **desde varias cámaras**, no solo de frente.
+</Mistake>
+
+<Warn title="Error típico: squash que encoge">
+Aplastas la criatura bajando su altura, pero la dejas igual de ancha. No parece aplastada: parece **más pequeña**. **Corrección:** cuando baja, se ensancha. El slime del visor pasa de 11×11×7 a 13×13×5: casi el mismo volumen.
+</Warn>
+
+<Warn title="Error típico: posar demasiadas partes">
+Mueves brazos, piernas, cabeza y torso a la vez y el chibi se convierte en un lío de bloques que ya no se lee. A esta escala, **dos partes y un vóxel de paso** bastan. Si la pose no se entiende, quita cambios antes de añadir más.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+<Checklist items={[
+  "He modelado el cuerpo con Mirror X y he guardado una copia neutra",
+  "La cabeza ocupa casi la mitad de la altura del chibi",
+  "He apagado Mirror para posar y la pose cambia solo un brazo y una pierna",
+  "El brazo levantado y la pierna adelantada son de lados opuestos",
+  "Mi criatura se lee como amable o como peligrosa en silueta, sin ojos ni color",
+  "La criatura tiene una pose de cuerpo entero (squash o estirada) que conserva el volumen",
+  "Chibi y criatura comparten paleta y están renderizados juntos",
+]} />
+
+<Quiz q="¿Cuándo apagas Mirror al modelar tu chibi?" options={["Al principio, para que cada lado sea distinto", "Cuando el cuerpo está terminado y vas a posarlo", "Nunca: la pose también debe ser simétrica"]} answer={1}>
+Mirror ahorra trabajo y asegura proporciones iguales mientras modelas. Se apaga al final, porque posar es romper la simetría.
+</Quiz>
+
+<Quiz q="Aplastas tu slime de 7 a 5 vóxels de alto. ¿Qué más haces?" options={["Nada: ya está aplastado", "Lo ensancho para conservar el volumen", "Le quito los ojos"]} answer={1}>
+Un squash conserva el volumen: si baja, se ensancha. Si no, parece que encoge en vez de aplastarse.
+</Quiz>
+
+<Quiz q="¿Qué hace que tu criatura se lea como amable antes de pintarle los ojos?" options={["El color verde", "Su forma redonda, baja y sin puntas", "El tamaño de la paleta"]} answer={1}>
+La forma se lee antes que el color y el detalle. Una cúpula sin picos dice «amable» desde el blockout.
+</Quiz>
+</Block>

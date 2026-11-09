@@ -1,0 +1,247 @@
+---
+id: f08-01
+discipline: fundamentos
+level: 8
+order: 1
+title: "Perspectivas: lateral, 3/4 e isométrica"
+summary: "La misma caja en las tres vistas de los juegos 2D, y en voxel con la cámara ortográfica o isométrica. Elige una vista y mantenla en toda la escena."
+duration: 45
+status: borrador
+prerequisites: [f02-01]
+fundamentals: [f08]
+objectives:
+  - "Distinguir la vista lateral, la top-down 3/4 y la isométrica de píxel por lo que se ve de cada objeto"
+  - "Dibujar el mismo prop en las tres vistas, con líneas 2:1 y tres tonos en la isométrica"
+  - "Usar la cámara ortográfica o isométrica de MagicaVoxel como referencia para el pixel"
+  - "Mantener una sola vista para tiles, personajes y props de una escena"
+tools: [aseprite, magicavoxel]
+piece:
+  name: "El mismo objeto en vista lateral, 3/4 e isométrica, más su render isométrico en voxel"
+  canvas: "16x16"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [tres-vistas]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Hoy forjas **el mismo objeto cuatro veces**:
+
+- una caja (o un prop tuyo) en **vista lateral**, como en un plataformas;
+- la misma caja en **top-down 3/4**, como en un JRPG;
+- la misma caja en **isométrica de píxel**, con líneas 2:1;
+- y la caja en **voxel**, renderizada con cámara **ortográfica o isométrica**.
+
+Es el mismo objeto. Lo que cambia es **desde dónde lo mira la cámara**.
+
+<Sprite name="view-side" scale={10} caption="Lateral: solo el frente" />
+<Sprite name="view-34" scale={10} caption="3/4: tapa arriba y frente más bajo" />
+<Sprite name="view-iso" scale={8} caption="Isométrica: tapa y dos caras" />
+
+<VoxViewer model="caja" stage={2} title="La caja en voxel: gírala y busca las tres vistas" />
+</Block>
+
+<Block kind="concepto">
+Cada vista es una **promesa** sobre dónde está la cámara. Todo lo que dibujes en esa escena tiene que cumplirla.
+
+### Vista lateral (plataformas)
+
+La cámara mira **de frente y a la altura del objeto**. Solo ves una cara.
+
+<Sprite name="view-side" scale={12} caption="view-side (12×12): la cara frontal ocupa todo el alto, con tres tablas. No hay tapa ni suelo." />
+
+- La cara frontal ocupa las **10 filas** interiores (12 con el contorno): tres tablas iguales.
+- No se ve la tapa. El suelo no es una superficie: es **una línea** bajo los pies.
+- Es la vista de *Super Mario* o *Celeste*: perfecta para saltar, porque la altura se lee sin ambigüedad.
+
+### Top-down 3/4 (JRPG)
+
+La cámara **sube y mira hacia abajo en diagonal**. Ahora ves la tapa, y el frente se **acorta**.
+
+<Sprite name="view-34" scale={12} caption="view-34 (12×12): 3 filas de tapa clara arriba y solo 7 de frente, con dos tablas" />
+
+- La caja mide lo mismo de alto en pantalla (12 px), pero el reparto cambia: **3 filas de tapa** y **7 de frente**, frente a las 10 de la lateral.
+- La tapa es el tono **más claro**: mira hacia arriba, hacia la luz.
+- El suelo ya es una superficie que se ve: por eso esta vista sirve para caminar en todas direcciones.
+
+<Why title="Por qué el frente se acorta">
+Cuando la cámara se inclina, una parte de la altura de la imagen se la queda la tapa. El frente no encoge en la realidad: lo ves **de refilón**, en escorzo. Cuanto más alta la cámara, más tapa y menos frente.
+</Why>
+
+<Why title="Un solo ángulo para todo el mundo">
+En 3/4, **todo** el mundo comparte el mismo ángulo de cámara: los tiles del suelo, los personajes y los props. Si la caja enseña 3 filas de tapa, la mesa de al lado también enseña la suya, y el héroe se ve un poco desde arriba. Lo verás al hacer tiles en la lección [P7-01](/forja-art/pixel/p7-01/), pero la regla vale ya: una escena, un ángulo.
+</Why>
+
+### Isométrica de píxel
+
+La cámara mira **en diagonal desde arriba y desde una esquina**. No hay ninguna cara de frente: ves la tapa y dos caras laterales.
+
+<Sprite name="view-iso" scale={12} caption="view-iso (16×16): aristas en tramos de 2 píxeles por 1 de alto (2:1), arista vertical en el centro" />
+
+- Las aristas superiores e inferiores son **líneas 2:1**: tramos de 2 píxeles que bajan 1. Son las pendientes limpias de [Líneas pixel-perfect (P2-01)](/forja-art/pixel/p2-01/).
+- La tapa es un rombo que ocupa de la fila 1 a la 7. Debajo, la arista vertical del centro separa las dos caras.
+- La frontera entre la tapa y cada cara también es 2:1. Los laterales y la arista central son verticales.
+- **Ninguna cara mira de frente**: no hay aristas horizontales. Solo las puntas de arriba y de abajo son planas, donde se juntan dos tramos 2:1.
+
+<Why title="Por qué 2:1 y no 30° de verdad">
+La isométrica real usa 30°, que en píxeles da escalones irregulares. La de píxel usa **2:1** (unos 26,6°) porque es la pendiente limpia más parecida: siempre 2 píxeles, 1 escalón. Así las aristas se leen rectas y los tiles encajan.
+</Why>
+
+### Tres caras, tres valores
+
+En la isométrica, cada cara mira a un sitio distinto, así que cada una lleva **su tono**: tapa clara, cara izquierda media y cara derecha oscura. Es la luz desde arriba a la izquierda de [Luz y sombra en los dos mundos (F05-01)](/forja-art/fundamentos/f05-01/).
+
+<Sprite name="view-iso" scale={12} view="gray" caption="view-iso en grises: tres valores separados. Así se lee el volumen." />
+
+Si dos caras tuvieran el mismo valor, la caja se aplanaría en un hexágono.
+
+### Y en voxel: la cámara decide la vista
+
+En voxel no dibujas la vista: **la eliges con la cámara**. MagicaVoxel tiene varios modos de proyección:
+
+- **Perspectiva**: lo lejano se ve más pequeño y las aristas paralelas convergen. Es lo natural en 3D, pero no encaja con el pixel art.
+- **Ortográfica**: las aristas paralelas siguen paralelas y nada encoge con la distancia. De lado te da la vista lateral; inclinada desde arriba, la 3/4.
+- **Isométrica**: ortográfica desde una esquina, con la tapa y dos caras a la vista.
+
+<Why title="Por qué ortográfica para el pixel art">
+El pixel art de juegos no tiene punto de fuga: una caja al fondo de la pantalla mide lo mismo que una delante. La cámara ortográfica o isométrica cumple esa regla. Por eso un render isométrico de tu modelo es una **referencia directa** para dibujar en pixel: te dice qué caras se ven y dónde caen las aristas.
+</Why>
+
+<Tip>
+Vienes de Blender: es lo mismo que pasar la cámara de *Perspective* a *Orthographic*. La diferencia es que aquí el resultado tiene que casar con un sprite.
+</Tip>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Vista lateral en Aseprite">
+1. <Keys k="Ctrl+N" />: **12×12**, fondo transparente. Activa *View → Grid*.
+2. Lápiz (<Keys k="B" />): un rectángulo de contorno que ocupe todo el lienzo.
+3. Rellena con el tono medio (<Keys k="G" />).
+4. Con un tono oscuro, un marco de 1 píxel por dentro del contorno y dos líneas horizontales que separen **tres tablas** de 2 filas cada una.
+
+<Why>
+En lateral solo existe el frente. No dibujes tapa ni sombra de suelo: el suelo de tu juego será una línea, y la caja se apoya en ella.
+</Why>
+</Step>
+
+<Step n={2} title="Vista 3/4: roba filas al frente para la tapa">
+1. Duplica el archivo y guárdalo con otro nombre (<Keys k="Ctrl+S" />).
+2. Selecciona (<Keys k="M" />) las **3 filas de arriba** del interior: ahí va la tapa.
+3. Píntalas con un tono **más claro** que el frente. Una línea media en el centro separa las dos tablas de la tapa.
+4. Debajo quedan **7 filas** de frente: caben dos tablas, no tres.
+
+<Tip>
+Compara con `view-34`: la caja mide lo mismo en pantalla. El frente no se ha estirado hacia abajo; ha cedido sitio a la tapa.
+</Tip>
+</Step>
+
+<Step n={3} title="Isométrica: el rombo de la tapa con líneas 2:1">
+1. <Keys k="Ctrl+N" />: **16×16**, fondo transparente.
+2. Lápiz con *Pixel-perfect*. Desde el centro de arriba, traza hacia cada lado tramos de **2 píxeles que bajan 1** hasta los bordes del lienzo: es la mitad superior del rombo de la tapa.
+3. Baja una línea **vertical** por cada borde del lienzo: los laterales de la caja.
+4. Cierra abajo con dos líneas 2:1 que se junten en el centro. Ya tienes el contorno, un hexágono.
+
+<Tip>
+En `view-iso`, el contorno oscuro solo rodea la caja. Las fronteras de dentro (la mitad inferior del rombo y la arista central) no llevan línea: las marca el **cambio de tono** del paso siguiente.
+</Tip>
+
+<Warn>
+Cuenta los tramos. Un tramo de 3 o de 1 en mitad de una línea 2:1 se ve como un bulto (es un jaggy, como en P2-01).
+</Warn>
+</Step>
+
+<Step n={4} title="Tres tonos, uno por cara">
+1. Rellena todo el interior con el tono **claro** (<Keys k="G" />).
+2. Con el tono **medio**, pinta la cara izquierda: su borde superior baja en 2:1 desde el lateral izquierdo hasta el centro, y de ahí hacia abajo sigue la arista vertical.
+3. Con el tono **oscuro**, lo mismo en la cara derecha. Lo que queda claro arriba es el rombo de la tapa.
+4. Exporta a 1× con *File → Export → Export As* y súbelo al Inspector. Pulsa **Grises**: deben verse tres valores distintos.
+
+<Inspector upload title="Tu caja isométrica en grises" />
+</Step>
+
+<Step n={5} title="La caja en voxel, con cámara isométrica">
+1. Descarga el .vox de la caja del visor de arriba (o modela tu prop en una rejilla de 8×8×8) y ábrelo en MagicaVoxel.
+2. Gira con el **botón derecho** y comprueba que en perspectiva las aristas convergen.
+3. Busca los ajustes de **proyección** de la cámara y cambia de perspectiva a **ortográfica** o **isométrica**.
+4. Coloca la cámara de modo que veas la tapa y dos caras, como en tu sprite.
+5. Pulsa *Render* arriba y guarda la imagen en PNG.
+
+<Why>
+Pon el render junto a tu `view-iso`. Si las caras no casan, mira el render: es tu referencia para corregir el sprite.
+</Why>
+</Step>
+
+<Step n={6} title="Las cuatro, juntas">
+Exporta los tres sprites con *Resize* a la misma escala entera y colócalos junto al render. Debe reconocerse **el mismo objeto** en las cuatro imágenes.
+
+<Warn title="Verifica en tu versión">
+El nombre y la ubicación de los modos de proyección de la cámara (perspectiva, ortográfica, isométrica) cambian entre versiones de MagicaVoxel. Busca los controles de la cámara aunque se llamen de otra forma.
+</Warn>
+</Step>
+</Block>
+
+<Block kind="version">
+Mismo método, otro objeto. Elige un reto:
+
+- **Un prop tuyo**: un barril, un cofre o una mesa en las tres vistas. Para el voxel, el `cofre` o el `barril` del curso te sirven de base.
+- **Más alto que ancho**: una torre o un farol. En 3/4 la tapa sigue siendo fina y el frente largo; en isométrica, las caras laterales son altas y estrechas.
+- **Elige tu juego**: decide si tu proyecto es de plataformas, JRPG o isométrico, y redibuja en esa vista tres props que ya tengas del curso.
+
+<Tip>
+Para el render, prueba primero la cámara ortográfica de lado: es tu vista lateral. Luego inclínala desde arriba para la 3/4 y gírala a la esquina para la isométrica. Un solo modelo, tres referencias.
+</Tip>
+</Block>
+
+<Block kind="errores">
+<Warn title="Error: mezclar vistas en la misma escena">
+Pones una caja en **vista lateral** sobre un suelo de tiles en **3/4**. El suelo dice «la cámara está arriba» y la caja dice «la cámara está a su altura». El ojo no sabe dónde está y la caja parece una pegatina pegada al suelo.
+
+**Corrección**: elige una vista para todo el juego. Si los tiles son 3/4, la caja enseña su tapa (como `view-34`), los personajes también se ven un poco desde arriba y todos los props comparten ese ángulo.
+</Warn>
+
+<Mistake title="Isométrica con dos caras del mismo tono" wrongLabel="Color plano: un hexágono" rightLabel="Tres valores: un volumen">
+  <Sprite slot="wrong" name="view-iso" scale={8} view="silhouette" />
+  <Sprite slot="right" name="view-iso" scale={8} view="gray" />
+
+La silueta es el caso extremo: es lo que queda cuando no hay ninguna diferencia de valor entre caras. Si la tapa y las caras comparten valor, la isométrica pierde lo que la hace funcionar: queda un hexágono que puede ser una caja, un dado o una gema. **Corrección**: tres tonos separados en valor, claro arriba, medio a la izquierda y oscuro a la derecha, con la misma luz que el resto del juego.
+</Mistake>
+
+<Mistake title="Un prop lateral en un mundo 3/4" wrongLabel="Lateral: sin tapa" rightLabel="3/4: la tapa a la vista">
+  <Sprite slot="wrong" name="view-side" scale={8} />
+  <Sprite slot="right" name="view-34" scale={8} />
+
+Las dos cajas son correctas en su vista. El error es poner la de la izquierda en un mapa de JRPG: allí la cámara está arriba y todo enseña su tapa, así que una caja sin tapa rompe la escena. **Corrección**: en un mundo 3/4, la caja de la derecha.
+</Mistake>
+
+<Warn title="Error: añadir la tapa sin acortar el frente">
+Al pasar de lateral a 3/4, es habitual pegar la tapa **encima** del frente sin tocarlo: la caja crece en altura y parece una torre. **Corrección**: la caja ocupa lo mismo. La tapa se queda con las filas de arriba (3 en `view-34`) y el frente baja de 10 filas a 7.
+</Warn>
+
+<Warn title="Error en voxel: renderizar en perspectiva">
+Con la cámara en perspectiva, las aristas convergen y la caja se deforma hacia el fondo. Ese render no te sirve de referencia para un sprite, porque el pixel art no tiene punto de fuga. **Corrección**: cambia la cámara a ortográfica o isométrica antes de renderizar.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+<Checklist items={[
+  "Tengo el mismo objeto en vista lateral, 3/4 e isométrica",
+  "En la vista 3/4 la tapa le quita filas al frente; la caja no crece",
+  "Mis aristas isométricas son 2:1 limpias, sin tramos de 1 ni de 3",
+  "En grises, la isométrica tiene tres valores: tapa clara, cara izquierda media y cara derecha oscura",
+  "Mi render de voxel usa cámara ortográfica o isométrica, no perspectiva",
+  "He guardado los .aseprite, el .vox y los PNG en mi portfolio",
+]} />
+
+<Quiz q="En una escena top-down 3/4, ¿cómo dibujas un cofre que va sobre los tiles del suelo?" options={["De lado, solo el frente, para que se vea grande", "En 3/4, con la tapa visible, como los tiles", "En isométrica, para darle más volumen"]} answer={1}>
+En 3/4 todo el mundo comparte el mismo ángulo de cámara: tiles, personajes y props. Un cofre en otra vista parece pegado encima.
+</Quiz>
+
+<Quiz q="¿Qué pendiente usan las aristas de la isométrica de píxel?" options={["1:1, a 45°", "2:1: dos píxeles por cada escalón", "La que salga a 30° exactos"]} answer={1}>
+La 2:1 es la pendiente limpia más parecida a la isometría real. Los 30° exactos dan escalones irregulares en píxeles.
+</Quiz>
+
+<Quiz q="¿Qué cámara de MagicaVoxel usas para sacar una referencia para un sprite?" options={["Perspectiva", "Ortográfica o isométrica", "Da igual"]} answer={1}>
+La ortográfica no tiene punto de fuga, igual que el pixel art: las aristas paralelas siguen paralelas y el render casa con el sprite.
+</Quiz>
+</Block>

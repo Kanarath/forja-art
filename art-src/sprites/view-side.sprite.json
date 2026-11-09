@@ -1,0 +1,28 @@
+{
+  "name": "view-side",
+  "description": "La caja vista de lado (vista lateral, como un plataformas): solo la cara frontal. No hay suelo visible: el suelo es una línea.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "perspectiva"
+  ],
+  "palette": {
+    "o": "#1b1030",
+    "M": "#a0603a",
+    "D": "#6b3d2e"
+  },
+  "rows": [
+    "oooooooooooo",
+    "oDDDDDDDDDDo",
+    "oDMMMMMMMMDo",
+    "oDMMMMMMMMDo",
+    "oDDDDDDDDDDo",
+    "oDMMMMMMMMDo",
+    "oDMMMMMMMMDo",
+    "oDDDDDDDDDDo",
+    "oDMMMMMMMMDo",
+    "oDMMMMMMMMDo",
+    "oDDDDDDDDDDo",
+    "oooooooooooo"
+  ]
+}

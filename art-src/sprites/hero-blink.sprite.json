@@ -1,0 +1,49 @@
+{
+  "name": "hero-blink",
+  "description": "Frame de parpadeo: cada ojo pasa de 2 píxeles de alto a 1. Dura muy poco (unos 100 ms).",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "personaje",
+    "animación"
+  ],
+  "palette": {
+    "o": "#1b1030",
+    "s": "#f2c29b",
+    "S": "#c98f6b",
+    "h": "#6b3d2e",
+    "H": "#a0603a",
+    "t": "#3b6fd1",
+    "T": "#26489a",
+    "b": "#6b3d2e",
+    "p": "#4a4560",
+    "P": "#2f2b40",
+    "B": "#3b2418"
+  },
+  "rows": [
+    "................",
+    "................",
+    "................",
+    "....oooooooo....",
+    "...ohhHHHhhho...",
+    "..ohhHHHHHhhhho.",
+    "..ohhhhhhhhhhho.",
+    "..ohhsssssssshho",
+    "..ohssssssssSho.",
+    "..ohsssssssssho.",
+    "..ohsosssosssho.",
+    "..oSssssssssSSo.",
+    "...oSSsssssSSo..",
+    "....oooooooo....",
+    "...otttttttto...",
+    "..ostttttttTso..",
+    "..ostttttttTso..",
+    "..oSbbbbbbbbSo..",
+    "...otttttttTo...",
+    "...opppppppPo...",
+    "...oppPo.opPPo..",
+    "...oppPo.opPPo..",
+    "...oBBBo.oBBBo..",
+    "...ooooo.ooooo.."
+  ]
+}

@@ -199,7 +199,94 @@ const chibiDetail = [
   { x: 7, y: 1, z: 10, c: "#1b1030" }, { x: 7, y: 1, z: 9, c: "#1b1030" }, // ojo derecho
 ];
 
+// ---------- POSE del chibi: el mismo personaje saludando, con un paso adelante
+const chibiPose = [
+  ...chibiDetail
+    .filter((v) => !(v.x >= 9 && v.x <= 10 && v.y >= 5 && v.y <= 6 && v.z >= 3 && v.z <= 5)) // quitamos el brazo derecho
+    .map((v) => (v.x >= 3 && v.x <= 4 && v.z <= 1 ? { ...v, y: v.y - 1 } : v)), // la pierna izquierda avanza un vóxel
+  ...box(9, 5, 5, 9, 6, 6, SKIN), // hombro
+  ...box(10, 5, 6, 10, 6, 12, SKIN), // brazo levantado junto a la cabeza
+];
+
+// ---------- CRIATURA: slime voxel (cúpula), del bloque al gesto
+const SLIME = { light: "#d8ffe6", mid: "#4ade80", dark: "#1f8a4c", eye: "#1b1030" };
+function dome(rx, h) {
+  const v = [];
+  for (let x = -rx; x <= rx; x++) for (let y = -rx; y <= rx; y++) for (let z = 0; z < h; z++)
+    if (Math.hypot(x / rx, y / rx, z / h) <= 1.02) v.push({ x, y, z, c: SLIME.mid });
+  return v;
+}
+function slimeDetail(vox, eyeZ) {
+  const minY = (x, z) => Math.min(...vox.filter((v) => v.x === x && v.z === z).map((v) => v.y));
+  const eyes = new Set([-2, 2].flatMap((x) => eyeZ.map((z) => `${x},${minY(x, z)},${z}`)));
+  const top = Math.max(...vox.map((v) => v.z));
+  return vox.map((v) => {
+    if (eyes.has(`${v.x},${v.y},${v.z}`)) return { ...v, c: SLIME.eye };
+    if (v.z <= 1) return { ...v, c: SLIME.dark }; // la base, en sombra (AO pintado)
+    if (v.z >= top - 1 && v.x <= -1 && v.y <= -1) return { ...v, c: SLIME.light }; // brillo arriba a la izquierda
+    return v;
+  });
+}
+const slimeBlock = dome(5, 7);
+const slimeColor = slimeDetail(slimeBlock, [3, 4]);
+const slimeSquash = slimeDetail(dome(6, 5), [2, 3]);
+
+// ---------- CASA MODULAR: piezas de 8×1×8 en rejilla, reutilizadas en las cuatro paredes
+const PLASTER = "#e8dcc0", TIMBER = "#6b3d2e", BASE = "#7d8698", DOOR = "#a0603a", PANE = "#9fd8ff";
+function wallModule(kind) {
+  // coordenadas locales: u a lo largo de la pared (0–7), z de altura (0–7)
+  const v = [];
+  for (let u = 0; u <= 7; u++) for (let z = 0; z <= 7; z++) {
+    let c = z === 0 ? BASE : u === 0 || u === 7 || z === 7 || z === 4 ? TIMBER : PLASTER;
+    if (kind === "puerta" && u >= 3 && u <= 4 && z >= 1 && z <= 4) c = z === 2 && u === 4 ? "#f2c14e" : DOOR;
+    if (kind === "ventana" && u >= 2 && u <= 5 && z >= 2 && z <= 5) c = u >= 3 && u <= 4 && z >= 3 && z <= 4 ? PANE : TIMBER;
+    v.push({ u, z, c });
+  }
+  return v;
+}
+// colocar un módulo: a lo largo de X (frente/fondo) o de Y (laterales)
+const along = (mod, axis, at, offset = 0) =>
+  mod.map(({ u, z, c }) => (axis === "x" ? { x: u + offset, y: at, z, c } : { x: at, y: u + offset, z, c }));
+const modulesLaidOut = [
+  ...along(wallModule("lisa"), "x", 0, 0),
+  ...along(wallModule("puerta"), "x", 0, 10),
+  ...along(wallModule("ventana"), "x", 0, 20),
+];
+const houseWalls = [
+  ...along(wallModule("lisa"), "x", 7), // fondo
+  ...along(wallModule("ventana"), "y", 0), // lateral izquierdo
+  ...along(wallModule("ventana"), "y", 7), // lateral derecho
+  ...along(wallModule("puerta"), "x", 0), // fachada (la última gana en las esquinas)
+];
+const houseRoof = [];
+for (let i = 0; i <= 4; i++) { // tejado a dos aguas: cada capa se estrecha un vóxel por lado
+  for (let x = -1; x <= 8; x++) for (let y = -1 + i; y <= 8 - i; y++) houseRoof.push({ x, y, z: 8 + i, c: i % 2 ? ROOF.dark : ROOF.light });
+}
+
 export const MODELS = {
+  "chibi-pose": {
+    description: "El chibi voxel: de la pose neutra a una pose con intención",
+    stages: [
+      { label: "Pose neutra", note: "Simétrico y de frente: sirve para modelar, pero no cuenta nada.", voxels: chibiDetail },
+      { label: "Saludo", note: "Un brazo levantado y una pierna un vóxel adelante. Con cambiar dos partes, el personaje ya hace algo.", voxels: chibiPose },
+    ],
+  },
+  "slime-voxel": {
+    description: "Slime voxel: una criatura que se lee por su forma",
+    stages: [
+      { label: "Blockout", note: "Una cúpula: redonda, baja y ancha. Antes de los ojos ya parece blanda e inofensiva.", voxels: slimeBlock },
+      { label: "Color y ojos", note: "Base oscura (AO pintado), brillo arriba a la izquierda y dos ojos de 2 vóxels en la cara frontal.", voxels: slimeColor },
+      { label: "Squash", note: "Más ancha y más baja con los mismos detalles: la pose de una criatura sin brazos es aplastarse o estirarse.", voxels: slimeSquash },
+    ],
+  },
+  "casa-modular": {
+    description: "Casa modular: tres piezas de pared reutilizadas",
+    stages: [
+      { label: "Tres módulos", note: "Pared lisa, con puerta y con ventana. Todas miden 8×1×8 y comparten zócalo, vigas y colores.", voxels: modulesLaidOut },
+      { label: "Paredes", note: "Cuatro paredes hechas con esos mismos módulos: dos ventanas laterales, la puerta delante y la lisa detrás.", voxels: houseWalls },
+      { label: "Tejado", note: "Un tejado a dos aguas escalonado, un vóxel más estrecho por capa y alternando dos rojos.", voxels: [...houseWalls, ...houseRoof] },
+    ],
+  },
   "kit-herrero": {
     description: "Kit del herrero: tres props con la misma escala y paleta",
     stages: [

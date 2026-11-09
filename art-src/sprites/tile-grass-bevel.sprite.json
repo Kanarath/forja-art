@@ -1,0 +1,33 @@
+{
+  "name": "tile-grass-bevel",
+  "description": "El mismo tile con los bordes iluminados arriba y a la izquierda y oscurecidos abajo y a la derecha. Solo, parece bonito; repetido, dibuja una cuadrícula.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "tile",
+    "error"
+  ],
+  "palette": {
+    "g": "#3fa45b",
+    "d": "#2c7a48",
+    "l": "#6fd17f"
+  },
+  "rows": [
+    "llllllllllllllll",
+    "lggggggggglggggd",
+    "lggggggggdgdgggd",
+    "lgglgggggggggggd",
+    "lgdgdggggggggggd",
+    "lggggggglggggggd",
+    "lggggggdgdggggld",
+    "lggggggggggggdgd",
+    "lggggggggggggggd",
+    "lggggglggggggggd",
+    "lggggdgdgggggggd",
+    "lggggggggggggggd",
+    "lggggggggggglggd",
+    "lggggggggggdgdgd",
+    "lggggggggggggggd",
+    "lddddddddddddddd"
+  ]
+}

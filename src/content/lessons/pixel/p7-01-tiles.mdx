@@ -1,0 +1,224 @@
+---
+id: p7-01
+discipline: pixel
+level: 7
+order: 1
+title: "Tiles sin costuras: un prado que no se repite"
+summary: "Dibuja un tile de hierba de 16×16 que se repite sin costuras, evita el bisel y el patrón visible, y rompe la repetición con variantes."
+duration: 45
+status: borrador
+objectives:
+  - "Entender qué es un tile y cómo se coloca en una rejilla de 16×16"
+  - "Hacer que lo que sale por un borde entre por el opuesto"
+  - "Dibujar con el Tiled Mode de Aseprite viendo la repetición"
+  - "Evitar el bisel y los elementos que forman una retícula"
+  - "Romper la repetición con dos variantes del mismo tile"
+prerequisites: [p2-02]
+fundamentals: [f08]
+tools: [aseprite]
+piece:
+  name: "Tile de hierba de 16×16 sin costuras y 2 variantes que rompen la repetición"
+  canvas: "16x16"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [tile-infinito]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Vas a forjar un **tile de hierba de 16×16** que se pueda repetir hasta el infinito sin que se vea dónde acaba cada copia. Y luego **dos variantes** del mismo tile para que el prado no parezca papel pintado.
+
+<Sprite name="tile-grass" scale={8} caption="Un solo tile: 16×16, tres verdes y ocho matas pequeñas" />
+
+Solo no dice mucho. Un tile se juzga **repetido**:
+
+<Sprite name="tile-grass" tile={3} scale={4} caption="El mismo tile en una cuadrícula de 3×3. No se ve ninguna costura: se lee como un prado" />
+
+<Tip>
+Busca dónde termina cada copia. Cuesta, ¿verdad? Esa es la meta.
+</Tip>
+</Block>
+
+<Block kind="concepto">
+Un **tile** (baldosa) es una pieza cuadrada que el juego coloca en una **rejilla**. Con tiles de 16×16, cada casilla del mapa mide 16 píxeles y el suelo entero se monta repitiendo unas pocas piezas.
+
+<Why>
+Es modular, como un kit de hard surface en Blender: diseñas una pieza bien y la instancias cien veces. Ahorra trabajo y memoria, pero cualquier defecto de la pieza también se repite cien veces.
+</Why>
+
+**La costura.** Cuando pones dos copias juntas, la columna derecha de una toca la columna izquierda de la siguiente. Y la fila de abajo toca la de arriba. Si esos bordes no casan, aparece una **costura**: una línea recta que delata la rejilla.
+
+La solución es pensar el tile como si **envolviera**: lo que sale por el borde derecho continúa por el izquierdo, y lo que sale por abajo continúa por arriba. Como el mapa de un videojuego antiguo en el que sales por un lado y entras por el otro.
+
+Mira cómo lo hace `tile-grass`. Cada mata son tres píxeles: una punta clara y dos píxeles oscuros debajo, en diagonal. Hay ocho matas y **dos cruzan el borde** (filas y columnas contadas desde 0, como en Aseprite):
+
+- La punta clara de la fila 15, columna 2, está en la **última fila**. Sus dos píxeles oscuros no caben debajo, así que están en la **fila 0**, columnas 1 y 3.
+- La punta clara de la fila 14 está en la **columna 0**. Su píxel oscuro de la izquierda no cabe, así que está en la **columna 15** de la fila 15.
+
+<Sprite name="tile-grass" scale={10} caption="Fíjate en las esquinas: arriba a la izquierda hay dos píxeles oscuros sin punta; abajo a la derecha, uno suelto. Son los trozos de las matas que cruzan" />
+
+Solo, el tile parece tener píxeles sueltos en los bordes. Repetido, cada trozo encuentra su otra mitad.
+
+<Why>
+El ojo detecta las líneas rectas largas al instante, porque en la naturaleza casi no existen. Si las matas se cortan justo en el borde, la rejilla aparece. Si lo cruzan, no hay ninguna línea que seguir.
+</Why>
+
+**La luz es de la escena, no del tile.** Un tile no es un objeto: es un trozo de suelo. Si le pones luz arriba y sombra abajo como a una roca, cada copia se convierte en un botón con bisel.
+
+<Mistake title="Sombrear el tile como un objeto" wrongLabel="Bisel: bordes claros y oscuros" rightLabel="Sin bisel: luz plana">
+  <Sprite slot="wrong" name="tile-grass-bevel" tile={3} scale={4} />
+  <Sprite slot="right" name="tile-grass" tile={3} scale={4} />
+
+A la izquierda, cada tile tiene la fila de arriba y la columna izquierda en verde claro, y la fila de abajo y la columna derecha en verde oscuro. Repetido, el oscuro de uno toca el claro del siguiente y dibuja una **cuadrícula**. A la derecha, el suelo es continuo.
+</Mistake>
+
+**Sin costuras no basta.** Un elemento que llama la atención, repetido a la misma distancia, forma un **patrón**. El ojo lo encuentra en un segundo.
+
+<Mistake title="Un detalle que forma retícula" wrongLabel="Flor en cada tile" rightLabel="Matas discretas">
+  <Sprite slot="wrong" name="tile-grass-flower" tile={3} scale={4} />
+  <Sprite slot="right" name="tile-grass" tile={3} scale={4} />
+
+`tile-grass-flower` no tiene costuras: es el mismo tile con una flor de cinco píxeles en el centro (corazón amarillo y cuatro pétalos crema). Pero la flor es lo más claro del tile y aparece cada 16 píxeles exactos: las nueve flores forman una **retícula** perfecta. Las matas de `tile-grass`, en cambio, son pequeñas, de bajo contraste y están repartidas sin orden.
+</Mistake>
+
+<Why>
+Es lo que aprendiste con los huérfanos en P2-02: lo que contrasta atrae la mirada. En un tile, lo que atrae la mirada se repite, y la mirada salta de copia en copia hasta ver la rejilla. Un buen tile de suelo es **aburrido a propósito**.
+</Why>
+
+**Variantes.** Para meter detalles (una flor, una piedra, una mata más alta) sin crear patrón, se hacen **variantes**: copias del tile base con un cambio pequeño y **los mismos bordes**. El mapa usa sobre todo el tile base y salpica las variantes de vez en cuando, sin orden. Así, la flor de arriba pasa de error a acierto: no en cada casilla, sino en una de cada muchas.
+
+<Tip>
+Al final, todo esto acabará en Godot como un **TileSet** que se pinta en un **TileMapLayer**. Lo verás en el nivel 9; de momento, basta con que el tile sea bueno.
+</Tip>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Lienzo y tres verdes">
+1. <Keys k="Ctrl+N" />: 16×16. Activa *View → Grid*.
+2. Prepara tres verdes de valor **cercano**: medio para el fondo, uno algo más oscuro y uno algo más claro. Sirven los de `tile-grass`: `#3fa45b`, `#2c7a48` y `#6fd17f`.
+3. Rellena todo el lienzo con el verde medio usando el cubo (<Keys k="G" />).
+
+<Why>
+En un suelo, el contraste bajo es una virtud. Lo que va encima (el héroe, el slime) tiene que destacar; el suelo, quedarse detrás.
+</Why>
+</Step>
+
+<Step n={2} title="Activa el Tiled Mode">
+Ve a *View → Tiled Mode* y elige que repita en los dos ejes. Aseprite pinta copias del lienzo alrededor del original. Aleja el zoom con la rueda del ratón hasta ver unas 3×3 copias.
+
+<Why>
+Ya no dibujas un cuadrado: dibujas el prado. Cada píxel que pongas aparece a la vez en todas las copias, y verás al momento si algo forma costura o patrón.
+</Why>
+
+<Warn title="Verifica en tu versión">
+El nombre exacto de las opciones del submenú *Tiled Mode* (ambos ejes, solo X, solo Y) puede variar entre versiones de Aseprite.
+</Warn>
+</Step>
+
+<Step n={3} title="Matas por el centro">
+Lápiz (<Keys k="B" />) con **Pixel-perfect**. Dibuja 5 o 6 matas pequeñas: una punta clara y dos píxeles oscuros debajo, en diagonal. Repártelas **sin orden**: ni en fila, ni en diagonal, ni a la misma distancia.
+
+<Tip>
+Mira las copias, no el original. Si tres matas forman una línea entre copia y copia, mueve una.
+</Tip>
+</Step>
+
+<Step n={4} title="Matas que cruzan el borde">
+Ahora pon **dos matas** que crucen el borde, como en `tile-grass`:
+
+1. Una con la punta en la **última fila**: sus píxeles oscuros van en la **primera fila**.
+2. Otra con la punta en la **primera columna**: su píxel oscuro de la izquierda va en la **última columna**.
+
+Con el Tiled Mode activo, pintar sobre una copia vecina debería colocar el píxel en el borde opuesto del original. Si en tu versión no funciona así, cuenta las filas con la rejilla y píntalo a mano en el original.
+
+<Warn>
+Si dejas los cuatro bordes lisos, sin nada que los cruce, la costura no se verá como línea, pero sí como una «calle» vacía alrededor de cada tile. Que algo cruce, al menos en un eje.
+</Warn>
+</Step>
+
+<Step n={5} title="Caza de bisel y patrón">
+Aleja el zoom y mira el prado durante unos segundos.
+
+1. ¿Ves una cuadrícula? Busca bordes más claros u oscuros que el resto y píntalos del verde medio.
+2. ¿Hay algo que salte a la vista en cada copia? Bájale el contraste o quítalo: irá a una variante.
+
+Guarda con <Keys k="Ctrl+S" /> como `prado-base.aseprite`.
+</Step>
+
+<Step n={6} title="Dos variantes">
+1. Guarda una copia como `prado-flor.aseprite`. Añade **un** detalle en el centro: una flor pequeña o una piedra. **No toques los bordes.**
+2. Guarda otra copia como `prado-matas.aseprite`. Cambia de sitio dos o tres matas **del interior**, o añade una mata más alta. De nuevo, sin tocar los bordes.
+
+<Why>
+Si los bordes son idénticos a los del tile base, las tres piezas encajan entre sí en cualquier orden. Las variantes cambian el interior; el contorno es el contrato.
+</Why>
+</Step>
+
+<Step n={7} title="Exporta">
+Exporta los tres tiles con *File → Export → Export As*: una copia al 100 % (la que usará el juego) y otra con **Resize** 800 % para el portfolio.
+</Step>
+</Block>
+
+<Block kind="version">
+Ahora a tu manera. Elige uno:
+
+- **Prado de otoño:** cambia los tres verdes por ocres y marrones de valor cercano. Las variantes: una hoja caída y un montoncito de hojas.
+- **Suelo de tierra:** tierra lisa con piedrecitas de 1–2 píxeles que crucen el borde. Variantes: una piedra mayor y un charco pequeño.
+- **Tres variantes:** el tile base más tres variantes en lugar de dos. Comprueba que, mezcladas en cualquier orden, ninguna forma retícula.
+</Block>
+
+<Block kind="errores">
+<Mistake title="Bisel en cada tile" wrongLabel="Repetido: cuadrícula" rightLabel="Repetido: prado">
+  <Sprite slot="wrong" name="tile-grass-bevel" tile={3} scale={4} />
+  <Sprite slot="right" name="tile-grass" tile={3} scale={4} />
+
+Cuando el tile se sombrea como un objeto, con borde claro arriba a la izquierda y oscuro abajo a la derecha, cada copia parece una baldosa en relieve. **Arréglalo:** pinta los cuatro bordes del verde medio y deja que la luz la pongan la escena y los objetos que van encima.
+</Mistake>
+
+<Mistake title="Un detalle llamativo en cada tile" wrongLabel="Las flores forman retícula" rightLabel="Detalle repartido">
+  <Sprite slot="wrong" name="tile-grass-flower" tile={3} scale={4} />
+  <Sprite slot="right" name="tile-grass" tile={3} scale={4} />
+
+La flor no tiene nada malo; el problema es que está **en todas las casillas**, a la misma distancia. **Arréglalo:** saca el detalle del tile base y mételo en una variante que el mapa use poco y sin orden.
+</Mistake>
+
+<Mistake title="Juzgar el tile solo" wrongLabel="Solo: parece correcto" rightLabel="Repetido: la verdad">
+  <Sprite slot="wrong" name="tile-grass-bevel" scale={8} />
+  <Sprite slot="right" name="tile-grass-bevel" tile={3} scale={4} />
+
+Es el mismo tile con bisel. Solo, parece una casilla bonita con volumen. Repetido, se ve la cuadrícula. **Arréglalo:** dibuja siempre con el Tiled Mode activo y no des un tile por bueno hasta verlo en 3×3.
+</Mistake>
+
+<Warn title="Matas cortadas en el borde">
+Si una mata se queda a medias en el borde derecho y no continúa en el izquierdo, cada copia tendrá media mata pegada a una columna recta: una costura. Todo lo que cruza un borde tiene que entrar por el opuesto.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+Sube tu tile base **a 1×** y revísalo con la rejilla y la vista de grises. Después, vuelve a mirarlo en Aseprite con el Tiled Mode y el zoom alejado.
+
+<Inspector upload title="Revisa tu tile" />
+
+<Checklist items={[
+  "Mi tile mide 16×16 y no tiene transparencia",
+  "Repetido en 3×3, no veo dónde acaba cada copia",
+  "Al menos un elemento cruza un borde y entra por el opuesto",
+  "Los bordes no son más claros ni más oscuros que el interior: no hay bisel",
+  "Ningún detalle llama la atención lo bastante para formar retícula",
+  "Tengo dos variantes con los mismos bordes que el tile base",
+  "Exporté los tres tiles al 100 % y a ×8, y guardé los .aseprite",
+]} />
+
+<Quiz q="Una mata sale por el borde derecho del tile. ¿Dónde tiene que continuar?" options={["En el borde derecho de la fila de abajo", "En el borde izquierdo, en la misma fila", "En ninguna parte: hay que cortarla"]} answer={1}>
+El tile envuelve: el borde derecho toca el izquierdo de la siguiente copia. Lo que sale por un lado entra por el opuesto, a la misma altura.
+</Quiz>
+
+<Quiz q="Tu tile no tiene costuras, pero repetido se ve una retícula de puntos claros. ¿Qué haces?" options={["Añadir un bisel para disimularla", "Sacar ese detalle a una variante que se use poco", "Hacer el detalle más grande"]} answer={1}>
+El problema es la repetición regular de algo que contrasta. En una variante salpicada sin orden, el mismo detalle aporta vida en lugar de patrón.
+</Quiz>
+
+<Quiz q="¿Por qué no se sombrea un tile de suelo con luz arriba a la izquierda y sombra abajo a la derecha?" options={["Porque la luz es de la escena, no de cada tile", "Porque los tiles no pueden tener más de dos colores", "Porque Aseprite no lo permite en Tiled Mode"]} answer={0}>
+El suelo es una superficie continua. Si cada tile tiene su propia luz, cada copia parece un objeto aparte y aparece la cuadrícula.
+</Quiz>
+</Block>

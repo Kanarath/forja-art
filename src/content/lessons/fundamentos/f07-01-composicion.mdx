@@ -1,0 +1,270 @@
+---
+id: f07-01
+discipline: fundamentos
+level: 7
+order: 1
+title: "Composición: dónde mira el ojo"
+summary: "Una escena se lee si tiene un punto focal. Créalo con contraste de valor, color y detalle, colócalo con intención y compruébalo en grises."
+duration: 40
+status: borrador
+prerequisites: [f01-01, f02-01]
+fundamentals: [f01, f07]
+objectives:
+  - "Crear un punto focal con contraste de valor, de color y de detalle"
+  - "Usar la regla de los tercios como guía y saber cuándo centrar"
+  - "Enmarcar la escena con elementos en las esquinas y quitar lo que sobra"
+  - "Comprobar el foco de una escena con la prueba de grises"
+  - "Elegir cámara y encuadre de un render en MagicaVoxel"
+tools: [aseprite, magicavoxel]
+piece:
+  name: "Una escena de 64×40 (pixel) o un render voxel encuadrado, con un punto focal claro comprobado en grises"
+  canvas: "64x40"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [foco]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Hasta ahora has forjado **objetos sueltos**. Hoy montas una **escena**: varios objetos juntos en un mismo encuadre. Y una escena tiene un problema que un objeto no tiene: hay que decidir **dónde mira el ojo**.
+
+Tu pieza, a elegir:
+
+- una **escena de 64×40** en Aseprite, con tus sprites o con sprites nuevos;
+- o un **render voxel encuadrado** en MagicaVoxel.
+
+En las dos, el requisito es el mismo: **un punto focal claro**, comprobado en grises.
+
+<Sprite name="scene-focus" scale={5} caption="Así: el héroe frente al slime. Sabes a quién mirar y qué está pasando" />
+<Sprite name="scene-focus" scale={5} view="gray" caption="…y en grises sigue leyéndose: los personajes destacan sobre una hierba oscura" />
+</Block>
+
+<Block kind="concepto">
+### El punto focal
+
+El **punto focal** es lo primero que mira el ojo. Una escena sin él obliga al ojo a saltar de un objeto a otro sin saber cuál importa. Una escena con él cuenta algo **de un vistazo**.
+
+El ojo va siempre hacia **la mayor diferencia**. Tienes tres formas de crearla:
+
+1. **Contraste de valor**: lo más claro junto a lo más oscuro. Es la más fuerte (ya lo viste en F01).
+2. **Contraste de color**: un tono saturado o cálido entre tonos apagados o fríos.
+3. **Contraste de detalle**: la zona con más detalle frente a zonas tranquilas.
+
+Úsalas **juntas en el mismo sitio**. Y, sobre todo, **quítalas del resto**: el foco no se crea solo añadiendo, sino también apagando lo demás.
+
+<Why title="Por qué el valor manda">
+Como viste en F01, el ojo lee primero el valor. Si el sitio con más contraste de valor no es tu protagonista, el ojo se irá a otra parte, por muy saturado o detallado que esté el protagonista.
+</Why>
+
+### Mira las dos escenas
+
+Las dos miden **64×40**, están montadas con sprites del curso sobre el mismo tile de hierba y tienen **seis piezas** cada una. Lo que cambia es **cuáles** y **dónde**.
+
+<Sprite name="scene-flat" scale={5} caption="scene-flat: cofre, seta, roca, héroe, slime y poción. El héroe, en el centro exacto" />
+
+En `scene-flat` hay **seis objetos distintos**: arriba, un cofre a la izquierda, una seta en el centro y una roca a la derecha; en medio, el héroe; abajo, el slime a la izquierda y la poción a la derecha. Es casi una cuadrícula. Todos tienen contorno oscuro y colores vivos, y la hierba es de valor medio, con matas claras repartidas por todo el lienzo. Nada destaca más que lo demás.
+
+Fíjate además en la seta: se apoya justo encima de la cabeza del héroe, como un sombrero. Cuando dos formas **se tocan por el borde** (una tangencia), el ojo las lee como una sola y se confunde.
+
+<Sprite name="scene-focus" scale={5} caption="scene-focus: héroe y slime frente a frente; rocas y setas en dos esquinas" />
+
+En `scene-focus` hay **dos personajes** (el héroe y el slime) y **cuatro piezas de marco**: una roca y una seta abajo a la izquierda y otra roca y otra seta arriba a la derecha. El héroe está en el tercio izquierdo; el slime, en el tercio derecho, a la altura de sus piernas. La hierba es la misma, pero **más oscura y menos saturada**, y sus matas apenas se notan.
+
+### La regla de los tercios: una guía, no una ley
+
+Divide el lienzo en tres partes iguales a lo ancho y a lo alto. En 64×40, las líneas caen más o menos en **x = 21 y x = 43**, y en **y = 13 e y = 27**. Colocar el foco cerca de una de esas líneas, o de un cruce, suele dar escenas más vivas que ponerlo en el centro exacto.
+
+En `scene-focus` el héroe ocupa más o menos de x = 20 a x = 32: está **sobre la línea del tercio izquierdo**. El slime empieza en x = 44, **justo a la derecha del tercio derecho**. Y la cabeza del héroe arranca cerca de la línea de arriba. Entre los dos queda un hueco de hierba: ese espacio vacío es **la tensión** entre ellos. Es donde «pasa» la historia.
+
+<Why title="Por qué funciona descentrar">
+Un objeto en el centro exacto queda quieto: el ojo llega y se para. Descentrado, deja espacio a un lado, y el ojo lo recorre buscando qué hay ahí. Si en ese lado pones a otro personaje, has creado una relación.
+</Why>
+
+Pero es una **guía**. No la sigas al píxel: lo que importa es que el foco esté **colocado con intención**, no repartido.
+
+### Cuándo centrar sí funciona
+
+Centrar no es un error en sí. Funciona cuando lo que quieres contar es **estabilidad, poder o soledad**:
+
+- **un retrato o un icono**: un solo objeto, sin nada que compita (como los iconos de un inventario: la poción, la gema o la espada, cada una centrada en su casilla);
+- **una escena simétrica**: un trono, una puerta, un altar; la simetría ya dice «orden», «solemne»;
+- **un enfrentamiento cara a cara**: el centro como eje, con un rival a cada lado.
+
+El error de `scene-flat` no es el héroe centrado. Es que **todo lo demás también pide atención por igual**. Si centras, que el centro sea lo único que destaca.
+
+### Menos elementos, una historia
+
+Las dos escenas tienen seis piezas. Pero en `scene-flat` son **seis objetos distintos**, cada uno con su color y su historia: un cofre, una poción, una seta… El ojo no sabe cuál es la historia. En `scene-focus` solo hay **una historia**: el héroe se encuentra con el slime. Rocas y setas se repiten y no cuentan nada: solo acompañan.
+
+Antes de añadir algo, pregúntate: «¿esto ayuda a contar lo que pasa?». Si no, sobra o va al borde.
+
+### Enmarcar con las esquinas
+
+En `scene-focus`, las rocas y las setas están **en dos esquinas opuestas** (abajo a la izquierda y arriba a la derecha) y **tocan o cruzan el borde del lienzo**. La seta de arriba incluso queda cortada por el borde derecho. Eso hace dos cosas:
+
+- **cierran** la escena: el ojo choca con ellas y vuelve al centro, en vez de escaparse por las esquinas;
+- **dicen «esto sigue»**: el mundo continúa fuera del encuadre.
+
+Funcionan porque son **poco importantes**: pequeñas, repetidas y apartadas. Si el marco fuese un cofre dorado, robaría el foco.
+
+### La prueba de grises de una escena
+
+La misma prueba de F01 sirve para escenas. Quita el color y busca **la mancha que más contrasta**. Debería ser tu protagonista.
+
+<Mistake title="La prueba del foco" wrongLabel="scene-flat en grises" rightLabel="scene-focus en grises">
+  <Sprite slot="wrong" name="scene-flat" view="gray" scale={5} />
+  <Sprite slot="right" name="scene-focus" view="gray" scale={5} />
+
+En `scene-flat` la hierba es de valor medio y está salpicada de matas claras: en grises, todo el fondo vibra y cada objeto contrasta lo mismo con él. En `scene-focus` la hierba es oscura y tranquila, así que la cara clara del héroe y el slime claro **saltan**. Las rocas y las setas también contrastan, pero están pegadas a las esquinas y cortadas por el borde: el ojo las registra como marco y vuelve a los personajes.
+</Mistake>
+
+<Tip>
+Otra prueba rápida: mira la escena a 1× o entorna los ojos. Lo que sigue destacando cuando todo se emborrona es tu punto focal real.
+</Tip>
+
+### En voxel: la cámara es tu encuadre
+
+En MagicaVoxel no dibujas el encuadre: lo **eliges con la cámara**. Lo que cuenta es lo mismo:
+
+- **Desde dónde miras**: girar alrededor (botón derecho) cambia qué tapa a qué. Busca un ángulo donde tu protagonista no quede tapado y no toque otros objetos por el borde.
+- **Cuánto ves**: acerca o aleja con la rueda y desplaza con el botón central hasta que el protagonista quede cerca de un tercio, o en el centro si quieres simetría.
+- **Qué proyección**: la cámara tiene modos de proyección, entre ellos **perspectiva**, **ortográfica** e **isométrica**. La perspectiva da profundidad y drama; la ortográfica y la isométrica, un aspecto de diorama o de juego.
+
+El contraste se crea igual que en pixel: el protagonista con los valores más extremos y los colores más vivos; el entorno, más apagado.
+
+<Why title="Por qué en voxel también hay que componer">
+Un modelo bonito con una cámara cualquiera es un objeto en un vacío. Con encuadre, es una escena. Y la luz del render no decide por ti qué importa: si todo tiene el mismo valor, el render será tan plano como `scene-flat`.
+</Why>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Decide la historia en una frase">
+Antes de abrir nada, escribe qué pasa en tu escena en **una frase**: «el héroe encuentra un cofre», «un slime vigila la poción», «una torre sola en la colina».
+
+Esa frase te dice **quién es el protagonista** (el punto focal) y **qué sobra**: todo lo que no aparece en ella.
+
+<Why>
+Componer es elegir. Sin una frase, añades objetos porque caben. Con ella, cada objeto tiene que ganarse su sitio.
+</Why>
+</Step>
+
+<Step n={2} title="Lienzo y fondo tranquilo (Aseprite)">
+1. <Keys k="Ctrl+N" />: lienzo de **64×40**.
+2. Activa *View → Grid* y amplía con la rueda.
+3. Rellena el fondo (<Keys k="G" />) con un color **oscuro o medio y poco saturado**. Si quieres textura, que sea suave: pocas matas y con un valor cercano al del fondo.
+
+<Tip>
+Si te sirve, pinta cuatro líneas guía finas en una capa aparte en x = 21, x = 43, y = 13 e y = 27. Bórralas o ocúltalas antes de exportar.
+</Tip>
+</Step>
+
+<Step n={3} title="Coloca al protagonista con intención">
+1. Abre un sprite tuyo (el héroe, el slime, una poción…), selecciónalo con <Keys k="M" /> y cópialo con *Edit → Copy*.
+2. Vuelve a la escena y pégalo con *Edit → Paste*. Muévelo hasta **cerca de un tercio**, o al centro si tu frase pide simetría o soledad.
+3. Si hay un segundo personaje, ponlo en el **otro lado**, dejando hierba libre entre los dos.
+
+<Warn>
+Vigila las tangencias: que ningún objeto toque a otro justo por el borde, como la seta sobre la cabeza del héroe en `scene-flat`. O se solapan claramente, o se separan con aire.
+</Warn>
+</Step>
+
+<Step n={4} title="Enmarca con las esquinas">
+1. Coloca **dos o tres** objetos sin importancia (rocas, matas, setas) en **esquinas opuestas**.
+2. Haz que toquen o crucen el borde del lienzo: es correcto que queden cortados.
+3. Nada de marco en el centro ni junto al protagonista.
+
+<Why>
+El marco empuja el ojo hacia dentro. Si tiene tanto contraste o detalle como el protagonista, compite con él: apágalo un poco o hazlo más simple.
+</Why>
+</Step>
+
+<Step n={5} title="Prueba de grises de la escena">
+1. Guarda con <Keys k="Ctrl+S" /> y exporta a 1× con *File → Export → Export As*.
+2. Súbela al Inspector y pulsa la vista **Grises**.
+
+<Inspector upload title="Tu escena en grises" />
+
+¿Lo primero que ves es tu protagonista? Si no:
+
+- **oscurece el fondo** o bájale el contraste a sus matas;
+- **apaga el marco** (un valor más cercano al fondo);
+- quita el objeto que más te distraiga.
+
+Y repite la prueba hasta que el foco salte.
+</Step>
+
+<Step n={6} title="Encuadre del render (MagicaVoxel)">
+Si eliges la pieza voxel, o como práctica extra:
+
+1. Abre un modelo tuyo (un cofre, una torre, un personaje) y añade **pocas** cosas alrededor: suelo y uno o dos elementos de marco.
+2. Gira con el **botón derecho**, acerca con la **rueda** y desplaza con el **botón central** hasta que el protagonista quede en un tercio y nada lo tape.
+3. Prueba los modos de proyección de la cámara (perspectiva, ortográfica, isométrica) y quédate con el que cuente mejor tu frase.
+4. Pinta el protagonista con los valores más extremos y el entorno, más apagado.
+5. Pulsa *Render* arriba, guarda el PNG y desatúralo en cualquier visor o editor para hacer la prueba de grises.
+
+<Warn>
+No subas el render al Inspector: solo admite imágenes pequeñas de pixel art (hasta 256×256).
+</Warn>
+
+<Warn title="Verifica en tu versión">
+Los nombres de los menús de Aseprite (*Edit → Copy*, *Edit → Paste*), la ubicación de los modos de proyección de la cámara y del botón para guardar el render en MagicaVoxel pueden variar entre versiones.
+</Warn>
+</Step>
+</Block>
+
+<Block kind="version">
+Ahora, a tu manera. Elige un reto:
+
+- **Misma escena, otro foco**: sin mover nada, cambia el protagonista solo con valor. Oscurece al héroe, aclara al slime. ¿A quién miras ahora?
+- **Centrado con razón**: una escena simétrica (un altar, una puerta, un trono) con el foco en el centro exacto y nada más que compita.
+- **Diorama voxel**: tu escena en MagicaVoxel con proyección isométrica u ortográfica, el protagonista en un tercio y marco en dos esquinas.
+
+**Prueba de lectura.** Enseña tu escena a alguien un segundo y pregúntale qué ha visto primero. Si no nombra a tu protagonista, vuelve a la prueba de grises.
+</Block>
+
+<Block kind="errores">
+<Mistake title="El protagonista en el centro y todo repartido por igual" wrongLabel="scene-flat" rightLabel="scene-focus">
+  <Sprite slot="wrong" name="scene-flat" scale={5} />
+  <Sprite slot="right" name="scene-focus" scale={5} />
+
+En `scene-flat` el héroe está en el centro exacto y los otros cinco objetos rodean su posición casi como una cuadrícula, todos con el mismo contorno y el mismo contraste sobre una hierba que vibra. El ojo salta de uno a otro. **Corrección**: decide la historia, quédate con los personajes que la cuentan, lleva lo demás a las esquinas y oscurece el fondo.
+
+Ojo: el centro no es el fallo. Una escena simétrica o un icono pueden ir centrados. El fallo es que **nada manda**.
+</Mistake>
+
+<Mistake title="Un fondo que grita" wrongLabel="Hierba media con matas claras" rightLabel="Hierba oscura y tranquila">
+  <Sprite slot="wrong" name="scene-flat" view="gray" scale={5} />
+  <Sprite slot="right" name="scene-focus" view="gray" scale={5} />
+
+Un fondo con mucho contraste interno (matas claras sobre hierba media) compite con todo lo que pongas encima. **Corrección**: baja el valor del fondo o acerca entre sí sus tonos. El fondo es escenario, no actor.
+</Mistake>
+
+<Warn title="Tangencias y marcos que roban el foco">
+Dos errores que verás en tus primeras escenas. Uno: objetos que se tocan justo por el borde, como la seta apoyada en la cabeza del héroe en `scene-flat`; sepáralos o solápalos con claridad. Dos: un marco más llamativo que el protagonista (un cofre dorado en la esquina); el marco tiene que ser lo más aburrido del encuadre.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+<Checklist items={[
+  "Puedo decir lo que pasa en mi escena en una frase",
+  "Mi escena mide 64×40 (o es un render voxel encuadrado a propósito)",
+  "El protagonista está en un tercio, o centrado por una razón que sé explicar",
+  "Solo hay los elementos que cuentan la historia; el resto va al borde o no está",
+  "Hay elementos de marco en las esquinas y no compiten con el foco",
+  "Ningún objeto toca a otro justo por el borde",
+  "En grises, lo primero que veo es mi protagonista",
+]} />
+
+<Quiz q="¿Qué es lo que más atrae al ojo en una escena?" options={["El objeto más grande", "La zona con más contraste de valor", "El objeto que está en el centro"]} answer={1}>
+El ojo va a la mayor diferencia, y la más fuerte es la de valor: lo más claro junto a lo más oscuro. Por eso la prueba de grises sirve para comprobar el foco.
+</Quiz>
+
+<Quiz q="¿Cuándo funciona centrar al protagonista?" options={["Nunca: hay que seguir siempre la regla de los tercios", "Cuando buscas estabilidad o simetría y nada más compite con él", "Solo en voxel"]} answer={1}>
+La regla de los tercios es una guía. Un icono, un retrato o una escena simétrica pueden ir centrados. Lo que falla en `scene-flat` es que todo pide atención por igual.
+</Quiz>
+
+<Quiz q="En scene-focus, ¿para qué sirven las rocas y las setas de las esquinas?" options={["Para rellenar el hueco", "Para enmarcar: cierran la escena y devuelven el ojo hacia los personajes", "Son el punto focal"]} answer={1}>
+Son marco: pequeñas, repetidas y pegadas al borde. Cierran las esquinas y llevan la mirada hacia el héroe y el slime.
+</Quiz>
+</Block>

@@ -1,0 +1,223 @@
+---
+id: p6-02
+discipline: pixel
+level: 6
+order: 2
+title: "Ciclo de caminar: cuatro frames y un rebote"
+summary: "Un ciclo de caminar es un bucle: base, paso A, base, paso B. Pies alternos, el cuerpo sube 1 px en cada paso y todos los frames duran lo mismo."
+duration: 50
+status: borrador
+objectives:
+  - "Entender un ciclo como un bucle: el último frame enlaza con el primero"
+  - "Construir el ciclo de frente de 4 frames: base, paso A, base, paso B"
+  - "Dar peso con el rebote: el cuerpo sube 1 px cuando un pie se levanta"
+  - "Alinear los frames con onion skin y ordenar las direcciones con tags"
+prerequisites: [p6-01]
+fundamentals: [f09]
+tools: [aseprite]
+piece:
+  name: "Ciclo de caminar hacia abajo (de frente) de tu héroe 16×24, 4 frames en bucle"
+  canvas: "16x24"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [primer-paso]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Vas a forjar **el ciclo de caminar de tu héroe**, de frente, hacia abajo: 4 frames que se repiten sin fin. Es la primera animación que el jugador ve cuando toca el mando, así que tiene que tener peso.
+
+Dale a *Reproducir*. Pies alternos y un pequeño rebote: el héroe camina sin moverse del sitio.
+
+<Animator sprites={["hero-chibi", "hero-walk-a", "hero-chibi", "hero-walk-b"]} durations={[180, 180, 180, 180]} />
+</Block>
+
+<Block kind="concepto">
+**Un ciclo es un bucle.** Después del último frame viene otra vez el primero. No hay «final»: el frame 4 tiene que encajar con el 1 igual que el 1 con el 2.
+
+**El ciclo de frente tiene 4 poses:**
+
+1. **Base:** los dos pies en el suelo.
+2. **Paso A:** un pie apoyado, el otro levantado.
+3. **Base** otra vez: el mismo dibujo que el frame 1.
+4. **Paso B:** el espejo del paso A, con el otro pie.
+
+Solo dibujas **3 poses distintas**. La base se repite: es el punto de paso entre un pie y el otro.
+
+<Sprite name="hero-chibi" scale={8} caption="Frames 1 y 3 · Base: las dos botas apoyadas; la fila de abajo (la 24) es la línea del suelo" />
+<Sprite name="hero-walk-a" scale={8} caption="Frame 2 · Paso A: todo sube 1 px; la pierna de la izquierda gana una fila y sigue en el suelo; la bota de la derecha queda 1 px en el aire" />
+<Sprite name="hero-walk-b" scale={8} caption="Frame 4 · Paso B: el mismo cuerpo subido; ahora la pierna de la derecha se estira y la bota de la izquierda se levanta" />
+
+**Qué cambia, píxel a píxel**, del frame base al paso A:
+
+- **El rebote.** La cabeza, el torso y la parte de arriba de las piernas (19 filas con dibujo) suben **exactamente 1 píxel**, sin redibujar nada. El contorno de la cabeza empieza en la fila 3 en vez de en la 4.
+- **La pierna de apoyo se estira.** En la pierna de la izquierda (de la pantalla) el pantalón pasa de 2 filas a 3. Así su bota vuelve a tocar la fila 24, el suelo.
+- **El pie levantado.** La pierna de la derecha conserva su largo. Como el cuerpo ha subido, el contorno de su bota acaba en la fila 23: queda **1 píxel por encima del suelo**.
+
+Entre el paso A y el paso B solo cambian **22 píxeles**, todos en las tres filas de abajo: el final de las piernas y las botas. Todo lo demás es idéntico.
+
+<Why title="Por qué sube el cuerpo">
+Al caminar, la pierna de apoyo se estira bajo el cuerpo y lo empuja hacia arriba; cuando los dos pies vuelven al suelo, el cuerpo baja. Ese sube y baja es el **peso**. Sin él, las piernas se mueven pero el cuerpo flota, como un muñeco colgado de un hilo. A 16×24, 1 píxel basta: 2 ya parecen saltos.
+</Why>
+
+**Pies alternos.** Primero se levanta un pie y luego el otro. Por eso el ciclo necesita las dos poses de paso. Mira lo que pasa si solo usas la base y el paso A:
+
+<Animator sprites={["hero-chibi", "hero-walk-a"]} durations={[180, 180]} />
+
+Sale **cojo**. En esos dos frames la bota de la izquierda nunca deja el suelo: solo se estira y se encoge. La de la derecha es la única que se levanta, una y otra vez. El ojo lee una pierna sana y otra que renquea. Con el paso B, cada pierna tiene su turno y el paso se equilibra.
+
+<Why title="Por qué el mismo timing en todos los frames">
+Caminar es un ritmo regular, como un metrónomo. En el brillo de P4-03 querías una pausa larga y un destello por sorpresa; aquí no. Si un frame dura más que los otros, el héroe parece tropezar en ese punto. Para un paso tranquilo, **entre 150 y 200 ms por frame** y todos iguales. Por debajo corre; por encima arrastra los pies.
+</Why>
+
+Prueba en el primer animador: pon los cuatro frames a 120 ms, luego a 300 ms. Después deja uno solo a 400 ms y mira dónde «tropieza».
+
+**Onion skin para alinear.** Con el frame anterior en transparencia, compruebas que la cabeza ha subido 1 píxel justo, ni medio ni dos, y que la bota de apoyo sigue en la misma fila. Si la cabeza se desplaza también hacia un lado, el héroe tiembla.
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Parte de tu héroe">
+1. Abre el héroe de 16×24 que forjaste en P5-01 (o el de P6-01, si ya tiene frames de idle, en un archivo aparte).
+2. Guárdalo con otro nombre, por ejemplo `heroe-caminar.aseprite`, con *File → Save As*. Así no tocas el original.
+3. Comprueba que hay **al menos 1 píxel libre arriba** de la cabeza. El rebote lo necesita.
+
+<Warn>
+Si el pelo toca el borde superior del lienzo, al subir el cuerpo 1 px se cortará. Baja todo el dibujo 1 px antes de empezar.
+</Warn>
+</Step>
+
+<Step n={2} title="Cuatro frames del mismo tiempo">
+1. En la línea de tiempo (*Timeline*), añade frames desde el menú *Frame* hasta tener **4 frames iguales**. Cada frame nuevo copia el actual.
+2. Selecciona los cuatro, clic derecho sobre los números de frame y abre *Frame Properties*. Ponles **180 ms** a todos.
+
+<Why>
+Los frames 1 y 3 se quedan tal cual: son la base. Solo vas a tocar el 2 y el 4.
+</Why>
+</Step>
+
+<Step n={3} title="Paso A: el rebote">
+Ve al frame 2.
+
+1. Con la selección rectangular (<Keys k="M" />), selecciona **todo el personaje**, de la coronilla a las botas.
+2. Arrastra la selección desde dentro **1 píxel hacia arriba**. Suelta y deselecciona.
+3. Ahora las dos botas flotan 1 px sobre el suelo. Es lo esperado.
+
+<Tip>
+Antes de soltar, mira la rejilla (*View → Grid*): el contorno de la cabeza tiene que quedar exactamente una fila más arriba, sin desplazarse a los lados.
+</Tip>
+</Step>
+
+<Step n={4} title="Paso A: una pierna al suelo, la otra en el aire">
+Sigue en el frame 2, con el lápiz (<Keys k="B" />) y *Pixel-perfect* activado:
+
+1. **Pierna de apoyo** (la de la izquierda de la pantalla): alárgala **una fila** de pantalón, justo encima de la bota, y baja la bota y su contorno hasta la fila del suelo.
+2. **Pierna levantada** (la de la derecha): no la toques. Ya está 1 px por encima del suelo.
+3. Borra (<Keys k="E" />) los píxeles que hayan quedado sueltos bajo la bota levantada.
+
+<Why>
+La pierna estirada es la que sostiene el peso: por eso llega al suelo aunque el cuerpo haya subido. La otra conserva su largo y por eso se ve levantada. No has dibujado un pie «en el aire»: lo ha levantado el rebote.
+</Why>
+</Step>
+
+<Step n={5} title="Paso B: el espejo">
+Ve al frame 4 y repite los pasos 3 y 4 **con la otra pierna**: sube todo 1 px, alarga la pierna de la derecha hasta el suelo y deja la de la izquierda en el aire.
+
+<Warn>
+No reflejes el frame entero para hacer el paso B. La luz del pelo y la sombra de la ropa están a un lado: si las reflejas, el héroe cambia de iluminación en cada paso. Refleja solo la idea: qué pierna se estira.
+</Warn>
+</Step>
+
+<Step n={6} title="Alinea con onion skin y revisa el bucle">
+1. Activa el onion skin (el botón está en la línea de tiempo).
+2. Ve frame a frame. Entre 1 y 2, la cabeza fantasma debe quedar **1 px por debajo** de la actual; entre 2 y 3, 1 px por encima. Nunca a un lado.
+3. La bota de apoyo debe estar siempre en la misma fila del suelo.
+4. Reproduce (botón de *play* de la línea de tiempo) y deja correr varias vueltas. Mira el salto del frame 4 al 1: no debe haber tirón.
+
+<Tip>
+Si el héroe «tiembla» de lado, algún frame se ha movido 1 px en horizontal. El onion skin lo delata enseguida.
+</Tip>
+</Step>
+
+<Step n={7} title="Etiqueta la dirección y exporta">
+1. Selecciona los frames 1–4 en la línea de tiempo y crea una **etiqueta** (tag) llamada `abajo`. Las otras direcciones (`arriba`, `lado`) irán en frames nuevos con su propia etiqueta, en el mismo archivo.
+2. Guarda con <Keys k="Ctrl+S" />.
+3. Para enseñarlo: *File → Export → Export As*, formato **GIF**, **Resize** 400 % o más.
+4. Para el juego: *File → Export → Export Sprite Sheet*, PNG a 1×.
+
+<Why title="Por qué etiquetas">
+Un personaje de juego tiene muchas animaciones en un solo archivo: idle, caminar abajo, arriba, a un lado… Las etiquetas les ponen nombre a los tramos de frames. En Godot este trabajo acabará en un `AnimatedSprite2D`, con una animación por dirección; lo verás en el nivel 9.
+</Why>
+</Step>
+
+<Warn title="Verifica en tu versión">
+Los nombres y la posición pueden variar según la versión de Aseprite: el panel *Timeline*, la opción de frame nuevo del menú *Frame*, *Frame Properties*, el botón de onion skin, cómo se crea una etiqueta (desde el menú *Frame* o con clic derecho sobre los frames seleccionados), si arrastrar dentro de una selección mueve los píxeles con la herramienta de selección activa, y las opciones de *Export Sprite Sheet*. Si no encuentras algo, búscalo por nombre en los menús.
+</Warn>
+</Block>
+
+<Block kind="version">
+La pieza es el ciclo hacia abajo. Si te quedan ganas, completa el personaje con las otras tres direcciones, cada una con su etiqueta y la misma estructura de 4 frames y el mismo timing. Elige uno o más:
+
+- **Hacia arriba** (etiqueta `arriba`): el héroe de espaldas. Sin cara: pelo por detrás y la túnica. Las piernas funcionan igual que de frente: base, paso A, base, paso B, con rebote.
+- **De lado** (etiqueta `lado`): el perfil, mirando a la derecha. Aquí las piernas se adelantan y se atrasan en vez de subir y bajar; mantén el rebote de 1 px en las poses de paso.
+- **El otro lado gratis:** el lateral izquierdo puede ser el derecho **reflejado** en horizontal (*Edit → Flip Horizontal*, o desde el motor). Ojo: si el héroe lleva algo en una mano, al reflejar cambia de mano. En la mayoría de juegos pequeños se acepta.
+
+<Tip>
+Haz primero una sola pose de cada dirección y compáralas a 1×. Si el héroe de espaldas o de lado parece otro personaje, corrige la pose antes de animar.
+</Tip>
+</Block>
+
+<Block kind="errores">
+<Mistake title="Solo dos frames: el héroe cojea" wrongLabel="Base + paso A" rightLabel="Base + A + base + B">
+  <p slot="wrong">Solo se levanta el pie de la derecha. El de la izquierda nunca deja el suelo: se estira y se encoge. El ojo ve una pierna que renquea.</p>
+  <p slot="right">Cada pie tiene su turno. El paso B es el espejo del A y la base hace de puente entre los dos.</p>
+
+Compáralo en los dos animadores del concepto. Corrígelo añadiendo la base repetida y el paso con la otra pierna.
+</Mistake>
+
+<Mistake title="Piernas sin rebote" wrongLabel="El cuerpo no se mueve" rightLabel="El cuerpo sube 1 px en cada paso">
+  <p slot="wrong">Solo se mueven los pies. La cabeza y el torso están clavados: el héroe parece flotar o deslizarse sobre una cinta.</p>
+  <p slot="right">En los pasos todo el cuerpo sube 1 píxel y la pierna de apoyo se estira hasta el suelo. Se nota el peso.</p>
+
+Corrígelo en los frames de paso: selecciona el personaje entero, súbelo 1 px y alarga la pierna de apoyo.
+</Mistake>
+
+<Mistake title="Rebote exagerado" wrongLabel="Sube 2–3 px" rightLabel="Sube 1 px">
+  <p slot="wrong">A 16×24, 2 píxeles son casi el 10 % de la altura. El héroe va dando saltitos, como si botara.</p>
+  <p slot="right">1 píxel basta para notar el peso sin que parezca un salto.</p>
+
+A más resolución, más píxeles de rebote. A esta escala, uno.
+</Mistake>
+
+<Warn title="Un frame más largo que los demás">
+Si un frame del ciclo dura 400 ms y el resto 180, el héroe se detiene en ese punto en cada vuelta: parece que tropieza. En un ciclo de caminar todos los frames duran lo mismo.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+Reprodúcelo varias vueltas **a 1×** y a tamaño de juego, no solo ampliado. Un fallo de 1 píxel se nota más en movimiento que quieto.
+
+<Checklist items={[
+  "Tengo 4 frames: base, paso A, base, paso B",
+  "Los frames 1 y 3 son idénticos",
+  "En cada paso el cuerpo sube 1 px, ni más ni menos",
+  "La pierna de apoyo toca el suelo; el otro pie queda 1 px en el aire",
+  "Los pies se alternan: en el paso A se levanta uno y en el B el otro",
+  "Todos los frames duran lo mismo, entre 150 y 200 ms",
+  "Con onion skin, la cabeza solo se mueve en vertical",
+  "El salto del frame 4 al 1 no da tirón",
+  "Los 4 frames están en una etiqueta llamada abajo",
+]} />
+
+<Quiz q="¿Por qué el ciclo de frente necesita 4 frames y no 2?" options={["Porque Aseprite no reproduce animaciones de 2 frames", "Porque con 2 frames solo se levanta un pie y el héroe cojea", "Porque 4 frames ocupan menos en la spritesheet"]} answer={1}>
+Con la base y un solo paso, siempre se levanta el mismo pie. El paso B le da su turno a la otra pierna y la base repetida une los dos pasos.
+</Quiz>
+
+<Quiz q="¿Cuándo sube el cuerpo 1 px?" options={["En los frames de paso, cuando un pie está levantado", "En los frames de base, con los dos pies en el suelo", "Nunca: el cuerpo debe quedarse fijo"]} answer={0}>
+La pierna de apoyo se estira y empuja el cuerpo hacia arriba; con los dos pies en el suelo, el cuerpo vuelve a bajar.
+</Quiz>
+
+<Quiz q="¿Qué duración pones a los frames de un paso tranquilo?" options={["500 ms el primero y 90 ms los demás", "Entre 150 y 200 ms, todos iguales", "Cada uno distinta, para que parezca natural"]} answer={1}>
+Caminar es un ritmo regular. La pausa larga del brillo de P4-03 aquí haría tropezar al héroe.
+</Quiz>
+</Block>
