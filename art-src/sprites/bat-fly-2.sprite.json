@@ -1,0 +1,31 @@
+{
+  "name": "bat-fly-2",
+  "description": "Murciélago, frame 2: alas en horizontal, abiertas del todo a la altura de los ojos. Es el frame de paso entre arriba y abajo.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "criatura",
+    "animación",
+    "vuelo"
+  ],
+  "palette": {
+    "o": "#1b1030",
+    "w": "#5b4a7a",
+    "b": "#3a2d52",
+    "R": "#ff4f4f"
+  },
+  "rows": [
+    "............",
+    "............",
+    ".....oo.....",
+    "....obbo....",
+    "oooooRRooooo",
+    "owwwobbowwwo",
+    ".owwwbbwwwo.",
+    "..o.obbo.o..",
+    "....o..o....",
+    "............",
+    "............",
+    "............"
+  ]
+}

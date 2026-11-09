@@ -170,6 +170,15 @@
   - dos slimes con y sin simulación de deuteranopía, antes y después de corregir el valor;
   - modelos «ruina» (intacta, rota y abandonada) y «vegetacion» (piezas, en rejilla y en grupos).
 
+**Contenido · decimotercer bloque: 5 lecciones más (78 en total).**
+- **Pixel:** P5-06 Un jefe (redibujar a 3×, no escalar), P6-08 Vuelo (el aleteo del murciélago), P8-05 Clima (lluvia sobre la escena).
+- **Voxel:** V4-05 Equipamiento (un escudo), V7-03 Mazmorras (una sala con luz de antorchas).
+- **Arte nuevo:**
+  - slime rey de 30×24 frente al slime escalado ×3;
+  - murciélago en tres poses de vuelo;
+  - escena final con lluvia en dos capas en 8 frames y la lluvia en rayas como error;
+  - modelos «mazmorra» (sala, atrezo, historia y luz) y «escudo» (forma, estructura, emblema y uso).
+
 **Lecciones aprendidas durante la fase 1:**
 - **`BASE_URL` sin barra final.** Astro 7 da `BASE_URL` sin barra final, así que hay que usar siempre `src/lib/url.ts`. El validador detecta enlaces sin la base.
 - **Colecciones nuevas en local.** El servidor de desarrollo no ve colecciones de contenido nuevas: hay que reiniciarlo (`npx astro dev --force`).

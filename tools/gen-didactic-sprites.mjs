@@ -1233,6 +1233,94 @@ const deutan = (hex) => {
   for (const [n, d, px, tags] of S) { const s = hexGridToSprite(px); add(n, d, tags, s.pal, s.rows); }
 }
 
+
+// ---------- un jefe: el slime redibujado a 30×24 (3×) frente al slime escalado ×3
+{
+  const K = { o: "#1b1030", G: "#14532d", g: "#1f8a4c", m: "#4ade80", l: "#86efac", h: "#d8ffe6", w: "#ffffff", e: "#1b1030", y: "#f2c14e", Y: "#a8661c", r: "#e8484f" };
+  const W = 30, H = 24, cx = 15, base = 22;
+  const L = (() => { const v = [-0.4, -0.7, 0.6]; const n = Math.hypot(...v); return v.map((a) => a / n); })();
+  const g = Array.from({ length: H }, (_, y) => Array.from({ length: W }, (_, x) => {
+    const X = x + 0.5, Y = y + 0.5;
+    if (Y > base + 0.5) return ".";
+    const nx = (X - cx) / 14, ny = (Y - base) / 15; // cúpula: media elipse apoyada en la base
+    if (nx * nx + ny * ny > 1) return ".";
+    const nz = Math.sqrt(Math.max(0, 1 - nx * nx - ny * ny)), k = nx * L[0] + ny * L[1] + nz * L[2];
+    if (Y > base - 1.5) return "G"; // la base en contacto con el suelo, en la sombra más oscura
+    return k > 0.9 ? "l" : k > 0.6 ? "m" : k > 0.25 ? "g" : "G";
+  }));
+  // brillo: un cluster de 3 + 1 píxel suelto, arriba a la izquierda (no un píxel solo)
+  for (const [x, y] of [[8, 10], [9, 10], [8, 11], [11, 9]]) g[y][x] = "h";
+  // ojos de 3×4 con un brillo blanco cada uno; boca de 6 px con un colmillo
+  for (const ex of [10, 17]) for (let y = 13; y < 17; y++) for (let x = ex; x < ex + 3; x++) g[y][x] = "e";
+  g[13][10] = "w"; g[13][17] = "w";
+  for (let x = 12; x < 18; x++) g[19][x] = "e";
+  g[20][16] = "w";
+  // corona dorada de 10 px con tres puntas y una gema
+  const crown = ["y...y...y.", "yy.yyy.yyy", "yyyyryyyyy", "YYYYYYYYYY"];
+  crown.forEach((r, dy) => [...r].forEach((c, dx) => { if (c !== ".") g[3 + dy][10 + dx] = c; }));
+  // contorno exterior
+  const filled = (x, y) => (g[y]?.[x] ?? ".") !== ".";
+  const out = g.map((r, y) => r.map((c, x) => (c === "." && [[1, 0], [-1, 0], [0, 1], [0, -1]].some(([dx, dy]) => filled(x + dx, y + dy)) ? "o" : c)));
+  const rows = out.map((r) => r.join(""));
+  add("slime-king", "Jefe de 30×24: el slime REDIBUJADO a 3×, no escalado. Cuatro verdes con la luz arriba a la izquierda, la base en la sombra más oscura, un brillo en grupo, ojos de 3×4 con su brillo blanco, una boca con colmillo y una corona dorada con gema. Mismo diseño, más información.", ["criatura", "jefe"], usedOnly(K, rows), rows);
+  const sl = spriteByName("slime");
+  const x3 = Array.from({ length: 24 }, (_, y) => Array.from({ length: 30 }, (_, x) => sl.rows[Math.floor(y / 3)][Math.floor(x / 3)]).join(""));
+  add("slime-x3", "Error: el slime de 10×8 escalado ×3 con vecino más cercano. Cada píxel es ahora un bloque de 3×3: el contorno mide 3 px de grueso, el brillo es un cuadrado y no se ha añadido nada. Más grande, pero no más detallado: parece de otro juego.", ["criatura", "jefe", "error"], sl.palette, x3);
+}
+
+// ---------- vuelo: el murciélago aletea en 3 poses (12×12). El cuerpo sube cuando las alas bajan
+{
+  const BATP = spriteByName("bat").palette;
+  const UP = spriteByName("bat").rows;
+  const MID = [".....oo.....", "....obbo....", "oooooRRooooo", "owwwobbowwwo", ".owwwbbwwwo.", "..o.obbo.o..", "....o..o...."];
+  const DOWN = [".....oo.....", "....obbo....", "....oRRo....", "..oowbbwoo..", ".owwwbbwwwo.", "owwwwbbwwwwo", "owwoobboowwo", "owo.o..o.owo", "oo........oo", "o..........o"];
+  const place = (rows, dy) => Array.from({ length: 12 }, (_, y) => (rows[y - dy] ?? "............"));
+  const F = [
+    ["bat-fly-1", "Murciélago, frame 1: alas arriba (el sprite del curso). Las puntas suben hasta la altura de las orejas.", place(UP, 2)],
+    ["bat-fly-2", "Murciélago, frame 2: alas en horizontal, abiertas del todo a la altura de los ojos. Es el frame de paso entre arriba y abajo.", place(MID, 2)],
+    ["bat-fly-3", "Murciélago, frame 3: alas abajo, con las puntas por debajo de los pies. El cuerpo está 1 px más arriba: el golpe de ala lo levanta.", place(DOWN, 1)],
+  ];
+  F.forEach(([n, d, rows]) => add(n, d, ["criatura", "animación", "vuelo"], usedOnly(BATP, rows), rows));
+}
+
+// ---------- clima: lluvia en dos capas sobre la escena final, oscurecida (80×48, 8 frames en bucle)
+{
+  const base = spriteByName("scene-final");
+  const rgbA = (h) => { const n = parseInt(h.slice(1), 16); return [n >> 16, (n >> 8) & 255, n & 255]; };
+  const hexA = (c) => "#" + c.map((v) => Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, "0")).join("");
+  const stormy = (h) => { const [r, g, b] = rgbA(h), l = 0.3 * r + 0.59 * g + 0.11 * b; return hexA([r, g, b].map((v, i) => (v * 0.55 + l * 0.45) * 0.72 + [0, 4, 18][i])); }; // menos saturación, menos valor, algo de azul
+  const LIGHT = ["#ffffff", "#ffe58a", "#ff8f3a"]; // el impacto emite luz: no se apaga con el día gris y sigue siendo el foco
+  const dark = base.rows.map((r) => [...r].map((k) => (k === "." ? null : LIGHT.includes(base.palette[k]) ? base.palette[k] : stormy(base.palette[k]))));
+  const FAR = "#8fa3c0", NEAR = "#c9d6ea", SPL = "#e8f0fa";
+  // posiciones pseudoaleatorias (hash): sin cadenas ni diagonales que delaten una fórmula
+  const hash = (i, k) => { const v = Math.sin(i * 12.9898 + k * 78.233) * 43758.5453; return v - Math.floor(v); };
+  const drops = (n, seed) => Array.from({ length: n }, (_, i) => [Math.floor(hash(i, seed) * 80), Math.floor(hash(i, seed + 17) * 48)]);
+  const FARD = drops(26, 1), NEARD = drops(12, 5);
+  const SPLASH = [[12, 44], [33, 40], [52, 45], [70, 41], [24, 30], [61, 34]];
+  const frame = (f, { straight = false } = {}) => {
+    const px = dark.map((r) => r.slice());
+    const put = (x, y, c) => { x = ((Math.round(x) % 80) + 80) % 80; if (y >= 0 && y < 48) px[y][x] = c; };
+    if (straight) { for (let x = 3; x < 80; x += 6) for (let y = 0; y < 48; y++) if ((y + x) % 6 < 3) put(x, y, NEAR); return px; }
+    // lejos: gotas de 2 px que caen 6 px por frame; cerca: gotas de 4 px que caen 12. Las dos con el mismo viento.
+    for (const [x0, y0] of FARD) { const y = (y0 + 6 * f) % 48; for (let i = 0; i < 2; i++) put(x0 + (y + i) * 0.25, y + i, FAR); }
+    for (const [x0, y0] of NEARD) { const y = (y0 + 12 * f) % 48; for (let i = 0; i < 4; i++) put(x0 + (y + i) * 0.25, y + i, NEAR); }
+    SPLASH.forEach(([x, y], i) => { if ((i + f) % 4 === 0) { put(x - 1, y, SPL); put(x + 1, y, SPL); } else if ((i + f) % 4 === 1) put(x, y - 1, SPL); });
+    return px;
+  };
+  const frames = Array.from({ length: 8 }, (_, f) => frame(f));
+  // paleta fija para los 8 frames: las mismas letras siempre
+  const keys = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  const all = [...new Set(frames.flat(2).filter(Boolean))];
+  const PALR = Object.fromEntries(all.map((h, i) => [keys[i], h]));
+  const inv = Object.fromEntries(all.map((h, i) => [h, keys[i]]));
+  frames.forEach((px, f) => {
+    const rows = px.map((r) => r.map((h) => (h ? inv[h] : ".")).join(""));
+    add(`rain-${f + 1}`, `Lluvia, frame ${f + 1} de 8: la escena final más oscura, menos saturada y algo azulada, salvo el impacto, que conserva su luz. Delante, dos capas de lluvia inclinada por el viento: gotas lejanas de 2 px, más oscuras, que caen 6 px por frame, y gotas cercanas de 4 px, más claras, que caen 12. Salpicaduras de 1–2 px en el suelo.`, ["escena", "clima", "animación"], usedOnly(PALR, rows), rows);
+  });
+  const st = hexGridToSprite(frame(0, { straight: true }));
+  add("rain-straight", "Error: la lluvia como líneas verticales discontinuas, todas iguales y repartidas cada 6 px. Sin profundidad ni viento: parecen rayas sobre la imagen, o una reja.", ["escena", "clima", "error"], st.pal, st.rows);
+}
+
 // ---------- escribir y validar
 let bad = 0;
 for (const s of out) {

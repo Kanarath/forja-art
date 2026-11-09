@@ -1,0 +1,44 @@
+{
+  "name": "slime-x3",
+  "description": "Error: el slime de 10×8 escalado ×3 con vecino más cercano. Cada píxel es ahora un bloque de 3×3: el contorno mide 3 px de grueso, el brillo es un cuadrado y no se ha añadido nada. Más grande, pero no más detallado: parece de otro juego.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "criatura",
+    "jefe",
+    "error"
+  ],
+  "palette": {
+    "o": "#1b1030",
+    "g": "#4ade80",
+    "G": "#1f8a4c",
+    "h": "#d8ffe6",
+    "e": "#1b1030"
+  },
+  "rows": [
+    ".........oooooooooooo.........",
+    ".........oooooooooooo.........",
+    ".........oooooooooooo.........",
+    "......oooggghhhggggggooo......",
+    "......oooggghhhggggggooo......",
+    "......oooggghhhggggggooo......",
+    "...oooggghhhggggggggggggooo...",
+    "...oooggghhhggggggggggggooo...",
+    "...oooggghhhggggggggggggooo...",
+    "...ooogggeeeggggggeeegggooo...",
+    "...ooogggeeeggggggeeegggooo...",
+    "...ooogggeeeggggggeeegggooo...",
+    "oooggggggggggggggggggggggggooo",
+    "oooggggggggggggggggggggggggooo",
+    "oooggggggggggggggggggggggggooo",
+    "oooggggggggggggggggggGGGGGGooo",
+    "oooggggggggggggggggggGGGGGGooo",
+    "oooggggggggggggggggggGGGGGGooo",
+    "oooGGGGGGGGGGGGGGGGGGGGGGGGooo",
+    "oooGGGGGGGGGGGGGGGGGGGGGGGGooo",
+    "oooGGGGGGGGGGGGGGGGGGGGGGGGooo",
+    "...oooooooooooooooooooooooo...",
+    "...oooooooooooooooooooooooo...",
+    "...oooooooooooooooooooooooo..."
+  ]
+}

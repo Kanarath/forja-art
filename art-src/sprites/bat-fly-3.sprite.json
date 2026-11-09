@@ -1,0 +1,31 @@
+{
+  "name": "bat-fly-3",
+  "description": "Murciélago, frame 3: alas abajo, con las puntas por debajo de los pies. El cuerpo está 1 px más arriba: el golpe de ala lo levanta.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "criatura",
+    "animación",
+    "vuelo"
+  ],
+  "palette": {
+    "o": "#1b1030",
+    "w": "#5b4a7a",
+    "b": "#3a2d52",
+    "R": "#ff4f4f"
+  },
+  "rows": [
+    "............",
+    ".....oo.....",
+    "....obbo....",
+    "....oRRo....",
+    "..oowbbwoo..",
+    ".owwwbbwwwo.",
+    "owwwwbbwwwwo",
+    "owwoobboowwo",
+    "owo.o..o.owo",
+    "oo........oo",
+    "o..........o",
+    "............"
+  ]
+}

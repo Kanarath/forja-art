@@ -1,0 +1,49 @@
+{
+  "name": "slime-king",
+  "description": "Jefe de 30×24: el slime REDIBUJADO a 3×, no escalado. Cuatro verdes con la luz arriba a la izquierda, la base en la sombra más oscura, un brillo en grupo, ojos de 3×4 con su brillo blanco, una boca con colmillo y una corona dorada con gema. Mismo diseño, más información.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "criatura",
+    "jefe"
+  ],
+  "palette": {
+    "o": "#1b1030",
+    "G": "#14532d",
+    "g": "#1f8a4c",
+    "m": "#4ade80",
+    "l": "#86efac",
+    "h": "#d8ffe6",
+    "w": "#ffffff",
+    "e": "#1b1030",
+    "y": "#f2c14e",
+    "Y": "#a8661c",
+    "r": "#e8484f"
+  },
+  "rows": [
+    "..............................",
+    "..............................",
+    "..........o...o...o...........",
+    ".........oyo.oyo.oyo..........",
+    ".........oyyoyyyoyyyo.........",
+    ".........oyyyyryyyyyo.........",
+    ".........oYYYYYYYYYYo.........",
+    ".........oommmmmmmmoo.........",
+    ".......oomlllllmmmmmgoo.......",
+    "......omlllhlllmmmmmmggo......",
+    ".....ollhhllllllmmmmmmggo.....",
+    "....omllhllllllmmmmmmmgggo....",
+    "...omllllllllllmmmmmmmggggo...",
+    "..ommlllllweellmmweemmggggGo..",
+    "..omlllllleeelmmmeeemgggggGo..",
+    ".ommmllllleeemmmmeeemgggggGGo.",
+    ".ommmllllleeemmmmeeemgggggGGo.",
+    ".ommmmmmmmmmmmmmmmmmggggggGGo.",
+    "ommmmmmmmmmmmmmmmmmggggggGGGGo",
+    "ommmmmmmmmmmeeeeeegggggggGGGGo",
+    "ogmmmmmmmmmmmmmmwgggggggGGGGGo",
+    "oGGGGGGGGGGGGGGGGGGGGGGGGGGGGo",
+    "oGGGGGGGGGGGGGGGGGGGGGGGGGGGGo",
+    ".oooooooooooooooooooooooooooo."
+  ]
+}

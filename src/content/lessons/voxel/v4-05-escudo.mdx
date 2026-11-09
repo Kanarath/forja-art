@@ -1,0 +1,227 @@
+---
+id: v4-05
+discipline: voxel
+level: 4
+order: 5
+title: "Equipamiento: un escudo con historia"
+summary: "Forja un escudo redondo: un disco de escalones ordenados con Mirror, tablas, llanta y umbo de metal, un emblema que se lee de lejos, marcas de uso y el asa detrás."
+duration: 40
+status: borrador
+prerequisites: [v4-02, v3-03]
+fundamentals: [f02, f10]
+objectives:
+  - "Construir un círculo limpio en vóxels con escalones ordenados y Mirror en X y Z"
+  - "Contar cómo está construido un objeto con sus materiales: madera en las tablas, metal donde hay golpes"
+  - "Diseñar un emblema de formas grandes y pocos colores que se lea a distancia"
+  - "Añadir marcas de uso con lógica (mella, remache saltado) sin ensuciar el emblema"
+  - "Modelar la parte de atrás (el asa) y renderizar el metal con material Metal"
+tools: [magicavoxel]
+piece:
+  name: "Tu escudo (redondo, de cometa o rectangular) con estructura, emblema, marcas de uso y asa, en 3 versiones y un render"
+  canvas: "13x6x13"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [escudo]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Hoy forjas un **escudo redondo de madera y hierro**. No es un disco con dibujo: es un objeto que alguien construyó, pintó con su emblema y llevó a la batalla.
+
+<VoxViewer model="escudo" stage={2} title="Tu pieza: el escudo en 3 etapas (13×13 de frente)" />
+
+Pulsa las tres etapas: **Forma**, **Estructura** y **Emblema y uso**. Después gira el escudo con el ratón y míralo **por detrás**: ahí está el asa.
+</Block>
+
+<Block kind="concepto">
+**1. Un círculo en vóxels es un círculo de píxeles con fondo.** El disco mide 13 de diámetro y **1 vóxel de grosor**. Mira las filas de arriba abajo:
+
+- **5, 7, 9, 11** vóxels de ancho: cada fila sale **1 vóxel por lado**;
+- **13** de ancho durante **cinco filas** seguidas: el lado recto;
+- y luego **11, 9, 7, 5**, el mismo camino de vuelta.
+
+Tramo plano, escalones iguales, tramo plano. Es lo que aprendiste con las líneas y curvas de [P2-01](/forja-art/pixel/p2-01/): los tramos crecen y decrecen **con orden**.
+
+<Sprite name="circle-clean" scale={8} caption="circle-clean: tramos que crecen y decrecen con orden. El disco del escudo sigue la misma regla" />
+
+<VoxViewer model="escudo" stage={0} title="Forma: disco de 13 y 1 de grosor, tablas verticales de 2 en dos tonos" />
+
+<Why title="¿Por qué Mirror en X y en Z?">
+Un círculo es simétrico a izquierda y derecha (X) y arriba y abajo (Z, la altura). Con los dos espejos activos construyes **un cuarto** y MagicaVoxel pone los otros tres. Con 13 de ancho hay una columna central exacta: por eso el tamaño es **impar**.
+</Why>
+
+**2. Los materiales cuentan cómo está hecho.** Un escudo de verdad son tablas de madera unidas y reforzadas con metal. Mira la etapa «Estructura»:
+
+- **Tablas:** columnas de 2 vóxels en dos marrones (`#a0603a` y `#8a5030`). El cambio de tono es la junta entre tablas.
+- **Llanta:** el anillo exterior, de **1 vóxel**, en hierro (`#8f9bab`). Sujeta las tablas y para los golpes de canto.
+- **Umbo:** la cúpula del centro, en hierro claro (`#c9d1dc`). Un bloque de 3×3 que sale 1 vóxel hacia delante y 1 vóxel más en el centro: **sobresale 2**. Protege la mano, que está justo detrás.
+- **Remaches:** ocho vóxels de hierro oscuro (`#5c6676`) que asoman 1 por delante, en anillo, pegados a la llanta por dentro: cuatro arriba, abajo y a los lados, y cuatro en las diagonales.
+
+<VoxViewer model="escudo" stage={1} title="Estructura: llanta, umbo y ocho remaches" />
+
+<Why>
+El metal va **donde hay golpes**: el canto y el centro. La madera llena la superficie grande, que respira. Es la regla de V4-03 (detalle en bordes y uniones) con una razón física detrás: si no sabes por qué hay metal en un sitio, sobra.
+</Why>
+
+**3. El emblema es la identidad.** En la última etapa, sobre la madera, hay un **galón**: una V invertida de brazos de 2 vóxels, en rojo (`#c2413b`), con la **punta en crema** (`#e8dcc0`) arriba. Los brazos bajan desde la punta, se abren 1 columna cada 2 filas y llegan casi hasta la llanta. El umbo queda **dentro** de la V.
+
+Dos colores. Una forma. Se lee desde la otra punta del campo de batalla.
+
+<Why title="Formas grandes, poco color">
+A distancia, un escudo ocupa pocos píxeles en la pantalla. Un león con melena y corona se convierte en una mancha; una V, una cruz o una franja siguen siendo una V, una cruz o una franja. Es F02: la silueta manda, también dentro del emblema. Y el color del emblema debe tener un **valor** distinto de la madera: el rojo y el crema contra el marrón se separan también en grises.
+</Why>
+
+**4. El uso cuenta la historia.** Un escudo nuevo no tiene pasado. En la etapa final hay dos marcas: arriba a la derecha faltan 2 vóxels de la llanta, una **mella** donde paró un golpe, y abajo a la derecha falta un remache: se ha saltado. Es la lógica del desgaste de [V3-03](/forja-art/voxel/v3-03/): el daño va donde el objeto se usa, no al azar. Y es storytelling (F10): el emblema dice **de quién** es; la mella, **qué ha vivido**.
+
+**5. La parte de atrás.** Gira la etapa final. Detrás, a media altura, hay un **asa** de madera oscura: una tabla de 5 pegada al escudo, dos soportes de 1 y la empuñadura de 5, a 3 vóxels del disco. Deja un hueco de 3 para la mano. Solo se ve al girar, pero un escudo sin asa es una tapa de barril.
+
+<Warn title="El visor no simula materiales">
+El visor web solo muestra colores. El brillo del hierro con material **Metal** solo se ve en el modo **Render** de MagicaVoxel ([V3-02](/forja-art/voxel/v3-02/)).
+</Warn>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Modelo y paleta">
+1. Crea un modelo nuevo y pon el tamaño a **13×6×13** (la Z es la altura). El disco va en una capa del fondo; delante queda sitio para el umbo y detrás para el asa.
+2. En la **paleta** de la izquierda, en una fila libre, pon: dos maderas para las tablas, una madera oscura para el asa, tres hierros (claro, medio y oscuro) y los dos colores del emblema.
+
+<Why>
+Ocho colores decididos antes del primer vóxel, y cada material con colores **propios**: en el paso 7 el Metal se asigna por color. Si la madera comparte un gris con el hierro, también brillará.
+</Why>
+</Step>
+
+<Step n={2} title="El disco con Mirror">
+1. Activa los botones **Mirror** de **X** y de **Z** (en la barra de pinceles).
+2. Modo **Attach**, pincel **Box**, madera clara. Trabaja en la capa del fondo que elijas para el disco, mirando el escudo de frente.
+3. Dibuja la banda central: **13 de ancho y 5 de alto**, centrada.
+4. Encima, filas de **11, 9, 7 y 5**, cada una centrada. El espejo en Z pone las de abajo.
+5. Gira la cámara con el botón derecho y comprueba: 5, 7, 9, 11, cinco de 13, 11, 9, 7, 5.
+
+<Tip>
+Si el espejo no cae en la columna central, el modelo no es impar o la fila no está centrada. Corrígelo ahora: un círculo torcido no se arregla con pintura.
+</Tip>
+</Step>
+
+<Step n={3} title="Tablas en dos tonos">
+1. **Desactiva Mirror X**: las tablas no tienen por qué ser simétricas.
+2. Modo **Paint**, pincel **Voxel** (o **Face**): pinta columnas de 2 alternando las dos maderas, desde el borde izquierdo hacia la derecha.
+3. Guarda como `escudo_v1.vox`.
+
+<Why>
+El cambio de tono **es** la junta. No hace falta hundir vóxels: en un disco de 1 de grosor, borrar abriría un agujero. Dos tonos de valor cercano se leen como tablas; dos muy distintos, como un código de barras.
+</Why>
+</Step>
+
+<Step n={4} title="Llanta, umbo y remaches">
+1. Vuelve a activar **Mirror X** y **Mirror Z**.
+2. **Llanta:** modo **Paint**, hierro medio. Pinta el anillo exterior de 1 vóxel: en las filas de arriba y abajo, toda la fila; en las demás, el primer vóxel de cada lado. Con los espejos, basta un cuarto.
+3. **Umbo:** modo **Attach**, hierro claro. Pon un bloque de 3×3 delante del centro y, encima de su vóxel central, uno más hacia delante.
+4. **Remaches:** **Attach**, hierro oscuro, un vóxel delante de la madera pegado a la llanta por dentro. Pon tres: el de arriba, el de un lado y uno en una diagonal. Los espejos completan los ocho.
+5. Guarda como `escudo_v2.vox`.
+
+<Warn>
+Un remache en mitad de una tabla no sujeta nada. Los ocho van en anillo junto a la llanta: es lo que la clava a las tablas.
+</Warn>
+</Step>
+
+<Step n={5} title="El emblema con Paint">
+1. **Desactiva Mirror Z** (el emblema no es simétrico arriba y abajo) y deja **Mirror X**.
+2. Modo **Paint**, pincel **Voxel**, crema: la punta, 3 vóxels centrales en las dos filas bajo la llanta de arriba, y debajo un par a cada lado con un hueco en el centro.
+3. Rojo: los brazos, de 2 de ancho, bajando y abriéndose **1 columna cada 2 filas** hasta tocar casi la llanta. Rodean el umbo.
+4. Aléjate con la rueda del ratón hasta que el escudo sea pequeño en pantalla. ¿Sigue siendo una V?
+
+<Why>
+Paint cambia el color sin tocar la forma: el emblema está **pintado** sobre la madera, como en uno real. Si mañana quieres otro emblema, repintas; el escudo sigue igual.
+</Why>
+</Step>
+
+<Step n={6} title="Uso y parte de atrás">
+1. **Desactiva todos los Mirror**: el daño nunca es simétrico.
+2. **Mella:** modo **Erase**, pincel **Voxel**. Borra 2 vóxels seguidos de la llanta en una zona de arriba, donde caen los golpes.
+3. **Remache saltado:** borra un remache, o muévelo un vóxel fuera de su sitio.
+4. Gira el escudo y míralo por detrás. Activa **Mirror X**. Con **Attach** y madera oscura, a media altura: una fila de 5 pegada al disco, un vóxel hacia atrás en cada extremo y otra fila de 5 que los une. Queda un hueco de 3 para la mano.
+5. Guarda como `escudo_v3.vox`.
+
+<Tip>
+Pocas marcas y con causa. Una mella y un remache cuentan una batalla; veinte agujeros cuentan una termita.
+</Tip>
+</Step>
+
+<Step n={7} title="Metal en el render">
+1. Selecciona en la paleta cada uno de los tres hierros y, en el **panel de materiales**, cambia su tipo de *Diffuse* a **Metal**.
+2. Deja en *Diffuse* las maderas y los dos colores del emblema: es pintura sobre madera.
+3. Pulsa **Render**, coloca la luz para que el umbo tenga un brillo y guarda la imagen. Haz otra girando la cámara para enseñar el asa.
+
+<Tip>
+Sube tu render al Inspector de abajo y mira la vista a 1× y la de grises: es la prueba de distancia del emblema.
+</Tip>
+</Step>
+
+<Warn title="Verifica en tu versión">
+Los nombres y la posición de los modos (**Attach**/**Erase**/**Paint**), los pinceles (**Box**/**Voxel**/**Face**), los botones **Mirror**, los campos de tamaño, el punto respecto al que refleja el espejo, el **panel de materiales** y los controles de luz y de guardado en **Render** pueden variar entre versiones de MagicaVoxel.
+</Warn>
+
+<Inspector upload title="Prueba de distancia: tu render a 1× y en grises" />
+</Block>
+
+<Block kind="version">
+Forja **tu escudo** en tres versiones guardadas (forma, estructura, emblema y uso) y un render con el metal en **Metal**. Elige un reto:
+
+- **Redondo con tu emblema:** el mismo disco, otro emblema de dos colores. Una cruz, una franja, un sol de cuatro puntas. Prueba la distancia antes de guardar.
+- **De cometa:** redondo arriba y en punta abajo. La parte redonda sigue la regla de los escalones; la punta, pendientes limpias 1:1 o 2:1. Activa solo Mirror X.
+- **Rectangular (pavés):** tablas largas, llanta en las cuatro aristas y refuerzos en las esquinas. Aquí la forma es fácil: todo el reto está en que el metal vaya donde hay golpes.
+
+Antes de cada versión, míralo de frente en un solo color: si la silueta no dice «escudo», vuelve a la forma.
+</Block>
+
+<Block kind="errores">
+<Mistake title="Círculo con escalones desordenados" wrongLabel="Tramos que bailan" rightLabel="Tramos con orden">
+  <Sprite slot="wrong" name="circle-bumpy" scale={8} caption="Tramos irregulares: bultos y esquinas" />
+  <Sprite slot="right" name="circle-clean" scale={8} caption="Tramos que crecen y decrecen con orden" />
+
+Si una fila del disco sale 2 vóxels y la siguiente 0, el escudo se lee abollado antes de recibir un golpe. **Corrección:** cuenta las filas (5, 7, 9, 11, 13…) y construye con Mirror en X y Z, así un cuarto bien hecho da un círculo bien hecho.
+</Mistake>
+
+<Mistake title="Emblema con mucho detalle" wrongLabel="Un dragón de 12 colores" rightLabel="Una V en dos colores">
+  <p slot="wrong">Un dragón con escamas, ojos y llamas en un disco de 13: de cerca se intuye, a distancia es ruido marrón y rojo.</p>
+  <p slot="right">Una forma grande y simple, en dos colores con valor distinto del de la madera: se lee a cualquier tamaño.</p>
+
+Un emblema es un logotipo, no una ilustración. **Corrección:** aléjate con la rueda o mira tu render a 1× en el Inspector. Si dudas de qué es, simplifica hasta que no dudes.
+</Mistake>
+
+<Mistake title="Todo de metal o todo de madera" wrongLabel="Un solo material" rightLabel="Cada material en su sitio">
+  <p slot="wrong">Todo de hierro: una tapa de cacerola. Todo de madera: una tabla redonda que se parte al primer golpe.</p>
+  <p slot="right">Madera en la superficie, metal en la llanta, el umbo y los remaches: los sitios que reciben golpes.</p>
+
+El contraste de materiales cuenta cómo se construyó. **Corrección:** pregúntate qué parte para cada golpe y pon ahí el hierro; el resto, madera.
+</Mistake>
+
+<Warn title="Error típico: escudo sin parte de atrás">
+De frente queda perfecto, pero al girarlo es un disco plano: nadie podría sostenerlo. **Corrección:** el asa detrás, a la altura del umbo (que protege la mano), con hueco para los dedos. En un juego el escudo gira con el personaje: la parte de atrás se va a ver.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+<Checklist items={[
+  "Mi forma es limpia: en un escudo redondo, las filas crecen y decrecen con orden",
+  "Usé Mirror para la forma y la estructura, y lo desactivé para las tablas, el emblema que no es simétrico y el daño",
+  "La madera llena la superficie y el metal está en el canto, el centro y los remaches",
+  "Mi emblema tiene formas grandes, dos o tres colores, y se lee a 1× y en grises",
+  "Hay pocas marcas de uso y cada una tiene una causa",
+  "Mi escudo tiene asa por detrás",
+  "He guardado v1, v2, v3 y un render con el hierro en material Metal",
+]} />
+
+<Quiz q="¿Por qué el escudo mide 13 de ancho y no 12?" options={["Con un número impar hay una columna central y el espejo la respeta", "Porque los círculos solo existen en tamaños impares", "Porque MagicaVoxel no admite tamaños pares"]} answer={0}>
+Con 13 hay una columna exacta en el centro: el espejo refleja alrededor de ella y el umbo cae justo en medio. Un círculo par también existe, pero no tiene vóxel central.
+</Quiz>
+
+<Quiz q="¿Dónde va el metal en el escudo?" options={["Repartido por igual por toda la madera", "Solo en el emblema, para que destaque", "En el canto, el centro y los remaches: donde hay golpes"]} answer={2}>
+La llanta para los golpes de canto, el umbo protege la mano y los remaches sujetan la llanta a las tablas. El material cuenta cómo funciona el objeto.
+</Quiz>
+
+<Quiz q="Tu emblema se ve bien de cerca, pero en el render pequeño es una mancha. ¿Qué haces?" options={["Añadir un contorno más oscuro a cada detalle", "Simplificar a una forma grande en pocos colores con valor distinto de la madera", "Subir la resolución del render"]} answer={1}>
+A distancia solo sobreviven las formas grandes y el contraste de valor. Un emblema es una silueta dentro de otra silueta.
+</Quiz>
+</Block>

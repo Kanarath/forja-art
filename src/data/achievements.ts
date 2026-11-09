@@ -80,5 +80,10 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   { id: "accesible", name: "Para todos los ojos", description: "Una paleta comprobada con simulación de daltonismo y en grises (F03-02).", color: "#ccbf86" },
   { id: "ruina", name: "Ruina", description: "Una construcción voxel rota con intención: grietas, cascotes y el paso del tiempo (V2-04).", color: "#b4ab9f" },
   { id: "vegetacion", name: "Vegetación", description: "Un kit de piezas pequeñas repartidas en grupos, no en rejilla (V6-04).", color: "#6ee59f" },
+  { id: "jefe", name: "Jefe", description: "Un enemigo redibujado a más resolución, con más información y el mismo diseño (P5-06).", color: "#86efac" },
+  { id: "vuelo", name: "Vuelo", description: "Un ciclo de aleteo de 3 poses con el cuerpo que sube en el golpe de ala (P6-08).", color: "#5b4a7a" },
+  { id: "lluvia", name: "Lluvia", description: "Una escena con clima: lluvia en dos capas, viento y la luz de un día gris (P8-05).", color: "#c9d6ea" },
+  { id: "mazmorra", name: "Mazmorra", description: "Una sala voxel con atmósfera: piedra, atrezo y luz de antorchas (V7-03).", color: "#5e5a6e" },
+  { id: "escudo", name: "Escudo", description: "Una pieza de equipamiento voxel con forma, estructura y emblema (V4-05).", color: "#c2413b" },
   { id: "forma-primero", name: "Forma antes que detalle", description: "Un modelo voxel con su blockout guardado como primera versión (V2-01).", color: "#38e1ff" },
 ];

@@ -597,7 +597,64 @@ const vegClusters = place([
   [5, 9, 19], [6, 19, 4], [5, 2, 20], // hierba suelta, poca
 ]);
 
+// ---------- MAZMORRA: una sala de piedra en corte, con atrezo y luz de antorchas
+const DUN = { floorA: "#4a4656", floorB: "#3e3a4a", wall: "#5e5a6e", wallD: "#46425a", mortar: "#2e2a3a", bone: "#e8dcc0", moss: "#2a5a3c", puddle: "#2a4a6a" };
+const dunRoom = [
+  ...box(0, 0, 0, 15, 15, 0, null).map((v) => ({ ...v, c: (Math.floor(v.x / 2) + Math.floor(v.y / 2)) % 2 ? DUN.floorA : DUN.floorB })), // losas de 2×2
+  ...box(0, 15, 1, 15, 15, 8, null), ...box(0, 0, 1, 0, 14, 8, null), // pared del fondo e izquierda
+].map((v) => (v.z === 0 ? v : { ...v, c: v.z % 2 === 0 ? DUN.mortar : ((v.z % 4 === 1 ? v.x + v.y : v.x + v.y + 2) % 4 === 0 ? DUN.mortar : (v.x + v.y + v.z) % 5 === 0 ? DUN.wallD : DUN.wall) })); // sillares con juntas alternas
+const dunPillar = box(12, 12, 1, 13, 13, 8, null).map((v) => ({ ...v, c: v.z === 1 || v.z === 8 ? DUN.mortar : DUN.wall }));
+const torch = (x, y, side) => [...box(x, y, 4, x, y, 5, WOOD.dark), { x: x + side[0], y: y + side[1], z: 4, c: IRON }]; // soporte en la pared y mango
+// un cofre pequeño (5×3×4), a la escala de la sala: el del curso mide 10 y la llenaría
+const dunChest = move([...box(0, 0, 0, 4, 2, 2, WOOD.mid), ...box(0, 0, 3, 4, 2, 3, WOOD.light), ...box(2, 0, 0, 2, 2, 3, METAL.mid), { x: 2, y: -1, z: 2, c: GOLD.light }], 2, 11, 1);
+const dunProps = [
+  ...dunRoom, ...dunPillar, ...dunChest, ...torch(6, 14, [0, 1]), ...torch(1, 6, [-1, 0]),
+  ...[[13, 2], [14, 2], [14, 3]].map(([x, y]) => ({ x, y, z: 1, c: WOOD.mid })), // tablas rotas en el suelo
+];
+const dunStory = [
+  ...dunProps.map((v) => (v.z === 0 && Math.hypot(v.x - 12, v.y - 5) < 2.2 ? { ...v, c: DUN.puddle } : v.z <= 2 && (v.x === 0 || v.y === 15) && (v.x + v.y * 3 + v.z) % 4 === 0 ? { ...v, c: DUN.moss } : v)), // charco y humedad en la base de las paredes
+  { x: 6, y: 14, z: 6, c: "#ff8f3a" }, { x: 6, y: 14, z: 7, c: "#ffe58a" }, { x: 1, y: 6, z: 6, c: "#ff8f3a" }, { x: 1, y: 6, z: 7, c: "#ffe58a" }, // llamas (Emit)
+  ...[[5, 4], [6, 4], [7, 5], [6, 3]].map(([x, y]) => ({ x, y, z: 1, c: DUN.bone })), { x: 4, y: 4, z: 1, c: DUN.bone }, { x: 4, y: 4, z: 2, c: DUN.bone }, // huesos y un cráneo
+  ...box(12, 12, 9, 13, 13, 9, null).map((v) => ({ ...v, c: DUN.moss })), // musgo encima del pilar, donde se acumula la humedad
+];
+
+// ---------- ESCUDO redondo: forma, estructura y emblema (13×13, de cara a -Y)
+const SH = { a: "#a0603a", b: "#8a5030", rim: "#8f9bab", rimD: "#5c6676", boss: "#c9d1dc", paint: "#c2413b", paintL: "#e8dcc0" };
+const inDisc = (x, z, r = 6.4) => Math.hypot(x - 6, z - 6) <= r;
+const shieldForm = box(0, 0, 0, 12, 0, 12, null).filter((v) => inDisc(v.x, v.z)).map((v) => ({ ...v, c: Math.floor(v.x / 2) % 2 ? SH.a : SH.b })); // tablas verticales de 2
+const shieldStruct = [
+  ...shieldForm.map((v) => (!inDisc(v.x, v.z, 5.4) ? { ...v, c: SH.rim } : v)), // llanta de hierro de 1 vóxel
+  ...box(5, -1, 5, 7, -1, 7, SH.boss), { x: 6, y: -2, z: 6, c: SH.boss }, // umbo: la cúpula de metal del centro, que sobresale 2
+  ...[[6, 1], [6, 11], [1, 6], [11, 6], [3, 3], [9, 9], [3, 9], [9, 3]].map(([x, z]) => ({ x, y: -1, z, c: SH.rimD })), // remaches sobre la llanta
+];
+const shieldFinal = [
+  ...shieldStruct.map((v) => {
+    if (v.y !== 0 || v.c === SH.rim) return v;
+    const d = Math.abs(v.x - 6) - (12 - v.z) * 0.5; // galón: una V invertida pintada sobre la madera
+    if (d > -1.2 && d < 0.8 && v.z >= 3) return { ...v, c: v.z >= 9 ? SH.paintL : SH.paint };
+    return v;
+  }).filter((v) => !(v.c === SH.rim && ((v.x === 9 && v.z === 11) || (v.x === 10 && v.z === 10)))) // una mella en la llanta, arriba a la derecha: ha parado golpes
+    .filter((v) => !(v.y === -1 && v.x === 9 && v.z === 3)), // falta un remache: se ha saltado
+  ...box(4, 1, 6, 8, 1, 6, WOOD.dark), ...box(4, 2, 6, 4, 2, 6, WOOD.dark), ...box(8, 2, 6, 8, 2, 6, WOOD.dark), ...box(4, 3, 6, 8, 3, 6, "#6b3d2e"), // asa detrás: dos soportes y la empuñadura
+];
+
 export const MODELS = {
+  mazmorra: {
+    description: "Mazmorra: una sala de piedra en corte, con atrezo y luz de antorchas",
+    stages: [
+      { label: "Sala", note: "Suelo de losas de 2×2 en dos tonos y dos paredes de sillares (fondo e izquierda), de 8 de alto, con las juntas alternas como un muro de verdad. El frente y la derecha, abiertos a la cámara.", voxels: dunRoom },
+      { label: "Atrezo", note: "Un pilar de 2×2, un cofre pequeño (5×3×4) junto a la pared izquierda, dos soportes de antorcha en las paredes (aún apagados) y unas tablas rotas en el suelo.", voxels: dunProps },
+      { label: "Historia y luz", note: "Llamas en las antorchas (para el material Emit), un charco, humedad y musgo en la base de las paredes y encima del pilar, y unos huesos con un cráneo en mitad de la sala, de camino a la salida: alguien no tuvo suerte.", voxels: dunStory },
+    ],
+  },
+  escudo: {
+    description: "Escudo redondo: forma, estructura y emblema",
+    stages: [
+      { label: "Forma", note: "Un disco de 13 de diámetro y 1 vóxel de grosor, hecho de tablas verticales de 2 en dos tonos de madera.", voxels: shieldForm },
+      { label: "Estructura", note: "Una llanta de hierro de 1 vóxel alrededor, el umbo de metal en el centro (sobresale 2) y ocho remaches junto a la llanta, por dentro. El metal enmarca y protege: va donde el escudo recibe golpes.", voxels: shieldStruct },
+      { label: "Emblema y uso", note: "Un galón (una V invertida) pintado en rojo con la punta en crema, una mella de 2 vóxels en la llanta (arriba a la derecha), un remache que falta (abajo a la derecha) y el asa por detrás. El emblema dice de quién es; la mella, que se ha usado.", voxels: shieldFinal },
+    ],
+  },
   ruina: {
     description: "Ruinas: un pórtico de piedra intacto, roto con intención y abandonado",
     stages: [

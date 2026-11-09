@@ -1,0 +1,261 @@
+---
+id: v7-03
+discipline: voxel
+level: 7
+order: 3
+title: "Mazmorras: una sala con atmósfera"
+summary: "Monta una sala de mazmorra en corte: piedra fría con juntas alternas, atrezo a escala, pistas de lo que pasó y dos antorchas en Emit como únicas luces."
+duration: 45
+status: borrador
+prerequisites: [v7-02, v3-02]
+fundamentals: [f05, f10]
+objectives:
+  - "Construir la atmósfera con la paleta: piedra fría y desaturada frente a una luz cálida"
+  - "Dar textura a un muro de sillares con juntas alternas pintadas"
+  - "Medir el atrezo con la sala: un cofre pequeño, no el del curso"
+  - "Contar qué pasó con pistas de historia: huesos, charco, humedad"
+  - "Iluminar con pocas fuentes en Emit y el sol bajo o apagado en el Render"
+tools: [magicavoxel]
+piece:
+  name: "Tu sala de mazmorra en corte con dos fuentes de luz"
+  canvas: "16x16x10"
+xp: { concept: 10, guided: 20, piece: 70 }
+achievements: [mazmorra]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+En [V7-02](/forja-art/voxel/v7-02/) montaste una habitación en corte: suelo, dos paredes, muebles a escala y una vela. Hoy usas la misma caja para algo distinto. La habitación contaba **quién vive ahí**. La mazmorra tiene que hacer que **no quieras entrar**.
+
+<VoxViewer model="mazmorra" stage={2} title="La sala terminada: piedra, atrezo, historia y antorchas" />
+
+Gírala y recorre las tres etapas del visor:
+
+1. **Sala:** suelo de 16×16 con losas de 2×2 en dos tonos, y dos paredes de sillares de 8 de alto, la del fondo y la izquierda.
+2. **Atrezo:** un pilar, un cofre pequeño, dos soportes de antorcha y unas tablas rotas.
+3. **Historia y luz:** las llamas de las antorchas, un charco, musgo, huesos y un cráneo.
+
+Tu pieza final: **tu propia sala de mazmorra en corte**, de 16×16 y 10 de alto, con **muro de juntas alternas**, **atrezo a escala**, **al menos una pista de historia** y **un render con dos fuentes de luz** en Emit.
+
+<Warn title="El visor no simula Emit">
+En el visor, las llamas son solo dos vóxels naranja y amarillo, y la sala se ve con una luz uniforme. La atmósfera de verdad (la sala casi a oscuras y las antorchas alumbrando) solo aparece en el modo **Render** de MagicaVoxel.
+</Warn>
+</Block>
+
+<Block kind="concepto">
+### 1. La atmósfera empieza en la paleta
+
+Antes de poner una sola luz, mira los colores de la sala. **Todo** lo de piedra está en grises con un tinte violeta azulado, muy poco saturados:
+
+- **Losas del suelo:** `#4a4656` y `#3e3a4a`, alternando en cuadros de 2×2.
+- **Sillares de la pared:** `#5e5a6e`, con algunos sueltos en `#46425a`, un poco más oscuros.
+- **Juntas:** `#2e2a3a`, casi negro violáceo.
+
+No hay ni un gris neutro. Es piedra **fría**.
+
+<Why title="¿Por qué fría y desaturada?">
+Una paleta fría y apagada dice «humedad, sótano, lejos del sol» antes de que el ojo entienda la forma. Y deja sitio: si la piedra ya fuera cálida o saturada, la luz de la antorcha no tendría contra qué destacar. Es la temperatura de [F03](/forja-art/fundamentos/f03-01/): la sombra fría hace que la luz cálida parezca más caliente.
+</Why>
+
+### 2. Un muro con juntas alternas
+
+<VoxViewer model="mazmorra" stage={0} title="Sala: losas de 2×2 y sillares con juntas alternas" />
+
+Acércate a una pared en el visor y cuenta:
+
+- **Las filas pares** (alturas 2, 4, 6 y 8) son juntas enteras: una línea horizontal oscura.
+- **Las filas impares** (1, 3, 5 y 7) son las hiladas de sillares. Cada sillar mide **3 vóxels de largo** y lo separa del siguiente **1 vóxel de junta**.
+- **Las juntas verticales se desplazan 2 vóxels** de una hilada a la siguiente: la junta de arriba cae sobre el centro del sillar de abajo. Las hiladas 1 y 5 comparten patrón; las 3 y 7, el otro.
+- El patrón **sigue al doblar la esquina**: la pared del fondo y la izquierda forman un solo muro.
+
+<Why title="Por qué alternas y no en cuadrícula">
+Un muro de verdad se construye así: cada piedra apoya sobre dos de abajo, para que el peso se reparta. Si las juntas verticales coinciden, el ojo ve una **rejilla de baldosas**, no un muro. Si no hay juntas, ve **un bloque plano** de plastilina gris. Las juntas alternas son lo que dice «piedra apilada».
+</Why>
+
+<Tip>
+Los pocos sillares en `#46425a` no siguen ningún patrón a simple vista. Rompen la repetición sin meter ruido: es la variación de tono mínima que pide una superficie grande, como el suelo tranquilo de V7-02.
+</Tip>
+
+### 3. El atrezo, a la escala de la sala
+
+<VoxViewer model="mazmorra" stage={1} title="Atrezo: pilar, cofre pequeño, soportes de antorcha y tablas rotas" />
+
+Recuerda la regla de V7-02: **una persona mide 4 vóxels**, la puerta de V6. Mide el atrezo con ella:
+
+- **El cofre** mide **5×3 en planta y 4 de alto**, con una banda de hierro en el centro y una cerradura dorada delante. Llega a la altura de la mesa de V7-02.
+- **El pilar** mide **2×2** y sube hasta lo alto de la pared, con una franja de junta oscura abajo y arriba.
+- **Los soportes de antorcha**, uno en cada pared: un mango de madera oscura de 2 vóxels, a la altura 4 y 5, y una pieza de hierro clavada en el muro. La llama irá **por encima de la cabeza** de una persona.
+- **Tres tablas rotas** de madera en el suelo, delante a la derecha.
+
+<Why title="El cofre del curso no cabe">
+El cofre que modelaste en V2 mide **10×6** en planta y 7 de alto. En una sala de 16×16 ocuparía más de la mitad del ancho y casi llegaría al techo: dejaría de ser un cofre y parecería un mueble gigante. El atrezo no se copia de otra pieza: **se mide con la sala y con la persona**. Un modelo para mirarlo de cerca puede ser grande; uno que vive en una escena tiene que encajar en ella.
+</Why>
+
+### 4. Pistas de historia: ¿qué pasó aquí?
+
+Vuelve al primer visor, en la etapa **Historia y luz**. Como en [Storytelling (F10-01)](/forja-art/fundamentos/f10-01/), cada pista cuenta algo:
+
+- **Huesos y un cráneo** en el suelo, en la mitad delantera de la sala, lejos del cofre del fondo. El cráneo son dos vóxels de hueso apilados.
+- **Un charco azul oscuro**, `#2a4a6a`, delante a la derecha, junto a las tablas rotas.
+- **Musgo** `#2a5a3c` salpicado en la base de las paredes (las dos filas de abajo y el borde del suelo junto a ellas) y encima del pilar.
+
+<Why title="La humedad es una historia lenta">
+Los huesos cuentan algo que pasó **una vez**: alguien entró y no salió, o no llegó al cofre. El charco y el musgo cuentan algo que pasa **siempre**: aquí gotea, aquí no entra nadie desde hace tiempo. Una pista rápida y una lenta juntas dan una sala con pasado. Y fíjate en dónde están: los huesos, entre el cofre y la salida. Su sitio es la mitad de la historia.
+</Why>
+
+### 5. La luz: pocas fuentes, cálidas, en la oscuridad
+
+Las llamas son dos vóxels por antorcha: **naranja `#ff8f3a` abajo y amarillo `#ffe58a` arriba**. Es lo único cálido y lo único saturado de toda la sala. En el render llevan el material **Emit** y son **las únicas luces**: el sol va muy bajo o apagado.
+
+<Sprite name="torch-1" scale={5} caption="P8-04: la antorcha en pixel art. La luz sube la piedra unos pasos junto a la llama y la deja casi negra fuera del radio" />
+
+<Why title="Contraste cálido y frío (F05)">
+En [F05-01](/forja-art/fundamentos/f05-01/) viste que la luz define la forma y la sombra la esconde. En una mazmorra, **la sombra es la protagonista**. Dos antorchas dejan zonas oscuras entre ellas: rincones donde no sabes qué hay. Esa duda es el misterio. La luz cálida sobre piedra fría te dice dónde mirar; la oscuridad fría te dice que no te fíes.
+</Why>
+
+<Warn title="Emit va por color">
+Como en [el farol (V3-02)](/forja-art/voxel/v3-02/), el material se asigna al **color de la paleta**. El naranja y el amarillo de las llamas no pueden estar en ningún otro sitio de la sala. La cerradura del cofre es de un dorado distinto, `#f2c14e`, precisamente para no brillar.
+</Warn>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Decide qué pasó y desde dónde miras">
+Antes de abrir MagicaVoxel, escribe:
+
+1. **Qué pasó en la sala**, en una frase: «un ladrón murió junto al tesoro», «una celda olvidada que se inunda».
+2. **Desde qué esquina mira la cámara**, como en V7-02. Las dos paredes que levantas son las del fondo de la imagen.
+
+<Why>
+La frase decide las pistas y dónde van; la esquina decide las paredes y dónde cuelgan las antorchas. Las dos cosas cuesta mucho cambiarlas después.
+</Why>
+</Step>
+
+<Step n={2} title="La sala y su paleta fría">
+1. Crea un modelo nuevo de **16×16 y 10 de alto**. Guárdalo como `mazmorra_v1.vox`.
+2. Prepara la paleta antes de construir: dos grises fríos parecidos para las losas, uno algo más claro para los sillares, uno más oscuro para algunos sillares sueltos y uno casi negro para las juntas. Todos con un tinte azul o violeta y poca saturación.
+3. En modo **Attach**, con el pincel **Box**, rellena la capa de abajo: el suelo.
+4. Con **Box**, levanta las dos paredes del fondo de la imagen, de 1 vóxel de grosor y **8 de alto**, juntas en un rincón.
+5. Pasa a **Paint** y pinta las losas en cuadros de 2×2 alternando los dos grises.
+
+<Tip>
+Pon un vóxel de prueba de cada color junto a otro y míralos con los ojos entornados: las dos losas casi iguales, la pared un poco más clara, la junta mucho más oscura. Es el valor de [F01](/forja-art/fundamentos/f01-01/) antes que el color.
+</Tip>
+</Step>
+
+<Step n={3} title="Las juntas alternas, pintando">
+1. Pinta la pared entera con el color del sillar.
+2. Con **Paint** y el pincel **Line**, pinta con el color de la junta **una fila sí y otra no** (las alturas 2, 4, 6 y 8): las juntas horizontales.
+3. En la primera hilada de sillares, pinta una junta vertical de 1 vóxel **cada 4** a lo largo del muro: sillares de 3.
+4. En la hilada siguiente, igual pero **desplazado 2**: cada junta, sobre el centro del sillar de abajo. Repite alternando hasta arriba.
+5. Dobla la esquina sin cortar el patrón.
+6. Pinta unos pocos sillares sueltos con el gris más oscuro, sin orden.
+
+<Why>
+Pintas las juntas en vez de tallarlas porque a esta escala un hueco de 1 vóxel haría el muro demasiado fino y en el render dejaría pasar luz. El color basta para que el ojo lea el aparejo.
+</Why>
+</Step>
+
+<Step n={4} title="El pilar y el atrezo, a escala">
+1. Levanta la columna de referencia de V7-02: 1×1 y **4 de alto**, en un color chillón, en el centro de la sala. Es tu persona.
+2. Con **Box**, levanta un **pilar de 2×2** hasta lo alto de la pared, cerca del rincón del fondo, con una franja oscura abajo y arriba.
+3. Modela un **cofre pequeño**: unos 5×3 en planta y 4 de alto, contra una pared. Compáralo con la persona.
+4. Pon **dos soportes de antorcha**, uno en cada pared: un mango de madera de 2 vóxels por encima de la cabeza de la persona (alturas 4 y 5) y un vóxel de hierro en el muro.
+5. Añade algo roto en el suelo: tres tablas, un barril partido, una cadena.
+
+<Warn>
+No copies el cofre de V2 dentro de la sala ni lo escales. Escalar un modelo voxel duplica vóxels y rompe las medidas. Rehazlo a su tamaño: son unos sesenta vóxels.
+</Warn>
+</Step>
+
+<Step n={5} title="Las pistas de historia">
+1. Vuelve a tu frase y elige **una pista rápida** (huesos, un arma tirada, una puerta forzada) y **una lenta** (charco, musgo, telarañas).
+2. Huesos: unos vóxels de hueso claro tumbados en el suelo, y un cráneo de dos vóxels apilados.
+3. Charco: con **Paint**, pinta unas losas en un azul oscuro, en una mancha redondeada de unos 4 vóxels de ancho.
+4. Musgo: pinta en verde oscuro algunos vóxels salpicados en las **dos filas de abajo** de las paredes, y alguno encima del pilar. Salpicados, no una franja.
+5. Coloca cada pista **donde tenga sentido**: el musgo junto al agua o en la base, los huesos donde alguien cayó.
+6. Borra la columna de referencia con **Erase**.
+</Step>
+
+<Step n={6} title="Las antorchas en Emit">
+1. Encima de cada mango, dos vóxels de llama: uno **naranja** y encima uno **amarillo**. Dos colores que no use nada más en la sala.
+2. Selecciona en la paleta el naranja y, en el panel de materiales, dale el tipo **Emit**. Haz lo mismo con el amarillo.
+3. Deja **todo lo demás** en *Diffuse*. Ni la cerradura, ni el charco, ni el musgo emiten.
+</Step>
+
+<Step n={7} title="Render con la luz ambiental baja">
+1. Pulsa **Render** y coloca la cámara en tu esquina: tienen que verse el rincón y las dos antorchas.
+2. En los ajustes de luz del Render, **baja la intensidad del sol y del cielo** hasta que la sala quede casi a oscuras. Si tu versión permite apagar el sol, apágalo.
+3. Sube la intensidad de emisión de las llamas hasta que alumbren el muro que tienen al lado, sin quemarlo a blanco.
+4. Comprueba: ¿se ven las juntas cerca de las antorchas? ¿Queda algún rincón en sombra? ¿Lo más claro de la imagen son las llamas?
+5. Guarda la imagen del render y `mazmorra_v1.vox` en tu portfolio.
+
+<Tip>
+Si la sala queda negra del todo, sube un poco el cielo, no las antorchas. Quieres **adivinar** la piedra lejana, no verla bien.
+</Tip>
+</Step>
+
+<Warn title="Verifica en tu versión">
+Los nombres de **Attach**, **Erase**, **Paint** y de los pinceles **Box** y **Line**, y la forma de fijar el tamaño de un modelo nuevo, pueden variar entre versiones de MagicaVoxel. En el modo **Render**, los ajustes de luz (la intensidad y la altura del **sol**, la intensidad del **cielo** o luz ambiental, y si el sol se puede apagar) cambian de nombre y de sitio: búscalos por su función. Lo mismo el panel de materiales, el tipo **Emit** y su deslizador de intensidad, y el botón para guardar la imagen.
+</Warn>
+</Block>
+
+<Block kind="version">
+Ahora, **tu** mazmorra. Misma receta: piedra fría, juntas alternas, atrezo a escala, una pista rápida y una lenta, y dos luces cálidas en la oscuridad. Elige un reto:
+
+- **La celda:** una sala más estrecha con una reja de hierro como tercera pared, unas cadenas en el muro y una sola antorcha fuera de la reja. La luz llega desde fuera: el preso está en la sombra.
+- **La cripta:** un sarcófago de piedra en el centro, iluminado por dos velas en Emit a sus lados. La tapa, movida un vóxel. ¿Quién la ha abierto?
+- **La sala inundada:** medio suelo bajo un charco grande, musgo hasta la tercera fila y una antorcha apagada (sin Emit) junto a otra encendida. La apagada cuenta tanto como la otra.
+
+Antes de darla por buena, mira el render en pequeño: ¿se nota en un segundo que es un sitio frío, oscuro y con algo que pasó?
+</Block>
+
+<Block kind="errores">
+<Mistake title="Un muro sin juntas" wrongLabel="Bloque plano" rightLabel="Sillares alternos">
+  <p slot="wrong">Las paredes son un solo gris liso de 8 de alto. Desde la cámara parecen una caja de cartón o un bloque de plastilina: no hay piedras, no hay peso.</p>
+  <p slot="right">Hiladas de sillares de 3 con juntas oscuras de 1, desplazadas 2 en cada hilada. El ojo lee piedra apilada aunque cada vóxel sea un cubo.</p>
+
+Pinta las juntas horizontales una fila sí y otra no, y las verticales alternando. Si coinciden en vertical, tienes baldosas: desplázalas. Compáralo con la etapa «Sala» del visor.
+</Mistake>
+
+<Mistake title="Atrezo a otra escala" wrongLabel="El cofre del curso" rightLabel="Un cofre de la sala">
+  <p slot="wrong">El cofre de 10×6×7 de V2 pegado en la sala: ocupa más de media pared y casi llega al techo. La sala parece una caja de juguetes.</p>
+  <p slot="right">Un cofre de 5×3×4, a la altura de una mesa para una persona de 4 vóxels. La sala vuelve a parecer grande.</p>
+
+Deja la columna de 1×1×4 en el suelo mientras colocas el atrezo. Si algo no encaja, rehazlo a su medida: no lo escales.
+</Mistake>
+
+<Warn title="Error típico: demasiadas antorchas">
+Seis antorchas, una en cada tramo de muro. En el render la sala sale iluminada por igual: no hay sombras, no hay rincones oscuros, no hay misterio. Parece un pasillo de hotel. **Corrección:** dos fuentes como mucho en una sala de 16×16, separadas, para que entre ellas quede oscuridad. La sombra es la mitad de la atmósfera.
+</Warn>
+
+<Warn title="Error típico: todo en el mismo gris sin temperatura">
+Suelo, paredes y pilar en un gris neutro, y la llama en un amarillo pálido. Sin frío en la piedra, la luz no tiene con qué contrastar y la sala parece apagada, no inquietante, como la escena subexpuesta de [P8-02](/forja-art/pixel/p8-02/). **Corrección:** inclina toda la piedra hacia el azul o el violeta y baja la saturación; deja el naranja y el amarillo solo para las llamas.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+<Checklist items={[
+  "Mi sala mide 16×16 y 10 de alto, con suelo y solo dos paredes juntas en un rincón al fondo de la imagen",
+  "La piedra es fría y poco saturada; los únicos colores cálidos y saturados son las llamas",
+  "Los muros tienen sillares con juntas alternas: las verticales se desplazan en cada hilada",
+  "El atrezo está a la escala de una persona de 4 vóxels (el cofre no pasa de 4 de alto)",
+  "Hay al menos una pista de historia y está colocada donde tiene sentido",
+  "Hay dos fuentes de luz en Emit, con colores que no usa nada más",
+  "En el render, el sol y el cielo están bajos, las llamas son lo más claro y quedan rincones en sombra",
+  "He guardado mazmorra_v1.vox y un render en mi portfolio",
+]} />
+
+<Quiz q="Tu muro de sillares parece una rejilla de baldosas. ¿Qué falla?" options={["Las juntas son demasiado oscuras", "Faltan sillares en un gris más oscuro", "Las juntas verticales coinciden en todas las hiladas"]} answer={2}>
+En un muro de verdad, cada junta vertical cae sobre el centro de la piedra de abajo. Desplázalas en cada hilada (en el modelo, 2 vóxels) y la rejilla se convierte en un muro.
+</Quiz>
+
+<Quiz q="Renderizas la sala y se ve todo iluminado por igual, sin misterio. ¿Qué cambias primero?" options={["Bajo el sol y el cielo, y dejo las antorchas como luces principales", "Añado más antorchas", "Pinto la piedra más clara"]} answer={0}>
+La atmósfera necesita sombra. Con la luz ambiental baja, las dos antorchas iluminan solo su zona y dejan rincones oscuros. Más antorchas o piedra más clara hacen lo contrario.
+</Quiz>
+
+<Quiz q="¿Por qué la cerradura del cofre usa un dorado distinto del amarillo de las llamas?" options={["Porque el dorado se ve mejor en el visor", "Porque el material Emit va por color: si compartieran color, la cerradura también brillaría", "Porque MagicaVoxel no deja repetir colores"]} answer={1}>
+En MagicaVoxel el material se asigna a cada color de la paleta. Las llamas necesitan colores propios para que solo ellas emitan luz.
+</Quiz>
+</Block>

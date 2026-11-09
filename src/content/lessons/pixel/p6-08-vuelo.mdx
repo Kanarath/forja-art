@@ -1,0 +1,286 @@
+---
+id: p6-08
+discipline: pixel
+level: 6
+order: 8
+title: "Ciclos de vuelo: el aleteo del murciélago"
+summary: "Un aleteo son tres poses en bucle: arriba, paso y abajo, como 1-2-3-2. El frame de paso evita el salto y el cuerpo sube 1 px en el golpe de ala."
+duration: 40
+status: borrador
+objectives:
+  - "Construir un ciclo de vuelo de 3 poses (arriba, paso, abajo) en bucle 1-2-3-2"
+  - "Entender por qué el frame de paso evita el salto entre arriba y abajo"
+  - "Dar peso al vuelo: el cuerpo sube 1 px cuando las alas empujan hacia abajo"
+  - "Elegir el timing del golpe de ala y dejar que el motor mueva el sprite"
+  - "Comprobar que la silueta de cada pose se lee sola a 1×"
+prerequisites: [p6-02, p5-03]
+fundamentals: [f09]
+tools: [aseprite]
+piece:
+  name: "Ciclo de vuelo de tu enemigo volador en 12×12: 3 poses en bucle 1-2-3-2 con el cuerpo que sube en el golpe de ala"
+  canvas: "12x12"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [vuelo]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Vas a forjar **el aleteo de tu murciélago**: el enemigo de [P5-03](/forja-art/pixel/p5-03/) ya no se queda quieto, vuela. Son 4 frames en bucle, pero solo **3 dibujos**.
+
+Dale a *Reproducir*. Las alas suben y bajan sin cortes, y el cuerpo da un pequeño respingo cuando las alas empujan.
+
+<Animator sprites={["bat-fly-1", "bat-fly-2", "bat-fly-3", "bat-fly-2"]} durations={[100, 80, 100, 80]} />
+
+Tu pieza será la misma idea con tu criatura voladora en un lienzo de **12×12**: un murciélago, un pájaro, un insecto o un ojo con alas. El murciélago del curso mide 12×8; los 12×12 le dejan sitio arriba y abajo para que las alas se muevan.
+</Block>
+
+<Block kind="concepto">
+### Tres poses
+
+El ciclo de vuelo más pequeño que funciona tiene **tres poses distintas**. Míralas a 10×:
+
+<Sprite name="bat-fly-1" scale={10} caption="bat-fly-1 · Arriba: el murciélago del curso tal cual, con 2 filas libres encima. Las puntas de las alas suben hasta la fila de las orejas" />
+<Sprite name="bat-fly-2" scale={10} caption="bat-fly-2 · Paso: alas en horizontal, abiertas de punta a punta a la altura de los ojos. La cabeza no se ha movido; los pies ya han subido 1 px" />
+<Sprite name="bat-fly-3" scale={10} caption="bat-fly-3 · Abajo: las alas son el reflejo vertical de las del frame 1, con las puntas 2 filas por debajo de los pies. Todo el cuerpo está 1 px más arriba que en el frame 1" />
+
+**Qué cambia, píxel a píxel:**
+
+- **Las alas.** Arriba y abajo son espejos: las dos tienen la misma forma en picos y **11 píxeles de membrana** por ala. En el paso, el ala es una franja estrecha: una línea recta de contorno a la altura de los ojos y 2 filas de membrana debajo (6 píxeles por ala). Es la pose de tránsito: se ve un instante.
+- **La envergadura no cambia.** En las tres poses el murciélago ocupa **las 12 columnas**, de punta a punta. Las alas giran; no crecen ni encogen.
+- **El cuerpo.** Mira las orejas y los pies:
+
+| Frame | Orejas (fila) | Pies (fila) | Qué pasa |
+| --- | --- | --- | --- |
+| 1 · arriba | 3 | 10 | Reposo, alas preparadas |
+| 2 · paso | 3 | 9 | Los pies suben; la cabeza todavía no |
+| 3 · abajo | 2 | 9 | Todo el cuerpo, 1 px más arriba |
+
+El frame 2 está a medio camino **también en el cuerpo**: arriba es como el 1 y abajo, como el 3.
+
+### El bucle 1-2-3-2
+
+Un ciclo de caminar va de un pie al otro y vuelve ([P6-02](/forja-art/pixel/p6-02/)). Un aleteo va de arriba abajo y vuelve **por el mismo camino**. Por eso el frame de paso aparece dos veces: una al bajar y otra al subir.
+
+1. **Arriba.**
+2. **Paso** (bajando).
+3. **Abajo.**
+4. **Paso** otra vez (subiendo). Después vuelve el 1.
+
+Son 4 frames con 3 dibujos, igual que la base repetida del caminar.
+
+<Why title="Por qué hace falta el frame de paso">
+De arriba abajo, la punta del ala recorre **8 filas**: de la fila 3 a la 11. Si pasa de una pose a la otra en un frame, el ojo no ve un movimiento: ve dos dibujos que se alternan, como una luz que parpadea. El frame de paso, con las puntas en las filas 5 y 6, parte ese recorrido en dos tramos más cortos y el ojo los une en un solo gesto.
+</Why>
+
+Compruébalo. Este es el mismo murciélago **solo con las poses 1 y 3**:
+
+<Animator sprites={["bat-fly-1", "bat-fly-3"]} durations={[100, 100]} />
+
+Las alas no aletean: **saltan**. Parece un murciélago que se pone y se quita una capa. Vuelve al primer animador y compara.
+
+### Acción y reacción: el cuerpo sube
+
+Cuando un ala empuja el aire hacia abajo, el aire empuja el cuerpo hacia arriba. Por eso, en el frame 3 (alas abajo), el murciélago entero está **1 px más arriba**. Cuando las alas vuelven a subir, el cuerpo cae otra vez.
+
+<Why title="Por qué 1 píxel basta">
+Es el mismo rebote del caminar: sin él, las alas se mueven pero el cuerpo está clavado con un alfiler en el aire. Con él, se nota que las alas **sostienen** algo que pesa. En un sprite de 8 filas de alto, 1 px es más del 10 % de la altura: 2 ya serían un salto.
+</Why>
+
+### El timing del golpe
+
+El golpe hacia abajo es el que hace fuerza; la subida solo recupera. Hay dos formas de contarlo:
+
+- **Regular:** todos los tiempos parecidos, como en el primer animador (100, 80, 100, 80). Es un aleteo mecánico y constante; funciona bien en enemigos pequeños que vuelan sin parar.
+- **Golpe rápido:** el paso de bajada **más corto** que el de subida. Las alas caen de golpe y suben con calma. Se lee más orgánico y con más peso.
+
+En un bucle 1-2-3-2, el primer frame 2 es la bajada y el segundo, la subida. Por eso tener **dos frames 2 separados** te deja darles duraciones distintas.
+
+<Tip title="Experimenta en el primer animador">
+1. Pon el primer frame 2 a 50 ms y el segundo a 120 ms. Las alas bajan de golpe y suben despacio.
+2. Pon los cuatro a 60 ms. Es un aleteo de persecución, nervioso.
+3. Pon los cuatro a 200 ms. El murciélago parece cansado: casi no se sostiene.
+</Tip>
+
+### El ciclo se queda en el sitio
+
+Igual que el héroe del caminar, el murciélago **aletea sin moverse** del lienzo. El desplazamiento por la pantalla lo hace el **motor**: el código mueve la posición del sprite mientras el ciclo se repite.
+
+<Why>
+Si dibujas el avance dentro de los frames, el murciélago solo puede volar en una dirección, a una velocidad y una distancia fijas, y al cerrar el bucle vuelve de golpe al principio. Con el ciclo en el sitio, el juego lo puede mover hacia donde quiera, a la velocidad que quiera, y también subirlo y bajarlo suavemente por código.
+</Why>
+
+### Cada pose se lee sola
+
+Un enemigo pequeño se ve a 1× y en movimiento. Cada pose tiene que funcionar **en negro**, sin colores ni ojos:
+
+<Sprite name="bat-fly-1" scale={6} view="silhouette" caption="Arriba: dos picos hacia arriba, a los lados de las orejas" />
+<Sprite name="bat-fly-2" scale={6} view="silhouette" caption="Paso: una barra horizontal de lado a lado, con la cabeza encima y los pies debajo" />
+<Sprite name="bat-fly-3" scale={6} view="silhouette" caption="Abajo: dos picos hacia abajo, más allá de los pies" />
+
+Tres formas distintas: picos arriba, barra, picos abajo. Si dos poses se parecen mucho en silueta, el aleteo se ve borroso.
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Lienzo y criatura">
+1. <Keys k="Ctrl+N" />: **12×12**, fondo transparente. Activa *View → Grid*.
+2. Pega o dibuja tu murciélago de [P5-03](/forja-art/pixel/p5-03/) (o el `bat` del curso) **centrado**, con las alas arriba. Deja **2 filas libres encima y 2 debajo**.
+3. Guarda con <Keys k="Ctrl+S" /> como `murcielago-vuelo.aseprite`.
+
+<Warn>
+Si las alas tocan el borde de arriba, no habrá sitio para subir el cuerpo en el frame 3, y si los pies tocan el de abajo, no cabrán las alas bajadas. Las dos filas libres de cada lado no son opcionales.
+</Warn>
+</Step>
+
+<Step n={2} title="Tres frames">
+En la línea de tiempo (*Timeline*), añade frames desde el menú *Frame* hasta tener **3**. Cada frame nuevo copia el actual, así que los tres empiezan iguales.
+
+- Frame 1: **arriba**. No lo toques.
+- Frame 2: será el **paso**.
+- Frame 3: será **abajo**.
+
+Activa el onion skin (el botón está en la línea de tiempo). Lo vas a necesitar en todos los pasos.
+</Step>
+
+<Step n={3} title="Frame 3: abajo y 1 px más alto">
+Empieza por el extremo; el paso se dibuja después, entre los dos.
+
+1. Ve al frame 3. Con la selección rectangular (<Keys k="M" />), selecciona **todo el murciélago** y pulsa la **flecha arriba** una vez: sube 1 píxel. Deselecciona.
+2. Con la goma (<Keys k="E" />), borra las alas, sin tocar el cuerpo ni la cabeza.
+3. Con el lápiz (<Keys k="B" />) y *Pixel-perfect*, dibuja las alas **bajadas**: el reflejo vertical de las del frame 1, con las puntas por debajo de los pies.
+
+<Why>
+Primero subes y luego dibujas: así el cuerpo sube **exactamente** 1 píxel y no tienes que adivinar dónde va cada pieza.
+</Why>
+
+<Tip>
+Cuenta los píxeles de membrana de un ala en el frame 1 y en el 3. Si son los mismos (en el del curso, 11), el ala tiene el mismo tamaño en las dos poses.
+</Tip>
+</Step>
+
+<Step n={4} title="Frame 2: el paso">
+1. Ve al frame 2. El onion skin te enseña el frame 1 por detrás.
+2. Borra las alas con la goma y dibuja las alas **en horizontal**, abiertas de punta a punta a la altura de los ojos, con el mismo ancho total que en el frame 1.
+3. La cabeza se queda donde está en el frame 1.
+
+<Tip>
+En el murciélago del curso, el paso también sube los pies 1 px (el cuerpo se acorta una fila): el cuerpo va a medio camino entre el 1 y el 3. Es un detalle opcional; prueba con y sin él.
+</Tip>
+
+<Warn>
+El paso no es «un ala a medias»: tiene que ser una pose clara, distinta de las otras dos. Si lo dibujas casi igual que el frame 1, el bucle se atasca arriba.
+</Warn>
+</Step>
+
+<Step n={5} title="Cierra el bucle 1-2-3-2">
+Tienes dos caminos. Elige uno.
+
+**A · Frames repetidos (el más seguro para un juego).**
+
+1. Ve al frame 2 y añade un frame desde el menú *Frame*: sale una copia justo detrás.
+2. Arrastra esa copia en la línea de tiempo hasta el **final**, para que el orden quede 1, 2, 3, 2.
+
+**B · Etiqueta en ping-pong.**
+
+1. Selecciona los frames 1–3 y crea una **etiqueta** (tag) llamada `volar`.
+2. En las propiedades de la etiqueta, cambia la dirección de la animación a *Ping-pong*: Aseprite va de 1 a 3 y vuelve.
+
+<Why title="Cuál elegir">
+Con frames repetidos, los dos frames 2 son independientes y les puedes dar duraciones distintas (golpe rápido). En ping-pong el frame 2 es uno solo y dura lo mismo al bajar y al subir. Además, no todos los motores leen la dirección de una etiqueta al importar el spritesheet: los frames repetidos funcionan en cualquiera.
+</Why>
+
+<Tip>
+Si usas frames repetidos, Aseprite puede **enlazar** el cel del último frame con el del frame 2 (linked cels): si retocas uno, cambia el otro.
+</Tip>
+</Step>
+
+<Step n={6} title="Timing y revisión">
+1. Clic derecho sobre el número de cada frame, *Frame Properties*, y pon **100, 80, 100, 80 ms** (o, para un golpe rápido, baja el primer frame 2 y sube el segundo).
+2. Reproduce (botón de *play* de la línea de tiempo) y deja correr varias vueltas.
+3. Con el onion skin, comprueba: del frame 1 al 3, las orejas suben **1 fila** y no se mueven a los lados; la envergadura es la misma en las tres poses.
+4. Haz zoom hasta verlo a 1× y mira si cada pose se reconoce sola.
+</Step>
+
+<Step n={7} title="Exporta">
+1. Para enseñarlo: *File → Export → Export As*, formato **GIF**, **Resize** al 400 % o más.
+2. Para el juego: *File → Export → Export Sprite Sheet*, en una fila, PNG a 1× y fondo transparente. Si usaste ping-pong, exporta también el JSON o, mejor, convierte el bucle a frames repetidos antes.
+</Step>
+
+<Warn title="Verifica en tu versión">
+Los nombres y la posición pueden variar según la versión de Aseprite: el panel *Timeline*, la opción de frame nuevo del menú *Frame*, *Frame Properties* (clic derecho sobre el frame), el botón de onion skin, arrastrar frames para cambiar su orden, los cels enlazados (linked cels) y las opciones de *Export Sprite Sheet*. Comprueba sobre todo cómo se crea una etiqueta y dónde se elige su dirección (*Forward*, *Reverse*, *Ping-pong*), si el ping-pong repite o no los frames de los extremos, y si la dirección de la etiqueta se guarda en el JSON exportado. Comprueba también que las flechas mueven 1 píxel el contenido de la selección.
+</Warn>
+
+<ToolNote tool="godot">
+
+Esto es opcional; lo verás en el nivel 9. En Godot, el ciclo iría en un AnimatedSprite2D con su SpriteFrames, con el bucle activado. El vuelo por la pantalla (y un sube y baja suave, si quieres) lo hace el código cambiando la posición del nodo, no los frames. Si el bucle de ida y vuelta no se respeta al importar, usa los frames repetidos 1, 2, 3, 2. Verifica en tu versión.
+
+</ToolNote>
+</Block>
+
+<Block kind="version">
+Ahora a tu manera. Mantén las tres poses, el frame de paso, el cuerpo que sube 1 px en el golpe y el ciclo en el sitio. Elige uno o más:
+
+- **Persecución y patrulla:** dos etiquetas con los mismos dibujos, `patrulla` (frames largos, golpe tranquilo) y `persecucion` (frames de 50–60 ms). El jugador sabe que lo han visto por el ritmo de las alas.
+- **Otra criatura:** un pájaro de perfil, una polilla o un ojo con alas de 12×12. Las mismas tres poses; cambia la forma de las alas (plumas redondeadas, alas de insecto finas…) y comprueba que las siluetas siguen siendo tres formas distintas.
+- **El planeo:** añade una cuarta pose, alas en horizontal sin moverse, para cuando la criatura baja en picado. Va en su propia etiqueta, fuera del ciclo.
+
+<Tip>
+Si tu criatura es más grande (16×16 o más), puedes subir el cuerpo 2 px en el golpe o añadir un segundo paso. A 12×12, tres poses y 1 px.
+</Tip>
+</Block>
+
+<Block kind="errores">
+<Mistake title="Sin frame de paso" wrongLabel="Solo arriba y abajo" rightLabel="Arriba, paso, abajo, paso">
+  <p slot="wrong">Las alas saltan 8 filas de golpe. El ojo no une las dos poses: ve un parpadeo, no un aleteo.</p>
+  <p slot="right">El paso parte el recorrido en dos tramos cortos y el ojo lee un solo movimiento continuo.</p>
+
+Compara los dos animadores del concepto. Corrígelo dibujando una pose en horizontal entre las dos y repitiéndola a la vuelta: 1, 2, 3, 2.
+</Mistake>
+
+<Mistake title="El cuerpo quieto" wrongLabel="Solo se mueven las alas" rightLabel="El cuerpo sube 1 px en el golpe">
+  <p slot="wrong">La cabeza y los pies están en la misma fila en todos los frames. Las alas se agitan, pero no sostienen nada: el murciélago parece colgado de un hilo.</p>
+  <p slot="right">Cuando las alas bajan, todo el cuerpo sube 1 píxel. Se nota que las alas empujan y que el cuerpo pesa.</p>
+
+Corrígelo en la pose de alas abajo: selecciona el murciélago entero, súbelo 1 px y vuelve a ajustar las alas.
+</Mistake>
+
+<Mistake title="Alas que cambian de tamaño" wrongLabel="Cada pose, un ala distinta" rightLabel="La misma ala, girada">
+  <p slot="wrong">El ala bajada es más corta que la levantada, o la del paso no llega a los bordes. Al animar, el murciélago parece encogerse y estirarse: las alas pierden volumen.</p>
+  <p slot="right">En el murciélago del curso la envergadura es de 12 columnas en las tres poses, y arriba y abajo tienen la misma membrana (11 píxeles por ala). El ala gira; no cambia de largo.</p>
+
+Corrígelo con el onion skin: compara la punta del ala con la del frame anterior y cuenta los píxeles de membrana de las poses extremas. El paso puede verse más estrecho porque es un instante de tránsito, pero tiene que llegar igual de lejos.
+</Mistake>
+
+<Warn title="Demasiados frames para un enemigo pequeño">
+Un murciélago de 12×12 con 8 o 10 poses de ala no aletea mejor: los cambios entre frames son de 1 píxel, se pierden a 1× y el ciclo se ve lento y blando. Además, cada pose de más es trabajo de más en cada variante del enemigo. Para una criatura pequeña, 3 poses en 4 frames bastan; guarda los ciclos largos para jefes y personajes grandes.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+Juzga tu ciclo **a 1×**, a su velocidad real y durante varias vueltas. Un aleteo se juzga en movimiento, no frame a frame.
+
+<Checklist items={[
+  "Tengo 3 poses distintas: arriba, paso y abajo",
+  "El bucle es 1, 2, 3, 2 (con frames repetidos o con una etiqueta en ping-pong)",
+  "El frame de paso tiene las alas en horizontal y es una pose clara",
+  "En la pose de alas abajo, todo el cuerpo está 1 px más arriba, ni más ni menos",
+  "La envergadura es la misma en las tres poses",
+  "Con onion skin, la cabeza solo se mueve en vertical",
+  "El timing es regular o con el golpe hacia abajo más rápido, a propósito",
+  "El ciclo se queda en el sitio: el avance lo hará el motor",
+  "Cada pose se reconoce sola en silueta a 1×",
+]} />
+
+<Quiz q="¿Qué pasa si quitas el frame de paso y dejas solo arriba y abajo?" options={["El aleteo es más rápido y más natural", "El cuerpo deja de subir en el golpe de ala", "Las alas saltan de una pose a otra y se ve un parpadeo"]} answer={2}>
+El ala recorre demasiada distancia en un solo frame. El paso la parte en dos tramos y el ojo los une en un movimiento.
+</Quiz>
+
+<Quiz q="¿En qué pose sube el cuerpo 1 px?" options={["Con las alas abajo: el golpe de ala empuja el aire y el cuerpo sube", "Con las alas arriba, porque tiran del cuerpo", "En ninguna: el cuerpo debe quedarse fijo para que se lea"]} answer={0}>
+Es acción y reacción: las alas empujan el aire hacia abajo y el aire empuja el cuerpo hacia arriba. Es el mismo rebote de 1 px del caminar.
+</Quiz>
+
+<Quiz q="¿Quién mueve el murciélago por la pantalla?" options={["Los frames: cada uno lo dibuja un poco más adelante", "El motor del juego, mientras el ciclo aletea en el sitio", "El onion skin de Aseprite"]} answer={1}>
+El ciclo se queda en el sitio, como el caminar de P6-02. Así el juego puede moverlo en cualquier dirección y a cualquier velocidad.
+</Quiz>
+</Block>

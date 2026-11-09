@@ -1,0 +1,357 @@
+---
+id: p8-05
+discipline: pixel
+level: 8
+order: 5
+title: "Clima: lluvia sobre la escena"
+summary: "El clima cambia dos cosas: la luz de toda la escena (un día gris) y una capa de partículas encima. Lluvia en dos capas, con viento, repartida a mano y en un bucle que cierra."
+duration: 45
+status: borrador
+prerequisites: [p8-02, p6-04]
+fundamentals: [f05, f08]
+objectives:
+  - "Tratar el clima como dos cambios: la luz de toda la escena y una capa de partículas encima"
+  - "Recolorear la escena para un día gris: menos saturación, menos valor y un tinte frío"
+  - "Separar la lluvia en dos capas de profundidad: lejos corta, oscura y lenta; cerca larga, clara y rápida"
+  - "Inclinar las dos capas con el mismo viento y repartir las gotas sin rejilla"
+  - "Animar un bucle de 8 frames que cierre (caída × frames = múltiplo de la altura) con salpicaduras breves"
+tools: [aseprite]
+piece:
+  name: "Tu escena de P8-01 (o la del curso) en un día de lluvia: paleta gris, dos capas de lluvia con viento y salpicaduras, en un bucle de 8 frames exportado como GIF y spritesheet"
+  canvas: "80x48"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [lluvia]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Tu escena ya tiene hora del día. Hoy le pones **tiempo**: vas a hacer que llueva.
+
+Vas a forjar **tu escena de P8-01 en un día de lluvia**: la misma imagen con la luz de un día gris y dos capas de gotas cayendo encima, en un bucle de 8 frames.
+
+Dale a *Reproducir*:
+
+<Animator sprites={["rain-1", "rain-2", "rain-3", "rain-4", "rain-5", "rain-6", "rain-7", "rain-8"]} durations={[70, 70, 70, 70, 70, 70, 70, 70]} />
+
+Fíjate en cuatro cosas:
+
+- La escena entera está **más oscura, más gris y algo azulada** que la de P8-01, menos el impacto, que brilla igual. No has movido un píxel: es otra paleta.
+- Hay **dos lluvias**: gotas cortas y oscuras que caen despacio, y gotas largas y claras que caen el doble de rápido.
+- Todas caen **inclinadas hacia la derecha**, con el mismo ángulo.
+- En el suelo y en el agua aparecen **salpicaduras** de uno o dos píxeles que duran un instante.
+
+Compárala con el día normal:
+
+<Sprite name="scene-final" scale={5} caption="scene-final: el día normal de P8-01. Colores saturados y el impacto como lo más claro" />
+
+<Sprite name="rain-1" scale={5} caption="rain-1: el primer frame de la lluvia. La misma escena, apagada y fría, con las gotas encima" />
+</Block>
+
+<Block kind="concepto">
+### El clima cambia dos cosas
+
+Cuando llueve no solo caen gotas. **Cambia la luz**: las nubes tapan el sol, y todo el mundo se vuelve más oscuro, más gris y más frío. Por eso el clima se hace en dos pasos:
+
+1. **La luz de toda la escena.** Una regla aplicada a toda la paleta, como en [P8-02](/forja-art/pixel/p8-02/).
+2. **Una capa de partículas encima.** Las gotas, que se mueven y no tocan los píxeles de la escena. Es el trabajo por capas de los efectos de [P6-04](/forja-art/pixel/p6-04/).
+
+<Why title="Por qué no basta con las gotas">
+Si pintas gotas sobre la escena soleada, ves un día de sol con rayas encima. El ojo no se cree la lluvia: sabe que con nubes no hay colores saturados ni luces brillantes. La lluvia **empieza en la paleta**; las gotas son lo último.
+</Why>
+
+### Paso 1: el día gris
+
+`rain-1` usa la paleta de `scene-final` pasada por una regla: cada color se acerca al gris, baja de valor y recibe un poco de azul. Todos menos tres: el blanco, el amarillo y el naranja del impacto, que **no cambian**. Estos son los datos reales (valor de 0 a 100 % y saturación aproximada):
+
+| Color | Día: valor | Gris: valor | Día: saturación | Gris: saturación |
+| --- | --- | --- | --- | --- |
+| Blanco del impacto | 100 % | 100 % (no cambia) | 0 % | 0 % |
+| Espuma de la orilla | 93 % | 68 % | 15 % | 17 % |
+| Arena clara | 83 % | 62 % | 34 % | 8 % |
+| Hierba clara | 71 % | 52 % | 47 % | 30 % |
+| Hierba | 54 % | 39 % | 62 % | 40 % |
+| Agua | 40 % | 30 % | 79 % | 62 % |
+| Contorno casi negro | 8 % | 8 % | 67 % | 59 % |
+
+Léela así:
+
+- **Menos saturación.** La arena pasa de un crema amarillo a un gris casi neutro; la hierba y el agua pierden un tercio de su color.
+- **Menos valor, sobre todo en las luces.** La espuma, la arena y la hierba clara bajan entre 19 y 25 puntos; el contorno no se mueve. Es la misma regla de la noche en P8-02: se aplastan las luces, no se hunden los oscuros.
+- **Tinte frío.** Todo gira un poco hacia el azul. Por eso los saturados (hierba, agua) se apagan y los cálidos (arena, piel) se quedan casi grises.
+
+Es una noche **suave**: menos bajada de valor y menos azul. Sigue siendo de día, pero sin sol.
+
+<Sprite name="scene-final" scale={5} view="gray" caption="scene-final en grises: arena y espuma forman una banda muy clara; el impacto, arriba del todo" />
+
+<Sprite name="rain-1" scale={5} view="gray" caption="rain-1 en grises: la misma imagen, más baja y con menos contraste, salvo el impacto, que sigue arriba del todo. Las gotas claras se ven como trazos" />
+
+<Why title="Por qué oscurecer ayuda a la lluvia">
+Las gotas son claras. Sobre una escena soleada con arena al 83 % casi no se ven: no hay contraste. Al bajar las luces, la escena deja **sitio arriba** en la escala de valores para las gotas. Oscurecer no es solo ambiente: es lo que hace que la lluvia se lea.
+</Why>
+
+### Paso 2: la lluvia en dos capas
+
+Es el parallax de [P8-03](/forja-art/pixel/p8-03/) en vertical. Lo que está cerca de la cámara **barre** el encuadre; lo lejano se arrastra.
+
+| Capa | Largo | Color | Valor | Caída por frame | Cuántas en `rain-1` |
+| --- | --- | --- | --- | --- | --- |
+| Lejos | 2 px | `#8fa3c0`, azul grisáceo | 63 % | 6 px | 26 gotas |
+| Cerca | 4 px | `#c9d6ea`, casi blanco | 83 % | 12 px | 12 gotas |
+| Salpicaduras | 1–2 px | `#e8f0fa`, el más claro | 94 % | no caen | 6 sitios |
+
+- **Largo:** la gota cercana mide el doble. Una gota que cae rápido deja una estela más larga en el ojo.
+- **Velocidad:** la cercana cae el doble (1:2). Igual que las capas del parallax.
+- **Contraste:** la gota lejana está al 63 %, muy cerca del valor de la escena gris. Casi se funde: se queda **al fondo**. La cercana, al 83 %, contrasta con todo: está **delante**.
+- **Cantidad:** hay menos gotas cercanas que lejanas. Las cercanas son las que más tapan.
+
+<Why title="¿Lejos no era más claro?">
+En P8-03 lo lejano era **claro** porque se acercaba al color del cielo. Aquí lo lejano es **más oscuro** que lo cercano. No es una contradicción: la regla de verdad es que lo lejano tiene **menos contraste con lo que tiene detrás**. Allí detrás estaba el cielo claro; aquí detrás está una escena gris oscura. La gota lejana se parece al fondo; la cercana destaca.
+</Why>
+
+Entre las dos capas, unas 100 de las 3.840 casillas del lienzo son lluvia: menos del 3 %. Llueve, pero la escena se sigue viendo entera.
+
+### El viento: mismo ángulo para todas
+
+En `rain-1…8` cada gota se desplaza **1 px a la derecha por cada 4 que baja**. Las dos capas, igual:
+
+- la cercana baja 12 y avanza 3 por frame;
+- la lejana baja 6 y avanza 1,5 de media (1 px un frame, 2 el siguiente).
+
+Por eso las gotas cercanas de 4 px tienen a veces un escalón de 1 px en medio, y las lejanas de 2 px a veces son dos píxeles en diagonal. A esta resolución, una inclinación de 1:4 se dibuja así.
+
+<Why title="Por qué el mismo ángulo">
+El viento empuja a todas las gotas igual. Si cada capa cae con un ángulo distinto, el ojo ve dos lluvias que no son del mismo cielo. Cambia la **velocidad** entre capas (eso da profundidad), nunca la **dirección**.
+</Why>
+
+### Repartidas sin rejilla
+
+Las gotas no van en filas, ni en columnas, ni en diagonales. En `rain-1` las posiciones son irregulares: hay zonas con varias gotas juntas, como la parte de arriba a la derecha, y zonas casi vacías, como la esquina de abajo a la izquierda, con solo dos gotas lejanas. No hay un paso fijo entre una gota y la siguiente. Eso es lo que separa la lluvia de una reja.
+
+<Why title="Por qué el ojo caza los patrones">
+El ojo busca orden sin querer. Si las gotas están a la misma distancia, o alineadas en una diagonal, el ojo encuentra la línea y deja de ver lluvia: ve un dibujo puesto encima de la imagen. Con un reparto irregular no hay nada que encontrar, y el ojo lo acepta como algo natural.
+</Why>
+
+<Tip>
+En tu pieza, coloca las gotas **a mano**: unas más juntas, otras más separadas, sin líneas. Después mira el frame entero desde lejos y busca filas, columnas o diagonales. Si encuentras una, mueve dos o tres gotas. Al azar «de verdad» le salen grupos y huecos: no repartas las gotas a la misma distancia por miedo a que se junten.
+</Tip>
+
+### El bucle cierra: caída × frames = múltiplo de la altura
+
+Es la misma cuenta de P7-02 y P8-03, ahora en vertical. Una gota que sale por abajo **vuelve a entrar por arriba**. Para que el frame 8 enlace con el 1, cada capa tiene que recorrer en el bucle exactamente una o varias veces la altura del lienzo:
+
+| Capa | Caída | × 8 frames | Altura | ¿Cierra? |
+| --- | --- | --- | --- | --- |
+| Lejos | 6 px | 48 px | 48 | Sí: una vuelta |
+| Cerca | 12 px | 96 px | 48 | Sí: dos vueltas |
+
+<Why title="Por qué la caída tiene que dividir la altura">
+Con 5 px por frame, en 8 frames una gota baja 40: le faltan 8 para volver a su sitio. Al pasar del frame 8 al 1, todas las gotas de esa capa **saltan 8 px hacia arriba** a la vez. En un bucle rápido ese tirón se ve como un parpadeo de toda la lluvia. Con 48 de alto y 8 frames, las caídas que cierran son 6, 12, 18…
+</Why>
+
+### Las salpicaduras: breves y en su sitio
+
+En `rain-1…8` hay **6 sitios** de salpicadura: dos en la hierba (bajo la roca y a la derecha de los pies del héroe, junto a la orilla) y cuatro en el agua. En cada uno pasa esto, en ciclos de 4 frames:
+
+1. **Dos píxeles a los lados**: la gota revienta.
+2. En el frame siguiente, **un píxel encima**: la gotita que rebota.
+3. Dos frames **sin nada**.
+
+Cada sitio va desfasado de los demás, así que nunca salpican todos a la vez. Y cada uno salpica dos veces por bucle.
+
+<Why title="Por qué tan breves">
+Una salpicadura dura un instante. Si se queda tres o cuatro frames, deja de ser un golpe y parece una mota blanca pegada al suelo. Dos frames de 70 ms bastan: el ojo la ve sin poder fijarse en ella.
+</Why>
+
+<Tip>
+Las salpicaduras no siguen a ninguna gota concreta. En una vista desde arriba, la lluvia cae en todas partes a la vez: basta con que aparezcan y desaparezcan en sitios repartidos por el suelo.
+</Tip>
+
+### ¿Y el foco? La fuente de luz no se apaga
+
+Es la regla de [P8-02](/forja-art/pixel/p8-02/): la luz que hay en la escena **emite**, no recibe. Las nubes oscurecen lo que el sol iluminaba, pero no un hechizo. Por eso el día gris de `rain-1` deja fuera de la regla los tres colores del impacto: el blanco sigue al 100 %, el amarillo al 89 % y el naranja igual que de día.
+
+Mira lo que pasa con los valores. Lo más claro de la escena después del impacto es el brillo del slime, al 70 %, y la espuma, al 68 %. De día, el brillo del slime estaba a 4 puntos del impacto; con lluvia, a 30. El foco es **más fuerte** que con sol, y además es lo único cálido de una escena fría.
+
+¿Y la lluvia? Las salpicaduras (94 %) y las gotas cercanas (83 %) quedan por debajo del blanco del impacto. Y no compiten con él porque son trazos diminutos, repartidos y en movimiento: no forman una mancha que se lleve la mirada.
+
+<Tip>
+Si tu escena no tiene fuente de luz, añádela antes de hacer la lluvia: una ventana encendida, un farol, un hechizo. Un día gris sin ninguna luz no tiene dónde poner el foco.
+</Tip>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Copia la escena y pásala al día gris">
+1. Abre tu `escena.aseprite` de P8-01 (o reconstruye la del curso). Guarda una copia con *File → Save As* como `escena-lluvia.aseprite`.
+2. Pásala a modo indexado (*Sprite → Color Mode → Indexed*) y guarda la paleta de día, como en P8-02.
+3. Señala los colores de tu **fuente de luz** (el efecto, una ventana, un farol): esos no se tocan.
+4. Edita cada una de las demás casillas de la paleta con tres reglas a la vez: **acércala al gris, bájale el valor (sobre todo a las luces) y gírala un poco hacia el azul**. Más suave que la noche.
+5. Guarda la paleta nueva como `gris.gpl`.
+
+<Tip>
+Si ya hiciste la noche en P8-02, tienes la mitad del trabajo: el día gris es un paso intermedio entre tu paleta de día y tu paleta de noche.
+</Tip>
+
+<Why>
+La luz va primero. Las gotas se eligen **en contraste con la escena gris**: si las eliges antes, tendrás que cambiarlas después.
+</Why>
+</Step>
+
+<Step n={2} title="Tres colores para la lluvia">
+Añade tres colores a la paleta:
+
+- **Lluvia lejos**: un azul grisáceo un poco más claro que la hierba gris. Que contraste poco.
+- **Lluvia cerca**: casi blanco, frío y poco saturado. Más claro que todo lo de la escena excepto la fuente de luz.
+- **Salpicadura**: el más claro de los tres.
+
+Exporta una copia a 1× y súbela al Inspector. En **Grises**, la lluvia lejana tiene que quedar cerca del valor del suelo y la cercana, claramente por encima.
+
+<Inspector upload title="Tu escena gris (y, después, un frame con lluvia)" />
+</Step>
+
+<Step n={3} title="Capas y frames">
+1. Desde el menú *Layer*, crea dos capas nuevas **encima de todas** y renómbralas con doble clic:
+   - `lluvia-lejos` (debajo)
+   - `lluvia-cerca` (encima)
+2. En la línea de tiempo (*Timeline*), añade frames hasta tener **8**. Las capas de la escena tienen que tener el mismo contenido en los 8 frames.
+3. Pon la duración de cada frame a **70 ms** (clic derecho sobre el frame, *Frame Properties*).
+
+<Why>
+Una capa por profundidad, como en el parallax. Si dibujas las dos lluvias en la misma capa, no podrás moverlas a velocidades distintas ni cambiar el color de una sin tocar la otra.
+</Why>
+
+<Warn>
+Comprueba que la escena no cambia entre frames. Si alguna capa de la escena solo tiene contenido en el frame 1, en los demás verás el fondo vacío. Revisa cada capa en la línea de tiempo.
+</Warn>
+</Step>
+
+<Step n={4} title="Frame 1: coloca las gotas">
+1. Activa *View → Grid*. Selecciona el frame 1 y la capa `lluvia-lejos`.
+2. Con el lápiz (<Keys k="B" />) y el color de lluvia lejos, dibuja **unas 20–25 gotas de 2 px** repartidas por todo el lienzo.
+3. Cambia a `lluvia-cerca` y al color claro. Dibuja **unas 10–12 gotas de 4 px**.
+4. Inclínalas todas igual: si quieres el viento de `rain-1`, cada 4 px de bajada, 1 a la derecha. En una gota de 4 px, eso es como mucho un escalón de 1 px.
+
+<Tip>
+Repártelas a mano: unas juntas, otras sueltas, sin filas ni diagonales. Aleja el zoom con la rueda del ratón y mira el frame entero: si el ojo encuentra una línea, mueve dos o tres gotas.
+</Tip>
+
+<Warn>
+Más gotas no es más lluvia. Si pasas del 3–4 % del lienzo, la escena desaparece detrás de una cortina. Empieza con pocas: siempre puedes añadir.
+</Warn>
+</Step>
+
+<Step n={5} title="Frames 2 a 8: mueve cada capa">
+Ahora cada capa baja **su** distancia en cada frame. Con 48 de alto y 8 frames:
+
+- `lluvia-lejos`: **6 px abajo** y 1–2 a la derecha por frame;
+- `lluvia-cerca`: **12 px abajo** y 3 a la derecha por frame.
+
+Dos formas de hacerlo:
+
+1. **A mano, con onion skin.** Activa el onion skin en la línea de tiempo. En cada frame, redibuja cada gota en su nueva posición usando el frame anterior como guía. La gota que se sale por abajo **entra por arriba** con lo que le sobra.
+2. **Copiando y moviendo.** Copia el contenido de la capa del frame anterior, pégalo en el frame nuevo y desplázalo con la selección (<Keys k="M" />) los píxeles que toque. Después, recorta lo que haya salido por abajo y llévalo arriba.
+
+<Why>
+6 × 8 = 48 y 12 × 8 = 96: las dos capas vuelven a su sitio al acabar el bucle. Es la regla de P8-03, velocidad × frames = múltiplo del tamaño. Si eliges otras caídas, haz antes la cuenta.
+</Why>
+
+<Tip>
+Comprueba el cierre con el frame 9 imaginario: si bajaras una vez más cada capa desde el frame 8, tendrías que obtener **exactamente** el frame 1. Míralo con el onion skin activo en el frame 1.
+</Tip>
+</Step>
+
+<Step n={6} title="Salpicaduras">
+1. Crea una capa `salpicaduras` encima de las dos lluvias.
+2. Elige **5 o 6 sitios** en el suelo y en el agua, repartidos.
+3. En cada sitio, dibuja en un frame **dos píxeles a los lados** y en el siguiente **un píxel encima**. Deja los dos frames siguientes vacíos y repite.
+4. Desfasa los sitios: que cada uno empiece en un frame distinto.
+
+<Warn>
+No pongas salpicaduras sobre el héroe, el slime o el cofre. Una mota blanca encima de un personaje se lee como un brillo o un defecto, no como agua.
+</Warn>
+</Step>
+
+<Step n={7} title="Prueba el timing y exporta">
+1. Reproduce la animación. Busca tres cosas: un tirón al volver al frame 1, una gota que «se queda» o salta de lado, y un sitio donde la lluvia tape lo importante.
+2. Si llueve demasiado despacio, baja la duración de los frames; si parpadea, súbela. Entre 60 y 100 ms suele funcionar.
+3. Exporta el bucle como GIF con *File → Export → Export As* y *Resize* al 400 %.
+4. Exporta el spritesheet con *File → Export Sprite Sheet*, a 1×. Si piensas usarlo en un juego, exporta también la lluvia sola (con la escena oculta) para ponerla como capa encima del nivel.
+</Step>
+
+<Warn title="Verifica en tu versión">
+El modo indexado, el panel de paleta (guardar y cargar .gpl), la línea de tiempo, *Frame Properties*, el onion skin y *File → Export Sprite Sheet* existen en Aseprite. Pueden cambiar entre versiones: cómo se añaden y se duplican frames, si un frame nuevo copia el contenido del anterior, cómo se aplica una duración a varios frames a la vez, el menú *Layer* y el doble clic para renombrar, cómo se copia y se pega el contenido de una capa entre frames y si la exportación a GIF está en *Export As* o en otra opción. Si no encuentras algo, búscalo por nombre en los menús o en la línea de tiempo.
+</Warn>
+</Block>
+
+<Block kind="version">
+Tu escena, con lluvia. Cumple lo mínimo (día gris, dos capas con el mismo viento, salpicaduras breves y un bucle de 8 frames que cierra) y elige un reto:
+
+- **La luz bajo la lluvia**: añade una segunda luz pequeña (una ventana, un farol) que también quede fuera de la regla del día gris, y haz que las gotas cercanas que pasan junto a ella se tiñan de su color durante un frame. Comprueba en grises que tu foco principal sigue siendo lo más claro.
+- **Temporal**: más viento (1 px a la derecha cada 2 hacia abajo), gotas cercanas de 5–6 px y más densidad. Comprueba que la escena se sigue leyendo a 1×.
+- **Otro clima**: nieve. Copos de 1 px, caída lenta (2 o 3 px por frame en lejos, el doble en cerca), un vaivén de 1 px a los lados en lugar de viento fijo y sin salpicaduras. Haz la cuenta del bucle antes de dibujar.
+
+**Prueba**: pon tu escena de P8-01 y la versión con lluvia una al lado de otra, a 1×. La de lluvia tiene que parecer **la misma escena con otro tiempo**, no otra escena.
+</Block>
+
+<Block kind="errores">
+<Mistake title="Rayas verticales iguales" wrongLabel="rain-straight" rightLabel="rain-1">
+  <Sprite slot="wrong" name="rain-straight" scale={5} />
+  <Sprite slot="right" name="rain-1" scale={5} />
+
+`rain-straight` usa la misma escena gris que `rain-1`. Solo cambia la lluvia: 13 columnas verticales, una cada 6 px, todas con trazos de 3 px y huecos de 3, y **todas empiezan en la misma fila**. Las columnas y las filas de trazos quedan alineadas: el ojo ve una rejilla, una reja o una pantalla rayada delante de la imagen. Sin viento no hay dirección; sin dos tamaños no hay profundidad. **Corrección**: dos capas (corta y oscura detrás, larga y clara delante), el mismo ángulo de viento para todas y las gotas repartidas a mano.
+</Mistake>
+
+<Warn title="Lluvia sobre el día de sol">
+Pintar las gotas encima de `scene-final` sin tocar la paleta: hierba saturada, arena clara y gotas casi blancas. Las gotas apenas contrastan con la arena (83 %) y la espuma (93 %), y la escena sigue diciendo «sol». **Corrección**: primero el día gris (menos saturación, menos valor, tinte frío) y luego las gotas.
+</Warn>
+
+<Warn title="Gotas demasiado largas o demasiado densas">
+Gotas de 8 o 10 px y el doble de cantidad: la lluvia se convierte en una cortina de rayas y tapa al héroe, al slime y al cofre. En `rain-1` las gotas cercanas miden 4 px y toda la lluvia ocupa menos del 3 % del lienzo. **Corrección**: gotas cortas, pocas cercanas, y comprueba a 1× que lo importante se sigue viendo.
+</Warn>
+
+<Warn title="El bucle que salta">
+Bajar las gotas 5 px por frame en un lienzo de 48 con 8 frames: recorren 40, no 48. Al volver al frame 1, toda la capa da un tirón de 8 px hacia arriba. **Corrección**: caída × frames tiene que ser un múltiplo de la altura (6 o 12 px con 8 frames y 48 de alto), o cambia el número de frames.
+</Warn>
+
+<Warn title="Cada capa con su viento">
+La capa lejana cae recta y la cercana, inclinada. Parecen dos lluvias de cielos distintos. **Corrección**: la misma inclinación en las dos capas; solo cambian la velocidad, el largo y el color.
+</Warn>
+
+<Warn title="Salpicaduras que no se van">
+Una salpicadura que dura todo el bucle es una mota blanca fija en el suelo. Y si todas aparecen en el mismo frame, el suelo parpadea. **Corrección**: dos frames de vida, dos de descanso, y cada sitio desfasado.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+Revisa tu bucle **a 1×, en movimiento y en grises**.
+
+<Checklist items={[
+  "La escena entera tiene la paleta del día gris: menos saturación, menos valor en las luces y un tinte frío",
+  "La fuente de luz conserva sus colores y sigue siendo lo más claro de la escena",
+  "Los contornos y las siluetas se siguen leyendo después de oscurecer",
+  "La lluvia está en dos capas: lejos (corta, oscura, lenta) y cerca (larga, clara, rápida)",
+  "Las dos capas caen con el mismo ángulo de viento",
+  "Las gotas están repartidas sin filas, columnas ni diagonales visibles",
+  "La lluvia no tapa al personaje ni al foco: ocupa poco del lienzo",
+  "Las salpicaduras duran uno o dos frames y van desfasadas",
+  "El bucle cierra: caída × frames es un múltiplo de la altura en cada capa",
+  "He exportado el GIF a escala entera y el spritesheet a 1×",
+]} />
+
+<Quiz q="¿Qué dos cosas cambian cuando llueve en una escena?" options={["La luz de toda la escena y una capa de partículas encima", "Solo las gotas: la escena se queda igual", "El dibujo de los personajes y el color del cielo"]} answer={0}>
+El clima empieza en la paleta: un día gris tiene menos saturación, menos valor y un tinte frío. Las gotas van encima, en sus capas, sin tocar los píxeles de la escena.
+</Quiz>
+
+<Quiz q="¿Cómo es la capa de lluvia cercana respecto a la lejana?" options={["Más corta, más oscura y más lenta", "Igual, pero inclinada en otra dirección", "Más larga, más clara y más rápida"]} answer={2}>
+Lo cercano barre el encuadre: cae el doble (12 px frente a 6 en `rain-1…8`), deja una estela más larga y contrasta más con la escena. La dirección del viento es la misma.
+</Quiz>
+
+<Quiz q="Tu lienzo mide 48 de alto y el bucle tiene 8 frames. ¿Qué caída por frame cierra el bucle?" options={["5 px", "6 px", "10 px"]} answer={1}>
+6 × 8 = 48: una vuelta exacta. Con 5 recorren 40 y con 10 recorren 80, y ninguno es múltiplo de 48: al volver al frame 1 la lluvia salta.
+</Quiz>
+
+<Quiz q="¿Por qué `rain-straight` parece una reja y no lluvia?" options={["Porque sus gotas son demasiado oscuras", "Porque todas las rayas son iguales, verticales y están alineadas en columnas y filas", "Porque la escena no está oscurecida"]} answer={1}>
+La escena de `rain-straight` es la misma gris de `rain-1`: el problema es solo la lluvia. Sin viento, sin dos tamaños y repartida en rejilla, el ojo lee un patrón delante de la imagen.
+</Quiz>
+</Block>

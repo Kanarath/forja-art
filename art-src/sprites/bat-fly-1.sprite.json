@@ -1,0 +1,31 @@
+{
+  "name": "bat-fly-1",
+  "description": "Murciélago, frame 1: alas arriba (el sprite del curso). Las puntas suben hasta la altura de las orejas.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "criatura",
+    "animación",
+    "vuelo"
+  ],
+  "palette": {
+    "o": "#1b1030",
+    "w": "#5b4a7a",
+    "b": "#3a2d52",
+    "R": "#ff4f4f"
+  },
+  "rows": [
+    "............",
+    "............",
+    "o....oo....o",
+    "oo..obbo..oo",
+    "owo.oRRo.owo",
+    "owwoobboowwo",
+    "owwwwbbwwwwo",
+    ".owwwbbwwwo.",
+    "..oowoowoo..",
+    "....o..o....",
+    "............",
+    "............"
+  ]
+}

@@ -1,0 +1,242 @@
+---
+id: p5-06
+discipline: pixel
+level: 5
+order: 6
+title: "Un jefe: el mismo enemigo, a 3×"
+summary: "Un jefe es el mismo enemigo con más presencia. Escalar ×3 solo engorda los píxeles: usa la copia escalada como guía y redibuja con contorno de 1 px, más rampa y rasgos nuevos."
+duration: 45
+status: borrador
+prerequisites: [p5-03, p1-01]
+fundamentals: [f02, f09]
+objectives:
+  - "Diseñar un jefe que se reconozca como pariente del enemigo normal por silueta y paleta"
+  - "Entender por qué escalar ×3 no añade información y engorda el contorno a 3 px"
+  - "Redibujar sobre una guía escalada con contorno de 1 px y una rampa más larga"
+  - "Decidir qué rasgos nuevos caben a la nueva resolución y cuáles sobran"
+  - "Comprobar el jefe en silueta, en grises y a 1× junto al enemigo original"
+tools: [aseprite]
+piece:
+  name: "El rey de tu enemigo: un jefe de 30×24 redibujado a partir de la criatura de P5-03"
+  canvas: "30x24"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [jefe]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Vas a forjar **un jefe**: el rey de tu enemigo de [P5-03](/forja-art/pixel/p5-03/). El jugador lo tiene que reconocer al instante («es un slime») y, a la vez, entender que este es distinto («y es el que manda»).
+
+<Sprite name="slime" scale={10} caption="slime · El enemigo normal, 10×8. Cuatro colores: contorno, verde base, verde de sombra y un brillo casi blanco" />
+
+<Sprite name="slime-king" scale={8} caption="slime-king · El jefe, 30×24: tres veces más ancho. Contorno de 1 px, cuatro verdes en la cúpula más el brillo, ojos de 3×4 con un píxel blanco, boca con colmillo y una corona dorada con una gema roja" />
+
+Lo importante: **no está escalado**. Está **redibujado** a 3×, con la versión escalada solo como guía.
+</Block>
+
+<Block kind="concepto">
+### Pariente, pero con más presencia
+
+Un jefe tiene que cumplir dos cosas que tiran en sentidos contrarios:
+
+| Se parece al original | Se distingue del original |
+| --- | --- |
+| La misma silueta de cúpula con la base plana | Mucho más grande: tres veces más ancho |
+| La misma paleta base: los mismos verdes y el mismo contorno | Una rampa más larga: dos verdes nuevos |
+| Los mismos rasgos: dos ojos oscuros y un brillo arriba a la izquierda | Rasgos más grandes y expresivos: ojos con brillo, una boca con colmillo |
+| | Un accesorio de estatus: la corona |
+
+Mira cómo `slime-king` hereda la paleta de `slime`. Los tres colores del original (`#4ade80`, `#1f8a4c` y el brillo `#d8ffe6`) siguen ahí, con el mismo contorno `#1b1030`. El jefe añade **un verde más claro** (`#86efac`) para la zona de la luz y **uno más oscuro** (`#14532d`) para el lado en sombra y la base.
+
+<Why title="Por qué el parecido importa (f09)">
+El jugador ya ha aprendido qué es un slime: blando, lento, poco peligroso. El jefe **aprovecha** ese aprendizaje. Si se parece, el jugador entiende la regla sin leer nada: «el mismo bicho, pero en grande y con corona». Si el jefe fuera un diseño nuevo, tendría que aprenderlo desde cero y perdería la gracia de ver al rey de algo que ya conoce.
+</Why>
+
+### Escalar ×3 no añade nada
+
+Lo más rápido sería ampliar el slime al 300 %. Mira lo que sale:
+
+<Sprite name="slime-x3" scale={8} caption="slime-x3 (ERROR) · El slime escalado ×3 con vecino más cercano. Cada píxel es un bloque de 3×3: el contorno mide 3 px de grueso, los ojos son cuadrados de 3×3 y el brillo, dos cuadrados en diagonal" />
+
+Tiene el mismo tamaño que el jefe, pero **la misma información que el original**: cuatro colores, dos ojos, un brillo. Solo que todo es más gordo. Y junto a sprites de 1 px, ese contorno de 3 px parece de otro juego.
+
+<Why title="Más píxeles no es más detalle">
+Es lo que viste en [P1-01](/forja-art/pixel/p1-01/) con la seta de 8×8 y la de 16×16: a cada resolución cabe una cantidad distinta de información. Escalar no la cambia; solo cambia el tamaño del píxel. En Blender sería como aplicar *Scale* a un modelo low poly y esperar que gane polígonos. Para que gane detalle hay que **remodelarlo**. Aquí, **redibujarlo**.
+</Why>
+
+### Qué hace el redibujado
+
+Compara `slime-x3` y `slime-king` píxel a píxel:
+
+- **Contorno:** de 3 px a 1 px. El jefe usa el mismo grosor de línea que el resto del juego.
+- **Rampa:** de 2 verdes a 4. La luz de arriba a la izquierda ya no es un salto: el verde más claro ocupa la parte de arriba a la izquierda, el verde base el centro y la parte baja de la izquierda, el verde de sombra la derecha, y el más oscuro el borde derecho y las **dos filas de la base**, donde toca el suelo.
+- **Brillo:** de dos bloques de 3×3 a un grupo de 3 píxeles con un cuarto suelto a su lado, que sigue la curva de la cúpula.
+- **Ojos:** de cuadrados planos a ojos de 3 de ancho y 4 de alto, con **un píxel blanco** arriba a la izquierda, el mismo lado de la luz. Ese píxel les da brillo y vida.
+- **Rasgos nuevos:** una boca de 6 px entre los dos ojos y, debajo, **un colmillo** de 1 px blanco. A 10×8 no cabía una boca; a 30×24, sí.
+- **Estatus:** una corona dorada de 10 px de ancho con tres puntas, una banda oscura abajo y una gema roja de 1 px en el centro.
+
+<Sprite name="slime-x3" scale={5} view="gray" caption="slime-x3 en grises: dos valores en el cuerpo y un salto brusco entre ellos" />
+
+<Sprite name="slime-king" scale={5} view="gray" caption="slime-king en grises: el valor baja por pasos de la izquierda a la derecha y hacia la base. La cúpula tiene volumen" />
+
+### La silueta: la misma familia
+
+<Sprite name="slime" scale={10} view="silhouette" caption="slime en silueta: cúpula de lados rectos y base plana" />
+
+<Sprite name="slime-king" scale={5} view="silhouette" caption="slime-king en silueta: la misma cúpula de base plana, con tres puntas de corona encima" />
+
+Fíjate en un detalle: el jefe **no calca** la guía. Mide 30 de ancho, como `slime-x3`, pero su cuerpo solo ocupa las 17 filas de abajo (de la 7 a la 23). La corona llena las de arriba. El cuerpo es más bajo y ancho que el slime escalado: una masa más pesada, que se asienta en el suelo.
+
+<Why title="La forma también cuenta el estatus (f02)">
+La cúpula sigue siendo redonda: el jefe es de la familia amable de F02, así que no asusta por sus picos. Su peso viene de la **masa ancha y baja** y de la corona. Las tres puntas de la corona son el único elemento triangular: un acento de forma, como el cuerno que viste en P5-03, que avisa de que este no es un slime cualquiera.
+</Why>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Abre tu enemigo y guarda una copia">
+1. Abre tu criatura amable de P5-03 (o copia el `slime` de 10×8 píxel a píxel en un lienzo nuevo).
+2. Guárdala con otro nombre con *File → Save As*: `jefe.aseprite`. Así no estropeas el original.
+3. Activa *View → Grid*.
+
+<Tip>
+Ten el original abierto en otra pestaña. Lo vas a mirar todo el rato.
+</Tip>
+</Step>
+
+<Step n={2} title="La guía ×3 en una capa aparte">
+1. *Sprite → Sprite Size*. Escala al **300 %** (con el ancho y el alto enlazados) y elige el método de vecino más cercano (*Nearest-neighbor*). Un lienzo de 10×8 pasa a 30×24.
+2. Renombra la capa a `guía` (doble clic sobre su nombre en el panel de capas).
+3. Baja su opacidad a un 30–40 % en las propiedades de la capa y bloquéala con el candado.
+4. Crea una capa nueva **encima** (*Layer → New Layer*) y llámala `jefe`. Todo lo que dibujes irá aquí.
+
+<Why>
+La guía te da las proporciones gratis: dónde van los ojos, dónde empieza la cúpula, cuánto ocupa la base. Pero es una guía, no un dibujo. Por eso va abajo, transparente y bloqueada: no puedes pintar en ella por error.
+</Why>
+
+<Tip>
+Si tu jefe necesita sitio para un accesorio alto (corona, cuernos), haz como `slime-king`: un cuerpo un poco más bajo que la guía. O agranda el lienzo con *Sprite → Canvas Size* antes de empezar.
+</Tip>
+</Step>
+
+<Step n={3} title="La silueta, con contorno de 1 px">
+1. Lápiz (<Keys k="B" />) con *Pixel-perfect* activado y el color de contorno.
+2. Traza el contorno **por el centro** de la línea gorda de la guía, de 1 px de grueso.
+3. Ahora la curva tiene tres veces más pasos. Úsalos: tramos que crecen o decrecen con orden, sin escalones de 3 en 3 copiados de la guía.
+4. Deja hueco arriba para la corona. Rellena con el verde base usando el cubo (<Keys k="G" />).
+
+<Warn>
+Si sigues los escalones de la guía al pie de la letra, el contorno sale con tramos de 3, 3, 3… y la curva se lee como una escalera. La guía dice **dónde**, no **cómo**.
+</Warn>
+</Step>
+
+<Step n={4} title="Más rampa: dos tonos nuevos">
+1. Toma los colores del original con el cuentagotas (<Keys k="I" />): base, sombra y brillo.
+2. Añade **uno más claro** que la base y **uno más oscuro** que la sombra. Ahora tienes cuatro verdes y el brillo.
+3. Con la luz arriba a la izquierda: el más claro arriba a la izquierda, la base en el centro, la sombra a la derecha y el más oscuro en el borde derecho y en las dos filas que tocan el suelo.
+4. Pon el brillo casi blanco como un grupo pequeño de 3–4 píxeles arriba a la izquierda, siguiendo la curva.
+
+<Why>
+Con 30 píxeles de ancho, dos verdes dejan un salto de valor enorme en mitad de la cúpula. Cuatro pasos reparten ese salto y la cúpula se redondea. El tamaño te da sitio: si no lo usas, el jefe es solo un slime más grande.
+</Why>
+</Step>
+
+<Step n={5} title="Rasgos más grandes y la corona">
+1. **Ojos:** donde la guía marca los dos cuadrados, dibuja ojos de unos 3×4 en el color oscuro, con **un píxel blanco** en la esquina de arriba del lado de la luz.
+2. **Boca:** una línea oscura de unos 6 px entre los ojos y un poco más abajo. Un colmillo blanco de 1 px debajo le da carácter sin volverlo un monstruo de picos.
+3. **Corona:** encima de la cúpula, centrada. Tres puntas, un dorado claro, una banda dorada oscura abajo y una gema de otro color. Contorno de 1 px, como todo lo demás.
+4. Oculta la guía con el icono del ojo y mira el jefe solo.
+
+<Tip title="Qué rasgos caben">
+Pregúntate lo de P1-01: ¿qué cabe a esta resolución que antes no cabía? Una boca, un brillo en los ojos, una corona. **Pocos** rasgos nuevos y grandes. Si empiezas a añadir escamas, burbujas o venas, para: lo veremos en los errores.
+</Tip>
+</Step>
+
+<Step n={6} title="Grises, silueta y 1×">
+1. **Grises:** *Sprite → Color Mode → Grayscale*. ¿Baja el valor por pasos de la izquierda a la derecha? ¿Destacan los ojos? Vuelve al color con <Keys k="Ctrl+Z" />.
+2. **Silueta:** rellena una copia de la capa en negro, o súbela al laboratorio de abajo. ¿Se reconoce la familia del slime?
+3. **1×:** rueda del ratón al mínimo, con el original al lado. ¿Parecen del mismo juego?
+
+<SilhouetteLab sprites="slime,slime-king,slime-x3,bat" title="¿Cuáles son de la misma familia? ¿Cuál se lee como jefe?" />
+
+<Warn>
+Pasar a *Grayscale* convierte de verdad los colores. Mira, deshaz y luego guarda.
+</Warn>
+</Step>
+
+<Step n={7} title="Limpia y exporta">
+1. Borra la capa `guía` o déjala oculta; no debe salir en el PNG.
+2. Guarda con <Keys k="Ctrl+S" />.
+3. Exporta con *File → Export → Export As*: un PNG a 1× y otro con **Resize** al 400 % o más para enseñarlo.
+</Step>
+
+<Warn title="Verifica en tu versión">
+Los nombres y la posición pueden variar según la versión de Aseprite: *File → Save As*, *Sprite → Sprite Size* (el campo de porcentaje y el método de interpolación), *Sprite → Canvas Size*, *Layer → New Layer*, la opacidad en las propiedades de la capa, el candado y el ojo del panel de capas, y *Sprite → Color Mode → Grayscale* con deshacer. Si una ruta no está donde dice, búscala por su función.
+</Warn>
+</Block>
+
+<Block kind="version">
+Ahora a tu manera. Mantén la regla: **mismo diseño, más información**. Elige uno:
+
+- **El rey de otra criatura:** el jefe de tu enemigo amenazante de P5-03 (el murciélago, por ejemplo). Alas con más pasos, colmillos, una cicatriz. El accesorio de estatus puede ser otro: un yelmo, una capa, cadenas.
+- **Jefe a 2×:** el mismo proceso con una guía al 200 %. Hay menos sitio para rasgos nuevos: decide cuál es el único que entra.
+- **Jefe de color:** combínalo con [P5-04](/forja-art/pixel/p5-04/). Un rey rojo o dorado con su rampa de cuatro pasos que, en grises, conserve la misma separación de valor que el verde.
+
+<Tip>
+Pon siempre el original al lado. Si tapas la corona con la mano y no sabes de qué enemigo es el jefe, has cambiado demasiado.
+</Tip>
+</Block>
+
+<Block kind="errores">
+<Mistake title="Escalar y dejarlo" wrongLabel="slime-x3: contorno de 3 px y nada nuevo" rightLabel="slime-king: redibujado con contorno de 1 px">
+  <Sprite slot="wrong" name="slime-x3" scale={6} />
+  <Sprite slot="right" name="slime-king" scale={6} />
+
+Los dos miden 30×24. A la izquierda, cada píxel del original es un bloque de 3×3: el contorno es grueso, la curva baja en escalones de 3 y los ojos son cuadrados. Junto al héroe y los demás enemigos, con su línea de 1 px, parece pegado de otro juego. Corrígelo usando la versión escalada **solo como guía** en una capa baja y redibujando encima con el grosor de línea del resto del juego.
+</Mistake>
+
+<Mistake title="Los mismos colores que el pequeño" wrongLabel="slime-x3 en grises: dos valores" rightLabel="slime-king en grises: cuatro pasos">
+  <Sprite slot="wrong" name="slime-x3" scale={6} view="gray" />
+  <Sprite slot="right" name="slime-king" scale={6} view="gray" />
+
+Aunque redibujes el contorno, si te quedas con la base y la sombra del original, la cúpula grande queda partida en dos manchas con un salto en medio. Lo que en 10×8 era suficiente, en 30×24 se ve plano. Corrígelo alargando la rampa: un tono más claro y otro más oscuro, del mismo verde, para que el valor baje por pasos.
+</Mistake>
+
+<Warn title="Tantos detalles que deja de parecerse">
+Escamas, burbujas dentro del cuerpo, cuernos, tres ojos, una capa, un cetro… Con cada rasgo nuevo el jefe se aleja del slime, y al final el jugador ve un monstruo nuevo, no al rey de algo que conoce. Corrígelo quitando hasta quedarte con **dos o tres** rasgos nuevos y grandes (como la boca con colmillo y la corona) y comprueba con el original al lado, en silueta, que sigue siendo de la familia.
+</Warn>
+
+<Warn title="Píxeles de 2–3 px mezclados con los de 1 (mixels)">
+Si redibujas solo una parte y dejas trozos de la guía (un ojo de 3×3, un tramo del contorno grueso, el brillo en bloque), el sprite mezcla píxeles de tamaños distintos: los mixels. El ojo lo nota aunque no sepa por qué: unas zonas parecen nítidas y otras borrosas. Corrígelo ocultando la capa `guía` y repasando el jefe con la rejilla: todo tiene que estar hecho con píxeles de 1, incluido cada bloque que copiaste de la guía.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+Estudia el jefe de referencia en el inspector: marca los huérfanos y verás que aparecen el píxel suelto del brillo, el brillo blanco de cada ojo, la gema y el colmillo. Están ahí a propósito. Luego sube el tuyo, exportado a 1×.
+
+<Inspector sprite="slime-king" upload title="El jefe de referencia (y el tuyo)" />
+
+<Checklist items={[
+  "Mi jefe se reconoce como pariente de mi enemigo: misma silueta base y misma paleta base",
+  "He usado la versión ×3 solo como guía, en una capa aparte, y no queda nada de ella en el PNG",
+  "Todo el contorno es de 1 px, como el del enemigo pequeño",
+  "La rampa tiene más pasos que la del original y en grises el valor baja por pasos",
+  "He añadido pocos rasgos nuevos y grandes, y un accesorio de estatus",
+  "No hay mixels: ningún bloque de 2 o 3 px junto a píxeles de 1",
+  "En silueta y a 1× se lee junto al original como el mismo enemigo, en jefe",
+  "He exportado un PNG a 1× y otro ampliado con escala entera",
+]} />
+
+<Quiz q="Escalas tu slime de 10×8 al 300 % con vecino más cercano. ¿Qué has ganado?" options={["Tres veces más detalle", "Mejor contorno, porque es más grueso", "Nada de información: los mismos píxeles, tres veces más grandes"]} answer={2}>
+Escalar no añade información: cada píxel se convierte en un bloque de 3×3 y el contorno pasa a 3 px. El detalle solo aparece si redibujas.
+</Quiz>
+
+<Quiz q="¿Para qué sirve la versión escalada en el proceso?" options={["Como guía en una capa baja: proporciones y posición de los rasgos", "Como el sprite final, después de limpiar el contorno", "Para sacar de ella la paleta nueva"]} answer={0}>
+La guía dice dónde va cada cosa. Encima, en otra capa, se redibuja con contorno de 1 px, más rampa y rasgos nuevos.
+</Quiz>
+
+<Quiz q="Tu jefe tiene cuernos, escamas, tres ojos, capa y cetro, y nadie lo reconoce como el rey de tu slime. ¿Qué corriges?" options={["Le pones más colores para que destaque", "Quitas rasgos hasta quedarte con dos o tres y comparas la silueta con el original", "Lo haces todavía más grande"]} answer={1}>
+El jefe funciona porque el jugador ya conoce al enemigo. Pocos rasgos nuevos y grandes mantienen el parecido.
+</Quiz>
+</Block>
