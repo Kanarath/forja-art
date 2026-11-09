@@ -1,0 +1,227 @@
+---
+id: v6-02
+discipline: voxel
+level: 6
+order: 2
+title: "Terreno: terrazas, estratos y agua"
+summary: "Piensa el terreno como un mapa de alturas: terrazas de 2 vóxels, color por altura para que los escalones se lean, un río hundido y árboles pequeños que dan escala."
+duration: 45
+status: borrador
+prerequisites: [v6-01, v2-02]
+fundamentals: [f01]
+objectives:
+  - "Pensar un terreno voxel como un mapa de alturas y planificarlo antes de modelar"
+  - "Usar terrazas de altura fija como estilo y como regla que da coherencia"
+  - "Colorear por altura (hierba, tierra y piedra) para que las terrazas se lean"
+  - "Hundir el agua un vóxel por debajo de la tierra para que tenga orilla"
+  - "Dar escala al terreno con árboles pequeños y piedras"
+tools: [magicavoxel]
+piece:
+  name: "Terreno propio con al menos tres alturas de terraza, estratos, agua y un render"
+  canvas: "24x24 a 32x32 de base"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [terreno]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Hoy forjas **un trozo de mundo**: un terreno con colinas en terrazas, cortes que enseñan la tierra y la piedra, un río y unos árboles.
+
+<VoxViewer model="terreno" stage={2} title="Tu pieza: terrazas, estratos, un río y árboles" />
+
+Recorre las tres etapas del visor:
+
+1. **Terrazas:** solo la forma, en un color. Dos colinas al fondo y una llanura delante.
+2. **Estratos:** el mismo terreno pintado por altura: hierba arriba, tierra debajo, piedra en bandas.
+3. **Agua y vida:** un río que cruza la llanura, árboles pequeños y dos piedras.
+
+Tu pieza final: **un terreno propio** de unos 24×24 a 32×32 de base, con **al menos tres alturas de terraza**, estratos, agua y un render.
+</Block>
+
+<Block kind="concepto">
+En Blender harías un plano, lo subdividirías y esculpirías las colinas. En vóxels no hay pendientes suaves: cada columna tiene **una altura entera**. Un terreno voxel es, en el fondo, **un mapa de alturas**: una cuadrícula vista desde arriba donde cada casilla dice cuántos vóxels sube.
+
+<Why title="¿Por qué pensarlo así?">
+Porque separa la forma del detalle. Primero decides **qué altura tiene cada zona** (como un mapa topográfico). Luego solo es apilar. Es la misma regla de siempre: **la forma grande primero** (V2-01). Si el mapa de alturas no funciona, ningún árbol lo salva.
+</Why>
+
+**Terrazas: la altura fija es el estilo.** El terreno del visor no usa cualquier altura. Todas son **pares**: 2, 4, 6 y 8 vóxels. Cada escalón sube **exactamente 2**. Abre la etapa «Terrazas» y baja el deslizador **Capas**: verás que el terreno cambia de forma cada dos capas, nunca en una.
+
+<VoxViewer model="terreno" stage={0} title="Terrazas: alturas de 2 en 2 y un solo color" />
+
+- **Llanura:** delante, a altura 2. Es el suelo base.
+- **Colina pequeña:** al fondo a la derecha, sube hasta 6.
+- **Colina grande:** al fondo a la izquierda, sube hasta 8.
+
+Cuenta las alturas: sobre la llanura hay **tres terrazas** (4, 6 y 8). Las colinas son anillos que se estrechan al subir, como el tejado de la torre de [V2-02](/forja-art/voxel/v2-02/), pero con contornos redondeados y sin simetría.
+
+<Why title="Una regla da coherencia">
+Es lo mismo que la rejilla de 8 de la [casa modular (V6-01)](/forja-art/voxel/v6-01/). Si todos los escalones miden 2, el ojo ve **un sistema**: terrazas de cultivo, un mundo construido con intención. Si cada escalón mide lo que le apetece (1, 3, 2, 1…), ve ruido, como el círculo abollado de V2-02.
+</Why>
+
+<Tip>
+Escalones de 1 vóxel se leen casi como una rampa suave; de 3 o 4, como acantilados. 2 es un buen término medio a esta escala. Elige uno y mantenlo en todo el terreno.
+</Tip>
+
+**Estratos: color por altura.** En un solo color, las terrazas solo se leen por la luz del render. Con estratos se leen siempre. El modelo sigue tres reglas:
+
+- **Hierba** (`#3fbf7f`): el vóxel de arriba de **cada columna**, esté a la altura que esté.
+- **Tierra** (`#8a5a3c`): los dos vóxels de debajo de la hierba.
+- **Piedra:** todo lo demás, en bandas horizontales de 2 vóxels que alternan dos grises (`#7d8698` y `#9aa3b5`).
+
+<VoxViewer model="terreno" stage={1} title="Estratos: hierba, tierra y piedra en bandas" />
+
+Fíjate en los cortes. En cada escalón de 2 se ve **una fila de hierba y una de tierra**: una línea clara sobre una oscura que dibuja el borde de la terraza. En el borde del mapa asoman también las bandas de piedra.
+
+<Why title="Valor antes que tono (F01)">
+La hierba es mucho más clara que la tierra. Esa diferencia de **valor** es la que marca cada escalón, aunque el render lo ilumine de frente. Y las bandas de piedra van a **la misma altura en todo el terreno**: por eso parecen capas de roca de verdad, que atraviesan las colinas.
+</Why>
+
+**Agua: siempre más baja.** El agua busca el punto más bajo. En el modelo, el río cruza la llanura de izquierda a derecha y está **un vóxel por debajo de la hierba**. Ese escalón de 1 es la **orilla**: el borde de hierba que se ve de lado y que separa la tierra del agua.
+
+- **Agua:** azul oscuro `#1f4f9a`.
+- **Corriente:** una franja más clara `#6fb8ff` en el centro del río. Da dirección y dice «esto se mueve».
+
+<Warn>
+Si el agua está al mismo nivel que la hierba, se lee como un suelo pintado de azul. El escalón hacia abajo es lo que la hace agua.
+</Warn>
+
+**Escala: árboles pequeños y piedras.** En la última etapa hay cinco árboles y dos piedras. Cada árbol mide 5 de alto: tronco de 2 vóxels en madera oscura, una copa de 3×3 y 2 de alto, y un vóxel más claro arriba. Las piedras son de 2×1, en gris oscuro.
+
+<Why>
+El árbol es la **referencia de tamaño**. Al lado de un árbol de 5, una colina de 8 parece una montaña. Si el árbol fuera de 12, la misma colina sería un montículo. Todos los árboles a la misma escala: si no, el terreno no tiene medida.
+</Why>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Dibuja el mapa de alturas en papel">
+1. En una cuadrícula de 24×24 (papel o un lienzo de Aseprite), marca la **llanura**, una o dos **colinas** y por dónde pasa el **río**.
+2. Dentro de cada colina, dibuja anillos: cada anillo es una terraza que sube 2.
+3. Escribe la altura en cada zona: 2 para la llanura, y 4, 6 y 8 en las colinas.
+4. Pon el río en la llanura, lejos de las colinas, y marca dónde irán 4 o 5 árboles.
+
+<Why>
+Diez minutos de papel te ahorran una hora de borrar vóxels. Es el blockout del terreno: decides la forma grande antes de tocar MagicaVoxel.
+</Why>
+
+<Tip>
+Deja la llanura delante y las colinas al fondo, como el modelo. Así, desde la cámara, lo alto no tapa lo bajo.
+</Tip>
+</Step>
+
+<Step n={2} title="Prepara el modelo y la paleta">
+1. Crea una escena nueva y pon el tamaño del modelo a 24×24 de base y unos 16 de alto (sitio para colinas y árboles).
+2. En la **paleta** de la izquierda, prepara una fila: hierba `#3fbf7f`, tierra `#8a5a3c`, piedra `#9aa3b5` y `#7d8698`, agua `#1f4f9a` y `#6fb8ff`, tronco `#6b3d2e` y un verde claro para la punta de los árboles `#6ee59f`.
+
+<Tip>
+Son colores que ya usaste: la piedra de la torre, la madera de la casa y el agua del diorama. Reutilizar la paleta hace que todo parezca del mismo mundo.
+</Tip>
+</Step>
+
+<Step n={3} title="Construye capa a capa, de 2 en 2">
+1. Elige la tierra en la paleta (luego pintarás encima).
+2. En modo **Attach**, con el pincel **Box**, rellena toda la base de 24×24 y súbela a 2 de alto: es la llanura.
+3. Encima, con **Box**, dibuja el primer anillo de cada colina según tu papel y súbelo **2 capas**.
+4. Repite con el anillo siguiente, más pequeño, hasta la cima.
+
+Gira la cámara con el botón derecho y compara con la etapa «Terrazas» del visor.
+
+<Tip>
+Otra forma: el pincel **Face** en modo **Attach** añade una capa sobre la cara que pulsas. Dos clics, una terraza. Úsalo para subir zonas enteras de golpe y **Box** para los contornos.
+</Tip>
+
+<Warn>
+Cuenta siempre de 2 en 2. Si una terraza se queda en 1 o sube 3, rompe la regla y se notará en el render.
+</Warn>
+</Step>
+
+<Step n={4} title="Pinta los estratos">
+1. Cambia al modo **Paint**.
+2. Con la hierba elegida, pinta **la cara de arriba de cada terraza**. Con el pincel **Face**, un clic pinta una cara plana entera.
+3. En los cortes, deja el vóxel de debajo de la hierba en tierra.
+4. En el borde del mapa, pinta la piedra por debajo de la tierra, en bandas de 2 vóxels que alternen los dos grises a la **misma altura** en todo el contorno.
+
+<Why>
+La banda horizontal continua es lo que hace que la piedra parezca roca bajo tierra y no pintura. Si cada columna tuviera las bandas a una altura distinta, el corte se vería como ruido.
+</Why>
+</Step>
+
+<Step n={5} title="Hunde el agua un vóxel">
+1. En modo **Erase**, con **Box** o **Voxel**, quita **la capa de arriba** (la hierba) a lo largo del río que marcaste.
+2. Vuelve a **Paint** y pinta el fondo del cauce con el azul oscuro.
+3. Pinta una franja de 1 vóxel en el centro con el azul claro: la corriente.
+4. Mira la orilla de lado: debe verse un escalón de 1 entre la hierba y el agua.
+
+<Tip>
+Si quieres que se vea más tierra en la orilla, hunde el cauce 2 y pon el agua a 1 vóxel del fondo. Lo importante es que el agua quede **por debajo** de la hierba.
+</Tip>
+</Step>
+
+<Step n={6} title="Árboles, piedras y render">
+1. Planta 4 o 5 árboles **iguales de escala**: tronco de 2, copa de 3×3 y 2 de alto, un vóxel claro arriba.
+2. Ponlos sobre terrazas distintas, no todos en fila.
+3. Añade dos o tres piedras de 2×1 en gris oscuro, una cerca del río.
+4. Pulsa **Render**, elige una luz que caiga de lado (así los escalones proyectan sombra) y guarda `terreno_v1.vox` y un PNG del render.
+</Step>
+
+<Warn title="Verifica en tu versión">
+Los nombres y la posición de los modos (**Attach**, **Erase**, **Paint**) y de los pinceles (**Box**, **Face**, **Voxel**) pueden cambiar entre versiones de MagicaVoxel. Comprueba sobre todo cómo se comporta **Face** en tu versión: si no extruye o no pinta la cara entera como esperas, haz cada capa con **Box** y pinta con **Box** o **Voxel**. El resultado es el mismo. Los controles del sol y el botón para guardar la imagen del **Render** también cambian de nombre: búscalos por su función.
+</Warn>
+</Block>
+
+<Block kind="version">
+Haz **tu propio terreno**, de 24×24 a 32×32 de base. Elige un reto:
+
+- **Valle:** dos colinas a los lados y el río por el centro, entre ellas. Más profundo donde más se estrecha.
+- **Lago y meseta:** una meseta alta y plana a un lado (terraza de 8 o 10) y un lago hundido en la llanura, con una piedra en la orilla.
+- **Terrazas de cultivo:** una sola ladera con cuatro o cinco terrazas largas y rectas, como un campo de arroz, y un camino de piedra que las sube.
+
+Antes de pintar, mira la forma en un solo color desde arriba: ¿se distinguen tus alturas como en el papel?
+</Block>
+
+<Block kind="errores">
+<Mistake title="Todo de un color" wrongLabel="Un solo color" rightLabel="Estratos por altura">
+  <VoxViewer slot="wrong" model="terreno" stage={0} title="Las terrazas solo se leen por la luz" />
+  <VoxViewer slot="right" model="terreno" stage={1} title="Cada escalón dibuja una línea de hierba sobre tierra" />
+
+Con un solo color, los escalones dependen de la sombra: con la luz de frente desaparecen. **Corrección:** con **Paint**, hierba arriba de cada columna, tierra debajo y piedra en bandas. El salto de valor entre hierba y tierra dibuja cada terraza.
+</Mistake>
+
+<Mistake title="Terrazas de alturas aleatorias" wrongLabel="Ruido" rightLabel="Siempre de 2 en 2">
+  <p slot="wrong">Un escalón de 1, otro de 3, otro de 2 y luego uno de 1. Las colinas parecen abolladas y no se entiende dónde acaba una terraza y empieza la siguiente.</p>
+  <p slot="right">Todos los escalones suben 2. Las colinas se leen como anillos y el terreno parece construido con una regla.</p>
+
+Es el mismo problema que los escalones irregulares de V2-02. **Corrección:** vuelve al mapa de alturas en papel y redondea cada zona a la altura par más cercana.
+</Mistake>
+
+<Warn title="Error típico: el agua al nivel de la hierba">
+Pintas el río de azul sobre la hierba, a la misma altura. Se lee como una alfombra azul, sin orilla. **Corrección:** quita al menos una capa en el cauce con **Erase** y pon el agua abajo. Ese escalón es la orilla.
+</Warn>
+
+<Warn title="Error típico: árboles a escala distinta">
+Un árbol de 5 junto a otro de 14, o un árbol que es más alto que la colina. El ojo pierde la medida y el terreno parece un collage. **Corrección:** un solo tamaño de árbol (o dos muy parecidos) en toda la pieza, y más pequeño que la colina más alta.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+<Checklist items={[
+  "Dibujé el mapa de alturas antes de modelar",
+  "La base mide entre 24×24 y 32×32",
+  "Hay al menos tres alturas de terraza sobre la llanura",
+  "Todos los escalones suben la misma altura",
+  "Cada columna tiene hierba arriba y se ve tierra en los cortes; la piedra va en bandas horizontales",
+  "El agua está por debajo de la hierba y se ve la orilla",
+  "Los árboles comparten escala y son más bajos que la colina más alta",
+  "He guardado terreno_v1.vox y un render en mi portfolio",
+]} />
+
+<Quiz q="¿Por qué los escalones del terreno se leen mejor con estratos que en un solo color?" options={["Porque los estratos añaden vóxels", "Porque la hierba clara sobre la tierra oscura marca cada escalón con un salto de valor, aunque la luz no ayude", "Porque MagicaVoxel renderiza mejor los colores verdes"]} answer={1}>
+La forma no cambia: cambia el valor. Una línea clara sobre una oscura dibuja el borde de cada terraza desde cualquier ángulo de luz.
+</Quiz>
+
+<Quiz q="Tu río no parece agua. ¿Qué es lo primero que revisas?" options={["Que esté más bajo que la hierba, con una orilla visible", "Que tenga muchos tonos de azul", "Que sea más ancho"]} answer={0}>
+El agua está siempre en lo más bajo. Si no hay escalón hacia abajo, no hay orilla, y sin orilla el azul se lee como suelo pintado.
+</Quiz>
+</Block>

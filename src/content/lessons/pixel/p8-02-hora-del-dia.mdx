@@ -1,0 +1,283 @@
+---
+id: p8-02
+discipline: pixel
+level: 8
+order: 2
+title: "Luz de escena: día, atardecer y noche"
+summary: "La hora del día transforma toda la paleta: temperatura, saturación y valor cambian juntos, el orden de valores se conserva y la fuente de luz pasa a ser el foco de la noche."
+duration: 45
+status: borrador
+prerequisites: [p8-01, f03-01]
+fundamentals: [f03]
+objectives:
+  - "Tratar la hora del día como una transformación de toda la paleta, no de un objeto"
+  - "Cambiar a la vez temperatura, saturación y valor para el atardecer y la noche"
+  - "Conservar el orden de valores para que la escena se siga leyendo"
+  - "Dejar intacta la fuente de luz para que sea el foco de la noche"
+  - "Crear una paleta por hora del día y aplicarla en Aseprite en modo indexado o con una capa de fusión"
+tools: [aseprite]
+piece:
+  name: "Tu escena de P8-01 en dos o tres horas del día (día y noche, o con atardecer), con una fuente de luz que siga siendo el foco por la noche"
+  canvas: "80x48"
+xp: { concept: 10, guided: 20, piece: 70 }
+achievements: [hora-del-dia]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Tu escena de P8-01 ya está terminada. Hoy no le añades ni un píxel: le cambias **la hora**.
+
+Vas a forjar **la misma escena en dos o tres horas del día**:
+
+- de **día** (la que ya tienes);
+- de **noche**, con una fuente de luz que siga siendo el foco;
+- y, si quieres, al **atardecer**.
+
+Mismos píxeles. Solo cambia la paleta.
+
+<Sprite name="scene-final" scale={5} caption="scene-final: de día. El impacto es el blanco puro de la escena" />
+
+<Sprite name="scene-final-dusk" scale={5} caption="scene-final-dusk: al atardecer. Todo gira un poco al naranja y baja algo de valor; las sombras, hacia el violeta" />
+
+<Sprite name="scene-final-night" scale={5} caption="scene-final-night: de noche. Todo baja, se enfría y se apaga, menos el impacto: es la fuente de luz" />
+
+Las tres versiones tienen **los mismos 33 colores en los mismos sitios**. Ningún píxel se ha movido. Cada color se ha sustituido por otro.
+</Block>
+
+<Block kind="concepto">
+### La hora del día cambia todo, no un objeto
+
+Cuando anochece, no se oscurece el héroe. Se oscurece **el mundo**: la hierba, el agua, la arena, la roca, el cofre. Todo a la vez y en la misma dirección.
+
+Por eso la hora del día no se pinta objeto a objeto. Se aplica como **una regla a toda la paleta**: cada color de día tiene su pareja de noche.
+
+<Why title="Por qué una regla y no retoques sueltos">
+Si retocas a mano «un poco más oscuro aquí, un poco más azul allá», cada sprite acaba con su propia noche. Es el mismo problema de la paleta común de P8-01: la escena deja de parecer un mundo. Una regla aplicada a todos los colores garantiza que todo recibe **la misma luz**.
+</Why>
+
+### Tres cosas cambian juntas
+
+Recuerda las tres dimensiones de [F03 · Color](/forja-art/fundamentos/f03-01/): tono, saturación y valor. La hora del día mueve **las tres**, más la temperatura.
+
+| Hora | Temperatura | Saturación | Valor |
+| --- | --- | --- | --- |
+| Día | Neutra: los colores «de verdad» | La de tus rampas | El de tus rampas |
+| Atardecer | Luces hacia el naranja; sombras hacia el violeta | Casi igual | Baja un poco |
+| Noche | Todo hacia el azul | Baja mucho | Baja mucho |
+
+Mira el cofre o la arena en las tres versiones. De día, la arena es un crema claro. Al atardecer, un naranja suave. De noche, un azul grisáceo medio. **Es el mismo píxel**.
+
+<Why title="Por qué de noche se pierde saturación">
+Con poca luz, el ojo distingue peor los colores: ve más en valores que en tonos. Por eso una noche creíble no es «azul intenso»: es **gris azulado**. Si dejas los colores saturados y solo los oscureces, la escena parece de día con el brillo bajado.
+</Why>
+
+### Lo que no puede cambiar: el orden de valores
+
+Esta es la regla que hace que la escena **se siga leyendo**. Ordena los colores del más claro al más oscuro. Ese orden se tiene que mantener a cualquier hora: lo que era claro sigue siendo claro **en comparación con lo demás**.
+
+Compara las tres en grises:
+
+<Sprite name="scene-final" scale={5} view="gray" caption="Día en grises: la estrella es lo más claro; la orilla, una banda clara en L" />
+
+<Sprite name="scene-final-dusk" scale={5} view="gray" caption="Atardecer en grises: la misma imagen, un poco más baja" />
+
+<Sprite name="scene-final-night" scale={5} view="gray" caption="Noche en grises: la orilla se queda en un gris medio; la estrella, sola arriba del todo" />
+
+Las tres se leen igual: el héroe, el slime, la orilla, el cofre. Lo que cambia es **dónde cae** cada valor. Estos son los datos reales de la paleta (valor de 0 a 100 %):
+
+| Color | Día | Atardecer | Noche |
+| --- | --- | --- | --- |
+| Blanco del impacto | 100 % | 87 % | 100 % |
+| Espuma de la orilla | 93 % | 82 % | 55 % |
+| Arena clara | 83 % | 74 % | 49 % |
+| Hierba clara | 71 % | 61 % | 43 % |
+| Contorno casi negro | 8 % | 6 % | 8 % |
+
+Fíjate en dos cosas de la noche:
+
+- **Las luces bajan mucho; los oscuros, casi nada.** La espuma pasa del 93 % al 55 %, pero el contorno se queda en el 8 %. La noche **aplasta las luces**, no hunde los oscuros en el negro.
+- **El impacto no baja.** Entre el impacto (100 %) y lo siguiente más claro (el brillo del slime, 56 %, y la espuma, 55 %) hay un salto enorme. De día, el brillo del slime estaba a 4 puntos y la espuma, a 7.
+
+<Why title="Por qué no se hunden los oscuros">
+Si llevas los oscuros al negro, los contornos se funden con las sombras y desaparecen las siluetas. En `scene-final-night` los colores más oscuros reciben incluso un poco de azul: se quedan en un gris azulado muy oscuro, no en negro. La silueta del héroe sigue ahí.
+</Why>
+
+### La fuente de luz no se apaga: se convierte en el foco
+
+De noche, la luz que hay en la escena **sigue emitiendo**. Una antorcha, una ventana, un hechizo o el impacto no reciben luz: la dan. Así que no se oscurecen con el resto.
+
+En `scene-final-night` los tres colores del impacto (blanco, amarillo y naranja) **no se han tocado**. Todo lo demás ha bajado y se ha enfriado. Resultado: el impacto, que de día era el foco por poco, de noche es el foco **con mucha diferencia**. Y además es lo único cálido de la escena.
+
+<Why title="Por qué la noche es la mejor hora para un foco">
+El foco es la mayor diferencia de valor (F01, F07). De día, todo está claro y el foco compite con la espuma y la arena. De noche, todo baja menos la luz: la diferencia se dispara. Y la temperatura suma: un cálido entre fríos atrae la vista por partida doble (F03).
+</Why>
+
+<Tip>
+Si tu escena no tiene ninguna fuente de luz, añádela antes de hacer la noche: una ventana encendida, un farol, unas luciérnagas, un hechizo. Sin fuente de luz, la noche no tiene foco.
+</Tip>
+
+### El atardecer: el cambio sutil
+
+`scene-final-dusk` es la versión más suave. Las luces giran al naranja y las sombras al violeta: el contorno casi negro de día (`#1b1030`) pasa a `#160b28`, un violeta más oscuro. Todo baja un poco de valor.
+
+Pero mira la tabla de valores: el blanco del impacto también se ha teñido (pasa a un crema melocotón, 87 %), el brillo del slime se queda en el 85 % y la espuma, en el 82 %. **El foco se ha debilitado**: la diferencia es menor que de día. Funciona, porque el orden se mantiene, pero se podría mejorar dejando el impacto blanco. Es uno de los retos de la versión.
+
+### Cómo se hace en la práctica
+
+Dos caminos en Aseprite:
+
+1. **Una paleta por hora del día.** Pasas la escena a modo indexado y sustituyes **color a color** en la paleta. Es el palette swap de [P5-04 · Variantes](/forja-art/pixel/p5-04/), ahora aplicado a una escena entera en lugar de a un slime. Control total: tú decides cada pareja.
+2. **Una capa de color con modo de fusión.** Una capa rellena de azul encima de la escena, en un modo de fusión como *Multiply*, y la capa del efecto **por encima** de ella para que no le afecte. Es rápido para probar, pero da menos control: un *Multiply* solo oscurece y enturbia, y tiende al error de la noche apagada.
+
+Hoy haces el primero. El segundo, como experimento.
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Duplica la escena y decide la fuente de luz">
+1. Abre tu `escena.aseprite` de P8-01. Guarda una copia con *File → Save As* como `escena-noche.aseprite`. El archivo de día no se toca.
+2. Señala tu **fuente de luz**: el efecto, una ventana, un farol. Apunta sus colores: esos **no cambiarán**.
+3. Si no tienes ninguna, añádela ahora en su propia capa, cerca de tu foco de día.
+
+<Why>
+La fuente de luz decide dónde estará el foco de la noche. Si la eliges al final, tendrás que rehacer la paleta para hacerle sitio.
+</Why>
+</Step>
+
+<Step n={2} title="Pasa la escena a modo indexado">
+1. Ve a *Sprite → Color Mode → Indexed*.
+2. Abre el **panel de paleta**: ahí están todos los colores de tu escena, uno por casilla.
+3. Guarda esa paleta (por ejemplo, como `dia.gpl`) para tenerla de referencia.
+
+<Why>
+En modo indexado cada píxel no guarda un color, sino **un número de casilla** de la paleta. Si cambias el color de la casilla, cambian todos los píxeles que la usan, en todas las capas. Es exactamente la regla «cada color de día tiene su pareja de noche».
+</Why>
+
+<Warn>
+Si tu escena tiene colores casi iguales que no unificaste en P8-01, ahora te costarán el doble: tendrás que darles pareja de noche a los dos. Es buen momento para unificarlos.
+</Warn>
+</Step>
+
+<Step n={3} title="Ordena la paleta por valor">
+1. Exporta una copia a 1× y súbela al Inspector. Mira la vista **Grises**.
+2. Haz una lista de tus colores del **más claro al más oscuro**. No hace falta que sea exacta: basta con grupos (luces, medios, oscuros, contornos).
+3. Esa lista es lo que **no puedes romper**: de noche, cada color debe seguir en su grupo y en su orden.
+
+<Inspector upload title="Tu escena en grises: de día y, después, de noche" />
+</Step>
+
+<Step n={4} title="La noche, color a color">
+Edita cada casilla de la paleta (sin tocar las de la fuente de luz) con estas tres reglas a la vez:
+
+1. **Tono hacia el azul.** Todos, también los verdes y los marrones.
+2. **Menos saturación.** Acerca cada color al gris. La hierba sigue siendo «verdosa», no verde.
+3. **Menos valor, sobre todo en las luces.** Las luces bajan mucho; los medios, algo; los contornos, casi nada.
+
+Empieza por los colores que más píxeles ocupan (la hierba, el agua, la arena): son los que deciden el ambiente. Deja para el final los pequeños.
+
+<Tip>
+Usa el cuentagotas (<Keys k="I" />) para identificar qué casilla de la paleta usa cada zona. Para comparar valores, pon el color nuevo junto a su vecino de grupo y comprueba en grises que no se han cruzado.
+</Tip>
+
+<Why>
+Las tres reglas juntas son lo que hace `scene-final-night`. Si aplicas solo una (solo bajar el valor, solo teñir de azul), obtienes otra cosa: una foto subexpuesta o una escena de día con un filtro.
+</Why>
+</Step>
+
+<Step n={5} title="Comprueba el orden y el foco">
+1. Guarda la paleta de noche como `noche.gpl`.
+2. Exporta a 1× y súbela al Inspector de arriba. Vista **Grises**.
+3. Comprueba tres cosas:
+   - la fuente de luz es **lo más claro, con mucha diferencia**;
+   - el orden de valores es el de tu lista del paso 3;
+   - los contornos y las siluetas **se siguen viendo**.
+4. Si dos colores se han fundido en el mismo gris y están juntos (un personaje y su suelo), separa uno de los dos un escalón.
+</Step>
+
+<Step n={6} title="El atardecer (opcional)">
+1. Vuelve a abrir la escena de día y guarda otra copia, `escena-atardecer.aseprite`.
+2. Mismo proceso, con otras reglas: **luces hacia el naranja, sombras hacia el violeta, valor un poco más bajo**. La saturación, casi igual.
+3. Decide si la fuente de luz se tiñe o no. En `scene-final-dusk` se tiñó y el foco perdió fuerza: prueba a dejarla blanca.
+
+<Tip>
+Al atardecer, el cambio debe ser **sutil**. Si se nota más que la noche, has ido demasiado lejos.
+</Tip>
+</Step>
+
+<Step n={7} title="Experimento: la capa de fusión">
+1. Vuelve a la escena de día, guarda otra copia de prueba y pásala a RGB (*Sprite → Color Mode → RGB*).
+2. Crea una capa nueva **por debajo** de la capa del efecto y por encima de todo lo demás. Rellénala de un azul medio con el cubo (<Keys k="G" />).
+3. Abre las propiedades de la capa y cambia su **modo de fusión** a *Multiply*. Baja su opacidad hasta que la escena se lea.
+4. Compárala en grises con tu noche indexada.
+
+<Why>
+La capa de fusión es rápida y te sirve para buscar el ambiente. Pero lo multiplica todo por el mismo color: baja las luces **y** los oscuros, y no quita la saturación como tú decidirías. Tu noche hecha a mano casi siempre se lee mejor. Úsala para probar; termina con la paleta.
+</Why>
+</Step>
+
+<Warn title="Verifica en tu versión">
+*Sprite → Color Mode → Indexed* y el panel de paleta (con guardar y cargar en .gpl) existen en Aseprite. La forma exacta de editar una casilla de la paleta, el menú *File → Save As*, dónde se abren las propiedades de la capa y la lista de modos de fusión disponibles pueden cambiar entre versiones. Si no encuentras algo, búscalo por nombre en los menús o en el panel de capas.
+</Warn>
+</Block>
+
+<Block kind="version">
+Tu escena, a dos o tres horas. Cumple lo mínimo (día y noche, con la fuente de luz como foco nocturno) y elige un reto:
+
+- **Atardecer con foco**: haz la versión de atardecer y mejora la de `scene-final-dusk`: que la fuente de luz quede más separada del resto que de día.
+- **Dos fuentes, un foco**: de noche, añade una segunda luz pequeña (una ventana, un farol) que ilumine el borde de la escena. Que se vea, pero que sea claramente **más débil** que el foco.
+- **Paletas reutilizables**: guarda `dia.gpl`, `atardecer.gpl` y `noche.gpl`, y aplícalas a otro sprite tuyo que use los mismos colores. Si la regla es buena, funciona sin retoques.
+
+**Prueba**: pon las versiones una al lado de otra, a 1×. Deben parecer **la misma escena**, a horas distintas. Si una parece otro sitio, has roto el orden de valores.
+</Block>
+
+<Block kind="errores">
+<Mistake title="La noche hecha solo bajando el brillo" wrongLabel="scene-final-dark" rightLabel="scene-final-night">
+  <Sprite slot="wrong" name="scene-final-dark" scale={5} />
+  <Sprite slot="right" name="scene-final-night" scale={5} />
+
+`scene-final-dark` es la escena de día con todos los colores multiplicados por 0,4. Los tonos no cambian de temperatura: la hierba sigue siendo verde y la arena sigue siendo amarilla, solo que sucias. No parece de noche: parece **una foto subexpuesta**. En `scene-final-night` todo gira al azul y pierde saturación, que es lo que hace la noche de verdad. **Corrección**: cambia temperatura, saturación y valor a la vez, nunca solo el valor.
+</Mistake>
+
+<Mistake title="Perder el foco: la luz se apaga con el resto" wrongLabel="scene-final-dark en grises" rightLabel="scene-final-night en grises">
+  <Sprite slot="wrong" name="scene-final-dark" view="gray" scale={5} />
+  <Sprite slot="right" name="scene-final-night" view="gray" scale={5} />
+
+Multiplicar conserva el orden, pero lo **comprime**: en `scene-final-dark` el blanco del impacto se queda en el 40 % y la espuma, en el 37 %. Tres puntos de diferencia: el foco ha desaparecido. En `scene-final-night` el impacto se queda en el 100 % y la espuma baja al 55 %: el foco es más fuerte que de día. **Corrección**: la fuente de luz no recibe la noche. Déjala fuera de la regla.
+</Mistake>
+
+<Warn title="Colores que se funden en uno">
+Al bajar valor y saturación, colores que de día eran distintos acaban en el mismo gris. Pasa incluso en `scene-final-night`: el dorado del cofre, la luz de la roca, el cuerpo del slime y la hierba clara caen todos entre el 42 y el 43 %. Allí se salva porque cada objeto tiene **su contorno oscuro** y están en zonas distintas. En `scene-final-dark` es peor: los dos colores más oscuros de la escena quedan en el 3 %, prácticamente negro los dos. **Corrección**: en grises, busca colores vecinos que se hayan fundido. Si un objeto se pierde contra su fondo, sepáralos un escalón; si no se tocan, déjalo.
+</Warn>
+
+<Warn title="Hundir los contornos en el negro">
+Si oscureces los contornos tanto como las luces, el contorno se funde con la sombra y la silueta desaparece. De noche, los oscuros bajan poco o nada; lo que baja son las luces.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+Revisa tus versiones **a 1× y en grises**, una al lado de otra.
+
+<Checklist items={[
+  "Tengo la escena de día y la de noche (y, si quise, la de atardecer) con los mismos píxeles",
+  "Cada versión usa una paleta propia, aplicada a toda la escena y no objeto a objeto",
+  "De noche cambian a la vez el tono (hacia el azul), la saturación (baja) y el valor (baja)",
+  "El orden de valores es el mismo en todas las versiones",
+  "La fuente de luz conserva sus colores y es lo más claro de la noche con mucha diferencia",
+  "Los contornos no se han hundido en el negro y las siluetas se leen",
+  "Ningún objeto se funde con su fondo en grises",
+  "He guardado las paletas en .gpl y exportado cada versión a escala entera",
+]} />
+
+<Quiz q="¿Por qué multiplicar todos los colores por 0,4 no da una noche?" options={["Porque cambia el orden de valores", "Porque solo baja el valor: la temperatura y la saturación no cambian, y la fuente de luz se apaga con el resto", "Porque Aseprite no permite multiplicar colores"]} answer={1}>
+Multiplicar conserva el orden, pero no enfría ni desatura, y comprime todos los valores hacia abajo. El resultado es una foto subexpuesta y sin foco.
+</Quiz>
+
+<Quiz q="De noche, ¿qué colores bajan más de valor?" options={["Los contornos y las sombras", "Las luces: la espuma, la arena, la hierba clara", "Todos bajan exactamente lo mismo"]} answer={1}>
+La noche aplasta las luces y deja los oscuros casi donde estaban. Así las siluetas se siguen leyendo y la escena no se hunde en el negro.
+</Quiz>
+
+<Quiz q="¿Por qué funciona el modo indexado para cambiar la hora del día?" options={["Porque reduce la escena a 16 colores", "Porque cada píxel apunta a una casilla de la paleta: al cambiar el color de la casilla, cambian todos los píxeles que la usan", "Porque convierte la imagen a grises"]} answer={1}>
+Es el palette swap de P5-04 a escala de escena: una regla de sustitución, color a color, aplicada a todo a la vez.
+</Quiz>
+</Block>

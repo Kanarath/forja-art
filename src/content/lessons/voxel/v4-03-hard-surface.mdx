@@ -1,0 +1,219 @@
+---
+id: v4-03
+discipline: voxel
+level: 4
+order: 3
+title: "Hard surface en vóxels: un carro"
+summary: "Traduce tu hard surface de Blender a vóxels con un carro: blockout, paneles y herrajes. Sin bevels: un chaflán es quitar un vóxel y el detalle va en bordes y uniones."
+duration: 45
+status: borrador
+prerequisites: [v4-02]
+fundamentals: [f02]
+objectives:
+  - "Traducir el flujo hard surface de Blender (blockout, paneles, detalle) a vóxels"
+  - "Construir la jerarquía de formas grande, media y pequeña en un vehículo"
+  - "Hacer chaflanes y líneas de panel con vóxels: quitar un vóxel o cambiar de color"
+  - "Concentrar el detalle mecánico en bordes y uniones y dejar respirar las superficies"
+  - "Separar metal y madera por color y por material de render"
+tools: [magicavoxel]
+piece:
+  name: "Un vehículo o máquina voxel propio en 3 versiones (blockout, paneles, herrajes) con un render"
+  canvas: "23x10x8"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [hard-surface]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Hoy forjas un **carro de madera y hierro** en tres etapas: blockout, paneles y herrajes. Es tu primer objeto **hard surface** en vóxels: piezas rígidas, uniones y metal.
+
+<VoxViewer model="carro" stage={0} title="Tu pieza: el carro en 3 etapas (unos 23×10×8 al final)" />
+
+Pulsa las tres etapas. Fíjate en qué cambia en cada una: primero volúmenes, luego superficies, al final bordes y uniones. Es el mismo orden que sigues en Blender.
+</Block>
+
+<Block kind="concepto">
+Ya sabes modelar hard surface en Blender. La buena noticia: **el método se traslada casi entero**. La mala: **las herramientas, no**.
+
+**Lo que SÍ se traslada:**
+
+- **Blockout primero.** Volúmenes grandes, proporción y silueta antes de un solo detalle.
+- **Jerarquía de formas.** Grande, media y pequeña, en ese orden.
+- **El detalle en las uniones.** Donde se juntan dos piezas, ahí van tornillos, escuadras y cortes.
+- **Superficies que respiran.** Las zonas grandes y lisas descansan la vista y hacen que el detalle destaque.
+
+**Lo que NO se traslada:**
+
+- **No hay bevel suave.** Un chaflán en vóxels es **quitar un vóxel** de la esquina: un escalón de 45°, nada más.
+- **No hay subdivisión** ni support loops. Lo que ves es lo que hay: cubos.
+- **Una línea de panel** no es un corte con boolean ni un inset. Es un **cambio de color** o **un vóxel hundido**.
+
+<ToolNote tool="blender">
+
+En Blender, un bevel de 3 segmentos redondea una arista y el render la hace brillar. En vóxels, la arista más suave posible es un chaflán de un vóxel. Por eso el carro no «redondea» nada: decide qué esquinas se cortan y cuáles se quedan vivas. Piensa en tu modelo como un hard surface **low poly sin bevels**: la forma la cuentan los volúmenes y el color, no el sombreado.
+
+</ToolNote>
+
+**La jerarquía del carro, etapa a etapa** (medidas reales del modelo):
+
+- **Grande (Blockout):** una caja de madera de 15×8×5. Cuatro ruedas de 7 vóxels de diámetro y **1 vóxel de grosor**, pegadas a los costados. Una lanza de 6×2×1 que sale por delante.
+- **Media (Paneles):** la caja se vacía y deja paredes de 1 vóxel. El borde superior va en madera clara, el fondo en oscura, con **montantes oscuros cada 4 vóxels** y **una franja oscura a media altura**: esa franja es tu línea de panel. Las ruedas ganan una **llanta de hierro**, **radios en cruz** (el resto del disco queda hueco) y un **buje** de hierro claro. Una barra de hierro corre por debajo y asoma por los dos extremos.
+- **Pequeña (Herrajes):** **escuadras de hierro** en las cuatro aristas verticales, **remaches** claros en los costados, un **chaflán de 1 vóxel** en las cuatro esquinas del borde superior, **dos cajas de carga** dentro y un **travesaño** de hierro al final de la lanza.
+
+<VoxViewer model="carro" stage={2} title="Herrajes: el detalle está en esquinas, borde y lanza" />
+
+<Why title="¿Por qué el detalle va en bordes y uniones?">
+Porque ahí es donde un objeto real necesita refuerzo: una esquina sin escuadra se abre. El ojo lo sabe aunque no lo piense. Y es F02 otra vez: los bordes dibujan la silueta, así que el detalle en el borde refuerza la forma. El centro de cada costado se queda en dos maderas y una franja: **respira**.
+</Why>
+
+**Las ruedas son cilindros de 1 vóxel de grosor.** Es el círculo de V1-02 con una sola capa de fondo. Un círculo limpio tiene tramos que crecen y decrecen con orden; si los tramos bailan, la rueda se lee abollada.
+
+<Sprite name="circle-clean" scale={8} caption="circle-clean: tramos ordenados. Así se lee redonda una rueda, aunque sea de 7 vóxels" />
+
+**Metal frente a madera, por color.** El carro usa tres maderas cálidas (`#d08a50`, `#a0603a`, `#6b3d2e`) y tres hierros fríos (`#c9d1dc`, `#8f9bab`, `#5c6676`). La temperatura ya separa los materiales sin render.
+
+<Sprite name="mat-wood" scale={8} caption="mat-wood: madera en tonos cálidos" />
+
+<Sprite name="mat-metal" scale={6} caption="mat-metal: el metal de verdad pide contraste alto; en el render lo da el material Metal" />
+
+<Why>
+En el render de MagicaVoxel, los tres grises pasan a material **Metal**, como en V3-02. Por eso deben ser colores **propios del hierro**: si una madera compartiera un gris, también brillaría como metal.
+</Why>
+
+<Warn title="El visor no simula materiales">
+El visor web solo muestra colores: no hace Metal, ni reflejos. El resultado real del hierro se ve en el modo **Render** de MagicaVoxel.
+</Warn>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Prepara el modelo y la paleta">
+1. Crea un modelo nuevo y pon el tamaño a 23×10×8 (la Z es la altura).
+2. En la **paleta** de la izquierda, en una fila libre, pon las tres maderas y los tres hierros del concepto.
+
+<Why>
+Seis colores, decididos antes del primer vóxel. Como en el kit del herrero: si eliges colores sobre la marcha, acabas con cinco grises «casi» iguales.
+</Why>
+</Step>
+
+<Step n={2} title="Blockout: caja, ruedas y lanza">
+1. Modo **Attach**, pincel **Box**, madera media: levanta la caja de 15×8×5, centrada en el fondo y **dejando 3 capas libres debajo** (ahí bajan las ruedas).
+2. Activa el botón **Mirror** en el eje del fondo (el que va de un costado a otro): lo que hagas en un costado se copia en el otro.
+3. Con el pincel **Voxel** y madera oscura, pon sobre la cara lateral de la caja un disco de 7 de diámetro, 1 vóxel de grosor. Sigue hacia abajo apoyándote en los vóxels que ya pusiste. El centro de la rueda queda a la altura del fondo de la caja.
+4. Haz la segunda rueda del mismo costado, con su centro a 8 vóxels de la primera.
+5. Lanza: madera oscura, 6×2×1, saliendo del frente a 1 vóxel por encima del fondo.
+6. Guarda como `carro_v1.vox`.
+
+<Tip>
+Gira la cámara con el botón derecho y mira el carro de lado. Si las ruedas tapan casi toda la caja o se pierden debajo, corrige ahora: en el blockout es un minuto. Dentro de dos etapas costará una hora.
+</Tip>
+</Step>
+
+<Step n={3} title="Paneles: vacía la caja">
+1. Modo **Erase**, pincel **Box**: borra el interior de la caja dejando paredes de 1 vóxel y el fondo.
+2. Modo **Paint**: la capa superior de las paredes en madera clara; el fondo, en madera oscura.
+3. Pinta en madera oscura una columna cada 4 vóxels en los costados (los montantes) y una fila a media altura (la franja).
+
+<Why>
+La franja oscura es tu **línea de panel**. En Blender harías un inset o un corte; aquí, un cambio de color. Si quieres más relieve, puedes **hundir un vóxel** (borrarlo) en vez de pintarlo, pero en una pared de 1 vóxel eso abre un agujero: úsalo solo en piezas gruesas.
+</Why>
+</Step>
+
+<Step n={4} title="Paneles: ruedas de hierro y madera">
+1. Pinta en hierro oscuro el anillo exterior de cada rueda: la llanta.
+2. Deja en madera media una cruz por el centro (los radios) y pinta el vóxel central en hierro claro (el buje).
+3. Con **Erase**, borra los vóxels de madera que quedan entre los radios: la rueda se abre.
+4. Añade una barra de hierro oscuro bajo el centro de la caja que asome un vóxel por detrás y dos por delante.
+5. Guarda como `carro_v2.vox`.
+
+<Tip>
+Con **Mirror** activo, una rueda pinta su pareja. Compara con la etapa «Paneles» del visor y usa el corte por capas para ver los radios.
+</Tip>
+</Step>
+
+<Step n={5} title="Herrajes: chaflán, escuadras y remaches">
+1. **Chaflán:** con **Erase** y el pincel **Voxel**, quita el vóxel de cada una de las cuatro esquinas del borde superior.
+2. **Escuadras:** pinta en hierro medio las tres capas de cada arista vertical bajo el borde.
+3. **Remaches:** con **Attach**, pon unos pocos vóxels de hierro claro sobre los costados, alineados con los montantes. Pocos: tres por lado.
+4. **Carga:** dos cajas de madera clara dentro, de 3×3×3 y 3×3×2.
+5. **Lanza:** un travesaño de hierro medio de 4 de ancho en la punta.
+6. Guarda como `carro_v3.vox`.
+
+<Warn>
+Un remache en el centro de una tabla no sujeta nada. Si no puedes decir qué une cada herraje, sobra.
+</Warn>
+</Step>
+
+<Step n={6} title="Metal en el render">
+1. Selecciona en la paleta cada uno de los tres hierros y, en el **panel de materiales**, cambia su tipo de *Diffuse* a **Metal**.
+2. Deja las maderas en *Diffuse*.
+3. Pulsa **Render**, coloca el sol de lado para que marque los chaflanes y guarda la imagen.
+
+<Tip>
+Una luz rasante enseña las aristas: el chaflán de un vóxel proyecta un escalón de sombra que de frente no se ve.
+</Tip>
+</Step>
+
+<Warn title="Verifica en tu versión">
+Los nombres y la posición de los modos (**Attach**/**Erase**/**Paint**), los pinceles (**Box**/**Voxel**), los botones **Mirror**, los campos de tamaño, el **panel de materiales** y los controles del sol en **Render** pueden variar entre versiones de MagicaVoxel.
+</Warn>
+</Block>
+
+<Block kind="version">
+Forja **tu propio vehículo o máquina** en tres versiones guardadas: blockout, paneles y herrajes, y un render con el metal en **Metal**. Elige un reto:
+
+- **Vagoneta de mina:** caja de hierro con remaches y ruedas pequeñas. Aquí casi todo es metal: ¿cómo separas los paneles sin madera?
+- **Cañón:** un tubo (círculos apilados) sobre una cureña de madera con dos ruedas. El detalle, en la boca y en los aros del tubo.
+- **Grúa de puerto:** una torre de vigas, un brazo y un gancho. Las uniones entre vigas son tu zona de detalle.
+
+Antes de pasar de una versión a otra, ponla en un solo color y mírala de lado: si la silueta no dice qué es, vuelve al blockout.
+</Block>
+
+<Block kind="errores">
+<Warn title="Error típico: detallar antes del blockout">
+Empiezas por la rueda perfecta, con radios y buje, y luego descubres que es enorme para la caja. Toda esa rueda va a la papelera. **Corrección:** como en Blender, primero bloques de un color. Guarda `v1` solo con volúmenes y no la toques hasta que la proporción funcione de lado y de frente.
+</Warn>
+
+<Mistake title="Remaches repartidos por igual" wrongLabel="Detalle por todas partes" rightLabel="Detalle agrupado">
+  <Sprite slot="wrong" name="rock-noisy" scale={8} caption="Puntos sueltos repartidos: ruido" />
+  <Sprite slot="right" name="rock-clean" scale={8} caption="Grupos limpios con zonas de descanso" />
+
+Es la misma regla que en pixel art, ahora en 3D. Si llenas cada tabla de remaches, el carro entero vibra y la vista no sabe dónde parar. Pon el detalle en esquinas, borde y lanza, y deja que el centro de los costados respire con dos maderas y una franja.
+</Mistake>
+
+<Mistake title="Ruedas a otra escala" wrongLabel="Rueda de otro carro" rightLabel="Rueda que encaja">
+  <p slot="wrong">Ruedas de 13 de diámetro bajo una caja de 5 de alto, o una rueda de 2 vóxels de grosor y la otra de 1. Parecen piezas de modelos distintos.</p>
+  <p slot="right">Ruedas de 7 de diámetro, todas de 1 vóxel de grosor, con el centro a la altura del fondo de la caja.</p>
+
+Cada pieza se mide contra la pieza grande. Es la regla del kit del herrero: la caja manda y todo lo demás se ajusta a ella, sin cambiar el tamaño del vóxel.
+</Mistake>
+
+<Warn title="Error típico: buscar el bevel">
+Intentas redondear las esquinas con dos o tres escalones «para que quede suave». A esta resolución se lee como una caja mordida. **Corrección:** un chaflán de un vóxel, solo donde aporta, y el resto de las aristas vivas.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+<Checklist items={[
+  "Mi blockout (v1) se lee de lado en un solo color, sin detalle",
+  "Hay tres niveles de forma: volúmenes, paneles y herrajes, cada uno en su versión",
+  "Las ruedas o piezas redondas son círculos limpios y encajan con la escala del cuerpo",
+  "El detalle está en bordes y uniones; las superficies grandes respiran",
+  "Mis chaflanes son de un vóxel y mis líneas de panel, cambios de color o vóxels hundidos",
+  "Metal y madera usan colores propios y el metal va en material Metal en el render",
+  "He guardado v1, v2, v3 y un render en mi portfolio",
+]} />
+
+<Quiz q="En Blender pondrías un bevel en una arista. ¿Cuál es su equivalente en vóxels?" options={["Subir la resolución para que la curva quede suave", "Quitar el vóxel de la esquina: un chaflán de un vóxel", "Pintar la arista de un color más claro"]} answer={1}>
+En vóxels no hay bevel suave ni subdivisión. La arista más blanda posible es un chaflán: un vóxel menos en la esquina.
+</Quiz>
+
+<Quiz q="¿Dónde coloca el carro sus remaches y escuadras?" options={["Repartidos por igual en todas las tablas", "En esquinas, bordes y uniones", "Solo en las ruedas"]} answer={1}>
+El detalle mecánico va donde las piezas se unen y en los bordes que dibujan la silueta. El centro de los costados queda limpio.
+</Quiz>
+
+<Quiz q="Tus hierros brillan en el render, pero una tabla de madera también. ¿Qué ha pasado?" options={["La tabla usa un color de la paleta que tiene material Metal", "El sol está demasiado alto", "La tabla tiene paredes de 1 vóxel"]} answer={0}>
+Los materiales se asignan por color de la paleta. Si la madera comparte un color con el hierro, también es Metal. Reserva colores propios para cada material.
+</Quiz>
+</Block>

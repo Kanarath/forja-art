@@ -1,0 +1,219 @@
+---
+id: p4-04
+discipline: pixel
+level: 4
+order: 4
+title: "Interfaz: un panel 9-slice y una barra de vida"
+summary: "Dibuja un panel que crece con 9-slice sin deformarse (esquinas fijas, bordes y centro que se repiten) y una barra de vida con marco fijo y relleno que cambia."
+duration: 45
+status: borrador
+objectives:
+  - "Distinguir el 9-slice de estirar la imagen y ver qué rompe cada uno"
+  - "Diseñar un panel cortable: detalle en las esquinas, bordes y centro repetibles"
+  - "Elegir una trama cuyo periodo divida el tramo que se repite"
+  - "Dar al marco el bisel de la luz del juego y contraste con el fondo"
+  - "Construir una barra de vida como marco fijo más relleno variable"
+prerequisites: [p2-03, p3-01]
+fundamentals: [f01]
+tools: [aseprite]
+piece:
+  name: "Panel 9-slice de 24×24 probado a dos tamaños y barra de vida a dos niveles"
+  canvas: "24x24"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [interfaz]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Vas a forjar **un panel de interfaz de 24×24** que se pueda ampliar a cualquier tamaño sin deformarse, y **una barra de vida** llena y casi vacía.
+
+<Sprite name="ui-panel" scale={10} caption="El panel base de 24×24: contorno, bisel, marco, línea oscura, fondo con trama y un remache dorado en cada esquina del fondo" />
+
+<Sprite name="ui-panel-wide" scale={6} caption="El mismo panel a 64×24. Las esquinas son idénticas; los bordes y el centro se han repetido" />
+
+<Sprite name="ui-bar-full" scale={10} caption="Barra de vida llena, 32×7" />
+<Sprite name="ui-bar-low" scale={10} caption="La misma barra al 25 %: el marco no ha cambiado, solo lo de dentro" />
+</Block>
+
+<Block kind="concepto">
+La interfaz es **pixel art que cambia de tamaño**. Un cuadro de diálogo mide una cosa con una línea de texto y otra con cuatro. No puedes dibujar un panel para cada caso.
+
+Hay dos formas de hacerlo crecer:
+
+- **Estirar la imagen:** todo se ensancha a la vez, también el contorno y el bisel.
+- **9-slice** (nueve trozos): cortas el panel con dos líneas verticales y dos horizontales. Salen 9 piezas:
+  - las **4 esquinas** se copian tal cual, nunca cambian;
+  - los **4 bordes** se repiten (o se estiran) a lo largo de un solo eje;
+  - el **centro** se repite (o se estira) en los dos ejes.
+
+<Mistake title="El mismo panel a 64×24" wrongLabel="Estirado como imagen (×2,67)" rightLabel="9-slice: esquinas fijas, resto repetido">
+  <Sprite slot="wrong" name="ui-panel-stretched" scale={6} />
+  <Sprite slot="right" name="ui-panel-wide" scale={6} />
+
+Mira el estirado columna a columna. A la izquierda, el contorno mide 3 píxeles, el bisel claro 3, el marco medio 2 y la línea oscura 3. A la derecha, el contorno mide 2. Arriba y abajo todo sigue midiendo 1, porque no se estiró en vertical. Los remaches son rayas de 3×1 y la trama diagonal se rompe en tramos de 2 y 3. En el 9-slice, el bisel mide 1 píxel en los cuatro lados y los remaches siguen siendo de 1 píxel.
+</Mistake>
+
+<Why>
+Un factor no entero (64 ÷ 24 = 2,67) no puede repartir los píxeles por igual: unas columnas se duplican y otras se triplican. Es la misma regla de las escalas enteras de siempre. El 9-slice nunca escala nada: solo **copia** píxeles enteros. Por eso el grosor de cada línea se mantiene, igual que un bisel en hard surface no se ensancha cuando alargas la pieza.
+</Why>
+
+**Diseñar para el corte.**
+
+Un panel no se corta bien por casualidad. Abrí `ui-panel` píxel a píxel: los cortes van a 8 píxeles, así que cada esquina es de 8×8 y el centro también.
+
+- **Las esquinas llevan el detalle.** El remache dorado y el píxel transparente del borde redondeado están dentro de los 8×8 de cada esquina. Lo que no deba repetirse, ahí.
+- **Los bordes son iguales en todo su largo.** De fuera adentro, cada lado tiene 4 anillos de 1 píxel: contorno, bisel, marco medio y línea oscura. Cualquier columna del borde de arriba es igual a la de al lado: se puede repetir sin costura.
+- **El centro es una trama de periodo 4.** La diagonal clara se repite cada 4 píxeles en horizontal y en vertical. El tramo que se repite mide 8, y 8 ÷ 4 = 2: la trama encaja consigo misma.
+
+<Warn title="La trama manda en el tamaño del tramo">
+Si el centro midiera 6 y la trama tuviera periodo 4, al repetirlo la diagonal daría un salto en cada costura. El periodo de la trama debe **dividir** el tramo que se repite: con 8, sirven periodos de 1, 2, 4 u 8; con 6, de 1, 2, 3 o 6. Un fondo liso divide todo.
+</Warn>
+
+**Luz y legibilidad.**
+
+El bisel sigue **la misma luz que el resto del juego** (P3-01): claro arriba y a la izquierda, oscuro abajo y a la derecha. En el panel, la fila de arriba y la columna de la izquierda son gris claro; la fila de abajo y la columna de la derecha, gris oscuro. Si tus sprites tienen la luz arriba a la izquierda y tu interfaz no, el panel parece hundido o de otro juego.
+
+Y la interfaz **no es la protagonista**: el contenido manda (el texto, los iconos, el número de vidas).
+
+- Marco y fondo deben contrastar en **valor**: aquí, grises medios y claros frente a un fondo casi negro.
+- La trama del fondo es sutil: sus dos tonos están muy cerca en valor. Un texto claro encima seguirá leyéndose.
+
+<Sprite name="ui-panel" scale={8} view="gray" caption="En grises: el marco se separa del fondo y la trama casi desaparece. Así debe ser" />
+
+**La barra de vida: marco más relleno.**
+
+Una barra son **dos piezas**: un marco que no cambia nunca y un relleno que crece o mengua.
+
+- **Marco:** contorno alrededor (con las esquinas transparentes) y una columna gris a cada lado. Deja dentro un hueco de 28×5.
+- **Relleno:** rojo con una fila de brillo rosa arriba y una de rojo oscuro abajo. Parece un tubo, con la misma luz desde arriba.
+- **Hueco vacío:** en la barra baja, 7 de los 28 píxeles son rojos (el 25 %). El resto es un oscuro casi negro con su fila de arriba en gris oscuro, para que se lea como un canal vacío y no como una mancha.
+
+<Why>
+Si el marco cambiara con la vida, el jugador perdería la referencia de «cuánto es el máximo». El marco fijo es la regla; el relleno es la medida. En el juego, además, el marco se dibuja una vez y el relleno se recorta por código.
+</Why>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Estudia los anillos del panel">
+Amplía el panel de ejemplo con la rejilla. Cuenta los 4 anillos del borde, localiza los remaches y sigue la diagonal de la trama: comprueba que se repite cada 4 píxeles.
+
+<Inspector sprite="ui-panel" title="Cuenta los anillos y el periodo de la trama" />
+</Step>
+
+<Step n={2} title="Lienzo y rejilla de corte">
+<Keys k="Ctrl+N" />: 24×24, fondo transparente. Activa *View → Grid*. Decide los cortes: a 8, 8 y 8 píxeles. Si prefieres 16×16, usa esquinas de 5 y centro de 6 (5 + 6 + 5).
+
+<Tip>
+Con la selección rectangular (<Keys k="M" />) marca el cuadro central de 8×8 para ver dónde caen los cortes mientras dibujas. Los nueve trozos deben tener sentido por separado.
+</Tip>
+</Step>
+
+<Step n={3} title="Bordes en anillos de 1 píxel">
+Con el lápiz (<Keys k="B" />, *Pixel-perfect* activado) dibuja de fuera adentro:
+
+1. contorno oscuro, con el píxel de cada esquina transparente (<Keys k="E" />);
+2. bisel: claro arriba e izquierda, oscuro abajo y derecha;
+3. marco de tono medio;
+4. una línea oscura que separa el marco del fondo.
+
+<Why>
+Cada anillo es igual en todo su largo, así que cualquier trozo del borde se puede repetir. Una mella o un adorno en mitad del borde se repetiría diez veces al ampliar.
+</Why>
+</Step>
+
+<Step n={4} title="Fondo y detalle en las esquinas">
+Rellena el fondo con el cubo (<Keys k="G" />) en un tono oscuro. Añade una trama con un segundo tono muy cercano en valor; su periodo debe dividir el centro (4 si cortas a 8, 2, 3 o 6 si el centro mide 6). Pon el detalle, como un remache, **dentro de las esquinas**.
+
+<Warn>
+Si la trama contrasta mucho, compite con el texto. Mira el panel en grises: el fondo debe quedar casi plano.
+</Warn>
+</Step>
+
+<Step n={5} title="Pruébalo a dos tamaños">
+Guarda con <Keys k="Ctrl+S" />. Crea un lienzo nuevo de 64×24 y otro de 40×40. Monta el panel a mano con *Edit → Copy* y *Edit → Paste*: copia las esquinas en las cuatro esquinas del lienzo y repite los bordes y el centro hasta llenar el hueco. Con cortes a 8: 8 + 6 × 8 + 8 = 64, y 8 + 3 × 8 + 8 = 40.
+
+<Tip>
+Si algo salta en una costura (la trama, una línea del bisel), el fallo está en el panel base, no en el montaje. Corrígelo ahí y vuelve a montar.
+</Tip>
+</Step>
+
+<Step n={6} title="La barra de vida en dos capas">
+Lienzo nuevo de 32×7. En una capa dibuja el **marco**: contorno con las esquinas transparentes y una columna de tono medio a cada lado. En otra capa (*Layer → New Layer*) dibuja el **relleno**: brillo arriba, color en medio, sombra abajo.
+
+Guarda la barra llena. Después borra (<Keys k="E" />) el relleno hasta dejar un 25 %, pinta el hueco en la capa del marco y guarda la barra baja como otro archivo.
+</Step>
+
+<Step n={7} title="Exporta">
+Exporta el panel base, los dos montajes y las dos barras con *File → Export → Export As*, PNG, una copia al 100 % y otra con **Resize** 800 %.
+</Step>
+
+<Tip title="Dónde acabará: Godot y los slices de Aseprite">
+En el juego no montarás el panel a mano. En Godot, el nodo **NinePatchRect** recibe tu panel de 24×24 y los márgenes de corte (8 en cada lado) y lo amplía solo. En Aseprite también puedes marcar el corte con la herramienta **Slice**, que admite 9-slices. Lo usarás en el nivel 9.
+</Tip>
+
+<Warn title="Verifica en tu versión">
+La ubicación de *Layer → New Layer*, la herramienta Slice y su opción de 9-slice en Aseprite, y las propiedades de NinePatchRect en Godot (márgenes y si los bordes se estiran o se repiten) pueden cambiar entre versiones.
+</Warn>
+</Block>
+
+<Block kind="version">
+Aplica el 9-slice a tu manera. Elige uno:
+
+- **Panel de 16×16:** esquinas de 5 y centro de 6, con una trama de periodo 2 o 3. Menos sitio para el detalle: decide qué cabe en una esquina de 5×5.
+- **Tu juego, tu luz:** rehaz el panel con la luz y la paleta de tus sprites (los iconos de P4-02, por ejemplo) y móntalo como cuadro de inventario de 64×40 con dos iconos dentro.
+- **Tres barras:** vida, maná y experiencia con el **mismo marco** y tres rellenos de color distinto pero bien separados en valor del hueco.
+</Block>
+
+<Block kind="errores">
+<Mistake title="Estirar en vez de cortar" wrongLabel="Estirado: bisel y remaches deformados" rightLabel="9-slice: todo sigue a 1 píxel">
+  <Sprite slot="wrong" name="ui-panel-stretched" scale={5} />
+  <Sprite slot="right" name="ui-panel-wide" scale={5} />
+
+Es el error más común al llevar la interfaz al motor: arrastrar el panel hasta el tamaño que quieres. El bisel queda grueso en vertical y fino en horizontal, y los remaches se vuelven rayas. Usa 9-slice (NinePatchRect en Godot) y no estires nunca la imagen completa.
+</Mistake>
+
+<Mistake title="Relleno y hueco sin contraste de valor" wrongLabel="Caso extremo: todo el mismo valor" rightLabel="Rojo y hueco separados en grises">
+  <Sprite slot="wrong" name="ui-bar-low" scale={8} view="silhouette" />
+  <Sprite slot="right" name="ui-bar-low" scale={8} view="gray" />
+
+La izquierda es el caso extremo: si relleno, hueco y marco tuvieran el mismo valor, no sabrías cuánta vida queda. Mira tu barra en grises: el relleno tiene que separarse del hueco sin depender del tono. Un jugador daltónico, o una pantalla mala, solo ve el valor.
+</Mistake>
+
+<Warn title="Detalle en mitad del borde">
+Un adorno en el centro del borde de arriba (una gema, una mella) queda bien en el panel de 24×24, pero el 9-slice lo repite en cada tramo: a 64 de ancho verías seis. El detalle único va en las esquinas.
+</Warn>
+
+<Warn title="Bisel con otra luz">
+Si el bisel es claro abajo a la derecha y tus sprites tienen la luz arriba a la izquierda, el panel parece hundido y ajeno. Usa la misma luz en todo el juego (P3-01).
+</Warn>
+</Block>
+
+<Block kind="calidad">
+Sube a 1× tu panel base, los dos montajes y las dos barras. Revísalos con la rejilla y en grises.
+
+<Inspector upload title="Revisa tu panel y tu barra" />
+
+<Checklist items={[
+  "Las cuatro esquinas de los montajes son idénticas a las del panel base",
+  "El bisel y el contorno miden lo mismo en los cuatro lados y en los tres tamaños",
+  "La trama no salta en ninguna costura: su periodo divide el tramo repetido",
+  "El detalle único está dentro de las esquinas, no en los bordes",
+  "El bisel tiene la luz del resto del juego: claro arriba e izquierda",
+  "En grises, el marco se separa del fondo y el fondo queda casi plano",
+  "Las dos barras tienen exactamente el mismo marco; solo cambia el relleno",
+]} />
+
+<Quiz q="En un 9-slice, ¿qué partes no cambian nunca al ampliar el panel?" options={["Los bordes", "Las cuatro esquinas", "El centro"]} answer={1}>
+Las esquinas se copian tal cual. Los bordes se repiten en un eje y el centro en los dos.
+</Quiz>
+
+<Quiz q="El centro de tu panel mide 6 píxeles. ¿Qué trama encaja al repetirlo?" options={["Una de periodo 4", "Una de periodo 3", "Una de periodo 5"]} answer={1}>
+El periodo debe dividir el tramo repetido: 6 ÷ 3 = 2. Con periodo 4 o 5 la trama daría un salto en cada costura.
+</Quiz>
+
+<Quiz q="Al bajar la vida, ¿qué cambia en una barra bien hecha?" options={["El marco y el relleno", "Solo el relleno", "El ancho del marco"]} answer={1}>
+El marco es la referencia del máximo y no cambia. Solo mengua el relleno y aparece el hueco.
+</Quiz>
+</Block>

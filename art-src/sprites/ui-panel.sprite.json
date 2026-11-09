@@ -1,0 +1,44 @@
+{
+  "name": "ui-panel",
+  "description": "Panel de interfaz de 24×24 pensado para 9-slice: esquinas de 8×8 con un remache dorado, bordes con bisel (claro arriba y a la izquierda, oscuro abajo y a la derecha) y un centro con una trama de periodo 4.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "ui"
+  ],
+  "palette": {
+    "o": "#1b1030",
+    "L": "#c9d1dc",
+    "M": "#8f9bab",
+    "D": "#5c6676",
+    "f": "#2a2d3a",
+    "F": "#33364a",
+    "y": "#f2c14e"
+  },
+  "rows": [
+    ".oooooooooooooooooooooo.",
+    "oLLLLLLLLLLLLLLLLLLLLLDo",
+    "oLMMMMMMMMMMMMMMMMMMMMDo",
+    "oLMooooooooooooooooooMDo",
+    "oLMoyfffFfffFfffFffyoMDo",
+    "oLMofffFfffFfffFfffFoMDo",
+    "oLMoffFfffFfffFfffFfoMDo",
+    "oLMofFfffFfffFfffFffoMDo",
+    "oLMoFfffFfffFfffFfffoMDo",
+    "oLMofffFfffFfffFfffFoMDo",
+    "oLMoffFfffFfffFfffFfoMDo",
+    "oLMofFfffFfffFfffFffoMDo",
+    "oLMoFfffFfffFfffFfffoMDo",
+    "oLMofffFfffFfffFfffFoMDo",
+    "oLMoffFfffFfffFfffFfoMDo",
+    "oLMofFfffFfffFfffFffoMDo",
+    "oLMoFfffFfffFfffFfffoMDo",
+    "oLMofffFfffFfffFfffFoMDo",
+    "oLMoffFfffFfffFfffFfoMDo",
+    "oLMoyFfffFfffFfffFfyoMDo",
+    "oLMooooooooooooooooooMDo",
+    "oLMMMMMMMMMMMMMMMMMMMMDo",
+    "oDDDDDDDDDDDDDDDDDDDDDDo",
+    ".oooooooooooooooooooooo."
+  ]
+}

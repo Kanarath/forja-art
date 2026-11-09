@@ -720,6 +720,84 @@ function storyScene(placements, ground = GRASS) {
     Array.from({ length: 24 }, (_, y) => frames.map((f) => f[y]).join("")));
 }
 
+// ---------- interfaz: un panel 9-slice de 24×24 (esquinas de 8×8) y una barra de vida
+// El panel base se dibuja con reglas; las versiones anchas se construyen como lo haría un motor:
+// 9-slice (esquinas intactas, bordes y centro repetidos) frente a estirar la imagen entera.
+const UI = { o: "#1b1030", L: "#c9d1dc", M: "#8f9bab", D: "#5c6676", f: "#2a2d3a", F: "#33364a", y: "#f2c14e" };
+function panelBase() {
+  const S = 24;
+  return Array.from({ length: S }, (_, y) => Array.from({ length: S }, (_, x) => {
+    const r = Math.min(x, y, S - 1 - x, S - 1 - y); // anillo: 0 fuera … 4+ dentro
+    if (r === 0) return (x === 0 || x === S - 1) && (y === 0 || y === S - 1) ? "." : "o"; // esquinas redondeadas
+    if (r === 1) return x === S - 1 - 1 || y === S - 1 - 1 ? "D" : "L"; // bisel: luz arriba-izquierda
+    if (r === 2) return "M";
+    if (r === 3) return "o";
+    return (x + y) % 4 === 0 ? "F" : "f"; // trama suave del fondo, de periodo 4: se repite sin costuras
+  }).join(""));
+}
+const panel = panelBase().map((r) => [...r]);
+for (const [x, y] of [[4, 4], [19, 4], [4, 19], [19, 19]]) panel[y][x] = "y"; // remaches en las esquinas
+const panelRows = panel.map((r) => r.join(""));
+add("ui-panel", "Panel de interfaz de 24×24 pensado para 9-slice: esquinas de 8×8 con un remache dorado, bordes con bisel (claro arriba y a la izquierda, oscuro abajo y a la derecha) y un centro con una trama de periodo 4.", ["ui"], UI, panelRows);
+function nineSlice(rows, W, H, c = 8) {
+  const S = rows.length;
+  const map = (v, len) => (v < c ? v : v >= len - c ? S - (len - v) : c + ((v - c) % (S - 2 * c)));
+  return Array.from({ length: H }, (_, y) => Array.from({ length: W }, (_, x) => rows[map(y, H)][map(x, W)]).join(""));
+}
+add("ui-panel-wide", "El mismo panel ampliado a 64×24 con 9-slice: las cuatro esquinas se copian tal cual, los bordes y el centro se REPITEN. El bisel sigue midiendo 1 píxel y los remaches siguen siendo cuadrados.", ["ui"], UI, nineSlice(panelRows, 64, 24));
+add("ui-panel-stretched", "Error: el panel estirado a 64×24 como una imagen (×2,67 en horizontal, vecino más cercano). Los bordes verticales miden 2 o 3 píxeles según la columna, el bisel se ensancha y los remaches se alargan.", ["ui", "error"], UI,
+  panelRows.map((r) => Array.from({ length: 64 }, (_, x) => r[Math.floor((x * 24) / 64)]).join("")));
+function healthBar(fill) {
+  const W = 32, H = 7, inner = W - 4, n = Math.round(inner * fill);
+  return Array.from({ length: H }, (_, y) => Array.from({ length: W }, (_, x) => {
+    if (y === 0 || y === H - 1) return x === 0 || x === W - 1 ? "." : "o";
+    if (x === 0 || x === W - 1) return "o";
+    if (x === 1 || x === W - 2) return "M";
+    const i = x - 2;
+    if (i >= n) return y === 1 ? "D" : "k"; // vacío: un hueco oscuro
+    return y === 1 ? "p" : y === H - 2 ? "R" : "r"; // lleno: brillo arriba, sombra abajo
+  }).join(""));
+}
+const BAR = { o: UI.o, M: UI.M, D: UI.D, k: "#14121c", p: "#ff9a9a", r: "#e8484f", R: "#9c2234" };
+{ const rows = healthBar(1); add("ui-bar-full", "Barra de vida de 32×7 llena: contorno, marco gris de 1 píxel y el rojo con una fila de brillo arriba y otra de sombra abajo, como un tubo.", ["ui"], Object.fromEntries(Object.entries(BAR).filter(([k]) => rows.some((r) => r.includes(k)))), rows); }
+add("ui-bar-low", "La misma barra al 25 %: 7 píxeles de rojo y el resto un hueco oscuro con su propio borde superior. La forma del marco no cambia: solo cambia lo que hay dentro.", ["ui"], BAR, healthBar(0.25));
+
+// ---------- palette swap: el mismo slime, otras paletas. Las letras no cambian: solo los colores
+const SLIME_BASE = spriteByName("slime");
+const swap = (name, d, colors, tags = ["criatura", "paleta"]) => add(name, d, tags, { ...SLIME_BASE.palette, ...colors }, SLIME_BASE.rows);
+swap("slime-red", "Slime de fuego: los mismos píxeles que el verde con otra rampa (rojo, granate y un brillo rosado). Mismo valor relativo entre tonos: se lee igual de redondo.", { g: "#e8484f", G: "#9c2234", h: "#ffd0d0" });
+swap("slime-blue", "Slime de agua: la rampa en azules. Base media, sombra oscura y brillo casi blanco, con la misma separación de valor que el original.", { g: "#4aa8ff", G: "#1f4f9a", h: "#d8f0ff" });
+swap("slime-gold", "Slime dorado (el raro): oro, ocre y un brillo crema. Más claro que el rojo y el azul (y casi del mismo valor que el verde): junto a ellos destaca, que es lo que debe hacer el enemigo especial.", { g: "#f2c14e", G: "#a8661c", h: "#fff3c4" });
+swap("slime-swap-flat", "Error: un swap a azul donde la sombra tiene casi el mismo valor que la base. En color aún se distingue; en grises, el slime es una mancha plana y pierde el volumen.", { g: "#4aa8ff", G: "#3f9ae8", h: "#d8f0ff" }, ["criatura", "paleta", "error"]);
+
+// ---------- luz de escena: la escena final de día, al atardecer y de noche (remapeo de su paleta)
+// tintado en RGB según el valor (luminancia): girar el tono en HSL lleva la piel al violeta por el camino corto del círculo
+const rgbOf = (hex) => { const n = parseInt(hex.slice(1), 16); return [n >> 16, (n >> 8) & 255, n & 255]; };
+const hexOf = (c) => '#' + c.map((v) => Math.round(Math.min(255, Math.max(0, v))).toString(16).padStart(2, '0')).join('');
+const lumOf = ([r, g, b]) => (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+const mix = (a, b, t) => a.map((v, i) => v + (b[i] - v) * t);
+function relight(name, newName, d, fn, tags) {
+  const s = spriteByName(name);
+  // los colores pueden fundirse en uno: se reconstruye la paleta para que no haya letras repetidas
+  const px = s.rows.map((r) => [...r].map((k) => (k === "." ? null : fn(s.palette[k]))));
+  const t = hexGridToSprite(px);
+  add(newName, d, tags, t.pal, t.rows);
+}
+relight("scene-final", "scene-final-dusk", "La escena final al atardecer: todos los colores giran un poco hacia el naranja y bajan algo de valor; las sombras, hacia el violeta. Sigue leyéndose porque el contraste entre valores se mantiene.", (hex) => {
+  const c = rgbOf(hex), y = lumOf(c);
+  return hexOf(c.map((v, i) => v * mix([0.78, 0.64, 0.86], [1.06, 0.86, 0.66], Math.min(1, y * 1.3))[i])); // luces cálidas, sombras violáceas
+}, ["escena", "luz"]);
+relight("scene-final", "scene-final-night", "La escena final de noche: todo gira hacia el azul, pierde saturación y baja de valor, pero el orden de valores se mantiene (el impacto sigue siendo lo más claro). El impacto conserva su color: es la fuente de luz.", (hex) => {
+  if (["#ffffff", "#ffe58a", "#ff8f3a"].includes(hex)) return hex; // la fuente de luz no se oscurece
+  const c = rgbOf(hex), y = lumOf(c) * 255;
+  return hexOf(mix(c, [y, y, y], 0.6).map((v, i) => 10 + v * [0.42, 0.55, 0.85][i])); // menos saturación, tinte azul, menos valor
+
+}, ["escena", "luz"]);
+relight("scene-final", "scene-final-dark", "Error: la «noche» hecha solo bajando el brillo de todo (×0,4). Los colores no cambian de temperatura, el impacto se apaga con el resto y la escena parece una foto subexpuesta, no una noche.", (hex) => {
+  const n = parseInt(hex.slice(1), 16);
+  return "#" + [n >> 16, (n >> 8) & 255, n & 255].map((v) => Math.round(v * 0.4).toString(16).padStart(2, "0")).join("");
+}, ["escena", "luz", "error"]);
+
 // ---------- escribir y validar
 let bad = 0;
 for (const s of out) {

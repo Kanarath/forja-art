@@ -1,0 +1,25 @@
+{
+  "name": "ui-bar-full",
+  "description": "Barra de vida de 32×7 llena: contorno, marco gris de 1 píxel y el rojo con una fila de brillo arriba y otra de sombra abajo, como un tubo.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "ui"
+  ],
+  "palette": {
+    "o": "#1b1030",
+    "M": "#8f9bab",
+    "p": "#ff9a9a",
+    "r": "#e8484f",
+    "R": "#9c2234"
+  },
+  "rows": [
+    ".oooooooooooooooooooooooooooooo.",
+    "oMppppppppppppppppppppppppppppMo",
+    "oMrrrrrrrrrrrrrrrrrrrrrrrrrrrrMo",
+    "oMrrrrrrrrrrrrrrrrrrrrrrrrrrrrMo",
+    "oMrrrrrrrrrrrrrrrrrrrrrrrrrrrrMo",
+    "oMRRRRRRRRRRRRRRRRRRRRRRRRRRRRMo",
+    ".oooooooooooooooooooooooooooooo."
+  ]
+}

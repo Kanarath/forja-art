@@ -1,0 +1,27 @@
+{
+  "name": "slime-gold",
+  "description": "Slime dorado (el raro): oro, ocre y un brillo crema. Más claro que el rojo y el azul (y casi del mismo valor que el verde): junto a ellos destaca, que es lo que debe hacer el enemigo especial.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "criatura",
+    "paleta"
+  ],
+  "palette": {
+    "o": "#1b1030",
+    "g": "#f2c14e",
+    "G": "#a8661c",
+    "h": "#fff3c4",
+    "e": "#1b1030"
+  },
+  "rows": [
+    "...oooo...",
+    "..oghggo..",
+    ".oghggggo.",
+    ".ogeggego.",
+    "oggggggggo",
+    "oggggggGGo",
+    "oGGGGGGGGo",
+    ".oooooooo."
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "name": "slime-swap-flat",
+  "description": "Error: un swap a azul donde la sombra tiene casi el mismo valor que la base. En color aún se distingue; en grises, el slime es una mancha plana y pierde el volumen.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "criatura",
+    "paleta",
+    "error"
+  ],
+  "palette": {
+    "o": "#1b1030",
+    "g": "#4aa8ff",
+    "G": "#3f9ae8",
+    "h": "#d8f0ff",
+    "e": "#1b1030"
+  },
+  "rows": [
+    "...oooo...",
+    "..oghggo..",
+    ".oghggggo.",
+    ".ogeggego.",
+    "oggggggggo",
+    "oggggggGGo",
+    "oGGGGGGGGo",
+    ".oooooooo."
+  ]
+}

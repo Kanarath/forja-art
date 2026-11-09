@@ -1,0 +1,27 @@
+{
+  "name": "slime-blue",
+  "description": "Slime de agua: la rampa en azules. Base media, sombra oscura y brillo casi blanco, con la misma separación de valor que el original.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "criatura",
+    "paleta"
+  ],
+  "palette": {
+    "o": "#1b1030",
+    "g": "#4aa8ff",
+    "G": "#1f4f9a",
+    "h": "#d8f0ff",
+    "e": "#1b1030"
+  },
+  "rows": [
+    "...oooo...",
+    "..oghggo..",
+    ".oghggggo.",
+    ".ogeggego.",
+    "oggggggggo",
+    "oggggggGGo",
+    "oGGGGGGGGo",
+    ".oooooooo."
+  ]
+}

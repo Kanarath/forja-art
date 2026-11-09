@@ -124,6 +124,16 @@
   - escena final de 80×48 con orilla, personajes, impacto y props;
   - spritesheet de 64×24 del ciclo de caminar, para importarlo en Godot.
 
+**Contenido · octavo bloque: 5 lecciones más (53 en total).**
+- **Pixel:** P4-04 Interfaz (panel 9-slice y barra de vida), P5-04 Palette swap, P8-02 Luz de escena (día, atardecer y noche).
+- **Voxel:** V4-03 Hard surface (un carro), V6-02 Terreno (terrazas, estratos y agua).
+- **Arte nuevo:**
+  - panel de 24×24 ampliado con 9-slice frente a estirado, y barra de vida llena y baja;
+  - tres variantes del slime por cambio de paleta y una que se aplana en grises;
+  - la escena final recoloreada por fórmula: atardecer, noche (la luz conserva su color) y una «noche» que solo oscurece;
+  - modelos «terreno» (mapa de alturas en terrazas) y «carro» (blockout, paneles y herrajes).
+- **Ruta:** las lecciones nuevas se intercalan junto a las de su nivel, no al final.
+
 **Lecciones aprendidas durante la fase 1:**
 - **`BASE_URL` sin barra final.** Astro 7 da `BASE_URL` sin barra final, así que hay que usar siempre `src/lib/url.ts`. El validador detecta enlaces sin la base.
 - **Colecciones nuevas en local.** El servidor de desarrollo no ve colecciones de contenido nuevas: hay que reiniciarlo (`npx astro dev --force`).

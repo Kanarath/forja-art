@@ -1,0 +1,45 @@
+{
+  "name": "ui-panel-stretched",
+  "description": "Error: el panel estirado a 64×24 como una imagen (×2,67 en horizontal, vecino más cercano). Los bordes verticales miden 2 o 3 píxeles según la columna, el bisel se ensancha y los remaches se alargan.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "ui",
+    "error"
+  ],
+  "palette": {
+    "o": "#1b1030",
+    "L": "#c9d1dc",
+    "M": "#8f9bab",
+    "D": "#5c6676",
+    "f": "#2a2d3a",
+    "F": "#33364a",
+    "y": "#f2c14e"
+  },
+  "rows": [
+    "...ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo..",
+    "oooLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLDDDoo",
+    "oooLLLMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMDDDoo",
+    "oooLLLMMooooooooooooooooooooooooooooooooooooooooooooooooMMMDDDoo",
+    "oooLLLMMoooyyyffffffffFFffffffffFFFffffffffFFFfffffyyyooMMMDDDoo",
+    "oooLLLMMoooffffffffFFFffffffffFFffffffffFFFffffffffFFFooMMMDDDoo",
+    "oooLLLMMooofffffFFFffffffffFFFffffffffFFffffffffFFFfffooMMMDDDoo",
+    "oooLLLMMooofffFFffffffffFFFffffffffFFFffffffffFFffffffooMMMDDDoo",
+    "oooLLLMMoooFFFffffffffFFffffffffFFFffffffffFFFffffffffooMMMDDDoo",
+    "oooLLLMMoooffffffffFFFffffffffFFffffffffFFFffffffffFFFooMMMDDDoo",
+    "oooLLLMMooofffffFFFffffffffFFFffffffffFFffffffffFFFfffooMMMDDDoo",
+    "oooLLLMMooofffFFffffffffFFFffffffffFFFffffffffFFffffffooMMMDDDoo",
+    "oooLLLMMoooFFFffffffffFFffffffffFFFffffffffFFFffffffffooMMMDDDoo",
+    "oooLLLMMoooffffffffFFFffffffffFFffffffffFFFffffffffFFFooMMMDDDoo",
+    "oooLLLMMooofffffFFFffffffffFFFffffffffFFffffffffFFFfffooMMMDDDoo",
+    "oooLLLMMooofffFFffffffffFFFffffffffFFFffffffffFFffffffooMMMDDDoo",
+    "oooLLLMMoooFFFffffffffFFffffffffFFFffffffffFFFffffffffooMMMDDDoo",
+    "oooLLLMMoooffffffffFFFffffffffFFffffffffFFFffffffffFFFooMMMDDDoo",
+    "oooLLLMMooofffffFFFffffffffFFFffffffffFFffffffffFFFfffooMMMDDDoo",
+    "oooLLLMMoooyyyFFffffffffFFFffffffffFFFffffffffFFfffyyyooMMMDDDoo",
+    "oooLLLMMooooooooooooooooooooooooooooooooooooooooooooooooMMMDDDoo",
+    "oooLLLMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMDDDoo",
+    "oooDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDoo",
+    "...ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo.."
+  ]
+}

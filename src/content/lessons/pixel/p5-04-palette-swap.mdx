@@ -1,0 +1,214 @@
+---
+id: p5-04
+discipline: pixel
+level: 5
+order: 4
+title: "Palette swap: tres enemigos con un solo sprite"
+summary: "Crea tres variantes de un enemigo cambiando solo la paleta: otro tono, la misma estructura de valor, colores con significado y comprobación en grises."
+duration: 40
+status: borrador
+prerequisites: [p5-03, p3-02]
+fundamentals: [f04]
+objectives:
+  - "Entender qué es un palette swap y por qué lo usan los juegos"
+  - "Cambiar el tono de una rampa sin aplanar su estructura de valor"
+  - "Elegir colores con significado y hacer que la variante especial destaque"
+  - "Hacer el swap en Aseprite en modo indexado y guardar cada paleta"
+  - "Comprobar en grises que cada variante conserva el volumen"
+tools: [aseprite]
+piece:
+  name: "Tres variantes de tu criatura con palette swap, comprobadas en grises"
+  canvas: "12x8"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [variantes]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Hoy forjas **tres variantes de un enemigo** sin dibujar ni un píxel nuevo. Partes de tu criatura de la lección P5-03 (o del slime) y solo cambias su paleta. Tres paletas guardadas, tres enemigos distintos.
+
+<Sprite name="slime" scale={8} caption="El original: slime verde de 10×8" />
+<Sprite name="slime-red" scale={8} caption="Fuego: rojo, granate y brillo rosado" />
+<Sprite name="slime-blue" scale={8} caption="Agua: azul medio, azul oscuro y brillo casi blanco" />
+<Sprite name="slime-gold" scale={8} caption="Dorado: el raro. Oro, ocre y brillo crema" />
+
+Los cuatro tienen **exactamente las mismas filas de píxeles**. Solo cambian tres colores: la base, la sombra y el brillo. El contorno y los ojos (`#1b1030`) son iguales en todos.
+</Block>
+
+<Block kind="concepto">
+Un **palette swap** es reutilizar el mismo sprite con otra paleta. Cada letra del dibujo (contorno, base, sombra, brillo) apunta a un color; cambias el color y todos sus píxeles cambian a la vez.
+
+**Por qué lo usan los juegos:**
+
+- **Variedad barata.** Un dibujo y su animación sirven para tres o cuatro enemigos. En las consolas antiguas, además, ahorraba memoria.
+- **Lectura por color.** El jugador aprende la regla: mismo cuerpo, otro color, otra cosa. El color le dice el **rango** (débil, fuerte, raro) o el **elemento** (fuego, agua).
+
+<Why title="Por qué funciona">
+El jugador reconoce primero la **forma**: «es un slime». Ya sabe cómo se mueve y cómo se le pega. El color añade solo la diferencia. Es la misma idea de la armonía de F04: un color con un papel claro comunica más que muchos colores sin papel.
+</Why>
+
+### La regla: cambia el tono, conserva el valor
+
+La rampa del slime tiene tres peldaños en el cuerpo: **sombra**, **base** y **brillo**. Lo que da volumen no es el verde: es la **distancia de valor** entre esos peldaños. En el swap, cambias el tono y mantienes esas distancias.
+
+<Sprite name="slime" view="gray" scale={8} caption="Verde en grises: sombra, base y brillo bien separados" />
+<Sprite name="slime-red" view="gray" scale={8} caption="Rojo en grises: más oscuro en conjunto, pero los tres peldaños siguen separados" />
+<Sprite name="slime-blue" view="gray" scale={8} caption="Azul en grises: la misma estructura que el verde" />
+<Sprite name="slime-gold" view="gray" scale={8} caption="Dorado en grises: el más claro de las variantes" />
+
+Mira las cuatro. Cambia el valor general (el rojo es más oscuro, el dorado más claro), pero en todas la sombra de abajo a la derecha se separa de la base y el brillo de arriba a la izquierda salta a la vista. Por eso las cuatro se leen igual de redondas.
+
+<Why title="Si la sombra se acerca a la base">
+El ojo lee el volumen por el valor, no por el tono (F01). Si al cambiar de color la sombra queda casi tan clara como la base, en grises se funden y el slime se vuelve una pegatina plana. En color quizá aún lo distingas; a 1× y en movimiento, no.
+</Why>
+
+### Colores con significado
+
+Los juegos repiten unos códigos que el jugador ya trae aprendidos:
+
+- **Rojo / naranja:** fuego, peligro, ataque.
+- **Azul / cian:** agua, hielo, calma.
+- **Verde:** veneno, naturaleza o, simplemente, el básico.
+- **Dorado:** raro, valioso, recompensa.
+
+**La variante especial debe destacar en un grupo.** El dorado de nuestro ejemplo tiene la base y la sombra más claras de las cuatro variantes y el color más cálido. Junto al rojo y al azul, la mirada va a él primero, como a un tesoro.
+
+### Pruébalo: diseña la rampa de una variante
+
+El laboratorio aplica la rampa al slime. Pon el color base de tu variante (por ejemplo, un rojo fuego) y mira la fila de grises: los peldaños deben subir en orden y con saltos parecidos a los del original.
+
+<RampLab base="#e8484f" steps={5} sprite="slime" />
+
+<Tip>
+El laboratorio cambia **todos** los colores del slime, también el contorno y los ojos. En tu swap, lo normal es dejar el contorno y los ojos como están y cambiar solo el cuerpo: base, sombra y brillo.
+</Tip>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Abre tu criatura y conviértela a indexado">
+1. Abre tu criatura de P5-03 (o un lienzo de 10×8 con un slime tuyo).
+2. Ve a *Sprite → Color Mode → Indexed*.
+3. Mira el panel de paleta: cada color del sprite es una casilla.
+
+<Why>
+En modo indexado cada píxel no guarda un color, sino **el número de una casilla de la paleta**. Si cambias el color de esa casilla, cambian todos los píxeles que la usan. Esa es la base del palette swap.
+</Why>
+
+<Warn>
+Si tu paleta tiene muchas casillas que no usas, cuesta encontrar las tuyas. Quédate con los 4–5 colores de tu criatura y apunta qué papel tiene cada uno: contorno, base, sombra, brillo.
+</Warn>
+</Step>
+
+<Step n={2} title="Guarda la paleta original">
+1. Guarda el archivo con <Keys k="Ctrl+S" /> (por ejemplo, `slime.aseprite`).
+2. En el menú de opciones del panel de paleta, guarda la paleta como `slime-verde.gpl`.
+
+<Why>
+La paleta original es tu punto de partida y tu red de seguridad. Si un swap sale mal, la cargas y vuelves al principio sin tocar el dibujo.
+</Why>
+</Step>
+
+<Step n={3} title="Primera variante: cambia la base">
+1. Selecciona en la paleta la casilla de la **base** y cámbiala por el tono nuevo (por ejemplo, un rojo fuego).
+2. Mira el lienzo: todos los píxeles de base han cambiado a la vez.
+3. No toques el contorno ni los ojos.
+
+<Tip>
+Usa como guía la rampa del laboratorio: copia sus códigos hex o descarga el .gpl y fíjate en el valor de cada peldaño.
+</Tip>
+</Step>
+
+<Step n={4} title="Sombra y brillo, con el valor en mente">
+1. Cambia la casilla de la **sombra**: más oscura que la base y con el tono algo girado hacia el frío (como en P3-02).
+2. Cambia el **brillo**: casi blanco, con un toque del tono nuevo.
+3. Comprueba en grises: exporta una copia a 1× y súbela al Inspector, o compárala con los ejemplos en grises del concepto.
+
+<Why>
+La sombra es el peldaño que más se estropea. Al buscar «el mismo color, pero oscuro», es fácil quedarse corto. Si en grises la sombra casi no se ve, bájala más.
+</Why>
+</Step>
+
+<Step n={5} title="Guarda cada paleta y exporta cada variante">
+1. Guarda la paleta con un nombre claro: `slime-fuego.gpl`.
+2. Exporta con *File → Export → Export As*: `slime-fuego.png`, **Resize** 800 %.
+3. Repite los pasos 3–5 con las otras dos variantes, por ejemplo agua y dorado. Para volver a empezar, carga `slime-verde.gpl`.
+
+<Tip>
+Un único `.aseprite` y varios `.gpl`: así, si corriges un píxel del dibujo, las tres variantes lo heredan. Solo tienes que volver a cargar cada paleta y exportar.
+</Tip>
+</Step>
+
+<Step n={6} title="Compara las tres juntas">
+1. Pon los tres PNG uno al lado del otro y aléjate de la pantalla.
+2. ¿Distingues cuál es cuál de un vistazo? ¿Cuál destaca? Debería ser la especial.
+3. Revísalos también en grises.
+
+<Warn title="Verifica en tu versión">
+El modo indexado (*Sprite → Color Mode → Indexed*) y guardar o cargar paletas en .gpl existen en Aseprite. La forma exacta de editar una casilla (doble clic, selector de color…) y dónde está el menú de opciones del panel de paleta pueden cambiar entre versiones. Si no lo encuentras, busca en el menú del panel de paleta las opciones de guardar y cargar.
+</Warn>
+</Step>
+</Block>
+
+<Block kind="version">
+Ahora a tu manera. Elige un reto:
+
+- **Escala de rango:** tres variantes que cuenten «débil → fuerte → jefe». Del más apagado al más saturado y con más contraste.
+- **Tres elementos:** fuego, agua y veneno. Cada uno con su temperatura: cálido, frío y un verde ácido.
+- **El raro de verdad:** dos variantes normales y una especial que destaque en un grupo de cinco. Ponla entre cuatro copias de las normales y comprueba que la mirada va a ella.
+
+<Tip>
+Si quieres un reto extra, haz el swap también en el héroe de P5-01: una túnica de otro color para un segundo jugador. La regla es la misma.
+</Tip>
+</Block>
+
+<Block kind="errores">
+<Mistake title="Rampa aplanada: la sombra se come el volumen" wrongLabel="Sombra casi igual que la base" rightLabel="Sombra bien separada">
+  <Sprite slot="wrong" name="slime-swap-flat" view="gray" scale={8} />
+  <Sprite slot="right" name="slime-blue" view="gray" scale={8} />
+
+Los dos son azules y en color casi parecen iguales. En grises, el de la izquierda es una mancha: su sombra (`#3f9ae8`) tiene casi el mismo valor que la base (`#4aa8ff`). El de la derecha usa una sombra mucho más oscura (`#1f4f9a`) y conserva la forma de cúpula. Corrígelo bajando el valor de la sombra hasta que se separe como en el original.
+</Mistake>
+
+<Mistake title="Variante que en grises es igual que la original" wrongLabel="Dorado: en grises, casi como el verde" rightLabel="Rojo: otro valor, se separa">
+  <Sprite slot="wrong" name="slime-gold" view="gray" scale={8} />
+  <Sprite slot="right" name="slime-red" view="gray" scale={8} />
+
+Compáralo con el verde en grises del concepto. El dorado y el verde tienen un valor muy parecido: solo los separa el tono. Junto al rojo y al azul, el dorado destaca, pero si en tu juego aparece al lado del verde, de lejos o con poca luz se confunden. El rojo, en cambio, es claramente más oscuro. Si dos variantes van a compartir pantalla, sepáralas también en **valor**, no solo en tono.
+</Mistake>
+
+<Warn title="Cambiar píxeles además de colores">
+Si al hacer la variante añades un cuerno, mueves un ojo o engordas el cuerpo, ya no es un palette swap: es un sprite nuevo. Tendrás que mantener dos dibujos y dos animaciones, y cada corrección se hace dos veces. Decide: o solo cambias la paleta, o asumes que dibujas otro enemigo.
+</Warn>
+
+<Warn title="Colores que no dicen nada">
+Un slime morado, otro rosa y otro turquesa son distintos, pero no comunican nada. Usa los códigos que el jugador ya conoce: rojo para fuego, azul para agua, dorado para lo raro.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+Sube cada variante **a 1×** y revísala en la vista de grises.
+
+<Inspector upload title="Revisa el valor de tus variantes" />
+
+<Checklist items={[
+  "Tengo tres variantes de mi criatura con exactamente los mismos píxeles",
+  "Solo he cambiado colores de la paleta, en modo indexado",
+  "En grises, cada variante conserva la sombra, la base y el brillo separados",
+  "Cada color tiene un significado (elemento o rango) y la variante especial destaca",
+  "He guardado una paleta .gpl por variante y exportado los PNG a ×8",
+]} />
+
+<Quiz q="Haces un swap a azul y en grises el slime se ve plano. ¿Qué ha pasado?" options={["El azul no sirve para slimes", "La sombra tiene casi el mismo valor que la base", "Faltan píxeles en el contorno"]} answer={1}>
+El volumen depende de la distancia de valor entre peldaños. Si la sombra se acerca a la base, en grises se funden. Oscurece la sombra.
+</Quiz>
+
+<Quiz q="¿Por qué conviene trabajar en modo indexado para hacer un palette swap?" options={["Porque el archivo ocupa menos", "Porque cambiar una casilla de la paleta cambia todos los píxeles que la usan", "Porque solo así se puede exportar a PNG"]} answer={1}>
+En indexado cada píxel apunta a una casilla de la paleta. Cambias la casilla y todo el sprite cambia a la vez, sin repintar.
+</Quiz>
+
+<Quiz q="Añades un cuerno a la variante roja. ¿Sigue siendo un palette swap?" options={["Sí, porque también ha cambiado el color", "No: has cambiado píxeles, ya es otro sprite", "Solo si el cuerno es del mismo color"]} answer={1}>
+Un palette swap solo cambia colores. En cuanto cambias píxeles, tienes dos dibujos que mantener por separado.
+</Quiz>
+</Block>

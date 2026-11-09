@@ -1,0 +1,27 @@
+{
+  "name": "slime-red",
+  "description": "Slime de fuego: los mismos píxeles que el verde con otra rampa (rojo, granate y un brillo rosado). Mismo valor relativo entre tonos: se lee igual de redondo.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "criatura",
+    "paleta"
+  ],
+  "palette": {
+    "o": "#1b1030",
+    "g": "#e8484f",
+    "G": "#9c2234",
+    "h": "#ffd0d0",
+    "e": "#1b1030"
+  },
+  "rows": [
+    "...oooo...",
+    "..oghggo..",
+    ".oghggggo.",
+    ".ogeggego.",
+    "oggggggggo",
+    "oggggggGGo",
+    "oGGGGGGGGo",
+    ".oooooooo."
+  ]
+}

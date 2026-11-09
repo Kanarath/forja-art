@@ -292,7 +292,81 @@ const dioramaDetail = [
   ...box(5, 9, 4, 5, 9, 6, WOOD.mid), ...box(4, 9, 4, 4, 9, 4, WOOD.dark), // poste y cubo de leña junto a la casa
 ];
 
+// ---------- TERRENO: un mapa de alturas en terrazas de 2 vóxels, estratos por altura y un río
+// La altura se calcula con dos colinas suaves y se redondea a escalones: el escalonado ES el estilo.
+const TER = 24;
+const riverY = (x) => 5 + 2 * Math.sin(x / 3.5); // el río cruza por delante, de izquierda a derecha
+const inRiver = (x, y) => Math.abs(y - riverY(x)) <= 1.3;
+const terrainH = (x, y) => {
+  const raw = 2 + 7 * Math.exp(-((x - 6) ** 2 + (y - 18) ** 2) / 50) + 4 * Math.exp(-((x - 18) ** 2 + (y - 19) ** 2) / 28);
+  return Math.max(2, Math.floor(raw / 2) * 2); // terrazas: solo alturas pares
+};
+function terrain(stage) {
+  const v = [];
+  for (let x = 0; x < TER; x++) for (let y = 0; y < TER; y++) {
+    const river = stage >= 3 && inRiver(x, y);
+    const h = river ? 0 : terrainH(x, y);
+    for (let z = 0; z < h; z++) {
+      let c = STONE.light;
+      if (stage >= 2) c = z === h - 1 ? LEAF.mid : z >= h - 3 ? DIRT.light : z % 4 < 2 ? STONE.dark : STONE.light; // hierba, tierra y piedra en bandas
+      v.push({ x, y, z, c });
+    }
+    if (river) v.push({ x, y, z: 0, c: Math.abs(y - riverY(x)) < 0.5 ? WATER_L : WATER_D }); // agua en la altura 0: un vóxel por debajo de la llanura
+  }
+  return v;
+}
+const smallTree = (x, y, z) => [...box(x, y, z, x, y, z + 1, WOOD.dark), ...box(x - 1, y - 1, z + 2, x + 1, y + 1, z + 3, LEAF.mid), { x, y, z: z + 4, c: LEAF.light }];
+const terrainLife = [
+  ...terrain(3),
+  ...[[4, 16], [8, 20], [19, 18], [14, 13], [2, 11]].flatMap(([x, y]) => smallTree(x, y, terrainH(x, y))),
+  ...[[11, 9], [20, 10]].flatMap(([x, y]) => box(x, y, terrainH(x, y), x + 1, y, terrainH(x, y), STONE.dark)), // piedras sueltas
+];
+
+// ---------- CARRO: hard surface en vóxels (blockout → paneles → herrajes y chaflanes)
+// Lo mismo que en Blender: volúmenes primero, luego paneles que rompen las superficies y al final el detalle mecánico.
+function wheel(cx, y, cz, r, detail) {
+  const v = [];
+  for (let x = -3; x <= 3; x++) for (let z = -3; z <= 3; z++) {
+    const d = Math.hypot(x, z);
+    if (d > r) continue;
+    let c = WOOD.dark;
+    if (detail) c = d > r - 1 ? METAL.dark /* llanta de hierro */ : d < 1 ? METAL.light /* buje */ : x === 0 || z === 0 ? WOOD.mid /* radios */ : null;
+    if (c) v.push({ x: cx + x, y, z: cz + z, c });
+  }
+  return v;
+}
+const cartWheels = (detail) => [[3, -1], [3, 8], [11, -1], [11, 8]].flatMap(([x, y]) => wheel(x, y, 3, 3.2, detail));
+const cartBlock = [...box(0, 0, 3, 14, 7, 7, WOOD.mid), ...cartWheels(false), ...box(15, 3, 4, 20, 4, 4, WOOD.dark)];
+const cartBody = box(0, 0, 3, 14, 7, 7, WOOD.mid)
+  .filter((v) => !(v.x > 0 && v.x < 14 && v.y > 0 && v.y < 7 && v.z > 3)) // caja abierta: paredes de 1 vóxel
+  .map((v) => ({ ...v, c: v.z === 7 ? WOOD.light : v.z === 3 ? WOOD.dark : v.x % 4 === 0 || v.z === 5 ? WOOD.dark : WOOD.mid })); // borde claro, tablas y montantes
+const cartPanels = [...cartBody, ...cartWheels(true), ...box(-1, 3, 3, 16, 4, 3, METAL.dark) /* eje y bastidor */, ...box(15, 3, 4, 20, 4, 4, WOOD.dark)];
+const cartFinal = [
+  // chaflán: se quitan las cuatro esquinas verticales del borde superior, como un bevel de 1 vóxel
+  ...cartPanels.filter((v) => !(v.z === 7 && (v.x === 0 || v.x === 14) && (v.y === 0 || v.y === 7))),
+  ...[0, 14].flatMap((x) => [0, 7].flatMap((y) => box(x, y, 4, x, y, 6, METAL.mid))), // escuadras de hierro en las esquinas
+  ...[4, 8, 12].flatMap((x) => [{ x, y: -1, z: 7, c: METAL.light }, { x, y: 8, z: 7, c: METAL.light }]), // remaches en los lados
+  ...box(2, 2, 4, 4, 4, 6, WOOD.light), ...box(9, 3, 4, 11, 5, 5, WOOD.light), // carga: dos cajas
+  ...box(21, 2, 4, 21, 5, 4, METAL.mid), // travesaño de la lanza
+];
+
 export const MODELS = {
+  terreno: {
+    description: "Terreno: terrazas, estratos y un río",
+    stages: [
+      { label: "Terrazas", note: "Un mapa de alturas de 24×24 redondeado a escalones de 2 vóxels: dos colinas al fondo y una llanura delante. Un solo color: solo forma.", voxels: terrain(1) },
+      { label: "Estratos", note: "El color depende de la altura: hierba arriba de cada columna, dos de tierra debajo y piedra en bandas alternas. Los cortes de las terrazas enseñan los estratos.", voxels: terrain(2) },
+      { label: "Agua y vida", note: "Un río cruza la llanura de delante, un vóxel más bajo que la hierba, con una corriente más clara en el centro. Árboles pequeños y piedras sobre las terrazas: escala.", voxels: terrainLife },
+    ],
+  },
+  carro: {
+    description: "Carro: hard surface en vóxels",
+    stages: [
+      { label: "Blockout", note: "Una caja, cuatro ruedas de un vóxel de grosor y la lanza. Proporción y silueta, como el blockout de Blender.", voxels: cartBlock },
+      { label: "Paneles", note: "La caja se vacía (paredes de 1 vóxel), el borde superior más claro y montantes oscuros cada 4 vóxels. Ruedas con llanta de hierro, radios y buje; eje de metal.", voxels: cartPanels },
+      { label: "Herrajes", note: "Escuadras de hierro en las esquinas, remaches en los lados, un chaflán de 1 vóxel en las esquinas del borde y dos cajas de carga. El detalle mecánico va en bordes y uniones.", voxels: cartFinal },
+    ],
+  },
   diorama: {
     description: "Diorama: una base con estratos, una escena y detalles que cuentan algo",
     stages: [

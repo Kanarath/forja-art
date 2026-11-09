@@ -1,0 +1,44 @@
+{
+  "name": "ui-panel-wide",
+  "description": "El mismo panel ampliado a 64×24 con 9-slice: las cuatro esquinas se copian tal cual, los bordes y el centro se REPITEN. El bisel sigue midiendo 1 píxel y los remaches siguen siendo cuadrados.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "ui"
+  ],
+  "palette": {
+    "o": "#1b1030",
+    "L": "#c9d1dc",
+    "M": "#8f9bab",
+    "D": "#5c6676",
+    "f": "#2a2d3a",
+    "F": "#33364a",
+    "y": "#f2c14e"
+  },
+  "rows": [
+    ".oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo.",
+    "oLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLDo",
+    "oLMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMDo",
+    "oLMooooooooooooooooooooooooooooooooooooooooooooooooooooooooooMDo",
+    "oLMoyfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFffyoMDo",
+    "oLMofffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFoMDo",
+    "oLMoffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfoMDo",
+    "oLMofFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFffoMDo",
+    "oLMoFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffoMDo",
+    "oLMofffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFoMDo",
+    "oLMoffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfoMDo",
+    "oLMofFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFffoMDo",
+    "oLMoFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffoMDo",
+    "oLMofffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFoMDo",
+    "oLMoffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfoMDo",
+    "oLMofFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFffoMDo",
+    "oLMoFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffoMDo",
+    "oLMofffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFoMDo",
+    "oLMoffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfoMDo",
+    "oLMoyFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfffFfyoMDo",
+    "oLMooooooooooooooooooooooooooooooooooooooooooooooooooooooooooMDo",
+    "oLMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMDo",
+    "oDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDo",
+    ".oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo."
+  ]
+}

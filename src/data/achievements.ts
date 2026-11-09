@@ -55,5 +55,10 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   { id: "escena-final", name: "Escena de portfolio", description: "Una ilustración que reúne tiles, personajes, efecto y foco (P8-01).", color: "#ffffff" },
   { id: "en-el-juego", name: "En el juego", description: "Tu sprite animado y nítido dentro de Godot (P9-01).", color: "#478cbf" },
   { id: "voxel-en-juego", name: "Voxel en el juego", description: "Tu modelo voxel exportado e iluminado en una escena 3D de Godot (V9-01).", color: "#6fb8ff" },
+  { id: "interfaz", name: "Interfaz", description: "Un panel 9-slice y una barra de vida que se amplían sin deformarse (P4-04).", color: "#c9d1dc" },
+  { id: "hard-surface", name: "Hard surface", description: "Un vehículo o máquina voxel con paneles, herrajes y chaflanes (V4-03).", color: "#8f9bab" },
+  { id: "variantes", name: "Variantes", description: "Tres variantes de un enemigo con palette swap que se leen en grises (P5-04).", color: "#e8484f" },
+  { id: "terreno", name: "Terreno", description: "Un terreno voxel en terrazas con estratos y agua (V6-02).", color: "#3fbf7f" },
+  { id: "hora-del-dia", name: "Hora del día", description: "La misma escena de día y de noche, con la luz como foco (P8-02).", color: "#26489a" },
   { id: "forma-primero", name: "Forma antes que detalle", description: "Un modelo voxel con su blockout guardado como primera versión (V2-01).", color: "#38e1ff" },
 ];

@@ -1,0 +1,27 @@
+{
+  "name": "ui-bar-low",
+  "description": "La misma barra al 25 %: 7 píxeles de rojo y el resto un hueco oscuro con su propio borde superior. La forma del marco no cambia: solo cambia lo que hay dentro.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "ui"
+  ],
+  "palette": {
+    "o": "#1b1030",
+    "M": "#8f9bab",
+    "D": "#5c6676",
+    "k": "#14121c",
+    "p": "#ff9a9a",
+    "r": "#e8484f",
+    "R": "#9c2234"
+  },
+  "rows": [
+    ".oooooooooooooooooooooooooooooo.",
+    "oMpppppppDDDDDDDDDDDDDDDDDDDDDMo",
+    "oMrrrrrrrkkkkkkkkkkkkkkkkkkkkkMo",
+    "oMrrrrrrrkkkkkkkkkkkkkkkkkkkkkMo",
+    "oMrrrrrrrkkkkkkkkkkkkkkkkkkkkkMo",
+    "oMRRRRRRRkkkkkkkkkkkkkkkkkkkkkMo",
+    ".oooooooooooooooooooooooooooooo."
+  ]
+}
