@@ -1,0 +1,315 @@
+---
+id: p6-06
+discipline: pixel
+level: 6
+order: 6
+title: "Recibir daño: flash, retroceso y parpadeo"
+summary: "Un golpe recibido se cuenta en menos de un segundo: flash blanco, retroceso lejos del golpe, asentamiento y parpadeo de invulnerabilidad con la sombra en su sitio."
+duration: 40
+status: borrador
+objectives:
+  - "Entender qué le dice al jugador cada fase del daño: flash, retroceso, asentamiento y parpadeo"
+  - "Hacer el flash en blanco y no en rojo, porque lo que el ojo lee primero es el valor"
+  - "Dar al retroceso la dirección correcta, lejos del golpe, y un asentamiento breve"
+  - "Hacer un parpadeo de invulnerabilidad que deje la sombra en el suelo y no dure de más"
+  - "Animar el daño del héroe en Aseprite con capas separadas para el personaje y la sombra"
+prerequisites: [p6-04, p6-03]
+fundamentals: [f01]
+tools: [aseprite]
+piece:
+  name: "La animación de daño de tu héroe: flash, retroceso, asentamiento y parpadeo, con su timing"
+  canvas: "32x32"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [golpe-recibido]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Vas a forjar **la animación de daño de tu héroe**: lo que pasa en el instante en que algo le golpea. Dura menos de un segundo y le dice al jugador tres cosas: «te han dado», «desde ahí» y «durante un momento no te pueden volver a dar».
+
+Dale a *Reproducir*. Es el slime recibiendo el golpe que viene de la izquierda: flash, retroceso, asentamiento y dos parpadeos.
+
+<Animator sprites={["slime-hurt-1", "slime-hurt-2", "slime-hurt-3", "slime-hurt-4", "slime-hurt-5", "slime-hurt-4", "slime-hurt-5", "slime-hurt-4"]} durations={[300, 60, 80, 120, 80, 80, 80, 400]} />
+
+El laboratorio lo repite en bucle para que lo estudies. En un juego se reproduce **una vez** cada vez que el personaje recibe un golpe, y luego vuelve a su idle de P6-01.
+
+Tu pieza será la misma secuencia con el héroe de P5-01 en un lienzo de **32×32**: el héroe mide 16×24 y necesita sitio a los lados para el retroceso, y una fila debajo para su sombra.
+
+<Sprite name="hero-flash" scale={8} caption="hero-flash · El héroe en el frame del flash: el contorno y los ojos se quedan en el violeta casi negro y todo lo demás pasa a blanco" />
+</Block>
+
+<Block kind="concepto">
+### Cinco frames, cuatro mensajes
+
+Mira cada frame por separado. El lienzo mide 18×12 y el golpe llega desde la izquierda.
+
+<Sprite name="slime-hurt-1" scale={10} caption="slime-hurt-1 · En su sitio: el slime de siempre (10×8) y, debajo, su sombra en el suelo, una franja verde muy oscura de dos filas" />
+
+<Sprite name="slime-hurt-2" scale={10} caption="slime-hurt-2 · Flash: el mismo sitio y la misma forma. Todo el relleno pasa a blanco, incluidos el brillo y los ojos; el contorno y la sombra no cambian" />
+
+<Sprite name="slime-hurt-3" scale={10} caption="slime-hurt-3 · Retroceso: los colores vuelven y el slime aparece 4 píxeles a la derecha, lejos del golpe. La sombra se mueve con él" />
+
+<Sprite name="slime-hurt-4" scale={10} caption="slime-hurt-4 · Asentamiento: vuelve 1 píxel hacia atrás y ahí se queda. Ha retrocedido 3 píxeles en total" />
+
+<Sprite name="slime-hurt-5" scale={10} caption="slime-hurt-5 · Parpadeo: el slime desaparece, pero su sombra se queda en el suelo, exactamente donde estaba" />
+
+| Frame | Fase | Qué le dice al jugador | Duración |
+| --- | --- | --- | --- |
+| 2 | Flash | «Ha dado», ahora mismo | muy corta: 60 ms |
+| 3 | Retroceso | «El golpe venía de ahí» | corta: 80 ms |
+| 4 | Asentamiento | «Ha encajado el golpe» | media: 120 ms |
+| 5 y 4, alternados | Parpadeo | «Ahora no se le puede dañar» | 80 ms cada uno |
+
+### El flash: blanco, y solo el relleno
+
+El flash es **un solo frame** (dos como mucho) en el que el personaje se vuelve blanco. No es un dibujo nuevo: son las mismas filas con el relleno cambiado. El contorno se queda intacto, así que la silueta no cambia y el ojo sigue sabiendo **quién** ha recibido el golpe.
+
+<Why title="Por qué blanco y no rojo (f01)">
+Lo primero que lee el ojo es el **valor**, no el tono. El blanco es el valor más alto posible: el personaje salta de golpe a ser lo más claro de la pantalla, y ese salto se nota aunque dure 60 ms. Un rojo oscuro cambia el **tono**, pero casi no cambia el valor: en el tiempo de un frame, el ojo no registra el cambio. Es la misma regla que el blanco del estallido de [P6-04](/forja-art/pixel/p6-04/): el instante importante es el más claro.
+</Why>
+
+Compruébalo. Arriba, el héroe normal, con el flash blanco y con un flash rojo oscuro. Abajo, los tres en grises:
+
+<Sprite name="hero-chibi" scale={6} caption="hero-chibi · El héroe normal" />
+
+<Sprite name="hero-flash" scale={6} caption="hero-flash · Flash blanco" />
+
+<Sprite name="hero-flash-red" scale={6} caption="hero-flash-red · Flash en rojo oscuro" />
+
+<Sprite name="hero-chibi" scale={6} view="gray" caption="hero-chibi en grises: la cara es lo más claro; el pelo, la sombra de la túnica y los pantalones van en grises oscuros" />
+
+<Sprite name="hero-flash" scale={6} view="gray" caption="hero-flash en grises: todo el relleno sube al blanco, más claro incluso que la cara. El salto de valor es enorme" />
+
+<Sprite name="hero-flash-red" scale={6} view="gray" caption="hero-flash-red en grises: una mancha gris oscura del mismo valor que el pelo. No sube: la cara incluso se oscurece" />
+
+El rojo no solo no destaca: en grises, el héroe con el flash rojo es **más oscuro** que el héroe normal. Si su túnica fuera roja, ni siquiera cambiaría de tono.
+
+<Tip title="El rojo tiene su sitio">
+Si quieres que el daño «suene» a rojo, ponlo **después** del flash blanco, o en la barra de vida que baja ([P4-04](/forja-art/pixel/p4-04/)). El instante del golpe es del blanco.
+</Tip>
+
+### El retroceso: lejos del golpe
+
+El golpe empuja. En el frame 3, el slime aparece 4 píxeles **hacia el lado contrario** del golpe: el golpe viene de la izquierda, así que retrocede a la derecha. No hay frames intermedios: salta. Igual que en un smear ([P6-05](/forja-art/pixel/p6-05/)), lo rápido no necesita pasos; el ojo rellena el hueco.
+
+Luego, en el frame 4, **vuelve 1 píxel** y se queda. Es el asentamiento: el empujón se pasa un poco y el cuerpo recupera el equilibrio. Sin él, el personaje se para en seco como si chocara con una pared invisible.
+
+<Why>
+El retroceso es información: le dice al jugador **de dónde** vino el golpe sin tener que mirar al enemigo. Y le da al golpe un **peso**. 4 píxeles en un personaje de 10 son casi la mitad de su cuerpo: un golpe fuerte. Un golpe flojo podría quedarse en 1 o 2.
+</Why>
+
+### El parpadeo: invulnerable, pero ahí
+
+Muchos juegos dan al personaje golpeado un momento de **invulnerabilidad** (los *i-frames*) para que no reciba diez golpes seguidos. El parpadeo es como se ve: el sprite aparece y desaparece varias veces.
+
+Fíjate en el frame 5: el slime desaparece, pero **su sombra se queda**. El personaje no se ha ido; solo está «intocable». Si la sombra también parpadeara, la pantalla entera se encendería y apagaría en esa zona, y el jugador dejaría de saber dónde está exactamente.
+
+<Tip>
+Lo que dura el parpadeo en el juego lo decide el diseño (cuánto tiempo es invulnerable), no el dibujo. En la animación, con 2–4 parpadeos rápidos basta para que se entienda. Lo importante es que cada parpadeo sea **corto**: 60–100 ms.
+</Tip>
+
+### Hit-stop: congelar el instante
+
+Hay un truco que no se dibuja, se programa: el **hit-stop**. En el momento del impacto, el juego **congela** al atacante y al golpeado durante 2–4 frames del juego (a 60 frames por segundo, entre unos 33 y 66 ms). Esa pausa minúscula hace que el golpe se sienta sólido, como si la espada se hubiera clavado.
+
+En nuestra secuencia, el flash ya hace ese papel: dura 60 ms y el slime **no se mueve** en él. El retroceso llega después. El orden es «para, flash, empuja», nunca «empuja y luego flash».
+
+### Todo encadenado
+
+Juntando las tres lecciones, un golpe completo se lee así: el tajo de [P6-05](/forja-art/pixel/p6-05/) cruza, el impacto de [P6-04](/forja-art/pixel/p6-04/) estalla donde toca y, en ese mismo instante, el golpeado hace su flash y sale despedido. Cada pieza va en su capa y se reproduce a la vez.
+
+### El mismo golpe, sin flash
+
+Estos son los mismos frames, sin el frame 2:
+
+<Animator sprites={["slime-hurt-1", "slime-hurt-3", "slime-hurt-4", "slime-hurt-5", "slime-hurt-4", "slime-hurt-5", "slime-hurt-4"]} durations={[300, 80, 120, 80, 80, 80, 400]} />
+
+El slime se desplaza, pero no se nota **que le han dado**: parece que ha dado un saltito a un lado por su cuenta. El flash es lo que convierte un movimiento en un golpe.
+
+<Tip title="Experimenta en el primer animador">
+1. Sube el flash (frame 2) a 150 ms. Deja de ser un destello y parece que el slime se ha convertido en otra cosa.
+2. Sube los parpadeos (frames 5 a 7) a 250 ms. Ya no parpadea: aparece y desaparece, como si se teletransportara.
+3. Baja el asentamiento (frame 4) a 40 ms. El retroceso pierde peso y el golpe se siente nervioso.
+</Tip>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Lienzo y capas">
+1. <Keys k="Ctrl+N" />: **32×32**, fondo transparente. Activa *View → Grid*.
+2. Guarda con <Keys k="Ctrl+S" /> como `dano.aseprite`.
+3. Desde el menú *Layer*, crea capas hasta tener **tres**. Renómbralas con doble clic sobre su nombre en la línea de tiempo. De abajo arriba:
+   - `fondo`: rellénala con el cubo (<Keys k="G" />) de un color medio, por ejemplo un verde hierba;
+   - `sombra`: una franja oscura de 8–10 píxeles de ancho y 1–2 de alto, justo debajo de los pies del héroe;
+   - `heroe`: pega tu héroe de 16×24 (P5-01) en la mitad izquierda del lienzo, apoyado sobre la sombra. Deja al menos 6 píxeles libres a su derecha.
+
+<Why>
+La sombra va en su **propia capa** porque en el parpadeo el héroe desaparece y la sombra no. Si los dibujas juntos, no podrás borrar uno sin el otro.
+</Why>
+
+<Tip>
+Crea las capas **antes** de añadir frames: cada frame nuevo copia lo que hay en el actual, así que el fondo, la sombra y el héroe aparecerán en todos.
+</Tip>
+</Step>
+
+<Step n={2} title="Ocho frames con su timing">
+Añade frames desde el menú *Frame* hasta tener **8**. Clic derecho sobre el número de cada frame, *Frame Properties*, y pon:
+
+- Frame 1 · reposo: **300 ms** (solo para estudiarlo en bucle; en el juego no forma parte del daño).
+- Frame 2 · flash: **60 ms**.
+- Frame 3 · retroceso: **80 ms**.
+- Frame 4 · asentamiento: **120 ms**.
+- Frames 5 y 7 · parpadeo, héroe oculto: **80 ms**.
+- Frame 6 · héroe visible: **80 ms**.
+- Frame 8 · héroe visible, final: **400 ms**.
+
+<Why>
+Ya conoces la regla: el timing **antes** del dibujo. En el daño todo pasa en menos de un segundo; si lo pruebas desde el principio a su velocidad real, sabrás enseguida si el golpe pesa.
+</Why>
+</Step>
+
+<Step n={3} title="Frame 2: el flash">
+Ve al frame 2 y selecciona la capa `heroe`. Elige el **blanco puro** como color.
+
+Con el cubo (<Keys k="G" />), haz clic en **cada zona de color del relleno**: pelo, cara, túnica, cinturón, pantalones, botas. Cada clic rellena una zona del mismo color. No toques el contorno ni los ojos, que en el héroe de P5-01 son del mismo color que el contorno.
+
+Otra forma: en una capa nueva `flash` encima de `heroe`, pinta de blanco solo en el frame 2 todo el interior del contorno con el lápiz (<Keys k="B" />). O usa la opción de reemplazar un color por otro del menú *Edit*, color a color.
+
+<Why>
+El contorno intacto mantiene la silueta: el jugador sigue viendo **al héroe**, ahora blanco. Si el blanco se comiera el contorno, sería una mancha blanca sin forma.
+</Why>
+
+<Warn>
+Antes de pintar, comprueba que el frame 1 no cambia a la vez. Si cambia, el cel del frame 2 está **enlazado** con el del frame 1 (linked cel) y comparten el dibujo. Deshaz con <Keys k="Ctrl+Z" /> y separa los cels antes de seguir.
+</Warn>
+</Step>
+
+<Step n={4} title="Frames 3 y 4: retroceso y asentamiento">
+Decide de dónde viene el golpe. Aquí, de la **izquierda**: el héroe retrocede a la derecha.
+
+1. **Frame 3:** en la capa `heroe`, selecciona al héroe con la selección rectangular (<Keys k="M" />), arrastrando un rectángulo que lo contenga entero. Pulsa la **flecha derecha** 4 veces: cada pulsación lo mueve 1 píxel. Haz lo mismo en la capa `sombra`, también 4 píxeles.
+2. **Frame 4:** igual, pero 3 píxeles a la derecha en las dos capas. Es decir, 1 píxel menos que en el frame 3.
+3. Comprueba que el frame 3 tiene los colores normales: el flash es **solo** del frame 2.
+
+<Why>
+Mover con las flechas da desplazamientos exactos. Un retroceso de 4 y un asentamiento de 3 se ven limpios; si arrastras con el ratón y te sale 4 y luego 5, el héroe parece temblar en vez de asentarse.
+</Why>
+
+<Tip>
+Activa el onion skin (el botón está en la línea de tiempo) para ver en transparencia la posición del frame anterior y comprobar la distancia.
+</Tip>
+</Step>
+
+<Step n={5} title="Frames 5 a 8: el parpadeo">
+1. Copia la posición del frame 4 en los frames 5, 6, 7 y 8: héroe y sombra 3 píxeles a la derecha, en las dos capas.
+2. **Frames 5 y 7:** en la capa `heroe`, selecciona al héroe con <Keys k="M" /> y bórralo con la tecla <Keys k="Supr" />. Que el frame quede **vacío solo en esa capa**.
+3. Revisa la capa `sombra` en los frames 5 y 7: tiene que seguir ahí.
+
+<Why>
+El héroe desaparece y la sombra se queda: el jugador sabe que sigue ahí, solo que intocable. Así el parpadeo se lee como **invulnerable** y no como **ha desaparecido**.
+</Why>
+
+<Tip>
+Si lo vas a montar en un juego, a menudo no hace falta dibujar los frames vacíos: el programador oculta y muestra el sprite en bucle. Dibujarlos aquí te sirve para **probar el ritmo** del parpadeo.
+</Tip>
+</Step>
+
+<Step n={6} title="Prueba a tamaño real">
+Reproduce (botón de *play* de la línea de tiempo) y déjalo correr varias vueltas, a tamaño real y ampliado.
+
+- ¿Se nota el flash aunque dure 60 ms?
+- ¿El retroceso va lejos del golpe y se asienta, sin temblar?
+- ¿En el parpadeo se queda la sombra?
+- ¿El parpadeo es rápido, o parece que el héroe se teletransporta?
+
+Si tienes tu impacto de P6-04 o tu tajo de P6-05, ponlos en una capa encima de todo, de modo que el impacto arranque en el frame 2, el del flash. Verás el golpe entero.
+</Step>
+
+<Step n={7} title="Exporta">
+1. Para enseñarlo: *File → Export → Export As*, formato **GIF**, **Resize** al 400 % o más.
+2. Para un juego: oculta `fondo` y usa *File → Export → Export Sprite Sheet*, en una fila, PNG a 1× y fondo transparente. Apunta las duraciones o exporta también el JSON.
+</Step>
+
+<Warn title="Verifica en tu versión">
+Los nombres y la posición pueden variar según la versión de Aseprite: el menú *Layer*, el doble clic para renombrar, la opción de frame nuevo del menú *Frame*, *Frame Properties* (clic derecho sobre el frame), el botón de onion skin y las opciones de *Export Sprite Sheet*. Comprueba también: si los frames nuevos se crean con cels enlazados o independientes y cómo se separan; que las flechas mueven 1 píxel el contenido de la selección; que <Keys k="Supr" /> borra lo seleccionado; y el nombre exacto de la opción de reemplazar color del menú *Edit*. Si no encuentras algo, búscalo por nombre en los menús.
+</Warn>
+
+<ToolNote tool="godot">
+
+Esto es opcional; lo verás en el nivel 9. En un juego, el flash blanco suele hacerse con un **shader** que pinta de blanco el relleno del sprite, no con frames dibujados. La propiedad `modulate` no sirve para esto: solo **multiplica** los colores, así que puede oscurecerlos o teñirlos, pero nunca llevarlos a blanco. Verifica en tu versión.
+
+</ToolNote>
+</Block>
+
+<Block kind="version">
+Ahora a tu manera. Mantén el flash blanco con el contorno intacto, el retroceso lejos del golpe, el asentamiento y la sombra que se queda en el parpadeo. Elige uno:
+
+- **Otra dirección:** el mismo daño con el golpe llegando desde la derecha, o desde arriba. En un golpe desde arriba, el retroceso es un **aplastamiento** de 1–2 filas, como el squash de P6-03.
+- **Otra fuerza:** un golpe flojo (retroceso de 1–2 píxeles, sin parpadeo) y un golpe crítico (flash de 2 frames, retroceso de 6 píxeles y 4 parpadeos). Compara cómo se sienten.
+- **Otro personaje:** la animación de daño de tu murciélago o de tu slime de P5-03. Sin suelo (un murciélago vuela), piensa qué hace la sombra.
+
+<Tip>
+Sea cual sea tu variante, el flash sigue siendo **un frame corto y blanco**. Lo que cambias es la distancia, la dirección y el número de parpadeos.
+</Tip>
+</Block>
+
+<Block kind="errores">
+<Mistake title="El flash en rojo" wrongLabel="hero-flash-red en grises" rightLabel="hero-flash en grises">
+  <Sprite slot="wrong" name="hero-flash-red" scale={8} view="gray" />
+  <Sprite slot="right" name="hero-flash" scale={8} view="gray" />
+
+El rojo oscuro (izquierda) cambia el tono, pero en grises se queda en el mismo valor que el pelo y la sombra de la túnica, y oscurece la cara: a 60 ms el golpe no se nota. Corrígelo con un relleno **blanco** (derecha): el valor salta al máximo y el ojo lo capta aunque dure un instante. Si quieres rojo, ponlo después.
+</Mistake>
+
+<Mistake title="Un golpe sin flash" wrongLabel="Retroceso sin flash" rightLabel="Flash y luego retroceso">
+  <Sprite slot="wrong" name="slime-hurt-3" scale={8} />
+  <Sprite slot="right" name="slime-hurt-2" scale={8} />
+
+Si el slime pasa del reposo directamente al retroceso (izquierda), solo se ve que se mueve, no que le han dado: compara los dos animadores del concepto. Corrígelo con un frame de flash blanco **en el sitio** (derecha), antes de moverlo. Primero el «ha dado», luego el empujón.
+</Mistake>
+
+<Mistake title="Un parpadeo que borra la sombra o dura demasiado" wrongLabel="Parpadeo lento, sin sombra" rightLabel="Parpadeo rápido, con sombra">
+  <p slot="wrong">El héroe y su sombra desaparecen juntos, 300 ms cada vez. La zona entera se enciende y se apaga, y el jugador lo lee como un teletransporte o un error del juego.</p>
+  <p slot="right">Solo desaparece el héroe, 80 ms cada vez. La sombra se queda en el suelo, como en slime-hurt-5, y el parpadeo se lee como invulnerable.</p>
+
+Corrígelo separando la sombra en su propia capa y vaciando solo la del personaje. Y acorta cada parpadeo a 60–100 ms: si se ve como un apagón, es demasiado lento.
+</Mistake>
+
+<Warn title="El retroceso hacia el golpe">
+Si el golpe llega por la izquierda y el héroe se mueve hacia la izquierda, parece que se lanza **contra** el arma, o que el golpe tira de él. El jugador pierde la información de dónde vino. Corrígelo moviéndolo siempre hacia el lado contrario. Y si el juego tiene golpes desde los dos lados, haz la animación para un lado y que el juego la voltee.
+</Warn>
+
+<Warn title="El flash que borra el contorno">
+Si rellenas de blanco el sprite entero, contorno incluido, ves una mancha blanca sin forma, y sobre un fondo claro desaparece. Corrígelo dejando el contorno y los ojos en su color: la silueta debe seguir siendo la del personaje.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+Juzga tu animación **a 1×** y a su velocidad real. El flash tiene que notarse aunque no llegues a verlo bien.
+
+<Checklist items={[
+  "La animación tiene flash, retroceso, asentamiento y parpadeo, en ese orden",
+  "El flash dura 1–2 frames cortos y el relleno es blanco",
+  "El contorno se mantiene intacto en el flash",
+  "En el flash el personaje no se mueve: el retroceso llega después",
+  "El retroceso va hacia el lado contrario del golpe",
+  "Después del retroceso, el personaje vuelve 1 píxel y se asienta",
+  "Los desplazamientos son exactos, sin temblores",
+  "En el parpadeo desaparece el personaje, pero la sombra se queda",
+  "Cada parpadeo dura 100 ms o menos",
+  "He exportado la animación con fondo transparente y he apuntado las duraciones",
+]} />
+
+<Quiz q="¿Por qué el flash de daño suele ser blanco y no rojo?" options={["Porque el rojo no se puede usar en pixel art", "Porque el blanco es el salto de valor más grande, y el ojo lee el valor antes que el tono", "Porque el blanco gasta menos colores de la paleta"]} answer={1}>
+En 60 ms el ojo solo capta un cambio fuerte de valor. El blanco lleva al personaje a lo más claro de la pantalla; un rojo oscuro apenas cambia su valor.
+</Quiz>
+
+<Quiz q="El golpe llega desde la derecha. ¿Hacia dónde va el retroceso?" options={["Hacia la izquierda, lejos del golpe", "Hacia la derecha, hacia el golpe", "Hacia arriba, para que se vea mejor"]} answer={0}>
+El golpe empuja. El retroceso va lejos de él y así le dice al jugador de dónde vino.
+</Quiz>
+
+<Quiz q="En el parpadeo de invulnerabilidad, ¿qué debe quedarse en pantalla?" options={["Nada: el personaje y su sombra desaparecen", "Solo el contorno del personaje", "La sombra en el suelo"]} answer={2}>
+La sombra dice que el personaje sigue ahí. Sin ella, el parpadeo se lee como si hubiera desaparecido.
+</Quiz>
+</Block>

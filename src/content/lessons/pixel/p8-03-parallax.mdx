@@ -1,0 +1,330 @@
+---
+id: p8-03
+discipline: pixel
+level: 8
+order: 3
+title: "Fondos con parallax: profundidad en capas"
+summary: "Tres capas que se repiten sin costuras y se mueven a velocidades 1:2:4. Lo lejano, claro y apagado; lo cercano, oscuro y con contraste. Así un fondo plano gana profundidad."
+duration: 45
+status: borrador
+prerequisites: [p7-01, f08-01]
+fundamentals: [f08]
+objectives:
+  - "Separar un fondo en planos (lejos, medio, cerca) que se mueven más despacio cuanto más lejos están"
+  - "Aplicar la perspectiva atmosférica: menos contraste y saturación, y más cerca del cielo, en lo lejano"
+  - "Dibujar cada capa como una tira que se repite en horizontal sin costuras"
+  - "Hacer que el ancho de repetición de cada capa encaje con su velocidad para que el bucle cierre"
+  - "Montar el fondo en Aseprite con una capa por plano, comprobarlo en Tiled Mode y exportar cada capa en PNG"
+tools: [aseprite, godot]
+piece:
+  name: "Un fondo de 64×40 con cielo y tres capas (lejos, medio, cerca) que se repiten sin costuras, exportadas en PNG por separado"
+  canvas: "64x40"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [parallax]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Vas a forjar **un fondo con parallax**: el paisaje que pasa detrás del héroe cuando camina. No es una imagen: son **tres capas** apiladas que se mueven a velocidades distintas.
+
+Dale a *Reproducir*. La cámara avanza a la derecha.
+
+<Animator sprites={["parallax-1", "parallax-2", "parallax-3", "parallax-4", "parallax-5", "parallax-6", "parallax-7", "parallax-8", "parallax-9", "parallax-10", "parallax-11", "parallax-12", "parallax-13", "parallax-14", "parallax-15", "parallax-16"]} durations={[80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80]} />
+
+Fíjate en tres cosas:
+
+- Las **montañas** del fondo apenas se mueven: 2 píxeles por frame.
+- Las **colinas** van al doble: 4 píxeles por frame.
+- Los **árboles** de delante corren: 8 píxeles por frame.
+- El **cielo** no se mueve nunca.
+
+Son 16 frames y el bucle **cierra sin salto**: cuando vuelve al frame 1, ninguna capa da un tirón. Al final de la lección sabrás por qué.
+
+<Sprite name="parallax-1" scale={8} caption="parallax-1 · Un frame quieto, 64×40: cielo en dos tonos, montañas azul grisáceo, colinas verde azulado y árboles verde oscuro delante" />
+</Block>
+
+<Block kind="concepto">
+### El parallax: lo cercano corre, lo lejano se arrastra
+
+Vienes de Blender: mueve la cámara de lado en una escena con objetos a distintas distancias. Lo que está cerca **barre** el encuadre; lo del fondo casi no se mueve. Es el **parallax de movimiento**, y es una de las pistas de profundidad más fuertes que tiene el ojo.
+
+Un juego 2D no tiene distancias reales, así que las **finge**: parte el fondo en capas planas y mueve cada una a su velocidad.
+
+| Capa | Qué es | Velocidad en `parallax-1…16` | Proporción |
+| --- | --- | --- | --- |
+| Cielo | Fondo fijo, dos tonos | 0 px por frame | 0 |
+| Lejos | Montañas | 2 px por frame | 1 |
+| Medio | Colinas | 4 px por frame | 2 |
+| Cerca | Árboles | 8 px por frame | 4 |
+
+<Why title="Por qué 1:2:4">
+Cuanto más lejos está algo, más despacio parece moverse. Doblar la velocidad en cada capa separa los planos con claridad: el ojo ve **tres distancias**, no tres capas que van más o menos igual. Con velocidades parecidas (por ejemplo 3, 4 y 5) el fondo se lee como un solo bloque que se desliza.
+</Why>
+
+<Why title="Por qué el cielo no se mueve">
+El cielo está «en el infinito». En la vida real, por mucho que camines, el horizonte y el cielo no se desplazan. Si lo mueves, el mundo entero parece un decorado sobre ruedas.
+</Why>
+
+### La perspectiva atmosférica: lo lejano se parece al cielo
+
+El aire no es transparente del todo. Cuanto más aire hay entre tú y una montaña, más se tiñe del color del cielo. Por eso lo lejano tiene:
+
+- **menos contraste** entre sus tonos;
+- **menos saturación**;
+- un **valor y un tono cercanos al cielo**.
+
+Es la perspectiva atmosférica. En [F08-01](/forja-art/fundamentos/f08-01/) la cámara decidía qué caras se veían; aquí el **color** decide a qué distancia está cada cosa.
+
+<Sprite name="parallax-far" scale={8} caption="parallax-far · Solo el cielo y las montañas: dos azules grisáceos muy cerca del color del cielo. Casi no hay contraste" />
+
+Estos son los datos reales de la paleta de `parallax-1` (valor de 0 a 100 % y saturación aproximada):
+
+| Capa | Colores | Valor | Saturación |
+| --- | --- | --- | --- |
+| Cielo | arriba `#bfe3f2`, abajo `#d8eef2` | 86 % y 92 % | 21 % y 11 % |
+| Montañas | borde `#9cc0d6`, cuerpo `#86aac4` | 73 % y 64 % | 27 % y 32 % |
+| Colinas | borde `#5f9a8a`, cuerpo `#4b8070` | 55 % y 45 % | 38 % y 41 % |
+| Árboles | brillo `#3f7a4a`, copa `#2c5a3a`, sombra `#1c3f2a` | 42 %, 31 % y 21 % | 48 %, 51 % y 56 % |
+
+Lee la tabla de arriba abajo, del fondo al frente:
+
+- **El valor baja**: del 92 % del cielo al 21 % de la sombra de los árboles. Cada capa es más oscura que la de detrás.
+- **La saturación sube**: del 11 % al 56 %. Lo lejano es casi gris; lo cercano tiene color.
+- **El contraste dentro de la capa crece**: entre los dos azules de las montañas hay 9 puntos de valor; entre el brillo y la sombra de los árboles, 21.
+- **El tono gira**: las montañas son azules como el cielo; las colinas, verde azulado; los árboles, verde.
+
+<Why title="Por qué el valor manda">
+La silueta y la profundidad se leen en valor (F01). Si dos capas tienen el mismo valor, se funden aunque tengan tonos distintos. Por eso cada capa ocupa **su franja de valor** y ninguna se solapa con la de al lado.
+</Why>
+
+<Sprite name="parallax-1" scale={6} view="gray" caption="parallax-1 en grises: cuatro franjas de valor, de claro (cielo) a oscuro (árboles). Se leen tres distancias sin color" />
+
+### Siluetas simples al fondo, detalle solo delante
+
+Mira cómo está dibujada cada capa en `parallax-1`:
+
+- **Montañas**: un perfil suave con un pico grande y otro pequeño. Un solo detalle: la primera fila de cada columna es el azul más claro, un **borde de 1 píxel** contra el cielo. Por dentro, un solo tono.
+- **Colinas**: dos lomas anchas. Igual que las montañas: un borde claro de 1 píxel y el cuerpo liso.
+- **Árboles**: siete copas redondas de tres tamaños. Aquí sí hay detalle: un píxel de brillo cada 3 en la fila de arriba de cada copa, la copa en verde medio y la sombra oscura debajo.
+
+<Why title="Por qué el detalle va delante">
+Lo lejano se ve pequeño y borroso: el ojo no distingue detalles a esa distancia. Si pones texturas en las montañas, **se acercan**: compiten con el primer plano y con el personaje. Detalle y contraste son pistas de cercanía. Úsalos solo donde quieras que algo esté cerca.
+</Why>
+
+### Cada capa se repite en horizontal
+
+Un nivel puede medir miles de píxeles. No vas a dibujar miles de píxeles de montañas: dibujas **una tira** y el juego la repite. Es el tiling de [P7-01](/forja-art/pixel/p7-01/), con dos diferencias:
+
+- **Solo se repite en horizontal.** Arriba está el cielo y abajo, la capa siguiente. La costura que importa es la del borde izquierdo con el derecho.
+- **Cada capa puede tener su propio ancho de repetición.** En `parallax-1`, colinas y árboles se repiten cada **64** píxeles. Las montañas, cada **32**: fíjate en que el lienzo de 64 muestra el mismo par de picos **dos veces**.
+
+<Sprite name="parallax-far" scale={6} view="silhouette" caption="parallax-far en silueta: el mismo perfil de 32 px repetido dos veces. Al fondo, con tan poco contraste, la repetición casi no se nota" />
+
+<Tip>
+En el fondo puedes repetir más a menudo, porque con poco contraste la repetición no salta a la vista. Delante, un patrón cada pocos píxeles se ve enseguida (es la retícula de `tile-grass-flower` en P7-01).
+</Tip>
+
+### Por qué el bucle cierra: velocidad × frames = ancho
+
+Esta es la regla que hace que el animador no dé saltos. En un bucle, cada capa tiene que recorrer **exactamente una o varias veces su ancho de repetición**. Si no, al volver al frame 1 salta.
+
+| Capa | Velocidad | × 16 frames | Ancho de repetición | ¿Cierra? |
+| --- | --- | --- | --- | --- |
+| Montañas | 2 px | 32 px | 32 | Sí: una vuelta |
+| Colinas | 4 px | 64 px | 64 | Sí: una vuelta |
+| Árboles | 8 px | 128 px | 64 | Sí: dos vueltas |
+
+Por eso las montañas se repiten cada 32 y no cada 64: a 2 píxeles por frame, en 16 frames **solo avanzan 32**. Con un ancho de 64 se quedarían a medio camino y el bucle saltaría hacia atrás.
+
+<Sprite name="parallax-9" scale={6} caption="parallax-9 · A mitad del bucle: los árboles han avanzado 64 px (una vuelta entera) y están igual que en el frame 1. Las montañas y las colinas van por la mitad de su tira" />
+
+<Why title="Es el mismo error del agua">
+En [P7-02](/forja-art/pixel/p7-02/) las crestas avanzaban 1 px por frame en 3 frames sobre un tile de 16: no cerraba. Aquí es lo mismo con tres capas a la vez. La cuenta es siempre la misma: **velocidad × número de frames** tiene que ser un múltiplo del ancho de la capa.
+</Why>
+
+<Tip>
+En un motor, el fondo no es un bucle de frames: se desplaza sin fin con la cámara, y basta con que cada tira se repita sin costuras. La regla de los frames importa cuando exportas el fondo como animación (un GIF, una pantalla de título, un vídeo del portfolio). Pero si tu tira encaja con un bucle limpio, también encaja en el motor.
+</Tip>
+
+### No dejes huecos debajo
+
+Mira `parallax-far`: las montañas bajan **hasta el borde inferior** del lienzo, aunque luego las tapen las colinas. Las capas se mueven a velocidades distintas, así que lo que tapa una capa cambia en cada frame. Si una capa tiene un hueco por debajo, tarde o temprano asoma el cielo por él.
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Lienzo y cuatro capas">
+1. <Keys k="Ctrl+N" />: **64×40**, fondo transparente. Activa *View → Grid*.
+2. Guarda con <Keys k="Ctrl+S" /> como `parallax.aseprite`.
+3. Desde el menú *Layer*, crea capas hasta tener **cuatro**. Renómbralas con doble clic sobre su nombre. De abajo arriba:
+   - `cielo`
+   - `lejos`
+   - `medio`
+   - `cerca`
+
+<Why>
+Una capa por plano. Cada una se exportará sola y se moverá a su velocidad en el juego. Si pintas dos planos en la misma capa, ya no podrás separarlos.
+</Why>
+</Step>
+
+<Step n={2} title="La paleta: cuatro franjas de valor">
+Antes de dibujar, elige los colores y colócalos en orden en la paleta:
+
+- **Cielo**: 2 tonos muy claros y poco saturados. El de abajo, el más claro (el horizonte).
+- **Lejos**: 2 tonos un poco más oscuros que el cielo y **del mismo tono** (si el cielo es azul, azul grisáceo).
+- **Medio**: 2 tonos claramente más oscuros, con algo más de saturación y girando hacia el color del suelo.
+- **Cerca**: 2 o 3 tonos oscuros y saturados, con más diferencia entre ellos.
+
+Si quieres partir de una base probada, copia los nueve colores de la tabla del concepto.
+
+<Why>
+La perspectiva atmosférica se decide en la paleta, no en el dibujo. Si los valores ya están escalonados, cualquier silueta que dibujes con ellos quedará en su distancia.
+</Why>
+
+<Tip>
+Comprueba el escalón: cada capa tiene que ser más oscura que **todos** los colores de la capa de detrás. Si el borde claro de las colinas fuera más claro que el cuerpo de las montañas, se mezclarían.
+</Tip>
+</Step>
+
+<Step n={3} title="Activa el Tiled Mode solo en horizontal">
+1. Ve a *View → Tiled Mode* y elige que repita **solo en el eje X**.
+2. Aleja el zoom con la rueda del ratón hasta ver tres copias seguidas.
+
+<Why>
+Un fondo de parallax solo se repite de lado. Si activas los dos ejes, verás montañas encima del cielo y árboles flotando arriba: te despistará. Con el eje X verás exactamente lo que verá el jugador al caminar.
+</Why>
+</Step>
+
+<Step n={4} title="Cielo y capa lejana">
+1. En `cielo`, rellena con el cubo (<Keys k="G" />) el tono de arriba. Con la selección rectangular (<Keys k="M" />), selecciona la parte de abajo y rellénala con el tono claro del horizonte.
+2. En `lejos`, con el lápiz (<Keys k="B" />) y *Pixel-perfect*, dibuja el perfil de las montañas: **uno o dos picos suaves**, nada más. Revisa los tramos como en [P2-01](/forja-art/pixel/p2-01/): crecen y decrecen con orden.
+3. Rellena el cuerpo con el tono oscuro de la capa **hasta el borde inferior** del lienzo.
+4. Repasa la primera fila del perfil con el tono claro: el borde de 1 píxel contra el cielo.
+
+<Warn>
+El perfil tiene que acabar en el borde derecho **a la misma altura** a la que empieza en el izquierdo. Si no, el Tiled Mode te enseñará un escalón vertical en la costura. Mira la unión de las copias, no el centro.
+</Warn>
+
+<Tip>
+Si quieres que las montañas se repitan cada 32 px como en `parallax-1`, dibuja la mitad izquierda, selecciónala con <Keys k="M" /> y cópiala en la mitad derecha.
+</Tip>
+</Step>
+
+<Step n={5} title="Capa media y capa cercana">
+1. En `medio`: dos o tres lomas anchas, **más bajas** que las montañas, con su borde claro de 1 píxel. Rellena hasta abajo.
+2. En `cerca`: copas de árbol, rocas o edificios **más bajos todavía**, de tamaños distintos. Aquí sí: brillo en la parte de arriba, sombra debajo y más contraste. Rellena también hasta abajo.
+3. Oculta y muestra cada capa con su icono del ojo para comprobar que ninguna deja huecos.
+
+<Why>
+Cada capa más baja que la anterior deja ver un trozo de la de detrás. Así el ojo encuentra las tres distancias. Si la capa cercana fuera tan alta como las montañas, las taparía.
+</Why>
+
+<Warn>
+Que lo que cruza el borde derecho **entre por el izquierdo**: una copa partida en la costura debe tener su otra mitad al otro lado. Es la regla de P7-01.
+</Warn>
+</Step>
+
+<Step n={6} title="Comprueba valores y costuras">
+1. Con el Tiled Mode activo y el zoom alejado, busca en las uniones cualquier columna recta, escalón o media forma.
+2. Exporta una copia a 1× y mírala en grises (o baja la saturación de una copia de prueba): deben verse **cuatro franjas** de valor, de claro arriba a oscuro abajo.
+3. Si dos capas se funden en grises, oscurece la de delante o aclara la de detrás.
+</Step>
+
+<Step n={7} title="Exporta cada capa por separado">
+1. Oculta todas las capas menos `lejos` con el icono del ojo.
+2. *File → Export → Export As*, formato **PNG**, a 1×, como `parallax-lejos.png`. El fondo debe quedar transparente donde no hay montaña.
+3. Repite con `medio`, `cerca` y `cielo`.
+4. Para el portfolio, deja todas visibles y exporta una vista conjunta con *Resize* al 400 %.
+
+<Why>
+El juego necesita cada capa como imagen independiente para moverla a su velocidad. Con transparencia arriba, cada capa deja ver la de detrás.
+</Why>
+</Step>
+
+<Warn title="Verifica en tu versión">
+*View → Tiled Mode* existe en Aseprite, pero el nombre exacto de la opción «solo eje X» puede variar. También pueden cambiar el menú *Layer*, el doble clic para renombrar, el icono del ojo y si *Export As* exporta solo las capas visibles o te deja elegir una capa en el propio diálogo. Comprueba el PNG exportado antes de darlo por bueno.
+</Warn>
+
+<ToolNote tool="godot">
+
+Esto es lo que harás en el nivel 9. En Godot 4.3 o superior existe el nodo `Parallax2D`: pones un nodo por capa, con su PNG dentro, y su `scroll_scale` es la velocidad relativa a la cámara (por ejemplo 0,25, 0,5 y 1 para lejos, medio y cerca, la misma proporción 1:2:4). También tiene una opción para repetir la capa, cuyo tamaño debe coincidir con el ancho de tu tira. En versiones anteriores se usaba `ParallaxBackground` con un `ParallaxLayer` por capa y su `motion_scale`. Verifica en tu versión los nombres exactos de las propiedades.
+
+</ToolNote>
+</Block>
+
+<Block kind="version">
+Tu fondo, a tu manera. Mantén las tres capas, la escalera de valores, la repetición sin costuras y el detalle solo delante. Elige un reto:
+
+- **Otro lugar**: dunas de desierto (cielo naranja pálido, dunas lejanas rosadas), una ciudad de noche (edificios que se oscurecen hacia delante, ventanas solo en el primer plano) o una cueva (capas de roca que se aclaran hacia el fondo, porque ahí el «cielo» es la niebla).
+- **Una cuarta capa**: nubes entre el cielo y las montañas, aún más claras y con menos contraste que las montañas. Decide su velocidad y su ancho para que encaje en el bucle.
+- **La misma tira a otra hora**: aplica el método de [P8-02](/forja-art/pixel/p8-02/) para una versión al atardecer o de noche. Comprueba en grises que la escalera de valores se conserva.
+
+<Tip>
+Haz la cuenta antes de dibujar. Si tus capas miden 64 de ancho y quieres un bucle de 1, 2 y 4 px por frame, necesitas **64 frames**: la capa lejana tarda 64 en dar una vuelta. Si quieres solo 16 frames, sube a 4, 8 y 16 px, o estrecha la capa lejana como en `parallax-1`.
+</Tip>
+</Block>
+
+<Block kind="errores">
+<Mistake title="Todas las capas del mismo color" wrongLabel="parallax-flat en grises" rightLabel="parallax-1 en grises">
+  <Sprite slot="wrong" name="parallax-flat" scale={5} view="gray" />
+  <Sprite slot="right" name="parallax-1" scale={5} view="gray" />
+
+`parallax-flat` tiene exactamente las mismas siluetas que `parallax-1`: los mismos picos, las mismas lomas y las mismas copas. Pero las tres capas están pintadas en el mismo verde oscuro. En grises solo hay dos cosas: el cielo claro y **una mancha oscura**. No se sabe dónde acaba la montaña y empieza el bosque. En movimiento sería peor: tres capas del mismo color deslizándose a velocidades distintas parecen una sola forma que se deforma. **Corrección**: una franja de valor por capa, de claro (lejos) a oscuro (cerca), con menos saturación al fondo.
+</Mistake>
+
+<Mistake title="El mismo error, en color" wrongLabel="parallax-flat" rightLabel="parallax-1">
+  <Sprite slot="wrong" name="parallax-flat" scale={5} />
+  <Sprite slot="right" name="parallax-1" scale={5} />
+
+En color se ve igual de claro: el fondo de la izquierda está **pegado** al frente. Las montañas deberían estar a kilómetros, pero tienen el mismo color oscuro y saturado que los árboles, así que parecen igual de cerca. **Corrección**: acerca lo lejano al color del cielo.
+</Mistake>
+
+<Warn title="El bucle que salta">
+Haces todas las capas de 64 px y las mueves a 2, 4 y 8 px por frame en 16 frames. Las colinas y los árboles cierran, pero las montañas solo avanzan 32: al volver al frame 1 dan un tirón hacia atrás de media tira. **Corrección**: velocidad × frames tiene que ser un múltiplo del ancho. Estrecha la capa (32 px, como `parallax-1`), sube su velocidad o añade frames.
+</Warn>
+
+<Warn title="Las capas, al revés">
+Si la capa de delante va más despacio que la de atrás, el ojo se confunde: lo que debería estar cerca parece lejos y el fondo «se despega». **Corrección**: cuanto más cerca, más rápido. Y el cielo, quieto.
+</Warn>
+
+<Warn title="Detalle en las montañas">
+Rocas, nieve con textura, árboles diminutos en las laderas: todo eso añade contraste, y el contraste **acerca**. La montaña deja de estar al fondo y compite con el personaje. **Corrección**: al fondo, silueta y como mucho un borde de 1 píxel. Guarda el detalle para la capa cercana.
+</Warn>
+
+<Warn title="Costura o hueco">
+Una capa cuyo perfil no casa entre el borde derecho y el izquierdo deja un escalón que pasa cada vez que se repite. Una capa que no llega hasta abajo deja ver el cielo cuando las de delante se mueven. **Corrección**: revisa cada capa en el Tiled Mode solo en X y ocultando las demás.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+Revisa tu fondo **a 1×**, en Tiled Mode solo en X y en grises.
+
+<Checklist items={[
+  "Tengo cuatro capas: cielo, lejos, medio y cerca, cada una en su capa de Aseprite",
+  "En grises se ven cuatro franjas de valor, de claro (cielo) a oscuro (cerca), sin solaparse",
+  "Lo lejano tiene menos contraste y menos saturación, y un tono cercano al del cielo",
+  "Las capas lejanas son siluetas simples; el detalle está solo en la capa cercana",
+  "Cada capa es más baja que la de detrás y deja ver un trozo de ella",
+  "Ninguna capa tiene costura en el borde izquierdo-derecho",
+  "Cada capa llega hasta el borde inferior: no hay huecos",
+  "He calculado velocidades y anchos para que el bucle cierre (velocidad × frames = múltiplo del ancho)",
+  "He exportado cada capa por separado en PNG a 1×, con transparencia",
+]} />
+
+<Quiz q="¿Qué capa se mueve más deprisa cuando la cámara avanza?" options={["El cielo", "Las montañas", "La capa más cercana"]} answer={2}>
+Cuanto más cerca está algo, más rápido barre el encuadre. Por eso los árboles van a 8 px por frame, las colinas a 4, las montañas a 2 y el cielo no se mueve.
+</Quiz>
+
+<Quiz q="¿Cómo se pinta una capa muy lejana?" options={["Clara, poco saturada y con poco contraste, cerca del color del cielo", "Oscura y saturada, para que destaque", "Con mucho detalle, para que se vea bien a pesar de la distancia"]} answer={0}>
+Es la perspectiva atmosférica: el aire tiñe lo lejano del color del cielo y le quita contraste. El detalle y el contraste acercan.
+</Quiz>
+
+<Quiz q="Las montañas se mueven 2 px por frame y el bucle dura 16 frames. ¿Qué ancho de repetición cierra el bucle?" options={["64 px", "32 px", "20 px"]} answer={1}>
+2 × 16 = 32. La capa tiene que recorrer exactamente una o varias veces su ancho. Con 64 se quedaría a mitad y saltaría; con 20, 32 no es múltiplo de 20.
+</Quiz>
+
+<Quiz q="En grises, tu fondo es el cielo y una sola mancha oscura. ¿Qué cambias?" options={["Las siluetas de las montañas", "El valor de cada capa, para que haya una franja por plano", "La velocidad de las capas"]} answer={1}>
+Es `parallax-flat`: las siluetas son correctas, pero las tres capas comparten valor. Escalona los valores de claro (lejos) a oscuro (cerca).
+</Quiz>
+</Block>

@@ -229,6 +229,9 @@ if (sprites?.length) {
   .pal :global(button.on) { border-color: #fff; outline: 2px solid var(--accent); }
   .side { display: grid; gap: 10px; align-content: start; font-size: .85rem; }
   .play { background: conic-gradient(var(--checker-a) 25%, var(--checker-b) 0 50%, var(--checker-a) 0 75%, var(--checker-b) 0) 0 0 / 12px 12px; padding: 10px; display: grid; place-items: center; }
+  .side { grid-template-columns: minmax(0, 1fr); }
+  .play { max-width: 100%; min-width: 0; }
+  .preview { max-width: 100%; height: auto; image-rendering: pixelated; }
   .btns { display: flex; gap: 12px; align-items: center; }
   button { background: var(--panel-2); border: 1px solid var(--line); color: var(--text); padding: 6px 12px; cursor: pointer; font: 500 .82rem var(--font-head); }
   button:hover { border-color: var(--accent); }

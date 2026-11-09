@@ -1,0 +1,277 @@
+---
+id: p5-05
+discipline: pixel
+level: 5
+order: 5
+title: "Retratos: un busto de 32×32"
+summary: "El retrato de diálogo de tu héroe, en orden: masas planas, una sola luz con la sombra del pelo, rasgos y limpieza. La nariz es una sombra, los ojos caben en 3 px y el pillow shading sobra."
+duration: 45
+status: borrador
+objectives:
+  - "Construir un retrato en orden: masas planas, una luz, rasgos y limpieza"
+  - "Colocar ojos, nariz, boca y orejas con unas proporciones que se lean"
+  - "Sombrear con una sola luz, incluida la sombra que arroja el flequillo sobre la frente"
+  - "Dibujar la nariz con su sombra y unos ojos de 3 px con párpado, blanco e iris"
+  - "Detectar el pillow shading y comprobar el retrato en grises y a 1×"
+prerequisites: [p5-02, p3-01]
+fundamentals: [f05, f09]
+tools: [aseprite]
+piece:
+  name: "El retrato de diálogo de tu héroe: un busto de 32×32 con una sola luz"
+  canvas: "32x32"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [retrato]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Vas a forjar **el retrato de tu héroe**: el busto que sale junto al cuadro de diálogo o en la ficha del inventario. En el mapa, el héroe mide 16×24 y su cara son cuatro píxeles. Aquí la cara ocupa casi todo el lienzo, y por fin hay sitio para **una luz de verdad** y para unos ojos con párpado, blanco e iris.
+
+<Sprite name="portrait" scale={10} caption="portrait · El busto terminado, 32×32. La luz llega de arriba a la izquierda: pelo y cara se aclaran a ese lado y se oscurecen a la derecha. El flequillo deja una franja de sombra sobre la frente y el cuello queda en sombra bajo la barbilla" />
+
+No se empieza por los ojos. Se empieza por aquí:
+
+<Sprite name="portrait-masses" scale={10} caption="portrait-masses · Paso 1: cinco colores planos (contorno, pelo, piel, túnica y el cuello marrón de la túnica). Sin luz y sin cara. Solo silueta y proporciones" />
+</Block>
+
+<Block kind="concepto">
+### El orden de trabajo
+
+Un retrato se hace en cuatro pasadas, de lo grande a lo pequeño:
+
+| Pasada | Qué decides | Qué ignoras |
+| --- | --- | --- |
+| 1 · Masas | Silueta, tamaño de la cabeza, peinado, cuello y hombros | Luz y rasgos |
+| 2 · Luz | De dónde viene, qué lado se oscurece, qué sombra arroja el pelo | Rasgos |
+| 3 · Rasgos | Ojos, cejas, nariz y boca | El detalle fino |
+| 4 · Limpieza | Píxeles sueltos, contorno, valor en grises, lectura a 1× | Nada: aquí se juzga todo |
+
+<Why title="Por qué en este orden">
+Es lo mismo que en Blender: primero el blockout, luego la luz, luego el detalle. Si empiezas por unos ojos preciosos y después descubres que la cabeza es demasiado ancha, tendrás que redibujarlos. Las masas planas son baratas: se cambian en segundos. Cada pasada se apoya en la anterior y no la deshace.
+</Why>
+
+### Proporciones de la cara
+
+En una cabeza adulta realista hay tres reglas de partida:
+
+- Los **ojos** quedan a media altura de la cabeza, contando el cráneo.
+- La **nariz** acaba más o menos a medio camino entre los ojos y la barbilla, y la boca un poco por debajo.
+- Las **orejas** van entre la línea de las cejas y la de la nariz.
+
+Nuestro héroe es un personaje joven y estilizado, así que mueve una de ellas a propósito. Mira las filas del retrato (de 0 arriba a 31 abajo):
+
+- El pelo empieza en la fila 0 y la boca está en la 20. La cabeza ocupa unas 21 filas.
+- Los **ojos** ocupan las filas 13 a 15: están **por debajo** de la mitad. La frente es grande y queda bajo el pelo, como en el chibi de [P5-01](/forja-art/pixel/p5-01/). Eso hace la cara más joven.
+- La **nariz** (su brillo) está en la fila 17: justo a medio camino entre los ojos (14) y la boca (20).
+- Las **orejas** asoman en la fila 14, la más ancha de la cabeza: a la altura de los ojos, entre las cejas y la nariz.
+- Entre los dos ojos hay 6 píxeles: el ancho de **dos ojos**. Una cara adulta deja uno. Unos ojos separados también leen joven y amable.
+
+<Tip title="Proporción es decisión">
+Las reglas realistas no son leyes: son el punto desde el que te alejas **sabiendo** lo que haces. Ojos bajos y separados dicen «joven»; ojos altos y juntos, «adulto» o «severo».
+</Tip>
+
+### Una sola luz
+
+Es lo que aprendiste en [P3-01](/forja-art/pixel/p3-01/) con la bola, aplicado a una cabeza. El retrato tiene una luz, arriba a la izquierda, y todas las masas la obedecen:
+
+- **Pelo:** el marrón claro arriba a la izquierda, el medio en el centro y el más oscuro a la derecha.
+- **Cara:** la frente y la mejilla izquierda son las claras (la base de piel y unos toques del tono más claro en la frente); la derecha baja a los dos tonos de sombra.
+- **Cuello:** casi entero en el tono más oscuro de piel. La barbilla le tapa la luz.
+- **Túnica:** azul claro a la izquierda, medio en el centro y oscuro a la derecha.
+
+Y hay una **sombra arrojada**: justo bajo el borde del flequillo, una franja de piel en sombra cruza la frente. El pelo sobresale y tapa la luz, igual que la barbilla con el cuello.
+
+<Why title="La sombra arrojada (f05)">
+La sombra propia dice qué forma tiene un objeto. La **arrojada** dice qué está delante de qué. Sin la franja bajo el flequillo, el pelo parece pintado sobre la frente, como una peluca plana. Con ella, el pelo **sobresale** de la cabeza. Dos o tres píxeles de sombra dan profundidad que el contorno solo no da.
+</Why>
+
+<Sprite name="portrait" scale={6} view="gray" caption="portrait en grises: el valor baja de izquierda a derecha en pelo, cara y túnica. Se lee la dirección de la luz sin color" />
+
+### La nariz se dibuja con su sombra
+
+De frente, la nariz **no tiene borde** contra el fondo: está delante de la cara, del mismo color que la cara. Si le pones contorno, el ojo lee una línea pintada encima, como una cicatriz o un pico. Lo que de verdad te dice que hay una nariz es la luz: el lado que mira a la luz se ilumina y el otro queda en sombra.
+
+En el retrato, la nariz es **un píxel claro** (fila 17, el único de ese tono en la parte baja de la cara) y, a su derecha y debajo, tonos de sombra. No hay ni un píxel de contorno. La boca sigue la misma idea: 4 píxeles de un rosa oscuro y la comisura derecha en sombra, sin línea alrededor.
+
+### Ojos de 3 píxeles
+
+Cada ojo mide 3 de ancho y 3 de alto, y cada fila tiene un trabajo:
+
+- **Fila de arriba:** el párpado, 3 píxeles oscuros. Es lo que más pesa: marca la línea del ojo desde lejos.
+- **Dos filas de abajo:** el **blanco** en la columna de fuera y el **iris azul** en las dos de dentro. Arriba, en la esquina interior, un píxel oscuro hace de pupila y une el iris con el párpado.
+
+El blanco va **hacia fuera** en los dos ojos, así que los iris quedan hacia la nariz: el héroe te mira a ti. Si pusieras el blanco por dentro, miraría a los lados.
+
+Encima, las **cejas**: 3 píxeles cada una, del marrón más oscuro del pelo. La derecha está una fila más alta que la izquierda. Ese píxel de diferencia rompe la simetría y le da un gesto, como en [P5-02](/forja-art/pixel/p5-02/).
+
+<Why title="Personaje y lectura (f09)">
+En un diálogo, el retrato es la cara con la que el jugador asocia la voz. Se mira a tamaño real y de reojo, mientras se lee el texto. Por eso cada rasgo tiene que leerse con muy pocos píxeles: el párpado da la línea del ojo, el blanco la mirada, la ceja el gesto.
+</Why>
+
+### El error principal: pillow shading
+
+<Sprite name="portrait-pillow" scale={10} caption="portrait-pillow (ERROR) · Cada masa es clara en el centro y oscura por todos sus bordes por igual: el pelo es un casco, la cara un cojín inflado y la túnica tiene los dos lados en el mismo azul oscuro" />
+
+Ya lo viste en P3-01 con `ball-pillow`. Aquí pasa lo mismo: la sombra sigue el **contorno** en vez de seguir la **luz**. Parece que la luz sale de tus ojos. En grises se ve clarísimo: es simétrico.
+
+<Sprite name="portrait-pillow" scale={6} view="gray" caption="portrait-pillow en grises: anillos claros en el centro de cada masa y oscuros alrededor. No hay dirección de luz" />
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Lienzo y paleta">
+1. <Keys k="Ctrl+N" />: **32×32**, fondo transparente. Activa *View → Grid*.
+2. Guarda con <Keys k="Ctrl+S" /> como `retrato.aseprite`.
+3. Prepara tus colores. Puedes partir de los del retrato y cambiarlos a los de tu héroe:
+
+| Zona | Del más claro al más oscuro |
+| --- | --- |
+| Piel | `#ffdcbc` · `#f2c29b` (base) · `#c98f6b` · `#9c6450` |
+| Pelo | `#a0603a` · `#6b3d2e` (base) · `#4a2820` |
+| Túnica | `#5a8ae8` · `#3b6fd1` (base) · `#26489a` |
+| Ojo y boca | blanco `#fff3ec` · iris `#3b6fd1` · boca `#a8484f` |
+| Contorno | `#1b1030` |
+
+<Tip>
+El retrato **reutiliza** colores: el cuello de la túnica es el mismo marrón que la base del pelo y el iris es el mismo azul que la túnica. Menos colores, y la cara y la ropa quedan atadas entre sí.
+</Tip>
+</Step>
+
+<Step n={2} title="Pasada 1: masas planas">
+Con el lápiz (<Keys k="B" />) y *Pixel-perfect* activado, dibuja con **un solo color por masa**, como `portrait-masses`:
+
+1. **Hombros y túnica** abajo, en las filas 26–31, más anchos que la cabeza. Un cuello en V del marrón del pelo.
+2. **Cuello**, unas 5 filas y 6–7 píxeles de ancho. Más estrecho que la mandíbula.
+3. **Cabeza**: un óvalo de unas 21 filas que se estrecha hacia la barbilla. Las orejas asoman 1 píxel a cada lado a media cara.
+4. **Pelo** encima: casi la mitad de arriba de la cabeza. Decide ya el flequillo y la raya (en el retrato, la raya queda a la derecha, donde la piel asoma por primera vez en la fila 7).
+5. Contorno oscuro alrededor de todo. Rellena con el cubo (<Keys k="G" />).
+
+Antes de seguir, duplica la capa (*Layer → Duplicate*) y oculta la copia de abajo con el icono del ojo: así guardas cada pasada para compararla después.
+
+<Why>
+Aquí se decide si el personaje se reconoce. El peinado y la forma de la cabeza se leen en negro, a 1×, antes que cualquier ojo. Si no reconoces a tu héroe en las masas, no lo arreglarán los rasgos.
+</Why>
+</Step>
+
+<Step n={3} title="Pasada 2: una luz y la sombra del pelo">
+Decide la luz: **arriba a la izquierda**. Sin rasgos todavía.
+
+1. **Pelo:** aclara la zona de arriba a la izquierda y oscurece la derecha, siguiendo los mechones, no en anillos.
+2. **Cara:** pasa a sombra el lado derecho de la cara y de la mandíbula. Usa el tono más oscuro solo en el borde de la derecha, donde la cara gira y se aleja de la luz.
+3. **Sombra arrojada:** justo bajo el borde del flequillo, una franja de 1 píxel en el primer tono de sombra, de lado a lado de la frente.
+4. **Cuello:** casi entero en sombra. La barbilla le quita la luz.
+5. **Túnica:** claro a la izquierda, oscuro a la derecha.
+6. Unos pocos píxeles del tono de piel más claro en la frente, a la izquierda, bajo la franja de sombra.
+
+<Warn title="No sombrees el borde por costumbre">
+Si al pasar a sombra el lado derecho te descubres oscureciendo **también** el izquierdo «para dar volumen», para. Eso es pillow shading. El lado de la luz se queda claro hasta el contorno.
+</Warn>
+</Step>
+
+<Step n={4} title="Pasada 3: ojos y cejas">
+1. **Ojos:** en las filas 13–15 (o donde decidiste), dos ojos de 3×3. Arriba, el párpado: 3 píxeles oscuros. Debajo, dos filas: el blanco en la columna de **fuera** y el iris en las dos de dentro. Un píxel oscuro arriba en la esquina interior une iris y párpado.
+2. **Cejas:** 3 píxeles de pelo oscuro, dos filas por encima de cada párpado. Sube una de las dos 1 píxel si quieres un gesto.
+3. Mira con la rueda del ratón al mínimo. ¿Te mira el personaje a ti?
+
+<Why>
+El ojo es lo primero que mira el jugador. A 3 píxeles de ancho cada píxel tiene un trabajo: si quitas el párpado, el ojo flota; si quitas el blanco, el iris parece un agujero y desaparece la mirada.
+</Why>
+</Step>
+
+<Step n={5} title="Pasada 3: nariz y boca, sin contorno">
+1. **Nariz:** un píxel del tono más claro de piel donde está la punta, a media distancia entre ojos y boca. A su derecha y debajo, el primer tono de sombra. Nada más.
+2. **Boca:** 3–4 píxeles del color de la boca, centrados. Pon en sombra la comisura del lado de la sombra.
+3. Si dudas entre dos sitios, prueba los dos y deshaz con <Keys k="Ctrl+Z" />.
+
+<Tip>
+Si la nariz no se ve, no le pongas contorno: **oscurece** su sombra un tono. La nariz aparece cuando la luz la separa de la mejilla.
+</Tip>
+</Step>
+
+<Step n={6} title="Pasada 4: limpieza, grises y 1×">
+1. Busca píxeles sin sentido: un tono suelto en medio de una masa, escalones en el contorno, sombras de 1 píxel que no siguen ninguna forma. Corrígelos con el lápiz o la goma (<Keys k="E" />).
+2. **Grises:** *Sprite → Color Mode → Grayscale*. Mira si la luz sigue viniendo de la izquierda en pelo, cara y túnica. Vuelve al color con <Keys k="Ctrl+Z" />.
+3. **1×:** rueda del ratón al mínimo. ¿Se lee la mirada? ¿Y el peinado?
+4. Exporta con *File → Export → Export As*: un PNG a 1× (para el inspector y para el juego) y otro con **Resize** al 400 % o más para enseñarlo.
+
+<Warn>
+Pasar a *Grayscale* convierte de verdad los colores. Si guardas después sin deshacer, pierdes el color. Mira, deshaz y luego guarda.
+</Warn>
+</Step>
+
+<Warn title="Verifica en tu versión">
+Los nombres y la posición pueden variar según la versión de Aseprite: *Layer → Duplicate*, el icono del ojo del panel de capas y *Sprite → Color Mode → Grayscale* (y que se pueda deshacer con <Keys k="Ctrl+Z" />). Si tu versión no lo permite, comprueba los grises subiendo el PNG al inspector del final.
+</Warn>
+</Block>
+
+<Block kind="version">
+Ahora a tu manera. Mantén el orden de las cuatro pasadas, una sola luz, la sombra arrojada del pelo y la nariz sin contorno. Elige uno:
+
+- **Otra luz:** el mismo héroe con la luz desde la derecha, o desde abajo, como junto a una hoguera. Todo se invierte, también la franja del flequillo, que ahora cae hacia arriba o desaparece.
+- **Otra expresión:** el retrato con una de las caras de P5-02 (enfado, alegría, sorpresa), cambiando solo cejas, ojos y boca. Es lo que hacen los juegos para que el retrato reaccione al diálogo.
+- **Otro personaje:** el retrato de un PNJ, el herrero o una aldeana, con otro peinado y otras proporciones: ojos más altos y juntos para un adulto, por ejemplo.
+
+<Tip>
+Si eliges otro personaje, compara sus masas planas con `portrait-masses` antes de seguir. Si las dos siluetas se confunden en negro, cambia el peinado o el cuello antes de sombrear.
+</Tip>
+</Block>
+
+<Block kind="errores">
+<Mistake title="Pillow shading" wrongLabel="portrait-pillow: oscuro en todos los bordes" rightLabel="portrait: una luz arriba a la izquierda">
+  <Sprite slot="wrong" name="portrait-pillow" scale={7} />
+  <Sprite slot="right" name="portrait" scale={7} />
+
+Los dos usan casi los mismos colores. A la izquierda, cada masa se aclara hacia el centro y se oscurece igual por todos lados: el pelo parece un casco, la túnica tiene los dos costados en el azul más oscuro y la cara se infla como un cojín. A la derecha, todo se oscurece **hacia el mismo lado**. Corrígelo decidiendo la luz antes de pintar una sombra: el lado que la mira se queda claro hasta el contorno y la sombra se acumula en el contrario y donde algo tapa la luz (bajo el flequillo y bajo la barbilla).
+</Mistake>
+
+<Mistake title="La nariz dibujada con contorno" wrongLabel="Una línea oscura alrededor" rightLabel="Un brillo y su sombra">
+  <p slot="wrong">La nariz es una L o una U del color del contorno en medio de la cara. Se lee como un dibujo pegado encima: un pico o una cicatriz. Y, a 32 píxeles, se come el espacio de la boca.</p>
+  <p slot="right">Un píxel claro en la punta y la sombra a su lado contrario a la luz. Sin una sola línea: la nariz aparece porque la luz la separa de la mejilla.</p>
+
+El contorno sirve para separar una forma del **fondo**. La nariz no toca el fondo: está dentro de la cara. Corrígelo borrando la línea y dejando solo la sombra del lado de la sombra. Lo mismo vale para la boca y la barbilla: no las rodees de contorno.
+</Mistake>
+
+<Warn title="Empezar por los ojos">
+Si pintas los ojos lo primero, todo lo demás se acaba ajustando a ellos: la cabeza crece o encoge, el pelo se mueve, y los ojos quedan torcidos o a una altura rara. Corrígelo volviendo a las masas: tapa los rasgos y mira si la cabeza funciona en colores planos. Después recoloca los ojos.
+</Warn>
+
+<Warn title="Ojos sin blanco">
+Un ojo de 3×3 todo azul, o todo oscuro, es un agujero: no tiene dirección. Corrígelo con el blanco en la columna de fuera y el iris hacia la nariz, para que el personaje te mire.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+Juzga tu retrato **a 1×** y en grises. Primero estudia el de referencia en el inspector; luego sube el tuyo, exportado a 1×.
+
+<Inspector sprite="portrait" upload title="Retrato de referencia (y el tuyo)" />
+
+<Tip title="Huérfanos con función">
+Si marcas los huérfanos en el retrato de referencia, el inspector señala unos pocos. El más visible es el **brillo de la nariz**: un píxel claro sin vecino de su color. Está ahí a propósito, y por eso se queda. Un huérfano no es un error por definición: lo es cuando no hace ningún trabajo. Revisa los tuyos uno a uno con esa pregunta.
+</Tip>
+
+<Checklist items={[
+  "He trabajado en cuatro pasadas: masas, luz, rasgos y limpieza",
+  "En masas planas y en silueta se reconoce el peinado y el personaje",
+  "La cabeza, el cuello y los hombros tienen proporciones decididas, no casuales",
+  "Hay una sola luz y todas las masas se oscurecen hacia el mismo lado",
+  "El flequillo arroja una franja de sombra sobre la frente y el cuello está en sombra",
+  "Los ojos tienen párpado, blanco e iris, y el personaje mira hacia mí",
+  "La nariz es un brillo y una sombra, sin contorno",
+  "En grises se lee la dirección de la luz y no hay anillos de pillow shading",
+  "A 1× se lee la mirada",
+  "He exportado un PNG a 1× y otro ampliado con escala entera",
+]} />
+
+<Quiz q="¿Por qué la nariz se dibuja con su sombra y no con contorno?" options={["Porque el contorno gasta demasiados colores", "Porque a 32×32 no cabe una nariz", "Porque la nariz no tiene borde contra el fondo: la separa de la cara la luz"]} answer={2}>
+El contorno separa una forma del fondo. La nariz está dentro de la cara: la delata el lado en sombra, no una línea.
+</Quiz>
+
+<Quiz q="Pasas tu retrato a grises y cada masa tiene un anillo oscuro alrededor y el centro claro. ¿Qué pasa?" options={["Es pillow shading: la sombra sigue el contorno en vez de la luz", "Le falta contraste: hay que oscurecer más los bordes", "Está bien: así se ve el volumen"]} answer={0}>
+La sombra simétrica alrededor de todo no viene de ninguna luz. Decide de dónde llega y deja claro ese lado hasta el contorno.
+</Quiz>
+
+<Quiz q="¿Qué hace la franja de sombra justo bajo el flequillo?" options={["Marca el borde de la frente como un contorno", "Dice que el pelo sobresale y tapa la luz: es una sombra arrojada", "Oscurece la cara para que los ojos destaquen"]} answer={1}>
+Es una sombra arrojada, como la que deja la barbilla en el cuello. Sin ella, el pelo parece pintado sobre la frente.
+</Quiz>
+</Block>

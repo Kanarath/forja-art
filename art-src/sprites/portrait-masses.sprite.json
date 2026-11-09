@@ -1,0 +1,51 @@
+{
+  "name": "portrait-masses",
+  "description": "Retrato de 32×32, paso 1: las masas en colores planos. Pelo, cara, orejas, cuello y túnica, cada uno de un color y con su contorno. Sin luz ni rasgos: aquí solo se decide la silueta y las proporciones.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "personaje",
+    "retrato"
+  ],
+  "palette": {
+    "o": "#1b1030",
+    "s": "#f2c29b",
+    "h": "#6b3d2e",
+    "t": "#3b6fd1",
+    "b": "#6b3d2e"
+  },
+  "rows": [
+    ".............ooooo..............",
+    "..........ooohhhhhooo...........",
+    "........oohhhhhhhhhhhoo.........",
+    ".......ohhhhhhhhhhhhhhho........",
+    "......ohhhhhhhhhhhhhhhhho.......",
+    "......ohhhhhhhhhhhhhhhhho.......",
+    ".....ohhhhhhhhhhhhhhhhhhho......",
+    ".....ohhhhhhhhhhhsshhhhhho......",
+    ".....ohhhhhhhhsssssshhhhho......",
+    ".....ohhhhhssssssssssshhho......",
+    ".....ohhhsssssssssssssshho......",
+    "......ohsssssssssssssssso.......",
+    ".....ohhssssssssssssssssho......",
+    ".....oshssssssssssssssssso......",
+    "....ossssssssssssssssssssso.....",
+    ".....ossssssssssssssssssso......",
+    ".....ooosssssssssssssssooo......",
+    "........ossssssssssssso.........",
+    ".........ossssssssssso..........",
+    "..........ossssssssso...........",
+    "...........ossssssso............",
+    "............osssssso............",
+    "............osssssso............",
+    "............osssssso............",
+    "............osssssso............",
+    "...........ossssssso............",
+    "........oootssssssssooo.........",
+    "......oottbbssssssssbttoo.......",
+    ".....ottttbbbtttttbbbtttto......",
+    "...oottttttbbbtttbbbttttttoo....",
+    "...ottttttttttttttttttttttto....",
+    "..ottttttttttttttttttttttttto..."
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "name": "slime-hurt-5",
+  "description": "Daño, frame 5: el parpadeo de invulnerabilidad. El slime desaparece pero su sombra se queda: alternado con el frame 4, dice «ahora no se le puede dañar».",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "criatura",
+    "animación",
+    "daño"
+  ],
+  "palette": {
+    "k": "#14301f"
+  },
+  "rows": [
+    "..................",
+    "..................",
+    "..................",
+    "..................",
+    "..................",
+    "..................",
+    "..................",
+    "..................",
+    "..................",
+    "..................",
+    "......kkkkkkkk....",
+    ".......kkkkkk....."
+  ]
+}

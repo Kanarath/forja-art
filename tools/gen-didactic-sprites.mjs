@@ -875,6 +875,156 @@ slashes.forEach((rows, i) => add(`slash-${i + 1}`, SLASH_D[i], ["vfx", "animaci�
   add("slash-thin", "Error: el mismo recorrido como una línea fina de 1 píxel. Tiene la forma del arco, pero no el peso: a la velocidad del juego desaparece y no se siente el golpe.", ["vfx", "animación", "error"], { c: SLASH.c }, rows);
 }
 
+
+// ---------- retrato de 32×32: el héroe de busto. Formas con reglas (elipses), luz desde arriba a la izquierda
+const PORT = {
+  o: "#1b1030", l: "#ffdcbc", s: "#f2c29b", S: "#c98f6b", d: "#9c6450",
+  H: "#a0603a", h: "#6b3d2e", k: "#4a2820", w: "#fff3ec", i: "#3b6fd1", m: "#a8484f",
+  t: "#3b6fd1", T: "#26489a", u: "#5a8ae8", b: "#6b3d2e",
+};
+function portrait(mode) {
+  // mode: "masses" (colores planos, sin rasgos) · "final" · "pillow" (error: sombra alrededor del centro)
+  const N = 32, cx = 15.5;
+  const L = (() => { const v = [-0.45, -0.5, 0.74]; const n = Math.hypot(...v); return v.map((a) => a / n); })();
+  const lvl = (nx, ny, ramp) => {
+    if (mode === "masses") return ramp[1];
+    const r2 = nx * nx + ny * ny, nz = Math.sqrt(Math.max(0, 1 - r2));
+    const k = mode === "pillow" ? 1 - Math.sqrt(r2) : nx * L[0] + ny * L[1] + nz * L[2];
+    const cuts = mode === "pillow" ? [0.62, 0.32, 0.12] : [0.9, 0.62, 0.3];
+    return k > cuts[0] ? ramp[0] : k > cuts[1] ? ramp[1] : k > cuts[2] ? ramp[2] : ramp[3] ?? ramp[2];
+  };
+  const head = (x, y) => {
+    const cy = 14.5, ry = 10.5;
+    const t = Math.max(0, (y - cy) / ry), rx = 9.2 * (1 - 0.4 * t * t);
+    const nx = (x - cx) / rx, ny = (y - cy) / ry;
+    return nx * nx + ny * ny <= 1 ? [nx, ny] : null;
+  };
+  const hairVol = (x, y) => { const nx = (x - cx) / 10.4, ny = (y - 10.5) / 8.2; return nx * nx + ny * ny <= 1 && y <= 17 ? [nx, ny] : null; };
+  // flequillo asimétrico: la raya está a la derecha del espectador y el pelo cae hacia la izquierda
+  const FRINGE = [13, 12, 12, 11, 11, 11, 10, 10, 10, 9, 9, 10, 11, 11, 12, 13]; // de x = 8 a x = 23
+  const hairline = (x) => (x < 8 || x > 23 ? 18 : FRINGE[x - 8]);
+  const ear = (x, y) => [[6, 16.5], [25, 16.5]].some(([ex, ey]) => ((x - ex) / 1.5) ** 2 + ((y - ey) / 2.2) ** 2 <= 1);
+  const body = (x, y) => { const nx = (x - cx) / 15, ny = (y - 38) / 11; return y >= 27 && nx * nx + ny * ny <= 1 ? [nx, ny] : null; };
+  // se calcula con 2 filas de más abajo y luego se recortan las 2 de arriba: así caben los hombros
+  const g = Array.from({ length: N + 2 }, (_, y) => Array.from({ length: N }, (_, x) => {
+    const X = x + 0.5, Y = y + 0.5;
+    const hd = head(X, Y), hv = hairVol(X, Y);
+    if (hv && (!hd || Y < hairline(x) || x <= 7 || x >= 24)) return lvl(hv[0], hv[1], ["H", "h", "k", "k"]);
+    if (hd) {
+      if (mode !== "masses" && Y < hairline(x) + 1.2 && x > 7 && x < 24) return mode === "pillow" ? lvl(hd[0], hd[1], ["l", "s", "S", "d"]) : "S"; // sombra que el flequillo arroja
+      // la cara es casi un plano frontal: se aplana la curvatura vertical para que no se oscurezca toda la mitad de abajo
+      return mode === "pillow" ? lvl(hd[0], hd[1], ["l", "s", "S", "d"]) : lvl(hd[0], (hd[1] - 0.15) * 0.55, ["l", "s", "S", "d"]);
+    }
+    if (ear(X, Y)) return mode === "masses" ? "s" : X < cx ? "s" : "S";
+    if (X >= 12 && X <= 20 && Y >= 23 && Y < 30) return mode === "masses" ? "s" : Y < 27 ? "d" : "S"; // cuello: en sombra bajo la barbilla
+    const bd = body(X, Y);
+    if (bd) return lvl(bd[0], bd[1], ["u", "t", "T", "T"]);
+    return ".";
+  }));
+  // cuello de la túnica en V
+  for (let y = 28; y < 32; y++) for (let x = 0; x < N; x++) {
+    const dx = Math.abs(x + 0.5 - cx);
+    if (g[y][x] !== "." && dx >= 4.5 - (y - 28) && dx < 6.5 - (y - 28) * 0.6 && !"sSdl".includes(g[y][x])) g[y][x] = "b";
+  }
+  if (mode !== "masses") {
+    const set = (x, y, c) => { g[y][x] = c; };
+    // ojos: párpado de 3 px, blanco a un lado y el iris mirando al frente
+    [[10, 11, 12], [19, 20, 21]].forEach((xs, side) => {
+      xs.forEach((x) => set(x, 15, "o"));
+      const [a, b, c] = side === 0 ? ["w", "i", "o"] : ["o", "i", "w"];
+      set(xs[0], 16, a); set(xs[1], 16, b); set(xs[2], 16, c);
+      set(xs[0], 17, a === "w" ? "w" : "i"); set(xs[1], 17, "i"); set(xs[2], 17, c === "w" ? "w" : "i");
+    });
+    // cejas: 3 px, la del lado de la raya un poco más alta (gesto decidido)
+    [10, 11, 12].forEach((x) => set(x, 13, "k"));
+    [19, 20, 21].forEach((x) => set(x, 12, "k"));
+    // nariz: solo su sombra a la derecha y un brillo en la punta
+    set(17, 18, "S"); set(17, 19, "S"); set(16, 20, "d"); set(17, 20, "d"); set(15, 19, "l");
+    // boca: 4 px con la comisura un poco levantada
+    [14, 15, 16, 17].forEach((x) => set(x, 22, "m")); set(18, 21, "S");
+  }
+  // contorno: todo píxel de la figura que toca el vacío (salvo el borde inferior del lienzo: el busto sigue)
+  const fig = (x, y) => y >= g.length || (g[y]?.[x] ?? ".") !== ".";
+  const outlined = g.map((r, y) => r.map((c, x) => (c !== "." && (!fig(x - 1, y) || !fig(x + 1, y) || !fig(x, y - 1) || !fig(x, y + 1)) ? "o" : c)));
+  return outlined.slice(2).map((r) => r.join(""));
+}
+{
+  const masses = portrait("masses"), fin = portrait("final"), pillow = portrait("pillow");
+  add("portrait-masses", "Retrato de 32×32, paso 1: las masas en colores planos. Pelo, cara, orejas, cuello y túnica, cada uno de un color y con su contorno. Sin luz ni rasgos: aquí solo se decide la silueta y las proporciones.", ["personaje", "retrato"], usedOnly(PORT, masses), masses);
+  add("portrait", "Retrato terminado (32×32): la luz llega de arriba a la izquierda, así que la mejilla izquierda es la más clara y la sombra se acumula a la derecha y bajo la barbilla. El flequillo arroja una franja de sombra sobre la frente. Ojos de 3×3 con párpado, iris y blanco; la nariz es solo una sombra y un brillo.", ["personaje", "retrato"], usedOnly(PORT, fin), fin);
+  add("portrait-pillow", "Error: el mismo retrato con pillow shading. Cada masa es clara en el centro y se oscurece igual por todos los lados. No hay una luz: la cara parece un cojín inflado y el pelo, un casco.", ["personaje", "retrato", "error"], usedOnly(PORT, pillow), pillow);
+}
+
+// ---------- recibir daño: flash blanco, retroceso y parpadeo de invulnerabilidad (lienzo de 18×12)
+{
+  const sl = spriteByName("slime");
+  const HURT = { ...sl.palette, W: "#ffffff", k: "#14301f" };
+  const frame = (x0, { flash = false, body = true } = {}) => {
+    const g = Array.from({ length: 12 }, () => Array(18).fill("."));
+    for (let x = x0 + 1; x < x0 + 9; x++) g[10][x] = "k"; // sombra en el suelo: no parpadea
+    for (let x = x0 + 2; x < x0 + 8; x++) g[11][x] = "k";
+    if (body) sl.rows.forEach((r, y) => [...r].forEach((k, x) => { if (k !== ".") g[y + 2][x0 + x] = flash ? (k === "o" ? "o" : "W") : k; }));
+    return g.map((r) => r.join(""));
+  };
+  const F = [
+    ["slime-hurt-1", "Daño, frame 1: el slime en su sitio, justo antes de recibir el golpe. Debajo, su sombra en el suelo.", frame(2)],
+    ["slime-hurt-2", "Daño, frame 2: el flash. En el mismo sitio, todo el relleno pasa a blanco y solo queda el contorno. Dura muy poco: es el «ha dado».", frame(2, { flash: true })],
+    ["slime-hurt-3", "Daño, frame 3: el retroceso. El slime aparece 4 píxeles a la derecha, lejos del golpe, con sus colores normales.", frame(6)],
+    ["slime-hurt-4", "Daño, frame 4: vuelve 1 píxel hacia atrás y se asienta. Ahí se queda.", frame(5)],
+    ["slime-hurt-5", "Daño, frame 5: el parpadeo de invulnerabilidad. El slime desaparece pero su sombra se queda: alternado con el frame 4, dice «ahora no se le puede dañar».", frame(5, { body: false })],
+  ];
+  F.forEach(([n, d, rows]) => add(n, d, ["criatura", "animación", "daño"], usedOnly(HURT, rows), rows));
+  const hero = spriteByName("hero-chibi");
+  const flashRows = hero.rows.map((r) => r.replace(/[^.o]/g, "W"));
+  add("hero-flash", "El héroe con el flash de daño: el contorno se queda y todo el relleno pasa a blanco. Es el mismo sprite con otra paleta, no un dibujo nuevo.", ["personaje", "daño"], { o: hero.palette.o, W: "#ffffff" }, flashRows);
+  add("hero-flash-red", "Error: el flash en un rojo oscuro. Sobre la túnica azul y el pelo castaño apenas cambia el valor: a la velocidad del juego no se nota el golpe.", ["personaje", "daño", "error"], { o: hero.palette.o, W: "#8a2a3a" }, flashRows);
+}
+
+// ---------- parallax: tres capas que se repiten cada 64 px y se mueven a velocidades distintas (64×40)
+// Paleta fija (las mismas letras en todos los frames, para que el animador pueda mezclarlos)
+const PAR = {
+  a: "#bfe3f2", b: "#d8eef2", // cielo: arriba algo más saturado, abajo casi blanco
+  m: "#9cc0d6", M: "#86aac4", // montañas lejanas: poco contraste, casi del color del cielo
+  c: "#5f9a8a", C: "#4b8070", // colinas: algo más oscuras y verdes
+  n: "#2c5a3a", N: "#1c3f2a", y: "#3f7a4a", // primer plano: oscuro, saturado y con contraste
+};
+const PER = 64, PER_FAR = 32; // las montañas se repiten cada 32 px, colinas y árboles cada 64
+const wave = (x, per, parts) => parts.reduce((a, [amp, k, ph]) => a + amp * Math.sin((2 * Math.PI * k * x) / per + ph), 0);
+const mountainTop = (x) => 17 + wave(x, PER_FAR, [[3.5, 1, 0.3], [1.6, 2, 1.7], [0.8, 3, 0.4]]);
+const hillTop = (x) => 23 + wave(x, PER, [[2.5, 1, 2.1], [1.4, 3, 0.2]]);
+const treeTop = (x) => {
+  // copas redondas: semicírculos de radios distintos, repetidos cada 64 px
+  const T = [[4, 5], [13, 4], [21, 6], [33, 4], [41, 5], [52, 4], [59, 5]];
+  let top = 33; // suelo del bosque: entre copa y copa no se ve el fondo
+  for (const [tx, r] of T) for (const dx of [-PER, 0, PER]) {
+    const d = x + 0.5 - (tx + dx);
+    if (Math.abs(d) <= r) top = Math.min(top, Math.round(32 - Math.sqrt(r * r - d * d)));
+  }
+  return top;
+};
+const wrap = (v, p) => ((v % p) + p) % p;
+function parallaxFrame(offFar, offMid, offNear, { flat = false, layers = 3 } = {}) {
+  return Array.from({ length: 40 }, (_, y) => Array.from({ length: 64 }, (_, x) => {
+    const xn = wrap(x + offNear, PER), xm = wrap(x + offMid, PER), xf = wrap(x + offFar, PER_FAR);
+    if (layers >= 3 && y >= treeTop(xn)) {
+      if (flat) return "N";
+      const t = treeTop(xn);
+      return y >= 37 || y >= t + 4 ? "N" : y === t && wrap(xn, 3) === 0 ? "y" : "n";
+    }
+    if (layers >= 2 && y >= hillTop(xm)) return flat ? "N" : y < hillTop(xm) + 1 ? "c" : "C";
+    if (y >= mountainTop(xf)) return flat ? "N" : y < mountainTop(xf) + 1 ? "m" : "M";
+    return y < 12 ? "a" : "b";
+  }).join(""));
+}
+{
+  const FR = 16;
+  for (let f = 0; f < FR; f++) add(`parallax-${f + 1}`, `Parallax, frame ${f + 1} de ${FR}: la cámara avanza a la derecha. Desde el frame 1, las montañas se han movido ${f * 2} px, las colinas ${f * 4} y los árboles ${f * 8}: lo que está más lejos se mueve menos.`, ["fondo", "parallax", "animación"], PAR, parallaxFrame(f * 2, f * 4, f * 8));
+  const far = parallaxFrame(0, 0, 0, { layers: 1 });
+  add("parallax-far", "Solo la capa de las montañas lejanas sobre el cielo: dos azules grisáceos muy cerca del color del cielo. Casi no hay contraste: así se ve lo que está lejos.", ["fondo", "parallax"], usedOnly(PAR, far), far);
+  const flat = parallaxFrame(0, 0, 0, { flat: true });
+  add("parallax-flat", "Error: montañas, colinas y árboles en el mismo verde oscuro, sin contraste entre ellos. Se funden en una sola silueta: no se sabe qué está cerca y qué lejos.", ["fondo", "parallax", "error"], usedOnly(PAR, flat), flat);
+}
+
 // ---------- escribir y validar
 let bad = 0;
 for (const s of out) {

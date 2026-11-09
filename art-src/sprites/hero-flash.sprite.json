@@ -1,0 +1,40 @@
+{
+  "name": "hero-flash",
+  "description": "El héroe con el flash de daño: el contorno se queda y todo el relleno pasa a blanco. Es el mismo sprite con otra paleta, no un dibujo nuevo.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "personaje",
+    "daño"
+  ],
+  "palette": {
+    "o": "#1b1030",
+    "W": "#ffffff"
+  },
+  "rows": [
+    "................",
+    "................",
+    "................",
+    "....oooooooo....",
+    "...oWWWWWWWWo...",
+    "..oWWWWWWWWWWWo.",
+    "..oWWWWWWWWWWWo.",
+    "..oWWWWWWWWWWWWo",
+    "..oWWWWWWWWWWWo.",
+    "..oWWoWWWoWWWWo.",
+    "..oWWoWWWoWWWWo.",
+    "..oWWWWWWWWWWWo.",
+    "...oWWWWWWWWWo..",
+    "....oooooooo....",
+    "...oWWWWWWWWo...",
+    "..oWWWWWWWWWWo..",
+    "..oWWWWWWWWWWo..",
+    "..oWWWWWWWWWWo..",
+    "...oWWWWWWWWo...",
+    "...oWWWWWWWWo...",
+    "...oWWWo.oWWWo..",
+    "...oWWWo.oWWWo..",
+    "...oWWWo.oWWWo..",
+    "...ooooo.ooooo.."
+  ]
+}

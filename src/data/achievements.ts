@@ -65,5 +65,10 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   { id: "voxel-sprite", name: "Del voxel al sprite", description: "Una animación hecha con renders voxel y montada como spritesheet (V5-02).", color: "#4ade80" },
   { id: "tajo", name: "Tajo", description: "Un ataque con smear: el recorrido de la espada en un frame (P6-05).", color: "#bfe9ff" },
   { id: "interior", name: "Interior", description: "Una habitación voxel en corte con muebles a escala y una luz (V7-02).", color: "#c9b8a0" },
+  { id: "retrato", name: "Retrato", description: "Un busto de 32×32 con una luz clara, rasgos legibles y sin pillow shading (P5-05).", color: "#f2c29b" },
+  { id: "golpe-recibido", name: "Golpe recibido", description: "Una animación de daño con flash, retroceso y parpadeo de invulnerabilidad (P6-06).", color: "#ffffff" },
+  { id: "parallax", name: "Parallax", description: "Un fondo de tres capas que se repiten y se mueven a velocidades distintas (P8-03).", color: "#9cc0d6" },
+  { id: "desgaste", name: "Desgaste", description: "Un prop voxel con desgaste en bordes, óxido y una pista de su historia (V3-03).", color: "#dcb47e" },
+  { id: "alas", name: "Alas finas", description: "Una criatura voxel con partes finas de 1 vóxel que se lee desde la cámara del juego (V5-03).", color: "#8a5a7a" },
   { id: "forma-primero", name: "Forma antes que detalle", description: "Un modelo voxel con su blockout guardado como primera versión (V2-01).", color: "#38e1ff" },
 ];

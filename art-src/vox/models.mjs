@@ -426,7 +426,99 @@ const slimeJump = [
   { label: "Punto alto", note: "Redondo otra vez (9 de ancho, 8 de alto) y 6 vóxels por encima del suelo. Renderiza las cuatro etapas con la MISMA cámara y tendrás los frames del sprite.", voxels: onGround(slimeDetail(blob(4, 8, 6), [9, 10])) },
 ];
 
+// ---------- COFRE VIEJO: el mismo cofre limpio, gastado y con historia (desgaste en bordes, óxido, musgo)
+// Ruido determinista: el mismo vóxel recibe siempre el mismo valor, así el modelo no cambia al regenerarlo
+const noise = (x, y, z) => (((x * 73856093) ^ (y * 19349663) ^ (z * 83492791)) >>> 0) % 100;
+const RUST = "#d8743a", MOSS = { a: "#3fbf7f", b: "#2a8a5c" }, DIRT_D = "#4a3226", WOOD_W = "#dcb47e";
+const oldBase = box(0, 0, 0, 11, 7, 4, WOOD.mid).map((v) => ({ ...v, c: v.z === 4 ? WOOD.dark : WOOD.mid }));
+const oldLid = [...box(0, 0, 5, 11, 7, 5, WOOD.mid), ...box(0, 1, 6, 11, 6, 6, WOOD.mid), ...box(0, 2, 7, 11, 5, 7, WOOD.mid)];
+const isBand = (v) => v.x === 2 || v.x === 9;
+const oldLock = [...box(5, -1, 3, 6, -1, 5, GOLD.light), { x: 5, y: -1, z: 4, c: GOLD.mid }, { x: 6, y: -1, z: 4, c: GOLD.mid }];
+const chestClean = hollowOut([...paint([...oldBase, ...oldLid], isBand, METAL.mid), ...oldLock]);
+// arista: el vóxel está en el borde de dos caras a la vez (en la base o en la tapa)
+const onEdge = (v) => {
+  const ex = v.x === 0 || v.x === 11;
+  const ey = v.z <= 4 ? v.y === 0 || v.y === 7 : v.z === 5 ? v.y === 0 || v.y === 7 : v.z === 6 ? v.y === 1 || v.y === 6 : v.y === 2 || v.y === 5;
+  const ez = v.z === 0 || v.z === 4 || v.z === 7;
+  return [ex, ey, ez].filter(Boolean).length >= 2;
+};
+const chestWorn = chestClean
+  .filter((v) => !(onEdge(v) && !isBand(v) && v.c !== GOLD.light && v.c !== GOLD.mid && noise(v.x, v.y, v.z) < 22)) // desconchones: faltan trozos de arista
+  .map((v) => {
+    if (isBand(v) && v.c === METAL.mid) return { ...v, c: noise(v.x, v.y, v.z) < 30 ? RUST : noise(v.x, v.y, v.z) < 55 ? METAL.dark : METAL.mid }; // óxido a manchas
+    if (onEdge(v) && v.c !== GOLD.light && v.c !== GOLD.mid) return { ...v, c: WOOD_W }; // la madera se aclara donde más se toca
+    return v;
+  });
+const chestStory = chestWorn.map((v) => {
+  if (v.c === GOLD.light || v.c === GOLD.mid) return v;
+  const n = noise(v.x + 5, v.y, v.z);
+  if (v.z <= 1 && v.x <= 5 && n < 75) return { ...v, c: v.z === 0 ? MOSS.b : MOSS.a }; // musgo: sube desde el suelo, por el lado en sombra
+  if (v.z >= 6 && v.x <= 2 && n < 60) return { ...v, c: MOSS.a }; // y se queda en la tapa, donde se acumula el agua
+  if (v.z === 0 && n < 70) return { ...v, c: DIRT_D }; // barro en la base
+  return v;
+}).concat([{ x: 13, y: 2, z: 0, c: GOLD.light }, { x: 14, y: 3, z: 0, c: GOLD.mid }, { x: 13, y: 4, z: 0, c: GOLD.light }]); // monedas caídas: alguien lo abrió con prisa
+
+// ---------- MURCIÉLAGO: un cuerpo pequeño y alas de 1 vóxel de grosor
+const BAT = { fur: "#4a3a5e", belly: "#6a5a80", wing: "#8a5a7a", bone: "#2e2440", eye: "#ffd36e", fang: "#d8ccb4" };
+const batBody = [];
+for (let x = -3; x <= 3; x++) for (let y = -3; y <= 3; y++) for (let z = 0; z <= 13; z++) {
+  const body = Math.hypot(x / 2.6, y / 2.2, (z - 5) / 3.4) <= 1;
+  const head = Math.hypot(x / 2.2, y / 2.1, (z - 9.5) / 2) <= 1;
+  if (body || head) batBody.push({ x, y, z, c: body && !head && y === -2 && Math.abs(x) <= 1 ? BAT.belly : BAT.fur });
+}
+const batEars = [-1, 1].flatMap((s) => [{ x: s, y: 0, z: 12, c: BAT.fur }, { x: 2 * s, y: 0, z: 12, c: BAT.fur }, { x: 2 * s, y: 0, z: 13, c: BAT.fur }]);
+// perfil del ala derecha en el plano X–Z (a = distancia al centro). Borde de ataque: hombro → muñeca → punta.
+const WRIST = [6, 10], WING_TIP = [12, 9];
+const wingTop = (a) => Math.round(a <= 6 ? 8 + ((a - 3) * 2) / 3 : 10 - (a - 6) / 6);
+// borde de salida: entre la punta de cada dedo la membrana se recoge hacia arriba (festón)
+const TRAIL = [[3, 3], [8, 3], [11, 5], [12, 8]];
+const wingBottom = (a) => {
+  for (let i = 0; i < TRAIL.length - 1; i++) {
+    const [x0, z0] = TRAIL[i], [x1, z1] = TRAIL[i + 1];
+    if (a >= x0 && a <= x1) { const t = (a - x0) / (x1 - x0); return Math.round(z0 + (z1 - z0) * t + 1.4 * Math.sin(Math.PI * t)); }
+  }
+  return 8;
+};
+function batWing(s, bones) {
+  const v = [];
+  for (let a = 3; a <= 12; a++) for (let z = wingBottom(a); z <= wingTop(a); z++) v.push({ x: s * a, y: 0, z, c: BAT.wing });
+  if (!bones) return v;
+  const lines = [[[3, 8], WRIST], [WRIST, WING_TIP], [WRIST, [11, 5]], [WRIST, [8, 3]]]; // brazo y tres dedos
+  const out = new Map(v.map((p) => [`${p.x},${p.z}`, p]));
+  for (const [[x0, z0], [x1, z1]] of lines) {
+    const n = Math.max(Math.abs(x1 - x0), Math.abs(z1 - z0));
+    for (let i = 0; i <= n; i++) {
+      const x = s * Math.round(x0 + ((x1 - x0) * i) / n), z = Math.round(z0 + ((z1 - z0) * i) / n);
+      if (out.has(`${x},${z}`)) out.set(`${x},${z}`, { x, y: 0, z, c: BAT.bone });
+    }
+  }
+  return [...out.values()];
+}
+const batWings = (bones) => [...batWing(-1, bones), ...batWing(1, bones)];
+const batFace = [
+  { x: -1, y: -2, z: 10, c: BAT.eye }, { x: 1, y: -2, z: 10, c: BAT.eye }, // ojos: lo más claro del modelo
+  { x: -1, y: -2, z: 8, c: BAT.fang }, { x: 1, y: -2, z: 8, c: BAT.fang }, // colmillos
+  { x: 0, y: -2, z: 9, c: BAT.belly }, // hocico
+  { x: -1, y: 0, z: 1, c: BAT.bone }, { x: 1, y: 0, z: 1, c: BAT.bone }, // garras
+];
+
 export const MODELS = {
+  "cofre-viejo": {
+    description: "Cofre viejo: el mismo prop limpio, gastado y con historia",
+    stages: [
+      { label: "Limpio", note: "Un cofre de 12×8 de planta y 8 de alto, recién hecho: base con su borde oscuro, tapa escalonada, dos bandas de hierro y la cerradura dorada. Todo perfecto: parece de plástico.", voxels: chestClean },
+      { label: "Desgaste", note: "Faltan trozos en algunas aristas (desconchones), la madera se aclara en los bordes, donde más se toca, y el hierro se oxida a manchas. El desgaste va donde hay uso: bordes y esquinas, no en mitad de las caras.", voxels: chestWorn },
+      { label: "Historia", note: "Musgo que sube desde el suelo por un lado y se queda en un rincón de la tapa, barro en la base y tres monedas caídas en el suelo, junto al lado derecho. La cerradura sigue limpia: es lo que más se toca y el punto focal.", voxels: chestStory },
+    ],
+  },
+  murcielago: {
+    description: "Murciélago: un cuerpo pequeño y alas de un vóxel de grosor",
+    stages: [
+      { label: "Cuerpo", note: "Un óvalo para el cuerpo y otro más pequeño para la cabeza, con dos orejas de 1 vóxel. Solo 5 vóxels de ancho: el cuerpo es pequeño para que mande el ala.", voxels: [...batBody, ...batEars] },
+      { label: "Alas", note: "Cada ala es una lámina de 1 vóxel de grosor y 10 de largo, más alta en la muñeca y con el borde de abajo festoneado entre los dedos. Con Mirror en X basta con hacer una.", voxels: [...batBody, ...batEars, ...batWings(false)] },
+      { label: "Huesos y cara", note: "El brazo y tres dedos en un violeta casi negro recorren la membrana: le dan estructura y leen como ala aunque esté lejos. Ojos amarillos, lo más claro del modelo, dos colmillos de un crema algo más oscuro que los ojos y las garras.", voxels: [...batBody, ...batEars, ...batWings(true), ...batFace] },
+    ],
+  },
   "arbol-organico": {
     description: "Árbol orgánico: tronco curvo, ramas y copa en grupos",
     stages: [

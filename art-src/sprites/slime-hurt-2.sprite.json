@@ -1,0 +1,30 @@
+{
+  "name": "slime-hurt-2",
+  "description": "Daño, frame 2: el flash. En el mismo sitio, todo el relleno pasa a blanco y solo queda el contorno. Dura muy poco: es el «ha dado».",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "criatura",
+    "animación",
+    "daño"
+  ],
+  "palette": {
+    "o": "#1b1030",
+    "W": "#ffffff",
+    "k": "#14301f"
+  },
+  "rows": [
+    "..................",
+    "..................",
+    ".....oooo.........",
+    "....oWWWWo........",
+    "...oWWWWWWo.......",
+    "...oWWWWWWo.......",
+    "..oWWWWWWWWo......",
+    "..oWWWWWWWWo......",
+    "..oWWWWWWWWo......",
+    "...oooooooo.......",
+    "...kkkkkkkk.......",
+    "....kkkkkk........"
+  ]
+}

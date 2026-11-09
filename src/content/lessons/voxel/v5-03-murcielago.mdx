@@ -1,0 +1,282 @@
+---
+id: v5-03
+discipline: voxel
+level: 5
+order: 3
+title: "Criaturas voxel: un murciélago con alas finas"
+summary: "Una criatura que manda por la silueta: cuerpo pequeño, alas de 1 vóxel con huesos oscuros y borde festoneado, Mirror en X y ojos claros que se leen desde la cámara del juego."
+duration: 40
+status: borrador
+prerequisites: [v5-01, v2-03]
+fundamentals: [f02, f09]
+objectives:
+  - "Diseñar una criatura por su silueta: cuerpo pequeño y alas grandes"
+  - "Modelar partes finas de 1 vóxel y darles estructura con huesos más oscuros"
+  - "Festonear el borde de una membrana para que se lea blanda y viva"
+  - "Usar Mirror en X cuando la criatura es simétrica, y saber por qué aquí sí y en V2-03 no"
+  - "Hacer de los ojos el foco y comprobar la lectura desde la cámara del juego y en silueta"
+tools: [magicavoxel]
+piece:
+  name: "Tu propio murciélago u otra criatura alada (o con aletas u orejas grandes) con partes de 1 vóxel"
+  canvas: "25x5x14"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [alas]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+En [V5-01](/forja-art/voxel/v5-01/) forjaste un slime: una criatura **maciza**, toda volumen. Hoy forjas lo contrario: una criatura que es casi toda **lámina**. Un murciélago con un cuerpo diminuto y unas alas de **un solo vóxel de grosor**.
+
+<VoxViewer model="murcielago" stage={2} title="Tu pieza: cuerpo pequeño, alas finas con huesos y una cara que se ve" />
+
+Gíralo. De frente es un murciélago enorme. Ponlo de canto: las alas casi desaparecen. Esa es la lección de hoy: **una parte fina es fuerte en silueta y frágil desde otros ángulos**, y tienes que diseñar para la cámara de tu juego.
+
+Recorre las tres etapas: **Cuerpo**, **Alas** y **Huesos y cara**.
+
+Tu pieza final: **tu propio murciélago** o cualquier criatura con partes de 1 vóxel (un pez con aletas, un zorro de orejas enormes, una polilla, un dragoncito), modelada con Mirror en X, con estructura en las partes finas y un render desde la cámara del juego.
+</Block>
+
+<Block kind="concepto">
+### 1. Manda la silueta: cuerpo pequeño, alas grandes
+
+Recuerda el murciélago 2D de [P5-03](/forja-art/pixel/p5-03/): picos en las alas y en las orejas, amenaza antes de ver los ojos.
+
+<Sprite name="bat" scale={6} view="silhouette" caption="En 2D: solo con la silueta ya sabes qué es" />
+
+En vóxels, la regla es la misma, y se nota en las medidas del modelo:
+
+- **Envergadura:** 25 vóxels de punta a punta.
+- **Cuerpo:** solo **5** de ancho y 5 de fondo. El resto, 20 columnas, son alas.
+- **Alto:** 13 vóxels, de las garras a la punta de las orejas.
+
+<VoxViewer model="murcielago" stage={0} title="Cuerpo: dos óvalos y dos orejas, nada más" />
+
+La etapa **Cuerpo** es poca cosa: un óvalo para el tronco, otro más pequeño encima para la cabeza y **dos orejas** de 3 vóxels cada una, con la punta hacia fuera. Una mancha más clara delante, en la barriga. Sin alas no es nada. **Y está bien que sea así.**
+
+<Why title="Por qué un cuerpo tan pequeño">
+El contraste de tamaños es lo que se lee: **grande contra pequeño**. Si el cuerpo fuera tan grande como un ala, el ojo vería tres masas iguales en fila y no sabría qué mirar. Con un cuerpo pequeño, el ala manda y el cuerpo hace de centro. Es la regla de las masas de [F02](/forja-art/fundamentos/f02-01/): grande, mediana, pequeña.
+</Why>
+
+### 2. Partes finas: 1 vóxel de grosor
+
+<VoxViewer model="murcielago" stage={1} title="Alas: dos láminas de 1 vóxel, 10 de largo cada una" />
+
+Cada ala es **una lámina de un vóxel de grosor** y 10 de largo. Sale del centro del costado del cuerpo. Gírala de canto en el visor y lo verás: una línea de cubos.
+
+Fíjate en su forma, columna a columna:
+
+- **Borde de ataque** (el de arriba): sube del hombro a la **muñeca**, que es el punto más alto, y luego baja poco a poco hasta la punta.
+- **Borde de salida** (el de abajo): no es recto. La membrana cuelga más abajo en las puntas de los dedos y **sube un vóxel o dos entre dedo y dedo**. Es el **festón**.
+- **La punta** es estrecha: solo 2 vóxels de alto en la última columna.
+
+<Why title="Por qué 1 vóxel y no 2 o 3">
+Una membrana de verdad es más fina que el dedo que la sostiene. En vóxels, lo más fino que existe es **1**. Con 2 o 3 de grosor, el ala pasa a ser un bloque: pesa más que el cuerpo y parece de piedra. Y aquí no hay término medio: o es 1, o ya es un volumen.
+</Why>
+
+<Why title="Por qué el festón">
+Un borde recto se lee como algo **rígido y fabricado**: una placa, una vela de barco. Un borde que sube entre los dedos dice que la membrana es blanda y está tensa entre huesos. Basta con 1 o 2 vóxels de entrante: es el mismo principio de [V2-03](/forja-art/voxel/v2-03/), romper la línea recta con pasos pequeños.
+</Why>
+
+### 3. Huesos: estructura en una lámina
+
+Pasa el visor de arriba a la etapa **Huesos y cara** y vuelve a **Alas**. Cambian muy pocos vóxels:
+
+- **El brazo:** del hombro a la muñeca, por el borde de ataque.
+- **Tres dedos** que salen todos de la muñeca: uno sigue el borde de arriba hasta la punta; los otros dos bajan hasta las dos puntas del borde de salida, justo donde la membrana cuelga más.
+- Todos en un **violeta casi negro**, el color más oscuro del modelo, **pintados dentro de la lámina**. No añaden grosor.
+
+<Why title="Por qué la membrana sin huesos parece una placa">
+Una superficie grande de un solo color no tiene escala ni dirección: el ojo no sabe si es tela, cartón o metal. Las líneas oscuras que salen de un punto (la muñeca) dicen **cómo está construida**: aquí hay un esqueleto y la piel va tensada entre sus varillas. Es lo mismo que hacías en hard surface: un panel liso parece de juguete; con las líneas de construcción, parece una pieza de verdad.
+</Why>
+
+Fíjate también en el **orden de valor**, del más oscuro al más claro:
+
+1. huesos y garras (violeta casi negro);
+2. pelo del cuerpo;
+3. barriga y hocico;
+4. membrana (un violeta rosado medio, **más clara que el cuerpo**);
+5. colmillos en crema y, por encima de todo, los ojos amarillos.
+
+La membrana es más clara que el pelo: así se separa del cuerpo y los huesos oscuros se leen sobre ella. Si la membrana fuera tan oscura como los huesos, los huesos desaparecerían.
+
+### 4. La cara: los ojos son el foco
+
+En toda la criatura solo hay **cuatro vóxels claros**: los dos ojos amarillos y, debajo, los dos colmillos en un crema un poco más oscuro que los ojos. Entre ellos, un vóxel de hocico más claro que el pelo. Y debajo del cuerpo, dos garras oscuras.
+
+<Why title="Por qué los ojos tan claros">
+Lo más claro de un modelo oscuro es donde mira el ojo primero. En un enemigo, quieres que el jugador mire **a la cara**: ahí está la intención. Por eso los ojos van en el amarillo más claro y saturado del modelo, rodeados de pelo oscuro. Si los pintas en un tono oscuro, la cara se pierde y el murciélago es solo una mancha con alas.
+</Why>
+
+### 5. Simetría: aquí sí
+
+En [V2-03](/forja-art/voxel/v2-03/) apagaste Mirror porque lo orgánico de un árbol es **no** ser simétrico. Un murciélago con las alas abiertas sí lo es: ala izquierda y derecha, ojos, orejas, colmillos y garras se reflejan sobre el centro.
+
+<Why title="¿Cuándo Mirror y cuándo no?">
+Las criaturas y los personajes tienen **simetría de cuerpo**: dos ojos, dos alas, dos piernas. Se modelan con Mirror. Las plantas, las rocas y el terreno crecen sin ese plan, y se modelan sin él. Y en las criaturas, la asimetría llega **al final**, con la pose, como en [V5-01](/forja-art/voxel/v5-01/): un ala recogida, la cabeza girada.
+</Why>
+
+<Tip>
+Usa una envergadura **impar** (25 en el modelo). Así hay una columna central exacta para la cabeza y el cuerpo, y Mirror refleja todo lo demás a su alrededor. Con un ancho par, el centro cae entre dos columnas y el cuerpo tiene que ser par también.
+</Tip>
+
+### 6. La prueba de la cámara
+
+Una lámina de 1 vóxel tiene un punto débil: **de canto no existe**. Haz la prueba en el visor de la pieza:
+
+- **De frente:** se lee perfecto. Alas, dedos, festón, ojos.
+- **En isométrica** (desde arriba y en diagonal, como muchos juegos): el ala se ve en escorzo, pero se leen los huesos y la silueta en picos.
+- **Desde arriba del todo:** las alas se convierten en **una línea de un vóxel**. Solo queda el cuerpo y dos rayas.
+
+Este modelo está pensado para una cámara de frente o isométrica. Si tu juego es **cenital** (vista desde arriba), las alas tienen que estar **tumbadas**, abiertas en horizontal, para que las vea la cámara. La forma de la criatura se diseña para la cámara que la va a mirar.
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Decide la cámara y prepara el modelo">
+1. Antes de nada, decide **desde dónde la verá el jugador**: de lado, de frente, en isométrica o desde arriba. Si es desde arriba, todas las láminas que hagas hoy irán en horizontal.
+2. Crea un modelo nuevo en MagicaVoxel de **25×5×14** (ancho, fondo y alto), o algo parecido con un **ancho impar**.
+3. En la **paleta** de la izquierda, prepara seis colores en una fila: huesos (casi negro), pelo (oscuro), barriga (medio), membrana (medio, más clara que el pelo), ojos (el más claro, y saturado) y colmillos (crema, un poco más oscuro que los ojos).
+
+<Why>
+Si eliges la paleta antes, controlas el orden de valor desde el primer vóxel. La regla que no puedes romper: **membrana más clara que los huesos; los ojos, lo más claro de todo**.
+</Why>
+</Step>
+
+<Step n={2} title="El cuerpo, pequeño y en el centro">
+1. Activa el botón **Mirror X** (en la barra de pinceles). Gira la cámara con el **botón derecho** hasta verlo de frente.
+2. Modo **Attach**, pincel **Voxel** o **Box**: levanta en la columna central un óvalo de **5 de ancho y 5 de fondo**, de unas 7 capas de alto, que se estrecha arriba y abajo.
+3. Encima, un óvalo más pequeño para la cabeza, de unas 4 capas.
+4. Sobre la cabeza, una oreja de 3 vóxels con la punta hacia fuera. Mirror pone la otra.
+
+<Tip>
+Compara con la etapa **Cuerpo** del visor del concepto. Mueve **Capas** para ver dónde acaba el tronco y empieza la cabeza.
+</Tip>
+</Step>
+
+<Step n={3} title="Una ala de 1 vóxel con Mirror">
+1. Sigue con **Mirror X** activado. Trabaja solo en **la capa central de fondo**: la lámina sale del centro del costado.
+2. Con el pincel **Voxel**, marca primero el **borde de ataque**: del hombro sube hasta la muñeca (a unos 3 o 4 vóxels del cuerpo) y desde ahí baja despacio hasta la punta, a unos 10 vóxels del cuerpo.
+3. Marca debajo el **borde de salida**: elige dónde acabarán los dedos (dos o tres puntos bajos) y, entre ellos, haz que el borde **suba 1 o 2 vóxels**.
+4. Rellena el hueco entre los dos bordes. Mirror dibuja el ala del otro lado a la vez.
+5. Gira la cámara de canto: tiene que verse **una sola línea** de cubos. Si ves dos, borra con **Erase** los que sobran.
+
+<Warn>
+Es muy fácil poner un vóxel en la capa de delante o de detrás sin darte cuenta, sobre todo con el pincel **Box**. Un vóxel fuera de la lámina, de canto, parece una verruga. Comprueba de canto cada pocos vóxels.
+</Warn>
+</Step>
+
+<Step n={4} title="Pinta los huesos">
+1. Modo **Paint**, pincel **Voxel**, color de los huesos.
+2. Pinta el **brazo**: del hombro a la muñeca, siguiendo el borde de ataque.
+3. Desde la muñeca, pinta **tres dedos**: uno por el borde de arriba hasta la punta y dos que bajan hasta las puntas del borde de salida.
+4. Cada dedo es una línea recta de vóxels que se tocan por cara o por arista. No le añadas grosor: se pinta **sobre** la membrana.
+
+<Why>
+Todos los dedos salen del **mismo punto**. Eso es lo que el ojo reconoce como «mano»: un abanico. Si los repartes paralelos, parecen las varillas de un paraguas roto. Y que los dedos acaben **en las puntas del festón** hace que el borde tenga sentido: la piel cuelga entre hueso y hueso.
+</Why>
+
+<Tip>
+Compara con el visor del concepto: pasa de **Alas** a **Huesos y cara** y mira qué vóxels cambian.
+</Tip>
+</Step>
+
+<Step n={5} title="La cara: ojos claros y colmillos">
+1. Con **Mirror X** aún activado y en modo **Paint** (o **Attach** si la cara no tiene vóxels donde los necesitas), pon **un ojo de 1 vóxel** en la cara delantera, a un vóxel del centro. Mirror pone el otro.
+2. Debajo, un vóxel de colmillo en crema, algo más oscuro que el ojo. Mirror, el otro.
+3. Apaga **Mirror X** y pon en la columna central, entre ojos y colmillos, el **hocico** en el color de la barriga.
+4. Vuelve a encender Mirror y pon **dos garras** oscuras debajo del cuerpo.
+
+<Why>
+El hocico va justo en el centro: Mirror lo reflejaría sobre sí mismo, así que no pasa nada, pero apagarlo te obliga a pensar qué es simétrico y qué es una pieza única. Es la costumbre que necesitarás cuando poses la criatura.
+</Why>
+</Step>
+
+<Step n={6} title="Prueba de silueta y de cámara">
+1. Guarda el modelo como `murcielago_v1.vox`. Guarda **una copia** como `murcielago_silueta.vox`.
+2. En la copia, cambia en la paleta todos los colores que usas por el **mismo color oscuro**. Como cada vóxel usa un color de la paleta, todo el modelo se vuelve una silueta.
+3. Mira la silueta **desde la cámara de tu juego**. ¿Se lee «murciélago»? ¿Se ven los entrantes del festón y las orejas?
+4. Vuelve a `murcielago_v1.vox` y mira la criatura desde arriba, de lado y de frente. Si desde tu cámara el ala es una línea, cambia la orientación de las alas.
+
+<Tip>
+Además de la silueta, mira la criatura de lejos (aleja con la rueda del ratón). Si a esa distancia no ves los ojos, necesitan ser más claros o el pelo de alrededor, más oscuro.
+</Tip>
+</Step>
+
+<Step n={7} title="Renderiza desde la cámara del juego">
+1. Pulsa **Render** arriba.
+2. Prueba los modos de proyección y quédate con el de tu juego: **isométrica** u **ortográfica** si es un juego de cámara fija.
+3. Coloca la cámara en el ángulo del juego, no en el más bonito.
+4. Guarda la imagen del render y `murcielago_v1.vox` en tu portfolio.
+
+<Tip>
+Haz un segundo render de frente, el más favorecedor. Si los dos se leen, tu criatura está lista para el juego y para el portfolio.
+</Tip>
+</Step>
+
+<Warn title="Verifica en tu versión">
+Los nombres y la posición de **Mirror X**, **Attach** / **Erase** / **Paint**, los pinceles **Voxel** y **Box** y los campos de tamaño pueden variar entre versiones de MagicaVoxel. Comprueba también cómo refleja Mirror con un ancho impar (si la columna central se queda en su sitio), cómo se edita un color de la paleta para la prueba de silueta y dónde están los modos de proyección de la cámara en el modo **Render**.
+</Warn>
+</Block>
+
+<Block kind="version">
+Ahora, **tu** criatura. Misma receta: cuerpo pequeño, partes finas de 1 vóxel con estructura, borde vivo, Mirror en X, ojos claros y prueba de cámara. Elige un reto:
+
+- **Tu murciélago, a tu manera:** otra forma de ala (más larga y estrecha, más redonda), cuatro dedos en vez de tres, orejas más grandes. Pero que el cuerpo siga siendo pequeño.
+- **Un pez con aletas:** cuerpo macizo y aletas de 1 vóxel con radios oscuros en abanico, como los dedos del ala. El borde de la aleta, festoneado entre radio y radio.
+- **Una criatura para cámara cenital:** una polilla o un dragoncito con las alas **tumbadas en horizontal**, para que se lean desde arriba. Comprueba que de frente no queda en una línea... o decide que no importa, porque la cámara nunca la verá así.
+
+**Prueba final:** pon tu criatura junto al slime de V5-01 en el modo **World** y renderiza los dos desde la misma cámara. ¿Se ve a primera vista cuál es el amable y cuál el peligroso?
+</Block>
+
+<Block kind="errores">
+<Mistake title="Alas gruesas de 2 o 3 vóxels" wrongLabel="Ala de bloque" rightLabel="Ala de lámina">
+  <p slot="wrong">Cada ala tiene 3 vóxels de fondo, tanto como medio cuerpo. Pesa más que la criatura, tapa el cuerpo desde la isométrica y parece una losa de piedra.</p>
+  <p slot="right">Cada ala tiene 1 vóxel de fondo y sale del centro del costado. De frente se lee igual de grande, pero ligera.</p>
+
+Gira tu modelo de canto: si ves más de una línea de cubos en el ala, borra con **Erase** las capas de delante y de detrás. Lo que da fuerza al ala es su **silueta**, no su grosor.
+</Mistake>
+
+<Mistake title="Membrana sin huesos: una placa" wrongLabel="Etapa «Alas»" rightLabel="Etapa «Huesos y cara»">
+  <p slot="wrong">La membrana es un único violeta liso. Desde lejos se lee como una placa recortada, una vela o un trozo de cartón.</p>
+  <p slot="right">Brazo y tres dedos casi negros salen en abanico de la muñeca. Con los mismos vóxels, ahora se lee piel tensada sobre un esqueleto.</p>
+
+Compáralo en el visor del concepto cambiando de etapa. **Corrección:** pinta con **Paint** el brazo y los dedos en el color más oscuro del modelo, todos desde un mismo punto y acabando en las puntas del festón.
+</Mistake>
+
+<Warn title="Error típico: ojos oscuros que se pierden">
+Pintas los ojos en rojo oscuro o en negro, «porque da miedo». Sobre un pelo oscuro, desaparecen: la criatura no tiene cara. **Corrección:** los ojos, en el color claro y saturado del modelo, rodeados de lo más oscuro. Haz la prueba alejando la cámara: los ojos tienen que ser lo último que se pierde.
+</Warn>
+
+<Mistake title="Una criatura que solo se lee de frente" wrongLabel="Pensada para la vista frontal" rightLabel="Pensada para la cámara del juego">
+  <p slot="wrong">Modelas las alas abiertas de cara a ti, el render frontal queda precioso y lo metes en un juego cenital. Desde arriba solo se ven el cuerpo y dos rayas.</p>
+  <p slot="right">Antes del primer vóxel decides la cámara. Para una vista desde arriba, las alas van tumbadas; para una isométrica o frontal, de pie, como en el visor.</p>
+
+Prueba el visor de la pieza desde arriba del todo: verás el problema. **Corrección:** orienta las láminas de modo que la cámara del juego las vea **de cara**, y comprueba la silueta desde esa cámara, no desde la más favorecedora.
+</Mistake>
+</Block>
+
+<Block kind="calidad">
+<Checklist items={[
+  "El cuerpo es pequeño y las alas (o aletas u orejas) ocupan la mayor parte de la silueta",
+  "Las partes finas tienen 1 vóxel de grosor: de canto se ve una sola línea",
+  "La membrana tiene huesos o radios más oscuros que salen de un mismo punto",
+  "El borde de salida está festoneado: sube entre las puntas de los dedos",
+  "He modelado con Mirror X y la criatura es simétrica (la asimetría, si la hay, viene de la pose)",
+  "Los ojos son lo más claro del modelo y se ven al alejar la cámara",
+  "He comprobado la silueta y el render desde la cámara de mi juego",
+  "He guardado murcielago_v1.vox y un render en mi portfolio",
+]} />
+
+<Quiz q="Tu murciélago tiene la membrana lisa, de un solo color, y parece una placa. ¿Qué haces?" options={["Pinto huesos más oscuros dentro de la membrana, en abanico desde la muñeca", "Le doy 3 vóxels de grosor para que tenga volumen", "Pinto la membrana con ruido de tres tonos al azar"]} answer={0}>
+Los huesos dicen cómo está construida el ala: piel tensada entre varillas que salen de un punto. El grosor la convierte en una losa y el ruido solo añade textura sin estructura.
+</Quiz>
+
+<Quiz q="¿Por qué aquí usas Mirror X y en el árbol orgánico de V2-03 no?" options={["Porque Mirror solo funciona con modelos pequeños", "Porque las alas son más fáciles de pintar con Mirror", "Porque una criatura con las alas abiertas tiene simetría de cuerpo; lo orgánico de un árbol es justo no tenerla"]} answer={2}>
+Los cuerpos de criaturas y personajes son simétricos y se modelan con Mirror; la asimetría llega con la pose. Un árbol crece sin ese plan, y la simetría lo convierte en una piruleta.
+</Quiz>
+
+<Quiz q="Tu juego tiene cámara cenital (desde arriba). ¿Cómo orientas las alas de 1 vóxel?" options={["De pie, abiertas hacia la cámara frontal", "Tumbadas en horizontal, para que la cámara las vea de cara", "Da igual: una lámina se ve desde cualquier ángulo"]} answer={1}>
+Una lámina de 1 vóxel vista de canto es una línea. Las partes finas tienen que mirar a la cámara del juego para que se lean.
+</Quiz>
+</Block>

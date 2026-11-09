@@ -1,0 +1,33 @@
+{
+  "name": "slime-hurt-1",
+  "description": "Daño, frame 1: el slime en su sitio, justo antes de recibir el golpe. Debajo, su sombra en el suelo.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "criatura",
+    "animación",
+    "daño"
+  ],
+  "palette": {
+    "o": "#1b1030",
+    "g": "#4ade80",
+    "G": "#1f8a4c",
+    "h": "#d8ffe6",
+    "e": "#1b1030",
+    "k": "#14301f"
+  },
+  "rows": [
+    "..................",
+    "..................",
+    ".....oooo.........",
+    "....oghggo........",
+    "...oghggggo.......",
+    "...ogeggego.......",
+    "..oggggggggo......",
+    "..oggggggGGo......",
+    "..oGGGGGGGGo......",
+    "...oooooooo.......",
+    "...kkkkkkkk.......",
+    "....kkkkkk........"
+  ]
+}

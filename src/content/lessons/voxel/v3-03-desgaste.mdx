@@ -1,0 +1,259 @@
+---
+id: v3-03
+discipline: voxel
+level: 3
+order: 3
+title: "Desgaste: un prop con historia"
+summary: "Gasta un prop voxel con lógica: desconchones y bordes claros donde se toca, óxido a manchas en el hierro, musgo y barro desde el suelo, y el punto focal limpio."
+duration: 40
+status: borrador
+prerequisites: [v3-02]
+fundamentals: [f06, f10]
+objectives:
+  - "Explicar por qué un prop perfecto parece de plástico"
+  - "Poner el desgaste donde hay uso: aristas, esquinas, asas y la parte baja"
+  - "Hacer desconchones quitando vóxels de arista y aclarar los bordes de la madera"
+  - "Oxidar el metal a manchas y subir musgo y barro desde el suelo, con lógica de material"
+  - "Dejar limpio el punto focal y añadir una pista que cuente qué ha pasado"
+tools: [magicavoxel]
+piece:
+  name: "Tu propio prop (un cofre, un barril o una caja) en versión limpia y versión gastada, con un render de cada una"
+  canvas: "16x16x16"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [desgaste]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Hasta ahora tus props salían **recién hechos**: aristas perfectas, colores limpios, ni una marca. Hoy les pones años encima. Vas a forjar **un prop con historia**: el mismo objeto en versión limpia y en versión gastada.
+
+<VoxViewer model="cofre-viejo" stage={2} title="El cofre viejo: limpio, gastado y con historia" />
+
+Gíralo y recorre las tres etapas del visor:
+
+1. **Limpio:** un cofre de 12×8 de planta y 8 de alto. Base de madera con una fila oscura arriba, tapa escalonada de 3 capas, dos bandas de hierro y una cerradura dorada delante.
+2. **Desgaste:** faltan vóxels en algunas aristas, la madera de los bordes se aclara y el hierro de las bandas se oxida a manchas.
+3. **Historia:** musgo que sube desde el suelo por la mitad izquierda y en un rincón de la tapa, barro en la fila de abajo y tres monedas caídas en el suelo, a la derecha. La cerradura sigue limpia.
+
+Tu pieza final: **tu propio prop** (un cofre, un barril o una caja) en **dos versiones guardadas**, limpia y gastada, y **un render de cada una** con la misma cámara.
+</Block>
+
+<Block kind="concepto">
+### 1. Lo perfecto parece de plástico
+
+<VoxViewer model="cofre-viejo" stage={0} title="Limpio: todo perfecto, nada ha pasado" />
+
+El cofre limpio está **bien construido**: proporción, bandas, cerradura. Pero no ha estado en ningún sitio. Cada arista está entera, cada tabla tiene el mismo marrón `#a0603a`, cada vóxel de hierro el mismo gris `#8f9bab`. Parece un juguete recién salido del molde.
+
+<Why title="¿Por qué el ojo lo lee como plástico?">
+En el mundo real, nada que se use se queda igual. La madera se roza, el hierro se oxida, la humedad sube del suelo. El ojo ha visto miles de objetos viejos y **espera esas marcas**. Cuando no están, no piensa «nuevo»: piensa «falso». Es la lectura de material de [F06-01](/forja-art/fundamentos/f06-01/): la superficie dice de qué está hecho algo, y también **cuánto tiempo lleva ahí**.
+</Why>
+
+### 2. El desgaste va donde hay uso
+
+Esta es la regla de toda la lección. **No se reparte al azar por las caras.** Va donde el objeto se toca, se golpea o se moja:
+
+- **Aristas y esquinas:** es lo que choca con las paredes, el suelo y otros objetos.
+- **Asas, tapas y bordes de cierre:** lo que agarran las manos y lo que golpea cada vez que se cierra.
+- **La parte baja:** lo que está en contacto con el suelo, el barro y el agua.
+
+El centro de una cara grande casi no se toca. Ahí el desgaste **sobra**.
+
+<VoxViewer model="cofre-viejo" stage={1} title="Desgaste: desconchones, bordes claros y óxido a manchas" />
+
+Mira qué ha cambiado en la etapa **Desgaste** (cuenta hecha sobre el modelo):
+
+- **Desconchones:** faltan **19 vóxels**, todos en aristas: en las esquinas de la base, en el borde donde cierra la tapa y en el canto de arriba de la tapa. Ninguno en mitad de una cara.
+- **Bordes claros:** todas las aristas de madera que quedan pasan a un crema, `#dcb47e`. La fila oscura de arriba de la base, donde golpea la tapa al cerrarse, también se aclara.
+- **Óxido a manchas:** de los 48 vóxels de hierro visibles, 18 pasan a naranja óxido `#d8743a`, 11 a un hierro oscuro `#5c6676` y el resto se queda en el gris original.
+- **Sin tocar:** la cerradura dorada y el centro de las caras de madera.
+
+<Why title="Desconchón: quitar, no pintar">
+En vóxels no hay normal map ni textura de arañazos. Un golpe en una arista es **un vóxel que falta**. Es el chaflán de [V4-03](/forja-art/voxel/v4-03/), pero irregular: donde el chaflán es una decisión limpia y repetida, el desconchón es un accidente, aquí sí y allí no.
+</Why>
+
+**La madera gastada se aclara.** Al rozarse pierde la capa oscura de fuera y aparece la fibra clara de debajo. Por eso el borde va **más claro y más amarillo**, no más oscuro. La rampa del cofre:
+
+- madera de la cara: `#a0603a`;
+- madera de la arista, gastada: `#dcb47e`.
+
+Si tu prop es más grande, puedes meter un paso intermedio, como la madera clara `#d08a50` del carro de V4-03: el tono del medio va en la arista y el crema solo en las esquinas, donde roza más.
+
+**El hierro se oxida a manchas.** El óxido no avanza en línea recta: aparece en grupos, donde se queda el agua o donde se raspó la pintura. Dos colores bastan: el **naranja** del óxido y un **hierro oscuro** que hace de transición.
+
+<Warn title="El visor no simula el render">
+El visor solo muestra colores. Si das al hierro el material **Metal**, como en [V3-02](/forja-art/voxel/v3-02/), mira el resultado en el modo **Render** de MagicaVoxel. Y recuerda que los materiales van **por color de la paleta**: el naranja del óxido debe quedarse en *Diffuse*, porque el óxido no brilla.
+</Warn>
+
+### 3. Musgo y barro: desde el suelo y donde se queda el agua
+
+Vuelve al primer visor, etapa **Historia**:
+
+- **Musgo:** ocupa las dos filas de abajo de la mitad izquierda del cofre, verde oscuro `#2a8a5c` pegado al suelo y verde claro `#3fbf7f` en la fila de encima. Y aparece en un rincón de la tapa, en el lado izquierdo, en los dos escalones de arriba.
+- **Barro:** la fila de abajo de la mitad derecha pasa a un marrón muy oscuro `#4a3226`.
+
+<Why title="¿Por qué abajo y en la tapa?">
+El musgo necesita humedad y sombra. La humedad **sube del suelo**, así que el musgo nace abajo y trepa poco. En la tapa, el agua de la lluvia **se acumula en los escalones**: ahí también cabe. En una cara seca y vertical, a media altura, no crece nada. Y el barro salpica desde el suelo: solo llega a la primera fila.
+</Why>
+
+### 4. El punto focal se queda limpio
+
+Fíjate: la cerradura dorada **no tiene ni un vóxel cambiado** en ninguna de las tres etapas. Y es lo que más se toca.
+
+<Why>
+Una pieza muy usada se **pule**, no se ensucia: el pomo de una puerta vieja brilla. Y además la cerradura es el **punto focal** del cofre (lo más claro y lo más saturado). Si la gastas, el ojo no sabe dónde mirar. Todo lo demás envejece para que ella destaque, como el foco de [F07-01](/forja-art/fundamentos/f07-01/).
+</Why>
+
+### 5. Una pista: alguien estuvo aquí
+
+Las **tres monedas en el suelo**, junto al lado derecho, son lo único que no es desgaste. Son una pista fuera de su sitio, como la espada tirada de [Storytelling (F10-01)](/forja-art/fundamentos/f10-01/). El cofre ya no dice solo «soy viejo»: dice **«alguien lo abrió con prisa y se le cayeron»**.
+
+<Tip>
+El desgaste cuenta **cuánto tiempo**; la pista cuenta **qué pasó**. Con una sola pista basta: tres monedas cuentan más que un montón de oro.
+</Tip>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Guarda la versión limpia antes de tocar nada">
+1. Abre tu prop limpio: un cofre, un barril o una caja de V1–V3. Si no tienes ninguno, levanta uno sencillo: una caja de 10×6×6 con una banda de hierro y un asa.
+2. Guárdalo como `prop_limpio.vox`.
+3. Guarda **una copia con otro nombre**, `prop_gastado.vox`, y trabaja solo en la copia. Otra opción: en el modo **World**, duplica el modelo y ponlo al lado para comparar las dos versiones en la misma escena.
+
+<Why>
+El desgaste es destructivo: los desconchones **borran** vóxels. Sin la versión limpia guardada no puedes volver atrás ni comparar. Y la comparación es la mitad de la pieza.
+</Why>
+</Step>
+
+<Step n={2} title="Prepara los colores del desgaste en la paleta">
+1. En la **paleta** de la izquierda, busca una fila libre.
+2. Pon en ella, en este orden: el **crema** de la madera gastada (`#dcb47e`), el **naranja** del óxido (`#d8743a`), un **hierro oscuro** (`#5c6676`), dos **musgos** (`#2a8a5c` oscuro y `#3fbf7f` claro) y el **barro** (`#4a3226`).
+3. Si tu madera o tu hierro son de otros tonos, ajusta: el crema, más claro y amarillo que tu madera; el hierro oscuro, del mismo tono que tu hierro pero más bajo de valor.
+
+<Tip>
+Seis colores, decididos antes del primer cambio. Si los eliges sobre la marcha, acabas con cuatro cremas casi iguales y ninguno se lee.
+</Tip>
+</Step>
+
+<Step n={3} title="Desconchones: quita vóxels de arista">
+1. Modo **Erase**, pincel **Voxel**: borra un solo vóxel por clic.
+2. Gira la cámara con el botón derecho y recorre las **aristas**: las esquinas verticales, el borde de abajo, el borde donde cierra la tapa.
+3. Quita vóxels sueltos o de dos en dos, **solo en las aristas**. Más en las esquinas, que es lo que más choca. Deja tramos de arista enteros entre un desconchón y otro.
+4. No quites nada del hierro ni de la cerradura, y nada del centro de una cara.
+
+<Warn>
+Si tu pared tiene 1 vóxel de grosor, un desconchón en mitad de una cara abre un **agujero**, no un golpe. En las aristas el problema no existe: lo que queda es un escalón.
+</Warn>
+
+Si te pasas, deshaz con <Keys k="Ctrl+Z" />.
+</Step>
+
+<Step n={4} title="Aclara los bordes de la madera">
+1. Modo **Paint**, pincel **Voxel**, con el **crema** seleccionado en la paleta.
+2. Pinta los vóxels de arista que quedan: los bordes de las esquinas, el canto de la tapa, el borde donde cierra.
+3. Si tu prop tiene **asa**, píntala también: es lo que más tocan las manos.
+4. Gira el modelo. Las aristas tienen que dibujar el contorno en claro; el centro de cada cara, en su marrón de siempre.
+
+<Why>
+Es el mismo principio que el borde claro del carro en V4-03, pero con causa: aquí el borde es claro **porque se ha gastado**. El crema además separa las caras entre sí y ayuda a leer el volumen.
+</Why>
+</Step>
+
+<Step n={5} title="Óxido a manchas en el metal">
+1. Modo **Paint**, pincel **Voxel**, con el **naranja** del óxido.
+2. Pinta en las bandas o aros de hierro **grupos** de 2 o 3 vóxels juntos, separados por tramos de hierro sano. Más abajo que arriba: el agua baja.
+3. Con el **hierro oscuro**, pinta algún vóxel junto a cada mancha: es la transición entre el hierro y el óxido.
+4. Deja al menos la mitad del hierro en su color: si todo es óxido, deja de leerse como hierro.
+
+<Tip>
+El óxido **solo va en el metal**. Si una tabla de madera se te queda naranja, píntala otra vez de madera.
+</Tip>
+</Step>
+
+<Step n={6} title="Musgo, barro y una pista">
+1. Elige el lado **húmedo** de tu prop (el que estaría a la sombra o contra la pared).
+2. Con el **musgo oscuro**, pinta parte de la fila de abajo de ese lado; con el **musgo claro**, algunos vóxels de la fila de encima. No subas más de dos o tres filas.
+3. Si tu prop tiene una tapa plana o escalonada, pon unos vóxels de musgo claro en un rincón: donde se quedaría el agua.
+4. Con el **barro**, pinta parte de la fila de abajo del resto del prop.
+5. Una pista: en modo **Attach**, pon dos o tres vóxels en el suelo, junto al prop (monedas, una herramienta, un trozo de tabla caído).
+6. Comprueba el punto focal (la cerradura, el asa principal, un emblema): **ni un vóxel cambiado**.
+</Step>
+
+<Step n={7} title="Renderiza las dos versiones">
+1. Abre `prop_limpio.vox`, pulsa **Render**, coloca la cámara y guarda la imagen.
+2. Abre `prop_gastado.vox` y renderiza con **la misma cámara, la misma luz y la misma resolución**.
+3. Si usas Metal en el hierro, deja el naranja del óxido y el crema en *Diffuse*.
+4. Pon los dos renders juntos y guárdalos con `prop_limpio.vox` y `prop_gastado.vox` en tu portfolio.
+
+<Tip>
+Una luz de lado y baja marca mejor los desconchones: cada vóxel que falta proyecta un pequeño escalón de sombra.
+</Tip>
+</Step>
+
+<Warn title="Verifica en tu versión">
+Los nombres de los modos **Attach**, **Erase** y **Paint** y de los pinceles **Voxel** y **Box**, la forma de guardar una copia con otro nombre, cómo duplicar un modelo en el modo **World** y cómo editar el color de un hueco de la **paleta** pueden variar entre versiones de MagicaVoxel. Comprueba también que <Keys k="Ctrl+Z" /> deshace en la tuya. En el modo **Render**, los ajustes de luz, de cámara, el panel de materiales y el botón para guardar la imagen cambian de nombre y de sitio: búscalos por su función.
+</Warn>
+</Block>
+
+<Block kind="version">
+Ahora, **tu** prop. Misma receta: versión limpia guardada, desgaste solo donde hay uso, bordes claros, óxido a manchas en el metal, humedad desde abajo, punto focal limpio y una pista. Elige un reto:
+
+- **El barril de la bodega:** aros de hierro oxidados por abajo, duelas con el canto de arriba gastado y una mancha oscura bajo el grifo, donde gotea el vino. La pista: un charco o una jarra caída.
+- **La caja del puerto:** madera clara con las esquinas desconchadas, una franja de salitre blanco y musgo en la parte baja, porque ha estado junto al agua. La pista: una red o una cuerda enganchada.
+- **Dos edades del mismo cofre:** tres versiones en vez de dos: nuevo, con diez años y con cien. Decide qué aparece en cada edad (primero los bordes claros, luego el óxido, al final el musgo y los desconchones grandes).
+
+Antes de darla por buena, pon los dos renders juntos y pregúntate: ¿se ve en un segundo **dónde se ha usado** este objeto y **dónde ha estado**?
+</Block>
+
+<Block kind="errores">
+<Mistake title="Ruido repartido por todas las caras" wrongLabel="Vóxels sueltos por todas partes" rightLabel="Desgaste en las aristas">
+  <p slot="wrong">Vóxels claros, oscuros y agujeros salpicados por igual por el centro de cada cara. El prop no parece viejo: parece que tiene sarpullido.</p>
+  <p slot="right">Los desconchones y el crema siguen las aristas y las esquinas; el centro de las caras se queda en su madera, como en la etapa «Desgaste» del cofre.</p>
+
+Antes de cambiar un vóxel, pregúntate qué lo ha gastado: un golpe, una mano, el agua. Si no tienes respuesta, déjalo como estaba. El centro de las caras es el descanso que hace que el desgaste se lea.
+</Mistake>
+
+<Mistake title="Todo igual de gastado, también el punto focal" wrongLabel="La cerradura oxidada" rightLabel="La cerradura limpia">
+  <p slot="wrong">Desconchones en todas las aristas por igual, óxido en todo el hierro y la cerradura con manchas como lo demás. No hay ningún sitio donde mirar.</p>
+  <p slot="right">Más desgaste en las esquinas que en los tramos rectos, la mitad del hierro sano y la cerradura dorada sin un solo cambio: es el punto focal.</p>
+
+El desgaste también es composición. Varía la intensidad (mucho, poco, nada) y reserva lo más limpio y lo más claro para lo que quieres que se mire primero.
+</Mistake>
+
+<Mistake title="Desgaste sin lógica" wrongLabel="Musgo arriba, óxido en la madera" rightLabel="Cada marca con su causa">
+  <p slot="wrong">Musgo en lo alto de una cara seca y vertical, óxido naranja sobre las tablas de madera y barro a media altura. Cada marca está en un sitio donde no podría haber llegado.</p>
+  <p slot="right">Musgo desde el suelo y en el rincón de la tapa donde se queda el agua, óxido solo en el hierro, barro solo en la fila de abajo.</p>
+
+Cada material envejece a su manera: la madera se aclara y se astilla, el hierro se oxida, la humedad sube del suelo. Si una marca no encaja con su material o con la gravedad, el ojo lo nota aunque no sepa decir por qué.
+</Mistake>
+
+<Warn title="Error típico: trabajar sobre el único archivo">
+Gastas el prop sobre el archivo limpio y al final no tienes con qué comparar, o te pasas con los desconchones y ya no puedes volver. **Corrección:** guarda `prop_limpio.vox` antes de empezar y trabaja siempre en la copia.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+<Checklist items={[
+  "He guardado la versión limpia y la gastada en dos archivos distintos",
+  "Los desconchones son vóxels que faltan en aristas y esquinas, nunca en el centro de una cara",
+  "Los bordes de la madera son más claros que las caras",
+  "El óxido va a manchas, solo en el metal, y al menos la mitad del hierro sigue sano",
+  "El musgo y el barro empiezan en el suelo y no suben más de dos o tres filas, salvo donde se acumula el agua",
+  "El punto focal está limpio",
+  "Hay una pista que cuenta qué ha pasado",
+  "Tengo dos renders con la misma cámara y la misma luz en mi portfolio",
+]} />
+
+<Quiz q="¿Dónde pones los desconchones de un cofre de madera?" options={["En las aristas y esquinas, que es lo que choca", "Repartidos por igual en todas las caras", "En el centro de la tapa, que es lo que más se ve"]} answer={0}>
+El desgaste va donde hay uso. Las aristas y esquinas chocan con el suelo, las paredes y otros objetos; el centro de una cara casi no se toca.
+</Quiz>
+
+<Quiz q="La cerradura es lo que más se toca del cofre. ¿Por qué la dejas limpia?" options={["Porque el oro no se puede pintar en MagicaVoxel", "Porque lo que se toca mucho siempre se oxida primero", "Porque lo que se toca se pule y además es el punto focal"]} answer={2}>
+Las manos pulen lo que tocan, como el pomo de una puerta vieja. Y la cerradura es lo más claro y saturado del cofre: si la gastas, el ojo no sabe dónde mirar.
+</Quiz>
+
+<Quiz q="Has puesto musgo en lo alto de un costado seco y vertical de tu caja. ¿Qué cambias?" options={["Nada: el musgo puede crecer en cualquier sitio", "Lo bajo a las primeras filas desde el suelo o a un rincón donde se quede el agua", "Lo pinto de naranja para que parezca óxido"]} answer={1}>
+El musgo necesita humedad. Nace donde el agua sube del suelo o se acumula, como en el rincón de la tapa del cofre viejo. En lo alto de una cara seca no tiene de qué vivir.
+</Quiz>
+</Block>

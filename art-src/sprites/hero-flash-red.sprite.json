@@ -1,0 +1,41 @@
+{
+  "name": "hero-flash-red",
+  "description": "Error: el flash en un rojo oscuro. Sobre la túnica azul y el pelo castaño apenas cambia el valor: a la velocidad del juego no se nota el golpe.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "personaje",
+    "daño",
+    "error"
+  ],
+  "palette": {
+    "o": "#1b1030",
+    "W": "#8a2a3a"
+  },
+  "rows": [
+    "................",
+    "................",
+    "................",
+    "....oooooooo....",
+    "...oWWWWWWWWo...",
+    "..oWWWWWWWWWWWo.",
+    "..oWWWWWWWWWWWo.",
+    "..oWWWWWWWWWWWWo",
+    "..oWWWWWWWWWWWo.",
+    "..oWWoWWWoWWWWo.",
+    "..oWWoWWWoWWWWo.",
+    "..oWWWWWWWWWWWo.",
+    "...oWWWWWWWWWo..",
+    "....oooooooo....",
+    "...oWWWWWWWWo...",
+    "..oWWWWWWWWWWo..",
+    "..oWWWWWWWWWWo..",
+    "..oWWWWWWWWWWo..",
+    "...oWWWWWWWWo...",
+    "...oWWWWWWWWo...",
+    "...oWWWo.oWWWo..",
+    "...oWWWo.oWWWo..",
+    "...oWWWo.oWWWo..",
+    "...ooooo.ooooo.."
+  ]
+}

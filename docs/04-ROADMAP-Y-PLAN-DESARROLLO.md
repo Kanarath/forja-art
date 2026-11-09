@@ -142,6 +142,15 @@
   - tajo en tres frames (arranque, smear y estela) y su versión de línea fina;
   - modelos «arbol-organico», «habitacion» y «slime-salto» (cuatro etapas sobre el mismo disco, para renderizarlas como frames).
 
+**Contenido · décimo bloque: 5 lecciones más (63 en total).**
+- **Pixel:** P5-05 Retratos (un busto de 32×32), P6-06 Recibir daño (flash, retroceso y parpadeo), P8-03 Fondos con parallax.
+- **Voxel:** V3-03 Desgaste (un prop con historia), V5-03 Criaturas voxel (un murciélago con alas finas).
+- **Arte nuevo:**
+  - retrato de 32×32 en masas planas, terminado y con pillow shading como error;
+  - animación de daño del slime en cinco frames y el flash del héroe (blanco y, como error, rojo oscuro);
+  - fondo de tres capas con parallax en 16 frames, la capa lejana sola y la versión plana como error;
+  - modelos «cofre-viejo» (limpio, gastado y con historia) y «murcielago».
+
 **Lecciones aprendidas durante la fase 1:**
 - **`BASE_URL` sin barra final.** Astro 7 da `BASE_URL` sin barra final, así que hay que usar siempre `src/lib/url.ts`. El validador detecta enlaces sin la base.
 - **Colecciones nuevas en local.** El servidor de desarrollo no ve colecciones de contenido nuevas: hay que reiniciarlo (`npx astro dev --force`).
