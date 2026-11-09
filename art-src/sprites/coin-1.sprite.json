@@ -1,0 +1,36 @@
+{
+  "name": "coin-1",
+  "description": "Moneda, frame 1: de frente. Cara completa de 12 px de ancho con el bisel (claro arriba a la izquierda, oscuro abajo a la derecha), la barra del emblema y un brillo blanco.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "prop",
+    "animación",
+    "moneda"
+  ],
+  "palette": {
+    "o": "#5a3a10",
+    "y": "#f2c14e",
+    "L": "#ffe58a",
+    "Y": "#c98a2a",
+    "w": "#ffffff"
+  },
+  "rows": [
+    "................",
+    ".....oooooo.....",
+    "....oLLLLLLo....",
+    "...oLLyyyyLLo...",
+    "..oLLwyyyyyYYo..",
+    ".oLLyyyYYyyyYYo.",
+    ".oLLyyyYYyyyYYo.",
+    ".oLLyyyYYyyyYYo.",
+    ".oLLyyyYYyyyYYo.",
+    ".oLLyyyYYyyyYYo.",
+    ".oLLyyyYYyyyYYo.",
+    "..oLLyyyyyyYYo..",
+    "...oYYyyyyYYo...",
+    "....oYYYYYYo....",
+    ".....oooooo.....",
+    "................"
+  ]
+}

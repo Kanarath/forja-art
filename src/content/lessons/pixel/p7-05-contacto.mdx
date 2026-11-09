@@ -1,0 +1,259 @@
+---
+id: p7-05
+discipline: pixel
+level: 7
+order: 5
+title: "Sombras de contacto: que los objetos pesen"
+summary: "Apoya tus props en el suelo con una sombra de contacto: una elipse aplanada pegada a la base que oscurece la hierba un paso de su propia rampa. Sin negro, sin hueco."
+duration: 35
+status: borrador
+objectives:
+  - "Entender por qué un objeto sin sombra parece una pegatina que flota"
+  - "Dibujar una sombra de contacto: elipse aplanada, pegada a la base y 1 px más ancha por cada lado"
+  - "Oscurecer el suelo un paso de su propia rampa, no con negro ni con gris"
+  - "Distinguir la sombra de contacto de la proyectada y saber dónde no va"
+  - "Separar sombras y props en capas, como hará el motor"
+prerequisites: [p7-01, p3-01]
+fundamentals: [f05]
+tools: [aseprite]
+piece:
+  name: "Tres props apoyados sobre tu tile de hierba, cada uno con su sombra de contacto"
+  canvas: "48x24"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [contacto]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Tienes un prado sin costuras (P7-01) y props de lecciones anteriores. Hoy vas a forjar una **escena de 48×24**: tres props sobre tu hierba que **toquen el suelo**.
+
+Así quedan los props pegados encima de la hierba, sin más:
+
+<Sprite name="props-floating" scale={8} caption="props-floating: una roca, una seta y un cofre sobre la hierba. Están dibujados encima, no apoyados" />
+
+Y así, con sombra de contacto:
+
+<Sprite name="props-grounded" scale={8} caption="props-grounded: los mismos props en el mismo sitio. Solo cambia la hierba que tienen justo debajo" />
+
+<Tip>
+Los dos sprites son idénticos salvo en unos pocos píxeles de hierba alrededor de la base de cada prop. Ni la roca, ni la seta, ni el cofre cambian un solo píxel.
+</Tip>
+</Block>
+
+<Block kind="concepto">
+### Sin sombra, una pegatina
+
+Mira `props-floating` otra vez. La hierba sigue igual hasta el mismo borde de cada objeto. Nada en el suelo dice «aquí hay algo que pesa».
+
+<Why>
+Tu cerebro decide si un objeto está apoyado mirando **el suelo que lo rodea**, no el objeto. Si el suelo no cambia junto a la base, el objeto puede estar a un centímetro o a un metro: no hay forma de saberlo, y el ojo lo lee como una capa encima. Una pegatina.
+</Why>
+
+### Oclusión: donde el objeto toca, no llega luz
+
+En [F05-01](/forja-art/fundamentos/f05-01/) viste la **oclusión**: los rincones y contactos donde casi no entra luz. Justo bajo la base de un objeto, el propio objeto tapa el cielo. Esa franja de suelo queda más oscura **venga de donde venga la luz**.
+
+Eso es la sombra de contacto. No es la sombra proyectada de P3-01:
+
+- **Sombra proyectada:** depende de una luz con dirección. Cae al lado contrario de la luz y se alarga si la luz está baja.
+- **Sombra de contacto:** no depende de la dirección. Está **centrada bajo la base**, pegada, y es pequeña.
+
+Las dos pueden convivir. Pero la de contacto es la que nunca falta: en un día nublado no hay proyectada y sigue habiendo contacto.
+
+### Cómo es, píxel a píxel
+
+Mira de cerca la roca de `props-grounded`:
+
+<Sprite name="props-grounded" scale={12} caption="La sombra es una elipse de 3 filas centrada en la fila de la base. Casi toda queda tapada por el objeto: lo que ves es un ribete" />
+
+- **Es una elipse aplanada** de 3 filas de alto, centrada en la fila más baja del objeto.
+- **Va pegada a la base.** No hay ni un píxel de hierba sin oscurecer entre el objeto y su sombra.
+- **Es 1 px más ancha por cada lado** que el objeto: en la fila de la base, asoma 1 píxel a la izquierda y otro a la derecha.
+- **Por debajo asoma una sola fila.** Bajo la roca mide lo mismo que la roca (10 px); bajo el cofre es algo más corta que él, porque la elipse se estrecha en las puntas.
+- **El objeto tapa el resto.** Donde la roca se curva, la sombra rellena los huecos transparentes de su silueta y la abraza.
+
+<Why>
+Un ribete de 1 px basta. La sombra de contacto no tiene que verse como mancha: tiene que **cerrar la frontera** entre el objeto y el suelo. Si es grande, deja de ser contacto y pasa a ser un charco.
+</Why>
+
+### Un paso de la rampa del suelo
+
+Ahora mira **qué color** tiene la sombra. No hay negro ni gris. Cada píxel de hierba pasa al **verde siguiente, más oscuro**, de la misma rampa:
+
+- verde claro (`#6fd17f`) → verde medio (`#3fa45b`);
+- verde medio → verde oscuro (`#2c7a48`);
+- verde oscuro → un cuarto verde, más oscuro aún (`#1f5a36`).
+
+Ese cuarto verde es el único color nuevo de la escena: la rampa de la hierba tenía tres y la sombra necesitaba un escalón más bajo para el verde oscuro.
+
+<Sprite name="props-grounded" scale={8} view="gray" caption="En grises: alrededor de cada base hay un escalón de valor. Y dentro de la sombra se siguen viendo las matas de la hierba" />
+
+<Why>
+Es la idea de las rampas de [P3-02](/forja-art/pixel/p3-02/): un material en sombra es **el mismo material con menos luz**, no otro color. La sombra no es un objeto: es la hierba recibiendo menos luz. Por eso conserva su tono y su textura. Fíjate en la vista de grises: las matas de la hierba siguen ahí, un paso más oscuras. Un negro encima las **tapa**; un paso de rampa las **oscurece**.
+</Why>
+
+### Dónde no va
+
+La sombra de contacto falla en cuanto se separa del objeto:
+
+<Sprite name="props-shadow-wrong" scale={8} caption="props-shadow-wrong: bajo cada prop, una franja negra pura de 2 filas, a 2 px de la base y desplazada a la derecha" />
+
+- **Lejos de la base:** las 2 filas de hierba entre el objeto y la franja negra dicen «aquí hay aire». El objeto sigue flotando, y ahora además se ve a qué altura.
+- **Desplazada sin luz que lo justifique:** una sombra corrida hacia un lado es una sombra **proyectada**. Necesita una luz baja que la explique y, sobre todo, tiene que **empezar en el punto de contacto**. Una sombra proyectada nunca nace separada del objeto.
+- **En negro:** no oscurece la hierba, la sustituye. Parece un agujero en el suelo.
+
+### Sombras en su capa
+
+En la escena final, la sombra y el objeto viven en **capas distintas**: fondo, sombras y props, de abajo arriba. Así puedes mover un prop y su sombra, o cambiar la hierba, sin repintarlo todo.
+
+En el motor pasa lo mismo: la sombra de un personaje suele ser **un sprite aparte**, dibujado debajo de él. Ya lo viste en P6-06:
+
+<Sprite name="slime-hurt-5" scale={10} caption="slime-hurt-5: el slime parpadea y desaparece, pero su sombra se queda en el suelo. Son dos piezas distintas" />
+
+<Tip>
+Para props que nunca se mueven (una roca, un cofre), puedes dibujar la sombra dentro del propio sprite, con el suelo incluido, o en el tile. Para personajes que andan y saltan, sombra aparte: tiene que quedarse en el suelo cuando el personaje sube.
+</Tip>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Lienzo y capa de fondo con tu hierba">
+1. <Keys k="Ctrl+N" />: **48×24**, el ancho de 3 tiles de hierba. Activa *View → Grid*.
+2. Abre tu `tile-grass` de P7-01, copia el tile entero (<Keys k="Ctrl+C" />) y pégalo (<Keys k="Ctrl+V" />) en el lienzo nuevo: tres copias en la fila de arriba y tres en la de abajo. Las de abajo quedarán cortadas por el borde del lienzo: no pasa nada.
+3. Llama a esa capa «fondo».
+
+<Tip>
+Comprueba las uniones con la rueda del ratón, alejando: como el tile no tiene costuras, no deberías ver dónde empieza cada copia.
+</Tip>
+</Step>
+
+<Step n={2} title="Capa de props, y deja sitio para la de sombras">
+1. Crea dos capas nuevas encima de «fondo»: primero «sombras» y luego «props», que quede arriba del todo.
+2. En «props», pega tres objetos de lecciones anteriores: la roca, la seta y el cofre, o los tuyos. Que midan entre 8 y 12 px de ancho.
+3. Colócalos con la base a alturas distintas, como en `props-floating`: el cofre más arriba (más lejos), la roca más abajo (más cerca).
+
+<Why>
+El orden de las capas es el orden físico: el suelo, luego lo que oscurece el suelo, luego lo que está encima. Es lo mismo que hará el motor con el sprite de sombra bajo el personaje.
+</Why>
+</Step>
+
+<Step n={3} title="Añade el cuarto verde a la paleta">
+Con el cuentagotas (<Keys k="I" />), toma tus tres verdes de la hierba y mira en el panel de paleta que estén en orden, del claro al oscuro.
+
+Añade **un verde más oscuro** que el último. Sirve el de `props-grounded`, `#1f5a36`. Ahora tienes la rampa completa para la sombra: cada verde tiene «su siguiente».
+
+<Tip>
+Si en P3-02 hiciste la hierba con hue shifting, desplaza también este cuarto verde un poco hacia el azul, como el resto de tus sombras.
+</Tip>
+</Step>
+
+<Step n={4} title="Dibuja la elipse, pegada a la base">
+Empieza por la roca. En la capa «sombras», con el lápiz (<Keys k="B" />), marca la forma de la elipse de 3 filas centrada en la fila más baja de la roca:
+
+1. **fila de la base:** 1 px más allá del objeto por cada lado;
+2. **fila de debajo:** el ancho del objeto, redondeando las puntas si te quedan cuadradas;
+3. **fila de encima de la base:** solo lo que asome junto a la curva de la roca.
+
+Pinta de momento con cualquier color: es una plantilla. Ocultando y mostrando la capa «props» verás qué parte de la elipse queda tapada.
+
+<Tip>
+También puedes usar la herramienta de elipse con relleno, pero a 3 filas de alto el resultado depende de dónde empiezas a arrastrar. A mano, fila a fila, controlas cada píxel.
+</Tip>
+</Step>
+
+<Step n={5} title="Oscurece un paso con la rampa del suelo">
+Ahora la plantilla se convierte en sombra. Cada píxel tiene que ser **el verde siguiente** al que tiene debajo, en la capa «fondo»:
+
+1. Oculta un momento la plantilla y mira con el cuentagotas (<Keys k="I" />) qué verde hay en cada píxel de la zona.
+2. Píntalo en «sombras» con el verde siguiente de la rampa: claro → medio, medio → oscuro, oscuro → el cuarto verde.
+3. Repite con la seta y el cofre.
+
+<Warn title="Si lo haces sobre la propia hierba, empieza por el oscuro">
+Si prefieres cambiar los colores directamente en una copia de la hierba (con una selección y *Edit → Replace Color*), sigue este orden: **primero** oscuro → cuarto verde, **luego** medio → oscuro, **luego** claro → medio. Al revés, el claro se volvería medio, después oscuro, y bajaría dos o tres pasos.
+</Warn>
+
+<Tip title="El atajo: modo de capa y opacidad">
+Otra vía más rápida: pinta la elipse en un solo verde oscuro y, en las propiedades de la capa «sombras», ponle modo *Multiply* y baja la opacidad. Funciona, pero inventa colores que no están en tu paleta. Compáralo luego en grises con el método de la rampa.
+</Tip>
+</Step>
+
+<Step n={6} title="Comprueba alejando y en grises">
+1. Aleja el zoom con la rueda del ratón hasta ver la escena casi a 1×. Los objetos tienen que **posarse**, no flotar.
+2. Oculta y muestra la capa «sombras»: la diferencia tiene que notarse, pero sin que veas una mancha.
+3. Guarda con <Keys k="Ctrl+S" /> y exporta con *File → Export → Export As*: una copia al 100 % y otra con **Resize** al 800 % para el portfolio.
+4. Sube la de 1× al inspector del final y mírala en grises: un escalón de valor alrededor de cada base y las matas de la hierba visibles dentro de la sombra.
+</Step>
+
+<Warn title="Verifica en tu versión">
+Los nombres y la posición pueden variar según la versión de Aseprite: la creación de capas (menú *Layer*), las propiedades de capa con el modo de fusión (*Multiply*) y la opacidad, la herramienta de elipse y su opción de relleno, *Edit → Replace Color* y si respeta la selección, y cómo se añade un color al panel de paleta. Si no encuentras algo, búscalo por nombre en los menús.
+</Warn>
+</Block>
+
+<Block kind="version">
+Ahora a tu manera. Mantén la sombra pegada, 1 px más ancha por lado y un paso de la rampa del suelo. Elige uno:
+
+- **Otro suelo:** pon los mismos props sobre tierra, arena o la piedra del camino. Cada suelo tiene su rampa: la sombra sobre arena es una arena más oscura, no un verde.
+- **Sombra de contacto y proyectada:** decide una luz baja desde la izquierda y añade, además, una sombra proyectada que **nazca** en la base y se alargue hacia la derecha. La de contacto sigue debajo, centrada.
+- **El héroe que salta:** dibuja la sombra del héroe como un sprite aparte de 16 px de ancho y haz dos versiones: en el suelo y en el punto alto del salto, más pequeña. Pruébalas con el salto de P6-03.
+</Block>
+
+<Block kind="errores">
+<Mistake title="Props sin sombra" wrongLabel="Pegatinas" rightLabel="Apoyados">
+  <Sprite slot="wrong" name="props-floating" scale={6} />
+  <Sprite slot="right" name="props-grounded" scale={6} />
+
+La hierba no cambia junto a la base, así que nada dice que el objeto pese. **Arréglalo:** una elipse aplanada bajo cada base que oscurezca el suelo un paso de su rampa.
+</Mistake>
+
+<Mistake title="Sombra negra, separada y desplazada" wrongLabel="Un agujero aparte" rightLabel="Pegada, un paso más oscura">
+  <Sprite slot="wrong" name="props-shadow-wrong" scale={6} />
+  <Sprite slot="right" name="props-grounded" scale={6} />
+
+El negro tapa la hierba y parece un agujero. El hueco de 2 px entre la base y la franja deja ver aire: el objeto sigue flotando. Y el desplazamiento a la derecha pide una luz que la escena no tiene. **Arréglalo:** pega la sombra a la base, céntrala y usa el verde siguiente de la rampa.
+</Mistake>
+
+<Mistake title="Juzgar la sombra solo en color" wrongLabel="En grises: manchas negras" rightLabel="En grises: un escalón suave">
+  <Sprite slot="wrong" name="props-shadow-wrong" scale={6} view="gray" />
+  <Sprite slot="right" name="props-grounded" scale={6} view="gray" />
+
+En grises, el negro es lo más oscuro de toda la escena, más que el contorno de los props: roba la atención. La sombra buena es un solo paso de valor y deja ver la textura del suelo.
+</Mistake>
+
+<Warn title="Una sombra demasiado grande o demasiado oscura">
+Si la elipse se sale 3 o 4 px por los lados, o baja dos pasos de rampa, deja de ser contacto: parece un charco o un agujero bajo el objeto. La sombra de contacto es un ribete de 1 px. Si quieres una sombra más larga, es una proyectada y necesita una luz que la justifique.
+</Warn>
+
+<Warn title="Una sombra que no cambia cuando el personaje salta">
+Si la sombra está pintada dentro del sprite del personaje, sube con él: en el punto alto del salto de [P6-03](/forja-art/pixel/p6-03/), el slime se lleva su sombra al aire y el salto pierde la altura. La sombra de un personaje que salta va en un sprite aparte, se queda en el suelo y, cuanto más alto está él, más pequeña y menos oscura se hace.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+Sube tu escena **a 1×** (48×24) y revísala con la vista de grises: un escalón de valor alrededor de cada base, sin negros y con la hierba visible dentro de la sombra.
+
+<Inspector upload title="Revisa tus sombras de contacto" />
+
+<Checklist items={[
+  "Cada prop tiene una sombra de contacto, y sin ella la escena parece hecha de pegatinas",
+  "La sombra está pegada a la base: no hay hierba sin oscurecer entre el objeto y ella",
+  "Es una elipse aplanada que sobresale 1 px por cada lado, no más",
+  "Cada verde baja un solo paso de la rampa; no hay negro ni gris",
+  "En grises se siguen viendo las matas de la hierba dentro de la sombra",
+  "La sombra está centrada bajo la base; si hay una proyectada, nace en el contacto",
+  "Fondo, sombras y props están en capas separadas",
+  "Exporté la escena al 100 % y ampliada",
+]} />
+
+<Quiz q="¿Por qué un prop sin sombra parece flotar?" options={["Porque le falta contorno", "Porque su sombreado propio no tiene dirección", "Porque el suelo no cambia junto a su base y nada dice que lo esté tocando"]} answer={2}>
+El ojo decide si algo está apoyado mirando el suelo que lo rodea. Sin oclusión en la base, el objeto se lee como una capa encima.
+</Quiz>
+
+<Quiz q="¿Con qué color se pinta la sombra de contacto sobre la hierba?" options={["Con el verde siguiente de la rampa de la hierba, píxel a píxel", "Con negro, para que se note", "Con un gris neutro a media opacidad"]} answer={0}>
+La sombra es la misma hierba con menos luz. Bajar un paso de su rampa conserva el tono y la textura; el negro la tapa y el gris la apaga.
+</Quiz>
+
+<Quiz q="La sombra está a 2 px de la base y corrida a la derecha. ¿Qué falla?" options={["Nada, si es negra", "El hueco deja ver aire: una sombra, también la proyectada, empieza en el punto de contacto", "Que debería estar a la izquierda"]} answer={1}>
+La separación dice que el objeto está en el aire. La de contacto va centrada y pegada; una proyectada puede alargarse hacia un lado, pero siempre nace en la base.
+</Quiz>
+</Block>

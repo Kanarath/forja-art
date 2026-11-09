@@ -1,0 +1,305 @@
+---
+id: p7-04
+discipline: pixel
+level: 7
+order: 4
+title: "Plataformas: un tileset de 3×3 en vista lateral"
+summary: "Dibuja un tileset de 3×3 para un plataformas: hierba solo arriba, bordes y esquinas redondeadas que cierran el bloque y un centro que se repite, probado en un nivel."
+duration: 45
+status: borrador
+objectives:
+  - "Entender por qué en vista lateral el suelo tiene una cara que se pisa y lados que no"
+  - "Conocer las nueve piezas de un tileset de 3×3 y qué bloques se montan con ellas"
+  - "Dibujar un borde de hierba irregular cuyo periodo encaje en 16 píxeles"
+  - "Cerrar el bloque con contorno, una sombra de 1 px y esquinas redondeadas"
+  - "Probar el tileset montando un nivel, no pieza a pieza"
+prerequisites: [p7-01, f08-01]
+fundamentals: [f08]
+tools: [aseprite, godot]
+piece:
+  name: "Tileset de plataformas de 3×3 piezas (48×48) probado en un nivel de 8×6 tiles"
+  canvas: "48x48"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [plataformas]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Hasta ahora tus tiles eran suelo visto desde arriba: un prado (P7-01), un agua (P7-02), una orilla (P7-03). Hoy giras la cámara. Vas a forjar **el suelo de un plataformas**: un **tileset de 48×48** con nueve piezas de 16×16 que, combinadas, montan bloques de tierra con hierba del tamaño que quieras.
+
+<Sprite name="tileset-platform" scale={8} caption="tileset-platform: un bloque de 3×3 tiles. Hierba arriba, contorno y sombra a los lados y abajo, esquinas redondeadas y tierra en el centro" />
+
+Y la prueba de que funciona, un nivel montado **solo** con esas piezas:
+
+<Sprite name="map-platforms" scale={5} caption="map-platforms (96×64): suelo, un escalón de 2 tiles unido al suelo con el héroe encima y una plataforma flotante de 2 tiles a la derecha. El slime, en el suelo" />
+
+<Tip>
+Mira el nivel sin pensar en tiles: sabes al instante dónde puede ponerse el héroe. Cada superficie con hierba dice «aquí se pisa». Eso es lo que vas a diseñar.
+</Tip>
+</Block>
+
+<Block kind="concepto">
+### En vista lateral, el suelo tiene arriba y lados
+
+En [F08-01](/forja-art/fundamentos/f08-01/) viste que la vista lateral solo enseña **el frente** de las cosas: la caja de `view-side` no tiene tapa. El suelo de un plataformas es igual: ves su cara frontal, como un corte del terreno.
+
+Pero no todos sus lados son iguales para el jugador:
+
+- **La cara de arriba se pisa.** Es por donde se camina y donde se aterriza tras un salto.
+- **Los lados y la cara de abajo no.** Son paredes y techos: chocas con ellos.
+
+El tileset tiene que **contar esa diferencia** con el dibujo.
+
+<Sprite name="tileset-platform" scale={10} caption="Solo la fila de arriba tiene hierba. Los lados y la base tienen contorno oscuro y una columna (o fila) de tierra más oscura" />
+
+<Why>
+En un plataformas, el arte también es información. El jugador decide en una fracción de segundo dónde saltar; si la superficie pisable no se distingue del muro, falla el salto y culpa al juego. La hierba arriba es una **señal**, igual que el color de un botón en una interfaz: «aquí se puede pisar».
+</Why>
+
+### Las nueve piezas
+
+Un bloque rectangular tiene tres clases de casilla según con qué toque:
+
+- **4 esquinas:** tocan el aire por dos lados (arriba y un costado, o abajo y un costado).
+- **4 bordes:** tocan el aire por un lado: arriba, abajo, izquierda o derecha.
+- **1 centro:** rodeado de tierra por los cuatro lados.
+
+Con esas nueve piezas montas **cualquier rectángulo de 2×2 tiles o más**: las esquinas van en los cuatro extremos, los bordes se repiten a lo largo de cada lado tantas veces como haga falta, y el centro rellena el interior. Un bloque de 5×3 usa las mismas nueve piezas que uno de 20×8; solo cambia cuántas veces repites cada una.
+
+<Why>
+Es el mismo truco que el 9-slice de la interfaz (P4-04): esquinas fijas, bordes que se repiten en una dirección y un centro que se repite en las dos. Aquí no estiras nada: cada pieza se copia entera en su casilla de la rejilla.
+</Why>
+
+<Tip title="¿Y una plataforma de un solo tile de alto?">
+Fíjate en `map-platforms`: el suelo y la plataforma flotante miden **un tile** de alto. Ese tile toca el aire arriba **y** abajo a la vez, y ninguna de las nueve piezas tiene hierba y base juntas. Hacen falta **tres piezas más** (extremo izquierdo, tramo y extremo derecho de una tira). La buena noticia: se montan juntando la mitad de arriba de una pieza de la fila superior con la mitad de abajo de la pieza de la fila inferior. Lo harás en la versión.
+</Tip>
+
+### La hierba: irregular, pero con un periodo que encaje en 16
+
+La hierba ocupa **de 3 a 5 píxeles** bajo el contorno de arriba: una fila de verde claro, verde medio y una línea de verde oscuro que marca dónde acaba. Ese final no es recto: baja y sube columna a columna.
+
+<Sprite name="tileset-platform" scale={10} caption="Cuenta dónde acaba la hierba en las 8 primeras columnas: 3, 4, 3, 3, 4, 5, 4, 3. Y vuelve a empezar" />
+
+El dibujo se repite **cada 8 píxeles**. Como 8 cabe exactamente dos veces en 16, cada tile de la fila de arriba termina igual que empieza el siguiente, y el borde de hierba es continuo a lo largo de todo el bloque, mida lo que mida.
+
+<Why>
+Es la regla de P7-01 aplicada a un solo borde: lo que sale por la derecha de un tile entra por la izquierda del siguiente. Si el dibujo de la hierba tuviera un periodo de 6 o de 7, no encajaría en 16: en cada línea de la rejilla habría un salto, y el ojo vería la costura. Un periodo de 4, 8 o 16 siempre encaja.
+</Why>
+
+### El centro: tierra sin costuras y sin bisel
+
+El centro es la pieza que más se repite: un bloque grande es casi todo centro. Por eso es la más aburrida a propósito: tierra media con puntos sueltos de tierra oscura y de tierra clara, repartidos sin formar líneas ni dibujos.
+
+<Inspector sprite="tileset-platform" title="Inspecciona el tileset: compara las nueve piezas y busca la costura en el centro" />
+
+<Tip>
+Activa la rejilla del inspector. Las columnas 16 a 31 y las filas 16 a 31 son el centro. Comprueba que sus bordes no son más claros ni más oscuros que su interior: si lo fueran, al repetirlo aparecería la cuadrícula del bisel de P7-01.
+</Tip>
+
+### Contorno y sombra: solo en el exterior del bloque
+
+A los lados y abajo, el bloque se cierra con **el contorno** (casi negro) y **1 píxel de tierra más oscura** justo dentro. En P7-01 dijiste que un tile de suelo no lleva bisel. ¿Por qué aquí sí?
+
+Porque esa sombra no está en cada tile: está **solo en el exterior del bloque**. Los bordes interiores, donde dos piezas de tierra se tocan, no tienen nada. El bloque entero es un objeto con volumen; las piezas que lo forman, no.
+
+<Why>
+Es el principio de **silueta**: el contorno separa el bloque del fondo, y la fila oscura de dentro le da grosor sin necesidad de dibujar una cara lateral. Al jugador le llega una forma clara: un trozo de tierra con un borde que no se cruza.
+</Why>
+
+### Esquinas redondeadas
+
+En cada esquina se quitan **3 píxeles**: 2 en la fila (o columna) del borde y 1 en la siguiente. El contorno pasa en diagonal y el bloque deja de ser una caja.
+
+<Why>
+Una esquina en ángulo recto de 90° es lo primero que delata la rejilla, igual que la punta de tierra de P7-03. Con 3 píxeles menos, la esquina parece tierra gastada y el bloque se lee como terreno, no como un ladrillo. Ojo: solo se redondean las esquinas que dan al aire. Donde un bloque se une a otro (el escalón con el suelo, en el nivel) no hay esquina.
+</Why>
+
+### Se lee en grises
+
+<Sprite name="map-platforms" scale={5} view="gray" caption="En grises, la fila de hierba de arriba es la línea más clara de cada bloque. Señala todas las superficies pisables de un vistazo" />
+
+<Tip>
+En Godot, colocar la pieza correcta en cada casilla lo puede hacer el **TileMapLayer** con los **terrains** de su TileSet (autotile): tú pintas «tierra» y el motor elige esquinas y bordes según los vecinos. Lo verás en el nivel 9. Para que funcione, el tileset tiene que estar completo y encajar: eso es lo que forjas hoy.
+</Tip>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="El centro primero, en su propio lienzo">
+1. <Keys k="Ctrl+N" />: **16×16**. Guárdalo como `plataforma-centro.aseprite`.
+2. Prepara la tierra: tres marrones de valor cercano. Sirven los de `tileset-platform`: `#8a5a3c` (medio), `#6b4430` (oscuro) y `#a8744a` (claro).
+3. Rellena todo con el marrón medio usando el cubo (<Keys k="G" />).
+4. Activa *View → Tiled Mode* en los dos ejes y aleja el zoom con la rueda del ratón hasta ver unas 3×3 copias.
+5. Con el lápiz (<Keys k="B" />), salpica **puntos sueltos** de marrón oscuro y de marrón claro: unos 10–15 de cada uno, sin filas ni diagonales.
+
+<Why>
+El centro es la base de las nueve piezas: los bordes y las esquinas son el centro con algo encima. Si lo dibujas primero y sin costuras, todo lo demás hereda una tierra que ya encaja. Y el Tiled Mode te enseña el bloque grande mientras pintas el tile pequeño.
+</Why>
+
+<Tip>
+Mira las copias, no el original. Si tres puntos forman una línea que cruza de copia en copia, mueve uno.
+</Tip>
+</Step>
+
+<Step n={2} title="El lienzo del tileset, con rejilla de 16">
+1. <Keys k="Ctrl+N" />: **48×48**. Guárdalo como `plataforma-tileset.aseprite`.
+2. Abre la configuración de la rejilla (*Grid Settings*, en el menú *View*) y ponla en **16×16**. Activa *View → Grid*.
+3. Vuelve al centro, selecciónalo entero con la selección rectangular (<Keys k="M" />) y cópialo (<Keys k="Ctrl+C" />). Pégalo (<Keys k="Ctrl+V" />) en **las nueve casillas** del tileset.
+
+<Why>
+Las nueve piezas empiezan siendo el mismo centro. Así la tierra de una esquina casa con la de su borde y con la del centro, porque es la misma. Ahora solo falta pintar lo que las diferencia: el exterior.
+</Why>
+</Step>
+
+<Step n={3} title="Contorno y sombra en los lados y abajo">
+Añade dos colores: el contorno (sirve `#2a1a12`) y ya tienes el marrón oscuro.
+
+1. Pinta el **contorno** en la columna 0, la columna 47 y la fila 47, de punta a punta.
+2. Justo dentro, pinta **1 píxel de marrón oscuro**: columna 1, columna 46 y fila 46.
+3. Pinta también el contorno en la **fila 0** (arriba): ahí irá encima la hierba.
+
+<Warn>
+Nada en las líneas 16 y 32 de la rejilla. El contorno y la sombra van solo por fuera del bloque; las uniones entre piezas son tierra normal, como en el centro.
+</Warn>
+</Step>
+
+<Step n={4} title="La hierba, solo arriba">
+Añade tres verdes: los de `tile-grass` sirven (`#6fd17f`, `#3fa45b` y `#2c7a48`).
+
+1. **Fila 1:** verde claro de lado a lado.
+2. Debajo, decide dónde acaba la hierba en **8 columnas**. Por ejemplo, la de `tileset-platform`: 3, 4, 3, 3, 4, 5, 4, 3 (filas contadas desde 0). Rellena con verde medio hasta justo encima de esa fila, y en esa fila pon un píxel de **verde oscuro**.
+3. Selecciona esas 8 columnas de hierba (<Keys k="M" />), cópialas y pégalas a la derecha hasta cubrir los 48 píxeles: son 6 copias.
+4. La hierba tapa la sombra marrón de las columnas 1 y 46 en esas filas: está bien, la hierba llega hasta el contorno. Si ha pisado las columnas 0 o 47, vuelve a pintar ahí el contorno.
+
+<Why>
+Con un periodo de 8, cada tile de 16 lleva exactamente dos ondas y termina igual que empieza. Las tres piezas de arriba tienen el mismo perfil de hierba, así que puedes repetir el borde superior tantas veces como quieras sin salto.
+</Why>
+
+<Warn>
+La hierba no baja por los lados. En las columnas 0 y 1, por debajo de la hierba, sigue el contorno y la sombra marrón de los costados: una pared no tiene césped.
+</Warn>
+</Step>
+
+<Step n={5} title="Redondea las cuatro esquinas">
+Con la goma (<Keys k="E" />), en cada esquina del bloque de 48×48, borra 3 píxeles: los 2 de la esquina en la fila del borde y 1 en la fila siguiente. Arriba a la izquierda, por ejemplo: columnas 0 y 1 de la fila 0, y columna 0 de la fila 1.
+
+<Tip>
+Mira la esquina de arriba a la izquierda en `tileset-platform`: el píxel que queda en la diagonal es verde claro, sin contorno. El borde de la silueta pasa en diagonal de contorno a hierba y otra vez a contorno, y se lee redondo.
+</Tip>
+
+Guarda con <Keys k="Ctrl+S" />.
+</Step>
+
+<Step n={6} title="Monta un nivel de prueba">
+1. <Keys k="Ctrl+N" />: **128×96** (8×6 tiles de 16). Rejilla a 16×16 y ajuste a la rejilla (*Snap to Grid*, en el menú *View*). Guárdalo como `plataforma-nivel.aseprite`.
+2. Monta este nivel (`#` tierra, `.` aire), fila a fila:
+
+   - fila 1: `........`
+   - fila 2: `....###.`
+   - fila 3: `##..###.`
+   - fila 4: `##......`
+   - fila 5: `########`
+   - fila 6: `########`
+
+3. Copia cada pieza del tileset con <Keys k="M" /> y <Keys k="Ctrl+C" />, y pégala en su casilla con <Keys k="Ctrl+V" />. Para cada casilla, pregúntate: ¿qué vecinos son aire? Eso decide si va una esquina, un borde o el centro.
+
+<Why>
+Este nivel usa **las nueve piezas**: la torre de la izquierda tiene bordes laterales y un centro, la plataforma flotante tiene esquinas y bordes de arriba y abajo, y el suelo lo cierra todo. Donde la torre se une al suelo no hace falta ninguna pieza especial: la pared de la torre baja hasta el suelo y la hierba empieza justo al lado, como en el escalón de `map-platforms`.
+</Why>
+</Step>
+
+<Step n={7} title="Revisa el nivel y exporta">
+Aleja el zoom hasta ver el nivel pequeño, casi a 1×.
+
+1. ¿La hierba es continua en cada superficie, sin saltos en las líneas de la rejilla?
+2. ¿Ves alguna línea o cuadrícula dentro de la tierra? Vuelve al centro y repasa sus bordes.
+3. ¿Alguna esquina que da al aire sale en ángulo recto? Te falta redondearla.
+4. Si pones un sprite del curso encima (el héroe o el slime), ¿se ve apoyado en la hierba?
+
+Exporta el tileset y el nivel con *File → Export → Export As*: al 100 % (el tileset de 48×48 es el que usará el juego) y con **Resize** al 500 % para el portfolio.
+</Step>
+
+<Warn title="Verifica en tu versión">
+Los nombres y la posición pueden variar según la versión de Aseprite: la configuración de la rejilla (*Grid Settings*, que suele estar en *View* o en un submenú *Grid*), *Snap to Grid*, el submenú de *Tiled Mode* (ambos ejes, solo X, solo Y) y cómo pega una imagen de varias capas. Si no encuentras algo, búscalo por nombre en los menús.
+</Warn>
+
+<ToolNote tool="godot">
+
+En Godot 4, el tileset de 48×48 se carga en un **TileSet** con tiles de 16×16 y se pinta en un **TileMapLayer**. Con los **terrains** del TileSet puedes marcar qué piezas son esquinas, bordes y centro, y el motor las coloca solo al pintar (autotile). No lo configures todavía: es el trabajo del nivel 9. Recomendado: Godot 4.3 o superior. **Verifica en tu versión** los nombres de los paneles y de los modos de terrain.
+
+</ToolNote>
+</Block>
+
+<Block kind="version">
+Ahora a tu manera. Mantén la hierba solo arriba, el periodo que encaja en 16, el centro sin costuras y las esquinas redondeadas. Elige uno:
+
+- **Plataformas finas:** añade las tres piezas de una tira de un tile de alto (extremo izquierdo, tramo y extremo derecho). Monta cada una con las filas 0 a 7 de la pieza de arriba y las filas 8 a 15 de la de abajo de la misma columna. Prueba con una plataforma flotante de un tile de alto, como la de 2×1 de `map-platforms`.
+- **Otro bioma:** nieve sobre roca, musgo sobre piedra o arena sobre arenisca. Cambia los tres colores de la superficie y los tres del relleno, pero conserva el salto de valor: la superficie más clara que el relleno.
+- **Hierba con otro ritmo:** dibuja el borde de hierba con un periodo de 16 en lugar de 8 (una sola onda por tile, más irregular). Compara los dos niveles alejando el zoom: ¿cuál se nota menos repetido?
+</Block>
+
+<Block kind="errores">
+<Mistake title="Montar el nivel solo con el centro" wrongLabel="Solo el centro: rectángulos" rightLabel="Las nueve piezas: superficies">
+  <Sprite slot="wrong" name="map-platforms-flat" scale={4} />
+  <Sprite slot="right" name="map-platforms" scale={4} />
+
+Con un solo tile de tierra, las plataformas son rectángulos sin contorno ni hierba: no se sabe por dónde se camina, y el héroe parece pegado a un muro en lugar de estar de pie sobre algo. **Arréglalo:** cada casilla lleva la pieza que le toca según sus vecinos: hierba donde arriba hay aire, contorno y sombra donde hay aire a un lado o abajo, y el centro solo dentro.
+</Mistake>
+
+<Mistake title="Hierba en los lados o abajo" wrongLabel="Césped por todas partes" rightLabel="Hierba solo arriba">
+  <p slot="wrong">La hierba rodea el bloque entero, como un marco verde. Ya no hay diferencia entre el suelo y la pared: el jugador intenta posarse en un costado o salta contra un techo pensando que es una plataforma.</p>
+  <p slot="right">La hierba está solo en la cara de arriba. Los lados y la base llevan contorno y una fila de tierra oscura: se leen como paredes, que se chocan pero no se pisan.</p>
+
+**Arréglalo:** borra la hierba de las piezas de los lados y de abajo y pinta ahí el contorno y la sombra marrón. La hierba es una señal: ponla solo donde se pisa.
+</Mistake>
+
+<Mistake title="Esquinas en ángulo recto" wrongLabel="Cajas" rightLabel="Terreno">
+  <p slot="wrong">Las cuatro esquinas del bloque son ángulos de 90° perfectos. Cada plataforma parece una caja o un ladrillo, y en un nivel con muchos bloques se adivina la rejilla de 16×16 debajo.</p>
+  <p slot="right">Cada esquina que da al aire pierde 3 píxeles y el contorno pasa en diagonal. El bloque se lee como un trozo de tierra gastada.</p>
+
+**Arréglalo:** borra 3 píxeles en cada esquina exterior de las cuatro piezas de esquina. No redondees nada en las uniones entre bloques.
+</Mistake>
+
+<Warn title="Costuras en el centro">
+Si los puntos de la tierra se acumulan en un borde del tile, o si el borde es más claro o más oscuro que el interior, al repetir el centro en un bloque grande aparece una cuadrícula. Dibuja el centro con el Tiled Mode activo y no lo des por bueno hasta verlo en 3×3.
+</Warn>
+
+<Warn title="Una hierba que no encaja en 16">
+Si el borde inferior de la hierba se repite cada 6 o 7 píxeles, cada pieza de arriba termina distinta de como empieza la siguiente, y hay un salto en cada línea de la rejilla. Usa un periodo que divida 16 (4, 8 o 16), o dibuja las 16 columnas pensando en que la 15 toque a la 0.
+</Warn>
+
+<Warn title="Sombra en cada tile">
+Si pones la fila oscura en los cuatro lados de **cada pieza**, también el centro la lleva, y dentro del bloque aparece la cuadrícula del bisel de P7-01. La sombra solo va por fuera del bloque.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+Revisa tu tileset y tu nivel en Aseprite con la rejilla a 16×16 y el zoom alejado, casi a 1×.
+
+<Checklist items={[
+  "Mi tileset mide 48×48 y tiene nueve piezas de 16×16: 4 esquinas, 4 bordes y el centro",
+  "La hierba está solo en la fila de arriba; los lados y la base tienen contorno y 1 px de tierra oscura",
+  "El borde inferior de la hierba es irregular y su periodo encaja en 16: no salta en la rejilla",
+  "El centro se repite sin costuras ni bisel",
+  "Las cuatro esquinas exteriores están redondeadas",
+  "Monté el nivel de 8×6 tiles usando las nueve piezas, y todas las superficies pisables se leen de un vistazo",
+  "Exporté el tileset y el nivel al 100 % y ampliados, y guardé los .aseprite",
+]} />
+
+<Quiz q="En vista lateral, ¿por qué la hierba va solo en la cara de arriba del bloque?" options={["Porque los verdes no se pueden poner junto al contorno", "Porque así el tileset ocupa menos colores", "Porque es la superficie que se pisa, y la hierba se lo dice al jugador"]} answer={2}>
+La hierba es una señal de juego: marca dónde se puede caminar y aterrizar. Los lados y la base son paredes y techos; si también tuvieran hierba, el jugador no distinguiría el suelo del muro.
+</Quiz>
+
+<Quiz q="El borde de tu hierba se repite cada 8 píxeles. ¿Encaja en tiles de 16?" options={["Sí: 8 cabe dos veces en 16, y cada tile termina como empieza el siguiente", "No: el periodo tiene que ser exactamente 16", "Solo si la hierba es recta"]} answer={0}>
+Cualquier periodo que divida 16 (4, 8 o 16) encaja. Uno de 6 o 7 no: dejaría un salto en cada línea de la rejilla.
+</Quiz>
+
+<Quiz q="¿Qué bloques se montan con las nueve piezas de un tileset de 3×3?" options={["Solo bloques de exactamente 3×3 tiles", "Cualquier rectángulo de 2×2 tiles o más", "Cualquier forma, incluidas las plataformas de un tile de alto"]} answer={1}>
+Esquinas en los extremos, bordes repetidos a lo largo de cada lado y el centro dentro. Una tira de un tile de alto necesita piezas con hierba arriba y base abajo a la vez: tres más.
+</Quiz>
+
+<Quiz q="En P7-01 un tile de suelo no llevaba bisel. ¿Por qué aquí los lados tienen 1 px de tierra oscura?" options={["Porque la vista lateral siempre necesita bisel", "Porque la sombra va solo por fuera del bloque, no en cada tile", "Porque así el centro se ve más claro"]} answer={1}>
+El bloque entero es un objeto con silueta; las piezas que lo forman, no. Las uniones interiores son tierra normal, así que no aparece ninguna cuadrícula.
+</Quiz>
+</Block>

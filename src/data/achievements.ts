@@ -70,5 +70,10 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   { id: "parallax", name: "Parallax", description: "Un fondo de tres capas que se repiten y se mueven a velocidades distintas (P8-03).", color: "#9cc0d6" },
   { id: "desgaste", name: "Desgaste", description: "Un prop voxel con desgaste en bordes, óxido y una pista de su historia (V3-03).", color: "#dcb47e" },
   { id: "alas", name: "Alas finas", description: "Una criatura voxel con partes finas de 1 vóxel que se lee desde la cámara del juego (V5-03).", color: "#8a5a7a" },
+  { id: "moneda", name: "Moneda que gira", description: "Una rotación falsa en 2D: la cara se estrecha, aparece el canto y la luz no gira (P4-05).", color: "#f2c14e" },
+  { id: "plataformas", name: "Plataformas", description: "Un tileset de 3×3 en vista lateral y un nivel montado solo con sus piezas (P7-04).", color: "#3fa45b" },
+  { id: "contacto", name: "Con los pies en el suelo", description: "Props integrados en el suelo con sombras de contacto (P7-05).", color: "#2c7a48" },
+  { id: "puente", name: "Puente", description: "Dos alturas conectadas con escaleras y un puente con barandilla (V6-03).", color: "#9aa3b5" },
+  { id: "miniatura", name: "Miniatura", description: "Un prop voxel de 8×8×8 que se lee con muy pocos vóxels (V4-04).", color: "#e8484f" },
   { id: "forma-primero", name: "Forma antes que detalle", description: "Un modelo voxel con su blockout guardado como primera versión (V2-01).", color: "#38e1ff" },
 ];

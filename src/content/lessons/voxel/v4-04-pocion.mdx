@@ -1,0 +1,259 @@
+---
+id: v4-04
+discipline: voxel
+level: 4
+order: 4
+title: "Miniaturas: una poción de 8×8×8"
+summary: "Forja una poción en 8³ donde cada vóxel es una decisión: silueta primero, el líquido como color, un detalle por idea y parar a tiempo. Después, tres variantes cambiando solo el líquido."
+duration: 40
+status: borrador
+prerequisites: [v4-01, v3-02]
+fundamentals: [f02, f06]
+objectives:
+  - "Construir primero una silueta de frasco que se lea: cuerpo, cuello y boca"
+  - "Contar el contenido con color: el líquido es la superficie del modelo"
+  - "Añadir un solo detalle por idea y saber cuándo parar"
+  - "Asignar Glass al cristal (y Emit opcional al líquido) y renderizar"
+  - "Crear variantes de vida, maná y veneno cambiando solo los colores del líquido"
+tools: [magicavoxel]
+piece:
+  name: "Una poción de 8×8×8 renderizada con cristal, más dos variantes de color del líquido"
+  canvas: "8x8x8"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [miniatura]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Hoy forjas un prop **diminuto**: una poción en un lienzo de **8×8×8**. Son 512 huecos, y el frasco terminado usa 176. Aquí no hay sitio para dudar: **cada vóxel es una decisión**.
+
+<VoxViewer model="pocion" stage={2} title="La poción de 8³: silueta, líquido y detalle" />
+
+Gírala y recorre las tres etapas:
+
+1. **Silueta:** el frasco entero en un solo azul de cristal. Cuerpo redondo, cuello estrecho y la boca algo más ancha.
+2. **Líquido y corcho:** el cuerpo se llena de rojo desde abajo, el cristal queda arriba, un corcho tapa la boca y un cordel oscuro marca el cuello.
+3. **Detalle:** una etiqueta crema delante, con una marca violeta, y una burbuja en el líquido.
+
+Tu pieza final: **tu poción** en 8³, con su render (cristal en Glass) y **dos variantes** del mismo frasco en las que solo cambia el líquido.
+</Block>
+
+<Block kind="concepto">
+### 1. A 8³, cada vóxel es una decisión
+
+Ya lo viste en dos sitios. En [V1-01](/forja-art/voxel/v1-01/), al elegir la resolución del modelo: 8³ es la más pequeña y la más exigente. Y en pixel, en [P1-01](/forja-art/pixel/p1-01/): a baja resolución no cabe todo, así que eliges **qué** dibujar.
+
+<Sprite name="potion" scale={8} caption="La poción en pixel art (10×12): corcho, boca, cuello de 2 px, cuerpo, líquido y brillo" />
+
+Fíjate en la poción de pixel: el cuello mide **2 píxeles**, la boca es **más ancha** que el cuello y el corcho es otro bloque de 2. La de vóxels sigue la misma receta. Es la misma idea en otra dimensión.
+
+<Why title="¿Por qué empezar por la silueta?">
+Porque a esta escala la silueta es casi todo. En [F02](/forja-art/fundamentos/f02-01/) viste que el ojo reconoce los objetos por su forma en negro antes que por su color. Si la silueta del frasco no dice «poción», ningún color lo arreglará después.
+</Why>
+
+### 2. La silueta: cuerpo, cuello y boca
+
+<VoxViewer model="pocion" stage={0} title="Silueta: un solo color, tres partes" />
+
+Usa el corte por **capas** del visor y cuenta (de abajo arriba):
+
+- **Cuerpo, 5 capas:** una esfera achatada. Abajo y arriba mide 6 de ancho; en la capa del medio llega a **8**, todo el lienzo. Es simétrica de izquierda a derecha, de delante atrás **y** de arriba abajo.
+- **Cuello, 1 capa de 2×2:** solo 4 vóxels. Es el estrechamiento que convierte una pelota en un frasco.
+- **Boca, 1 capa de 4×4 sin las esquinas:** 12 vóxels, más ancha que el cuello. Ese saliente es lo que hace que se lea como el borde de una botella.
+
+<Tip>
+Tres partes, tres anchos muy distintos: 8, 2 y 4. Cuanto más se diferencian, mejor se lee la silueta desde lejos.
+</Tip>
+
+### 3. El contenido es color
+
+<VoxViewer model="pocion" stage={1} title="Líquido y corcho: el contenido como color" />
+
+En Blender harías un frasco hueco con un líquido dentro. Aquí no: **el líquido es la superficie**. Los vóxels de fuera del cuerpo se pintan del color del líquido hasta la altura a la que llega. Por capas:
+
+- **Capa 1 (fondo):** rojo oscuro `#9c2234`. Es la parte con más líquido y menos luz.
+- **Capas 2 y 3:** el rojo del líquido `#e8484f`.
+- **Capa 4 (superficie):** un rojo claro `#ff8a8a` en el centro, con un anillo de cristal alrededor. Es la línea donde acaba el líquido.
+- **Capa 5:** cristal `#9fd8ff`, el aire del frasco.
+
+Encima, el **cuello** se pinta entero de un marrón oscuro `#6b3d2e`: es el cordel. Y sobre la boca, un **corcho** de 2×2 en madera clara `#d08a50`. El frasco pasa a medir 8 de alto.
+
+<Why title="¿Por qué el cordel oscuro?">
+El cuello solo tiene 4 vóxels. En azul cristal se confunde con la boca y con el cuerpo. En marrón oscuro es **la línea más oscura de la pieza** y separa las tres partes: el ojo lee «cuerpo, cuello, boca» aunque el modelo esté lejos.
+</Why>
+
+<Warn title="El visor no simula el cristal">
+En el visor, el cristal es un azul **opaco**: no deja ver nada. La transparencia del material **Glass** solo aparece en el modo **Render** de MagicaVoxel, como en [V3-02](/forja-art/voxel/v3-02/). Por eso el líquido tiene que leerse **por su color**, sin contar con la transparencia.
+</Warn>
+
+### 4. Un detalle por idea, y parar a tiempo
+
+La etapa **Detalle** del primer visor añade muy poco:
+
+- **Etiqueta:** 4 de ancho × 2 de alto, delante, en crema `#f4e6c8`. Sigue la curva del cuerpo: los dos vóxels del centro de la fila de arriba están un paso más adelante que los de los lados. Dice «esto es un objeto fabricado, con dueño».
+- **Marca:** **un** vóxel violeta `#5b4a7a` en la etiqueta. Dice «tiene algo escrito».
+- **Burbuja:** **un** vóxel del rojo claro de la superficie, en el líquido, a la derecha de la etiqueta. Dice «esto es líquido y está vivo».
+
+- **Brillo:** **un** vóxel blanco  en el cristal, en la quinta capa del cuerpo, arriba, delante y a la izquierda. Dice «esto es cristal».
+
+<Why title="¿Por qué parar ahí?">
+Cada detalle cuenta **una** idea. Si añades una segunda burbuja, no cuentas nada nuevo: solo haces ruido. A 8³ un vóxel suelto pesa muchísimo; tres detalles de una idea cada uno ya son el máximo. Es la misma regla que el nivel de detalle constante del kit de [V4-01](/forja-art/voxel/v4-01/).
+</Why>
+
+### 5. Variantes: cambia solo el líquido
+
+Como en el palette swap de [P5-04](/forja-art/pixel/p5-04/), la forma se queda y cambia la paleta. Aquí cambias **solo los tres colores del líquido** (fondo, líquido y superficie) y la burbuja:
+
+- **Vida:** los rojos del modelo.
+- **Maná:** un azul **mucho más oscuro** que el cristal, por ejemplo `#1a2a7a`, `#2a4fbf` y `#6a8cff`.
+- **Veneno:** verdes ácidos, por ejemplo `#2f6a2a`, `#5fbf3f` y `#a8f070`.
+
+<Tip>
+El color dice qué hace la poción; el valor dice dónde acaba el líquido. Conserva en cada variante la misma separación de valor que en la roja: fondo oscuro, líquido medio y superficie clara, todo por debajo del cristal.
+</Tip>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Lienzo de 8×8×8 y paleta">
+1. Abre una escena nueva en MagicaVoxel y pon el tamaño del modelo a **8×8×8**.
+2. En la **paleta** de la izquierda, busca una fila libre y pon en ella: cristal `#9fd8ff`, los tres rojos (`#9c2234`, `#e8484f`, `#ff8a8a`), el cordel `#6b3d2e`, el corcho `#d08a50`, la etiqueta `#f4e6c8`, la marca `#5b4a7a` y el blanco `#ffffff` del brillo.
+3. Borra los vóxels que trae el modelo por defecto, si los hay.
+
+<Why>
+Nueve colores para 176 vóxels. Decidirlos antes del primero te obliga a pensar en lo que vas a contar.
+</Why>
+</Step>
+
+<Step n={2} title="El cuerpo con simetría">
+1. Activa los botones **Mirror** X e Y.
+2. Modo **Attach**, pincel **Voxel** o **Box**, color cristal.
+3. Construye el cuerpo capa a capa, de abajo arriba. Con la simetría basta con hacer un cuarto de cada capa: las capas 1 y 5 miden 6 de ancho, las 2 y 4 también 6 pero más llenas, y la 3 llega a 8 en el centro.
+4. Gira la cámara con el botón derecho y compara con la etapa **Silueta** del visor, usando el corte por capas.
+
+<Tip>
+El lienzo tiene un número **par** de vóxels. Con Mirror activo, un vóxel junto al centro se copia en su vecino: el centro del frasco siempre sale de 2 en 2. Por eso el cuello mide 2×2 y no 1×1.
+</Tip>
+</Step>
+
+<Step n={3} title="Cuello y boca">
+1. Sigue en **Attach** con Mirror X e Y.
+2. Encima del cuerpo, en el centro, una capa de **2×2**: el cuello.
+3. Encima, la boca: una capa de **4×4 sin las cuatro esquinas**.
+4. Prueba de silueta: aleja la cámara con la rueda hasta que el frasco sea pequeño en la pantalla. ¿Ves cuerpo, cuello y boca?
+
+<Warn>
+Si el frasco se lee como una pelota o una caja, corrige **ahora**, con un solo color. Después de pintar cuesta el doble.
+</Warn>
+</Step>
+
+<Step n={4} title="Pinta el líquido por capas y pon el corcho">
+1. Modo **Paint**, pincel **Voxel** (o **Face** para pintar una cara entera de golpe).
+2. Recorre las capas desde abajo: la de abajo en rojo oscuro, las dos siguientes en rojo, y en la cuarta el rojo claro en el centro, dejando el borde de cristal.
+3. Pinta el cuello entero con el marrón del cordel.
+4. Vuelve a **Attach** y pon el corcho: 2×2 encima de la boca.
+
+<Why>
+El fondo oscuro y la superficie clara son la rampa de valor de [V3-01](/forja-art/voxel/v3-01/) en pequeño: con tres tonos el líquido tiene volumen y un nivel bien marcado.
+</Why>
+</Step>
+
+<Step n={5} title="Tres detalles, uno por idea">
+1. Modo **Paint**, pincel **Voxel**.
+2. **Etiqueta:** delante, en las capas 2 y 3 del cuerpo, 4 vóxels de ancho en crema. Pinta los vóxels de fuera, los que se ven de frente.
+3. **Marca:** un solo vóxel violeta dentro de la etiqueta.
+4. **Burbuja:** un vóxel de rojo claro en el líquido, al lado de la etiqueta.
+5. **Brillo:** un vóxel blanco en el cristal, arriba a la izquierda (en la quinta capa del cuerpo), en el lado de donde vendrá la luz.
+6. Para. Aleja la cámara: si un detalle no se entiende a esa distancia, quítalo antes de añadir otro.
+
+<Warn>
+Al pintar con Mirror activo, cada vóxel se copia en los otros cuartos. Desactiva **Mirror** X e Y antes de los detalles: la etiqueta, la burbuja y el brillo van solo en un lado.
+</Warn>
+</Step>
+
+<Step n={6} title="Glass, Emit opcional y render">
+1. Selecciona el azul del cristal en la paleta y, en el panel de materiales, elige **Glass**. Baja o sube la transparencia hasta que el frasco se vea claro pero siga teniendo forma.
+2. Opcional: selecciona el rojo claro de la superficie y dale **Emit** con poca intensidad. La poción brillará un poco desde dentro.
+3. Deja el corcho, el cordel y la etiqueta en *Diffuse*.
+4. Pulsa **Render**, pon una luz desde arriba a la izquierda (la misma que tu brillo) y guarda la imagen.
+5. Guarda el modelo como `pocion_vida.vox`.
+
+<Tip>
+Si pones Emit en los tres rojos, el líquido se quema de luz y pierde el fondo oscuro. Con un solo color emisivo basta, como la llama del farol en V3-02.
+</Tip>
+</Step>
+
+<Step n={7} title="Dos variantes cambiando solo el líquido">
+1. Guarda una copia como `pocion_mana.vox`.
+2. En la **paleta**, edita los tres rojos (y con ellos la burbuja) por tres azules oscuros. Como los materiales van por color, revisa que el color de superficie conserve o pierda Emit según quieras.
+3. Renderiza con la **misma cámara y la misma luz**.
+4. Repite con `pocion_veneno.vox` y los verdes.
+
+<Why>
+Al editar el color en la paleta, cambian todos los vóxels que lo usan: no repintas nada. Es el modo indexado de Aseprite de P5-04, en 3D.
+</Why>
+</Step>
+
+<Warn title="Verifica en tu versión">
+Dónde se cambia el tamaño del modelo, los nombres de los modos **Attach**, **Erase** y **Paint**, de los pinceles **Voxel**, **Face** y **Box** y de los botones **Mirror** X/Y/Z, y cómo se edita un hueco de la **paleta** pueden variar entre versiones de MagicaVoxel. Comprueba también cómo se comporta Mirror en un lienzo de tamaño par en la tuya. En el modo **Render**, el panel de materiales (*Glass*, *Emit* y sus deslizadores de transparencia e intensidad), la luz y el botón para guardar la imagen cambian de nombre y de sitio: búscalos por su función.
+</Warn>
+</Block>
+
+<Block kind="version">
+Ahora, **tu** miniatura en 8³. La misma receta: silueta en un color, contenido como color, un detalle por idea y parar a tiempo. Elige un reto:
+
+- **Tres frascos, tres siluetas:** vida redonda, maná alto y estrecho (cuerpo de 4×4 y 6 de alto) y veneno en forma de matraz (ancho abajo, estrecho arriba). Las tres tienen que distinguirse **en un solo color**, antes de pintar.
+- **La poción gastada:** medio vacía (el líquido solo en las dos capas de abajo) y sin corcho. Con lo aprendido en [V3-03](/forja-art/voxel/v3-03/), añade **un** desconchón en la boca. ¿Qué cuenta ahora?
+- **Otro consumible:** una seta, un pan o una gema en 8³. Mismo límite: tres detalles como mucho.
+
+Antes de darla por buena, aleja la cámara hasta que la pieza sea del tamaño de un icono de inventario y pregúntate: ¿se sabe qué es y de qué está lleno?
+</Block>
+
+<Block kind="errores">
+<Mistake title="Frasco sin silueta reconocible" wrongLabel="Una pelota" rightLabel="Cuerpo, cuello y boca">
+  <Sprite slot="wrong" name="flask-bad" view="silhouette" scale={8} />
+  <Sprite slot="right" name="potion" view="silhouette" scale={8} />
+
+En pixel se ve igual que en vóxels: sin cuello, el frasco es una pelota. El mismo problema tiene el frasco **cuadrado**, un cubo de 6×6×6 con un corcho encima: se lee como una caja. **Corrección:** tres partes con anchos muy distintos (8, 2 y 4 en el modelo), y una curva en el cuerpo. Compruébalo en un solo color antes de pintar.
+</Mistake>
+
+<Warn title="Error típico: el cuello de 1×1 que desaparece">
+Un cuello de un solo vóxel parece elegante en el editor, pero de lejos, y en el render con Glass, se pierde: la boca parece flotar sobre el cuerpo. Además, en un lienzo par con Mirror no queda centrado. **Corrección:** cuello de 2×2 y de un color que contraste, como el cordel oscuro del modelo.
+</Warn>
+
+<Warn title="Error típico: líquido del mismo valor que el cristal">
+Pones una poción de maná en un azul claro, casi igual que el cristal `#9fd8ff`. En el visor no se ve dónde acaba el líquido, y en el render el Glass y el líquido se funden. **Corrección:** el líquido siempre bastante más oscuro que el cristal, y la superficie más clara que el resto del líquido. Compara los valores, no los tonos.
+</Warn>
+
+<Mistake title="Demasiado detalle a 8³" wrongLabel="Detalles por todas partes" rightLabel="Tres detalles, una idea cada uno">
+  <p slot="wrong">Dos etiquetas, cinco burbujas, un brillo en cada lado, una cinta de dos colores en el cuello y motas en el corcho. Cada vóxel compite con el de al lado: el frasco parece salpicado.</p>
+  <p slot="right">Una etiqueta con una marca, una burbuja y un brillo. Todo lo demás son masas limpias de color.</p>
+
+A esta resolución, un vóxel suelto es un detalle enorme. Antes de poner uno, di en voz alta qué idea cuenta. Si ya hay otro que cuenta lo mismo, no lo pongas. Parar a tiempo también es una decisión.
+</Mistake>
+</Block>
+
+<Block kind="calidad">
+<Checklist items={[
+  "Mi poción cabe en 8×8×8",
+  "En un solo color se leen cuerpo, cuello y boca",
+  "El cuello mide al menos 2×2 y contrasta con el cuerpo y la boca",
+  "El líquido es claramente más oscuro que el cristal y tiene fondo oscuro y superficie clara",
+  "Hay como mucho tres detalles y cada uno cuenta una idea",
+  "El cristal tiene Glass y lo he comprobado en el render",
+  "Tengo tres archivos (vida, maná y veneno) que solo cambian en el líquido, renderizados con la misma cámara y luz",
+]} />
+
+<Quiz q="En el visor, tu poción tiene el cristal opaco. ¿Por qué?" options={["Porque el visor solo muestra colores: Glass solo se ve en el render de MagicaVoxel", "Porque has olvidado vaciar el frasco por dentro", "Porque el cristal debe ser siempre un color oscuro"]} answer={0}>
+El visor no simula materiales. La transparencia de Glass solo aparece en el modo Render. Por eso el líquido tiene que leerse por su color, y no por lo que deja ver el cristal.
+</Quiz>
+
+<Quiz q="Haces la poción de maná y no se ve dónde acaba el líquido. ¿Qué cambias?" options={["Añado más burbujas para marcar el nivel", "Cambio el cristal a material Metal", "Oscurezco el líquido para que su valor se separe del cristal"]} answer={2}>
+El problema es de valor, no de tono ni de detalle. Un azul de líquido parecido al azul del cristal se funde con él. Oscurece el líquido y deja la superficie algo más clara.
+</Quiz>
+
+<Quiz q="Ya tienes etiqueta, burbuja y brillo. ¿Qué haces con la idea de una segunda burbuja?" options={["La pongo: cuanto más detalle, mejor", "No la pongo: no cuenta nada nuevo y a 8³ solo añade ruido", "La pongo, pero en otro color"]} answer={1}>
+Cada detalle cuenta una idea. La segunda burbuja repite la primera y compite con ella. A esta escala, parar a tiempo es parte de la pieza.
+</Quiz>
+</Block>

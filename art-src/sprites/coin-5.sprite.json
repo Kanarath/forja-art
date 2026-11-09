@@ -1,0 +1,36 @@
+{
+  "name": "coin-5",
+  "description": "Moneda, frame 5: el reverso, casi de perfil. Ahora el canto asoma a la izquierda y la cara no tiene emblema: es la otra cara.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "prop",
+    "animación",
+    "moneda"
+  ],
+  "palette": {
+    "o": "#5a3a10",
+    "y": "#f2c14e",
+    "L": "#ffe58a",
+    "Y": "#c98a2a",
+    "c": "#a8661c"
+  },
+  "rows": [
+    "................",
+    "......ooo.......",
+    ".....ocLLo......",
+    "....ocLyyLo.....",
+    "....ocLyyYo.....",
+    "....ocyyyyo.....",
+    "....ocyyyyo.....",
+    "....ocyyyyo.....",
+    "....ocyyyyo.....",
+    "....ocyyyyo.....",
+    "....ocyyyyo.....",
+    "....ocLyyYo.....",
+    "....ocYyyYo.....",
+    ".....ocYYo......",
+    "......ooo.......",
+    "................"
+  ]
+}

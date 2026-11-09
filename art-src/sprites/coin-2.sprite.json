@@ -1,0 +1,37 @@
+{
+  "name": "coin-2",
+  "description": "Moneda, frame 2: girando. La cara mide 8 px y por la derecha asoma 1 px del canto, más oscuro. El bisel y el brillo siguen en el mismo sitio: la luz no gira con la moneda.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "prop",
+    "animación",
+    "moneda"
+  ],
+  "palette": {
+    "o": "#5a3a10",
+    "y": "#f2c14e",
+    "L": "#ffe58a",
+    "Y": "#c98a2a",
+    "c": "#a8661c",
+    "w": "#ffffff"
+  },
+  "rows": [
+    "................",
+    "......ooooo.....",
+    ".....oLLLLco....",
+    "....oLLyyLLco...",
+    "...oLLwyyyYYco..",
+    "...oLyyYYyyYco..",
+    "...oLyyYYyyYco..",
+    "...oLyyYYyyYco..",
+    "...oLyyYYyyYco..",
+    "...oLyyYYyyYco..",
+    "...oLyyYYyyYco..",
+    "...oLLyyyyYYco..",
+    "....oYYyyYYco...",
+    ".....oYYYYco....",
+    "......ooooo.....",
+    "................"
+  ]
+}

@@ -502,7 +502,65 @@ const batFace = [
   { x: -1, y: 0, z: 1, c: BAT.bone }, { x: 1, y: 0, z: 1, c: BAT.bone }, // garras
 ];
 
+// ---------- PUENTE Y ESCALERAS: dos orillas a distinta altura, un río y cómo conectarlas
+// Orilla izquierda alta (suelo en z=4), río en medio, orilla derecha baja (suelo en z=1).
+const WATER_M = "#38b6ff";
+const bankL = box(0, 0, 0, 7, 9, 4, null).map((v) => ({ ...v, c: v.z === 4 ? LEAF.mid : v.z === 3 ? DIRT.light : v.z === 0 ? STONE.dark : DIRT.dark }));
+const river = box(8, 0, 0, 15, 9, 0, null).map((v) => ({ ...v, c: v.y % 3 === 1 && v.x % 4 === 1 ? WATER_L : WATER_M })); // el agua, 1 vóxel por debajo de la orilla baja
+const bankR = box(16, 0, 0, 23, 9, 1, null).map((v) => ({ ...v, c: v.z === 1 ? LEAF.mid : DIRT.dark }));
+const bridgeHeights = [...bankL, ...river, ...bankR];
+// escalera de piedra: rellano a la altura del puente y peldaños de 1 de alto y 2 de fondo hasta el suelo bajo
+const stepTop = (x) => (x <= 17 ? 4 : x <= 19 ? 3 : 2);
+const stairs = [];
+for (let x = 16; x <= 21; x++) for (let y = 2; y <= 7; y++) for (let z = 2; z <= stepTop(x); z++) stairs.push({ x, y, z, c: z === stepTop(x) ? STONE.light : STONE.dark });
+const pier = box(11, 2, 0, 12, 7, 3, STONE.dark).map((v) => ({ ...v, c: v.z === 3 ? STONE.light : STONE.dark })); // pila en mitad del río
+const bridgeStairs = [...bridgeHeights.filter((v) => !(v.x >= 11 && v.x <= 12 && v.y >= 2 && v.y <= 7)), ...pier, ...stairs];
+const deck = box(8, 2, 4, 15, 7, 4, null).map((v) => ({ ...v, c: v.x % 2 ? WOOD.light : WOOD.mid })); // tablas cruzadas, en dos tonos
+const beams = [...box(8, 2, 3, 15, 2, 3, WOOD.dark), ...box(8, 7, 3, 15, 7, 3, WOOD.dark)].filter((v) => !(v.x >= 11 && v.x <= 12)); // vigas bajo el tablero
+const rails = [
+  ...[8, 11, 12, 15].flatMap((x) => [2, 7].flatMap((y) => box(x, y, 5, x, y, 5, WOOD.dark))), // postes
+  ...box(8, 2, 6, 15, 2, 6, WOOD.dark), ...box(8, 7, 6, 15, 7, 6, WOOD.dark), // pasamanos
+];
+const pathL = box(0, 3, 4, 7, 6, 4, null).map((v) => ({ ...v, c: (v.x + v.y) % 3 ? PATH.light : PATH.dark })); // el camino llega al puente
+const lampPost = [...box(6, 1, 5, 6, 1, 8, WOOD.dark), { x: 6, y: 1, z: 9, c: "#ffd36e" }];
+const bridgeFinal = [...bridgeStairs.filter((v) => !(v.z === 4 && v.x <= 7 && v.y >= 3 && v.y <= 6)), ...pathL, ...beams, ...deck, ...rails, ...lampPost];
+
+// ---------- POCIÓN de 8×8×8: un prop pequeño donde cada vóxel cuenta
+const POT = { glass: "#9fd8ff", liq: "#e8484f", liqD: "#9c2234", liqL: "#ff8a8a", cork: "#d08a50", corkD: "#a0603a", string: "#6b3d2e", label: "#f4e6c8", ink: "#5b4a7a", shine: "#ffffff" };
+const potBody = [];
+for (let x = 0; x < 8; x++) for (let y = 0; y < 8; y++) for (let z = 0; z <= 4; z++) if (Math.hypot(x - 3.5, y - 3.5, (z - 2) * 1.15) <= 3.6) potBody.push({ x, y, z });
+const potNeck = [...box(3, 3, 5, 4, 4, 5, null), ...box(2, 2, 6, 5, 5, 6, null).filter((v) => !((v.x === 2 || v.x === 5) && (v.y === 2 || v.y === 5)))];
+const potSilhouette = [...potBody, ...potNeck].map((v) => ({ ...v, c: POT.glass }));
+const potLiquid = [
+  ...potBody.map((v) => ({ ...v, c: v.z <= 2 ? (v.z === 0 ? POT.liqD : POT.liq) : v.z === 3 && Math.hypot(v.x - 3.5, v.y - 3.5) < 2.6 ? POT.liqL : POT.glass })),
+  ...potNeck.map((v) => ({ ...v, c: v.z === 5 ? POT.string : POT.glass })),
+  ...box(3, 3, 7, 4, 4, 7, POT.cork), { x: 3, y: 3, z: 6, c: POT.corkD }, { x: 4, y: 4, z: 6, c: POT.corkD },
+];
+const potFront = (v) => v.y === Math.min(...potBody.filter((p) => p.x === v.x && p.z === v.z).map((p) => p.y));
+const potDetail = potLiquid.map((v) => {
+  if ((v.z === 1 || v.z === 2) && v.x >= 2 && v.x <= 5 && potBody.some((p) => p.x === v.x && p.y === v.y && p.z === v.z) && potFront(v)) return { ...v, c: v.x === 3 && v.z === 2 ? POT.ink : POT.label }; // etiqueta delante (4×2) con una marca
+  if (v.z === 1 && v.x === 6 && potFront(v)) return { ...v, c: POT.liqL }; // una burbuja
+  if (v.z === 4 && v.x === 2 && v.y === 2) return { ...v, c: POT.shine }; // brillo del cristal, arriba a la izquierda
+  return v;
+});
+
 export const MODELS = {
+  puente: {
+    description: "Puente y escaleras: conectar dos orillas a distinta altura",
+    stages: [
+      { label: "Alturas", note: "Dos orillas a distinta altura: la izquierda con el suelo 3 vóxels más alto que la derecha, y un río de 8 de ancho en medio, con el agua 1 vóxel por debajo de la orilla baja. El problema: cómo pasa alguien de un lado al otro.", voxels: bridgeHeights },
+      { label: "Escaleras y pila", note: "En la orilla baja, un rellano de piedra a la altura de la alta y dos peldaños de 1 de alto y 2 de fondo hasta el suelo. En mitad del río, una pila de piedra que sostendrá el tablero.", voxels: bridgeStairs },
+      { label: "Tablero y barandilla", note: "Tablas cruzadas en dos tonos de la orilla al rellano, vigas debajo, postes y pasamanos a los lados. El camino de la orilla alta llega al puente y una farola marca la entrada.", voxels: bridgeFinal },
+    ],
+  },
+  pocion: {
+    description: "Poción de 8×8×8: un prop pequeño",
+    stages: [
+      { label: "Silueta", note: "El frasco en un solo color de cristal: un cuerpo redondo de 8 de ancho, un cuello de 2×2 y el borde de la boca un poco más ancho. A esta escala, la silueta es casi todo.", voxels: potSilhouette },
+      { label: "Líquido y corcho", note: "El líquido ocupa la mitad de abajo del cuerpo (más oscuro en el fondo, más claro en la superficie) y el cristal queda arriba. Un corcho en la boca y un cordel oscuro en el cuello.", voxels: potLiquid },
+      { label: "Detalle", note: "Una etiqueta crema de 4×2 delante con una marca de 1 vóxel, una burbuja en el líquido y un vóxel blanco de brillo arriba a la izquierda. Tres detalles de un vóxel: más, y el frasco se vuelve ruido.", voxels: potDetail },
+    ],
+  },
   "cofre-viejo": {
     description: "Cofre viejo: el mismo prop limpio, gastado y con historia",
     stages: [

@@ -1,0 +1,34 @@
+{
+  "name": "coin-4",
+  "description": "Moneda, frame 4: de canto. Solo se ve el grosor: una franja de 2 px. Sin este frame, la moneda parece encogerse y volver a crecer, no girar.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "prop",
+    "animación",
+    "moneda"
+  ],
+  "palette": {
+    "o": "#5a3a10",
+    "Y": "#c98a2a",
+    "c": "#a8661c"
+  },
+  "rows": [
+    "................",
+    ".......oo.......",
+    "......oYco......",
+    "......oYco......",
+    "......oYco......",
+    "......oYco......",
+    "......oYco......",
+    "......oYco......",
+    "......oYco......",
+    "......oYco......",
+    "......oYco......",
+    "......oYco......",
+    "......oYco......",
+    "......oYco......",
+    ".......oo.......",
+    "................"
+  ]
+}

@@ -1,0 +1,266 @@
+---
+id: v6-03
+discipline: voxel
+level: 6
+order: 3
+title: "Escaleras y puentes: conectar alturas"
+summary: "Conecta dos alturas: peldaños de 1 de alto y 2 de fondo medidos con un personaje, una pila y vigas que se ven, barandilla, tablas en dos tonos y un camino que guía al puente."
+duration: 45
+status: borrador
+prerequisites: [v6-02, v2-02]
+fundamentals: [f07]
+objectives:
+  - "Medir peldaños, rellanos y barandillas con un personaje de referencia"
+  - "Hacer que una escalera llegue exactamente a la altura de destino, con un rellano arriba"
+  - "Enseñar el apoyo de un puente: pila y vigas que se ven"
+  - "Usar la barandilla para leer «borde peligroso» y las tablas en dos tonos para leer el tablero"
+  - "Guiar el ojo hasta el puente con un camino y una farola"
+tools: [magicavoxel]
+piece:
+  name: "Dos alturas tuyas conectadas con una escalera y un puente, con apoyo visible, barandilla y un render"
+  canvas: "24x10x10"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [puente]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+En [V6-02](/forja-art/voxel/v6-02/) hiciste un terreno con alturas. Se ve bien, pero en un juego surge una pregunta enseguida: **¿cómo paso de aquí a allí?** Hoy forjas la respuesta: **una escalera y un puente** que conectan dos orillas a distinta altura.
+
+<VoxViewer model="puente" stage={2} title="Tu pieza: dos alturas, una escalera y un puente" />
+
+Gíralo y recorre las tres etapas del visor:
+
+1. **Alturas:** el problema. Una orilla alta a la izquierda, una baja a la derecha y un río en medio.
+2. **Escaleras y pila:** en la orilla baja, un rellano y dos peldaños; en mitad del río, una pila de piedra.
+3. **Tablero y barandilla:** tablas en dos tonos, vigas debajo, postes y pasamanos, un camino que llega al puente y una farola.
+
+Tu pieza final: **dos alturas tuyas** (de unos 24×10 de planta y 10 de alto) **conectadas con una escalera y un puente**, con el apoyo a la vista, barandilla y un render.
+</Block>
+
+<Block kind="concepto">
+### 1. El problema: dos alturas y un hueco
+
+<VoxViewer model="puente" stage={0} title="Alturas: orilla alta, río y orilla baja" />
+
+El modelo mide 24 de largo y 10 de fondo. Cuenta las capas con el deslizador **Capas**:
+
+- **Orilla izquierda (alta):** 8 de ancho y 5 capas. Arriba hierba; debajo, tierra clara y luego tierra oscura; abajo del todo, piedra. Son los estratos de V6-02.
+- **Río:** 8 de ancho y una sola capa de agua azul `#38b6ff`, con algunos vóxels más claros `#6fb8ff` sueltos que la animan.
+- **Orilla derecha (baja):** 8 de ancho y solo 2 capas: tierra y hierba. El agua queda **un vóxel por debajo** de esta orilla, como el río de V6-02.
+
+La orilla alta está **3 vóxels por encima** de la baja. Esos 3 vóxels y los 8 de río son lo que hay que salvar.
+
+<Why title="Primero el problema, luego la solución">
+Es el mismo orden que el mapa de alturas de V6-02: decides **dónde está cada suelo** antes de pensar en escaleras. Si no sabes cuánto hay que subir, no sabes cuántos peldaños hacen falta.
+</Why>
+
+### 2. La medida: un personaje
+
+Una escalera no se mide en vóxels: **se mide con quien la sube**. Este modelo está a la escala del pueblo de [V6-01](/forja-art/voxel/v6-01/): una persona de **4 vóxels** de alto, la altura de la puerta de la casa modular.
+
+<VoxViewer model="puente" stage={1} title="Escaleras y pila: rellano, dos peldaños y la pila del río" />
+
+Mira la escalera de la orilla baja:
+
+- **El suelo bajo** está a la altura 2 (2 capas).
+- **Primer peldaño:** 1 vóxel más alto y **2 de fondo**.
+- **Segundo peldaño:** otro vóxel más y otros 2 de fondo.
+- **Rellano:** 2 de fondo, a la altura 5, **exactamente la misma que la orilla alta**. Ahí apoyará el puente.
+- Todo mide **6 de ancho**, el mismo ancho que tendrá el tablero.
+
+Tres subidas de 1 para salvar los 3 vóxels de diferencia. Ni una más, ni una menos.
+
+<Why title="¿Por qué 1 de alto y 2 de fondo?">
+Un peldaño tiene que poder subirse **de un paso**: alto, como mucho media pierna; fondo, al menos un pie entero. Para una persona de 4, un peldaño de 1 es un paso cómodo. El fondo de 2 hace que, vista de lado, la escalera dibuje una **pendiente 2:1**: suave y limpia, como las líneas 2:1 del pixel art. Con fondo de 1, la pendiente sería 1:1, una pared de escalones.
+</Why>
+
+<Tip title="Con tu chibi de V5-01">
+El chibi de [V5-01](/forja-art/voxel/v5-01/) mide 15 de alto, con piernas de 2 y pies de 4 de fondo. A su escala la regla es la misma, con otros números: peldaños de **1 de alto y 4 de fondo** (su pie entero) y un tablero más ancho que sus 10 vóxels con brazos. Si lo quieres de referencia, construye todo a su medida, no a la del modelo.
+</Tip>
+
+**El rellano es un descanso.** Arriba de la escalera hay 2 vóxels planos antes del puente. Ahí se para el personaje, se gira y sigue. Sin rellano, el último peldaño choca de golpe con el tablero.
+
+<Why title="El valor marca cada peldaño">
+La cara de arriba de cada peldaño es piedra clara `#9aa3b5`; lo de debajo, piedra oscura `#7d8698`. Es la misma regla que la hierba sobre la tierra de V6-02: **un salto de valor en cada borde**. Así se cuentan los peldaños aunque la luz del render venga de frente.
+</Why>
+
+### 3. Lo que sostiene algo se tiene que ver
+
+Un tablero de 8 de largo sin nada debajo **flota**. El ojo no se lo cree, aunque en el juego aguante. Por eso el modelo tiene dos piezas de estructura:
+
+- **La pila:** un bloque de piedra de **2×6** en mitad del río, que sale del fondo y llega justo debajo del tablero. Oscura, con la cara de arriba clara.
+- **Las vigas:** dos líneas de madera oscura `#6b3d2e` bajo los bordes del tablero, de la orilla a la pila y de la pila al rellano.
+
+Cuenta los apoyos: el tablero descansa en **la orilla, la pila y el rellano**. Entre uno y otro solo hay 3 vóxels de vano.
+
+<Why title="Si se ve el peso, se ve el apoyo">
+En Blender, al modelar hard surface, te preguntas de dónde sale cada pieza y qué la aguanta. Aquí igual. Un puente se cree cuando el ojo puede seguir el peso: tablero, vigas, pila, fondo del río. Y la madera oscura de las vigas, en sombra bajo las tablas claras, dice «esto está debajo».
+</Why>
+
+### 4. Tablero y barandilla: leer el borde
+
+**Las tablas van cruzadas**, de un lado a otro del puente, y alternan dos maderas: `#d08a50` y `#a0603a`. Cada tabla es una fila de 1 vóxel.
+
+<Why title="¿Por qué dos tonos?">
+Con un solo color, el tablero es una losa naranja: no se sabe si es madera, ni hacia dónde va. Con dos tonos alternos se ven **las tablas**, y el ritmo de franjas marca la dirección del paso, como las traviesas de una vía. El contraste entre las dos maderas es **pequeño**: es textura, no protagonista.
+</Why>
+
+**La barandilla dice «cuidado, aquí te caes».** En los dos bordes del tablero hay **postes** de 1 vóxel y, encima, un **pasamanos** continuo: en total, 2 vóxels por encima de las tablas, la cintura de una persona de 4. Entre las dos barandillas quedan **4 vóxels** de paso.
+
+Fíjate dónde están los postes: en los dos extremos y **encima de la pila**. Van donde hay apoyo, no al azar.
+
+<Warn title="Sin barandilla, es una plataforma">
+Quita mentalmente postes y pasamanos: el tablero se convierte en una tarima de colores entre dos orillas. La barandilla es lo que lo hace **puente**: marca el borde peligroso y dice por dónde se camina.
+</Warn>
+
+### 5. El camino y la farola: llevar el ojo al puente
+
+Vuelve al primer visor, en la etapa **Tablero y barandilla**. En la orilla alta, **un camino de piedra** de dos grises (`#b4ab9f` y `#8a8698`) cruza la hierba **en línea recta** hasta la entrada del puente. Mide **4 de ancho**: lo mismo que el paso entre barandillas.
+
+Junto a la entrada, al lado del camino, hay **una farola**: un poste de madera oscura de 4 de alto y, arriba, una luz amarilla `#ffd36e`. Es el punto más alto del modelo.
+
+<Why title="Composición (F07-01)">
+En [F07-01](/forja-art/fundamentos/f07-01/) viste que el ojo va a la mayor diferencia. El camino es una **línea guía**: el ojo la sigue y llega al puente. La farola es el **punto focal**: el amarillo es lo más claro y saturado de la escena, y está justo en el umbral, donde empieza el paso. Camino y farola dicen «se cruza por aquí» sin una sola flecha.
+</Why>
+
+<Warn title="El visor no simula los materiales">
+En el visor, la luz de la farola es solo un vóxel amarillo. Si le das material **Emit** en MagicaVoxel, brillará en el modo **Render**, como el farol de [V3-02](/forja-art/voxel/v3-02/).
+</Warn>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="El modelo, la paleta y las dos orillas">
+1. Crea un modelo nuevo de **24×10 de planta y 10 de alto**. Guárdalo como `puente_v1.vox`.
+2. En la **paleta** de la izquierda, prepara: hierba `#3fbf7f`, tierra `#8a5a3c` y `#6b4430`, piedra `#9aa3b5` y `#7d8698`, agua `#38b6ff` y `#6fb8ff`, madera `#d08a50`, `#a0603a` y `#6b3d2e`, camino `#b4ab9f` y `#8a8698`, y la luz `#ffd36e`.
+3. En modo **Attach**, con el pincel **Box**, levanta la **orilla alta**: 8 de ancho, todo el fondo y 5 de alto.
+4. Con **Box**, levanta la **orilla baja** al otro lado: 8 de ancho y 2 de alto.
+5. Entre las dos, una capa de agua de 8 de ancho.
+6. Pasa a **Paint** y pinta los estratos: hierba arriba de cada orilla, tierra debajo y piedra abajo del todo en la alta.
+
+<Why>
+Primero el problema entero, como la etapa «Alturas» del visor. Ahora ya sabes los números: 3 de diferencia y 8 de río.
+</Why>
+</Step>
+
+<Step n={2} title="Una persona de referencia">
+1. Con **Box**, en la orilla baja, levanta una columna de **1×1 y 4 de alto** en un color chillón: tu persona de medida, como en [V7-02](/forja-art/voxel/v7-02/).
+2. Ponla al pie de donde irá la escalera y déjala ahí hasta el final.
+
+<Tip>
+Si vas a usar tu chibi de V5-01 como medida, haz el modelo más grande y cambia los números de toda la guía a su escala (peldaños de 1 de alto y 4 de fondo).
+</Tip>
+</Step>
+
+<Step n={3} title="La escalera, peldaño a peldaño">
+1. Elige la piedra oscura. En **Attach**, con **Box**, levanta **el rellano** pegado al río: 2 de fondo, 6 de ancho y hasta la altura de la orilla alta.
+2. Delante, **el primer peldaño hacia abajo**: otro bloque de 2 de fondo, 6 de ancho y **1 menos** de alto.
+3. Repite hasta que el siguiente peldaño quedaría a la altura del suelo bajo. Un bloque por peldaño, **de uno en uno**.
+4. Gira la cámara de lado y compara la altura del rellano con la de la orilla alta: tienen que coincidir.
+5. En **Paint**, con el pincel **Face**, pinta de piedra clara la cara de arriba de cada peldaño y del rellano.
+
+<Warn>
+No hagas la escalera de un solo golpe con un bloque y luego «la tallas». Peldaño a peldaño es más lento, pero cuentas cada subida y no se te queda un escalón de 2.
+</Warn>
+</Step>
+
+<Step n={4} title="La pila y las vigas">
+1. En **Paint**, pinta de piedra oscura un rectángulo de **2×6** en el centro del río, alineado con la escalera.
+2. Cambia a **Attach** y, con **Box**, sube la pila sobre ese rectángulo hasta **1 vóxel por debajo** del rellano. Pinta su cara de arriba clara.
+3. Con la madera oscura y el pincel **Line**, traza **dos vigas** a esa misma altura, bajo lo que serán los bordes del tablero: de la orilla a la pila y de la pila al rellano.
+
+<Why>
+La pila queda un vóxel por debajo del rellano porque encima va el tablero. Así el tablero apoya en ella, a la misma altura que la orilla y el rellano, y el paso queda plano de lado a lado.
+</Why>
+</Step>
+
+<Step n={5} title="El tablero en dos tonos">
+1. Con la madera media y **Box**, cubre el hueco entre la orilla y el rellano con una capa de **6 de ancho**, encima de vigas y pila.
+2. Pasa a **Paint**. Con la madera clara y el pincel **Line**, pinta **una fila de cada dos**, cruzada al sentido del paso.
+3. Mira el tablero desde arriba: tienen que verse franjas regulares, una clara y una media.
+
+<Tip>
+Si **Line** te pinta más de lo que quieres, pinta cada tabla con **Voxel**, vóxel a vóxel. Son 6 por tabla.
+</Tip>
+</Step>
+
+<Step n={6} title="Postes, pasamanos, camino y farola">
+1. Con la madera oscura y el pincel **Voxel**, pon **postes de 1** sobre las tablas de los bordes: en los dos extremos y encima de la pila.
+2. Con **Line**, traza el **pasamanos** encima de los postes, de punta a punta, a los dos lados.
+3. En **Paint**, pinta en la orilla alta un camino de **4 de ancho** (el paso entre barandillas) que llegue recto al puente, alternando los dos grises.
+4. Junto a la entrada, al lado del camino, levanta un poste de 4 con **Voxel** y pon encima la luz amarilla.
+5. Comprueba con tu columna de referencia: ¿sube los peldaños de un paso? ¿Le llega la barandilla a la cintura? Luego bórrala con **Erase**.
+</Step>
+
+<Step n={7} title="Renderiza">
+1. Selecciona en la paleta el amarillo de la luz y, en el panel de materiales, dale el tipo **Emit**.
+2. Pulsa **Render**. Coloca la cámara un poco de lado, de forma que se vean la escalera, la pila bajo el tablero y el camino que llega.
+3. Elige una luz que caiga de lado: la pila y las vigas tienen que proyectar sombra.
+4. Guarda `puente_v1.vox` y la imagen del render en tu portfolio.
+</Step>
+
+<Warn title="Verifica en tu versión">
+Los nombres y la posición de los modos (**Attach**, **Erase**, **Paint**), de los pinceles (**Box**, **Face**, **Line**, **Voxel**) y la forma de fijar el tamaño de un modelo nuevo pueden cambiar entre versiones de MagicaVoxel. Comprueba sobre todo cómo se comporta **Line** en tu versión (si dibuja sobre la superficie o en el aire); si no te sirve, usa **Voxel**. El panel de materiales (tipo **Emit**), los ajustes de luz del **Render** y el botón para guardar la imagen cambian de nombre y de sitio: búscalos por su función.
+</Warn>
+</Block>
+
+<Block kind="version">
+Ahora, **tus** alturas. Misma receta: el problema primero, una medida, peldaños de uno en uno hasta la altura exacta, apoyo visible, barandilla y un camino que guíe. Elige un reto:
+
+- **Desde tu terreno:** recorta un trozo de tu terreno de V6-02 con dos terrazas y el río, y conéctalas. Si la diferencia es de 4, necesitas cuatro subidas.
+- **Dos pilas:** un río más ancho (12 o más) con dos pilas y tres vanos. Los postes, encima de cada apoyo.
+- **A la escala del chibi:** el mismo puente a la medida de tu personaje de V5-01: peldaños de 1 de alto y 4 de fondo, tablero más ancho y barandilla a su cintura.
+
+Antes de darla por buena, mira el render en pequeño: ¿se ve en un segundo **por dónde se cruza** y **qué aguanta el puente**?
+</Block>
+
+<Block kind="errores">
+<Mistake title="Peldaños de 1×1" wrongLabel="Pendiente 1:1" rightLabel="1 de alto y 2 de fondo">
+  <p slot="wrong">Cada peldaño sube 1 y tiene 1 de fondo. De lado es una diagonal de 45°: parece un tejado escalonado, no una escalera, y a esta escala no cabe el pie del personaje.</p>
+  <p slot="right">Cada peldaño sube 1 y tiene 2 de fondo. La pendiente es 2:1, suave, y cada huella se lee como un sitio donde pisar.</p>
+
+**Corrección:** mide con tu persona de referencia. Alto, como mucho media pierna; fondo, al menos un pie. Si no hay sitio para el fondo, alarga la escalera o gírala, pero no la comprimas.
+</Mistake>
+
+<Mistake title="Un puente que flota" wrongLabel="Sin apoyo" rightLabel="Pila y vigas a la vista">
+  <p slot="wrong">El tablero cruza 8 vóxels de río sin nada debajo. Parece pegado con cola, o un objeto suelto que alguien se olvidó de colocar.</p>
+  <p slot="right">Una pila de piedra en mitad del río y dos vigas oscuras bajo los bordes. El ojo sigue el peso hasta el fondo y se cree el puente.</p>
+
+**Corrección:** pon un apoyo cada pocos vóxels (en el modelo, el vano más largo es de 3) y deja ver las vigas bajo el tablero, en un color más oscuro que las tablas.
+</Mistake>
+
+<Warn title="Error típico: sin barandilla">
+El tablero está bien apoyado, pero no tiene postes ni pasamanos. Se lee como una plataforma o una tarima, no como un paso sobre el agua. **Corrección:** postes de 1 en los extremos y encima de cada apoyo, y un pasamanos continuo a la altura de la cintura de tu personaje.
+</Warn>
+
+<Warn title="Error típico: la escalera no llega">
+Haces tres peldaños «a ojo» y el rellano se queda 1 vóxel por debajo del puente, o 1 por encima. El personaje tendría que saltar. **Corrección:** cuenta la diferencia de alturas antes de empezar (en el modelo, 3) y haz exactamente ese número de subidas de 1. Comprueba de lado que el rellano, el tablero y la orilla alta están a la misma altura.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+<Checklist items={[
+  "Mis dos alturas están claras antes de la escalera: sé cuántos vóxels hay que subir",
+  "Los peldaños miden 1 de alto y 2 de fondo (o lo que pida mi personaje), todos iguales",
+  "La escalera termina en un rellano a la misma altura que el puente y la orilla de destino",
+  "El tablero tiene apoyo visible: al menos una pila o pilar y vigas debajo",
+  "Hay barandilla a los dos lados, con postes encima de los apoyos",
+  "Las tablas alternan dos tonos parecidos y van cruzadas al paso",
+  "Un camino lleva al puente y hay un punto focal en la entrada",
+  "He guardado puente_v1.vox y un render en mi portfolio",
+]} />
+
+<Quiz q="La orilla alta está 3 vóxels por encima de la baja. ¿Cuántas subidas de 1 necesita tu escalera, contando el rellano?" options={["Dos", "Cuatro", "Tres"]} answer={2}>
+Tres subidas de 1 suman los 3 de diferencia. En el modelo son dos peldaños y el rellano, que queda justo a la altura de la orilla alta y del tablero.
+</Quiz>
+
+<Quiz q="Tu puente de 8 vóxels se ve flotando. ¿Qué es lo primero que añades?" options={["Una pila en el río y vigas bajo el tablero", "Más tonos de madera en las tablas", "Una farola en la entrada"]} answer={0}>
+Lo que sostiene algo se tiene que ver. Con la pila y las vigas, el ojo sigue el peso desde el tablero hasta el fondo del río.
+</Quiz>
+
+<Quiz q="¿Para qué sirve el camino de piedra que llega recto al puente?" options={["Para que la orilla tenga más colores", "Es una línea guía: lleva el ojo hasta la entrada del puente", "Para tapar la hierba"]} answer={1}>
+Como en F07-01, el ojo sigue las líneas y va hacia la mayor diferencia. El camino lo lleva al puente y la farola, lo más claro de la escena, lo detiene en la entrada.
+</Quiz>
+</Block>

@@ -1,0 +1,36 @@
+{
+  "name": "coin-squeezed",
+  "description": "Error: el frame 3 hecho estrechando el frame 1 con la herramienta de escalar (vecino más cercano). Al contorno le faltan píxeles en casi todas las filas, el emblema y el brillo desaparecen y no hay canto: parece una moneda aplastada, no una que gira.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "prop",
+    "animación",
+    "moneda",
+    "error"
+  ],
+  "palette": {
+    "o": "#5a3a10",
+    "y": "#f2c14e",
+    "L": "#ffe58a",
+    "Y": "#c98a2a"
+  },
+  "rows": [
+    "................",
+    ".......oo.......",
+    "......oLLo......",
+    "......LyyL......",
+    ".....oLyyY......",
+    ".....Lyyyyo.....",
+    ".....Lyyyyo.....",
+    ".....Lyyyyo.....",
+    ".....Lyyyyo.....",
+    ".....Lyyyyo.....",
+    ".....Lyyyyo.....",
+    ".....oLyyY......",
+    "......YyyY......",
+    "......oYYo......",
+    ".......oo.......",
+    "................"
+  ]
+}

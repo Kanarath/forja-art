@@ -1025,6 +1025,111 @@ function parallaxFrame(offFar, offMid, offNear, { flat = false, layers = 3 } = {
   add("parallax-flat", "Error: montañas, colinas y árboles en el mismo verde oscuro, sin contraste entre ellos. Se funden en una sola silueta: no se sabe qué está cerca y qué lejos.", ["fondo", "parallax", "error"], usedOnly(PAR, flat), flat);
 }
 
+
+// ---------- moneda que gira: 6 frames de 16×16. La cara se estrecha, aparece el canto y la luz NO gira
+const COIN = { o: "#5a3a10", y: "#f2c14e", L: "#ffe58a", Y: "#c98a2a", c: "#a8661c", w: "#ffffff" };
+function coinFrame(hw, { back = false } = {}) {
+  const cx = 8, cy = 8, ry = 6.5;
+  const g = Array.from({ length: 16 }, () => Array(16).fill("."));
+  if (hw < 1.5) {
+    // de canto: una franja de 2 px, con el contorno arriba y abajo
+    for (let y = 1; y < 15; y++) for (const x of [7, 8]) g[y][x] = y === 1 || y === 14 ? "o" : x === 7 ? "Y" : "c";
+    for (const x of [6, 9]) for (let y = 2; y < 14; y++) g[y][x] = "o";
+    return g.map((r) => r.join(""));
+  }
+  const inside = (x, y, rx) => ((x + 0.5 - cx) / rx) ** 2 + ((y + 0.5 - cy) / ry) ** 2 <= 1;
+  // el canto asoma por el lado hacia el que gira la moneda (1 px más allá de la cara)
+  const edgeSide = hw < 5.5 ? (back ? -1 : 1) : 0;
+  for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) {
+    if (inside(x, y, hw)) {
+      const d = Math.hypot((x + 0.5 - cx) / hw, (y + 0.5 - cy) / ry), s = (x + 0.5 - cx) / hw + (y + 0.5 - cy) / ry;
+      g[y][x] = d > 0.74 ? (s < 0 ? "L" : "Y") : "y"; // bisel: claro arriba-izquierda, oscuro abajo-derecha, en pantalla
+    } else if (edgeSide && inside(x - edgeSide, y, hw)) g[y][x] = "c";
+  }
+  if (!back && hw >= 4) for (let y = 5; y <= 10; y++) for (let x = 0; x < 16; x++) if (Math.abs(x + 0.5 - cx) <= (hw >= 5.5 ? 1 : 0.5) && g[y][x] === "y") g[y][x] = "Y"; // emblema: una barra en relieve
+  if (hw >= 4) { const hx = Math.round(cx - hw * 0.45); g[4][hx] = "w"; } // brillo fijo arriba a la izquierda
+  // contorno alrededor de todo
+  const out = g.map((r, y) => r.map((c, x) => (c === "." && [[1, 0], [-1, 0], [0, 1], [0, -1]].some(([dx, dy]) => (g[y + dy]?.[x + dx] ?? ".") !== ".") ? "o" : c)));
+  return out.map((r) => r.join(""));
+}
+{
+  const F = [[6], [4.5], [2.5], [1], [2.5, true], [4.5, true]];
+  const D = [
+    "Moneda, frame 1: de frente. Cara completa de 12 px de ancho con el bisel (claro arriba a la izquierda, oscuro abajo a la derecha), la barra del emblema y un brillo blanco.",
+    "Moneda, frame 2: girando. La cara mide 8 px y por la derecha asoma 1 px del canto, más oscuro. El bisel y el brillo siguen en el mismo sitio: la luz no gira con la moneda.",
+    "Moneda, frame 3: casi de perfil. La cara mide 4 px y el canto sigue asomando a la derecha. Ya no caben ni el emblema ni el brillo.",
+    "Moneda, frame 4: de canto. Solo se ve el grosor: una franja de 2 px. Sin este frame, la moneda parece encogerse y volver a crecer, no girar.",
+    "Moneda, frame 5: el reverso, casi de perfil. Ahora el canto asoma a la izquierda y la cara no tiene emblema: es la otra cara.",
+    "Moneda, frame 6: el reverso girando hacia el frente. 8 px de cara, canto a la izquierda. Después vuelve el frame 1.",
+  ];
+  F.forEach(([hw, back], i) => { const rows = coinFrame(hw, { back }); add(`coin-${i + 1}`, D[i], ["prop", "animación", "moneda"], usedOnly(COIN, rows), rows); });
+  // error: el frame 3 hecho estrechando el frame 1 como una imagen (vecino más cercano)
+  const full = coinFrame(6);
+  const sq = Array.from({ length: 16 }, (_, y) => Array.from({ length: 16 }, (_, x) => {
+    const sx = Math.floor(8 + (x + 0.5 - 8) / (2.5 / 6));
+    return sx >= 0 && sx < 16 ? full[y][sx] : ".";
+  }).join(""));
+  add("coin-squeezed", "Error: el frame 3 hecho estrechando el frame 1 con la herramienta de escalar (vecino más cercano). Al contorno le faltan píxeles en casi todas las filas, el emblema y el brillo desaparecen y no hay canto: parece una moneda aplastada, no una que gira.", ["prop", "animación", "moneda", "error"], usedOnly(COIN, sq), sq);
+}
+
+// ---------- plataformas en vista lateral: un tileset de 3×3 (esquinas, bordes y centro) de tierra con hierba
+const PLAT = { o: "#2a1a12", L: "#6fd17f", g: "#3fa45b", G: "#2c7a48", d: "#8a5a3c", D: "#6b4430", s: "#a8744a" };
+const GRASS_DROP = [3, 4, 3, 3, 4, 5, 4, 3]; // dónde acaba la hierba en cada columna: periodo 8, encaja en 16
+function platformMap(mask, { flat = false } = {}) {
+  const th = mask.length, tw = mask[0].length;
+  const solid = (tx, ty) => mask[ty]?.[tx] === "#";
+  return Array.from({ length: th * 16 }, (_, y) => Array.from({ length: tw * 16 }, (_, x) => {
+    const tx = Math.floor(x / 16), ty = Math.floor(y / 16), lx = x % 16, ly = y % 16;
+    if (!solid(tx, ty)) return null;
+    const dirt = (lx * 5 + ly * 3) % 11 === 0 ? "D" : (lx * 3 + ly * 7) % 13 === 0 ? "s" : "d"; // textura con periodo 16: sin costuras
+    if (flat) return PLAT[dirt];
+    const up = solid(tx, ty - 1), dn = solid(tx, ty + 1), lf = solid(tx - 1, ty), rt = solid(tx + 1, ty);
+    if ((!up && !lf && lx + ly <= 1) || (!up && !rt && 15 - lx + ly <= 1) || (!dn && !lf && lx + 15 - ly <= 1) || (!dn && !rt && 30 - lx - ly <= 1)) return null; // esquinas redondeadas
+    if ((!lf && lx === 0) || (!rt && lx === 15) || (!dn && ly === 15) || (!up && ly === 0)) return PLAT.o; // contorno exterior
+    if (!up && (ly < GRASS_DROP[x % 8] || ((!lf && lx <= 1) || (!rt && lx >= 14)) && ly < 2)) return PLAT[ly === 1 ? "L" : "g"]; // hierba arriba
+    if (!up && ly === GRASS_DROP[x % 8]) return PLAT.G; // borde inferior de la hierba
+    if ((!lf && lx === 1) || (!rt && lx === 14) || (!dn && ly === 14)) return PLAT.D; // la tierra se oscurece junto al borde
+    return PLAT[dirt];
+  }));
+}
+{
+  const ts = hexGridToSprite(platformMap(["###", "###", "###"]));
+  add("tileset-platform", "Tileset de 48×48: un bloque de 3×3 tiles de 16×16 con las nueve piezas de una plataforma. Arriba, hierba de 3–5 px con el borde irregular; a los lados y abajo, contorno oscuro y 1 px de tierra en sombra; las cuatro esquinas, redondeadas. El centro es solo tierra.", ["tile", "plataformas"], ts.pal, ts.rows);
+  const LEVEL = ["......", "....##", ".##...", "######"];
+  const px = platformMap(LEVEL);
+  stamp(px, "hero-chibi", 22, 8); stamp(px, "slime", 66, 40);
+  const lv = hexGridToSprite(px);
+  add("map-platforms", "Un nivel de 96×64 con las mismas reglas del tileset: suelo, un escalón de dos tiles unido al suelo y una plataforma flotante a la derecha. El héroe está sobre el escalón y el slime en el suelo. Cada bloque lleva su hierba arriba y sus bordes; donde un bloque mide un solo tile de alto, ese tile junta la parte de arriba y la de abajo.", ["tile", "plataformas", "mapa"], lv.pal, lv.rows);
+  const fx = platformMap(LEVEL, { flat: true });
+  stamp(fx, "hero-chibi", 22, 8); stamp(fx, "slime", 66, 40);
+  const fl = hexGridToSprite(fx);
+  add("map-platforms-flat", "Error: el mismo nivel usando solo el tile del centro. Sin hierba ni bordes, las plataformas son rectángulos de tierra: no se sabe dónde se puede pisar y el héroe parece pegado a un muro.", ["tile", "plataformas", "mapa", "error"], fl.pal, fl.rows);
+}
+
+// ---------- sombras de contacto: los mismos props sobre la hierba, flotando, apoyados y con una sombra mal puesta
+{
+  const t = grassTile();
+  const DARKER = { [GRASS.l]: GRASS.g, [GRASS.g]: GRASS.d, [GRASS.d]: "#1f5a36" };
+  const PROPS = [["rock-clean", 4, 12], ["mushroom8", 21, 10], ["chest", 32, 8]];
+  const scene = (shadow) => {
+    const px = Array.from({ length: 24 }, (_, y) => Array.from({ length: 48 }, (_, x) => GRASS[t.rows[y % 16][x % 16]]));
+    for (const [n, x0, y0] of PROPS) {
+      const s = spriteByName(n), w = s.rows[0].length, h = s.rows.length;
+      const cx = x0 + w / 2, base = y0 + h - 1;
+      if (shadow === "contact") for (let y = base - 1; y <= base + 1; y++) for (let x = x0 - 1; x <= x0 + w; x++) {
+        if (((x + 0.5 - cx) / (w / 2 + 1)) ** 2 + ((y + 0.5 - (base + 0.5)) / 1.6) ** 2 <= 1) px[y][x] = DARKER[px[y][x]] ?? px[y][x];
+      }
+      if (shadow === "wrong") for (let y = base + 3; y <= base + 4; y++) for (let x = x0 + 2; x < x0 + w + 3; x++) if (px[y]) px[y][x] = "#000000";
+      stamp(px, n, x0, y0);
+    }
+    return hexGridToSprite(px);
+  };
+  const a = scene("none"), b = scene("contact"), c = scene("wrong");
+  add("props-floating", "Error: una roca, una seta y un cofre sobre la hierba sin ninguna sombra. Están dibujados encima, no apoyados: parecen pegatinas que flotan sobre el suelo.", ["prop", "integración", "error"], a.pal, a.rows);
+  add("props-grounded", "Los mismos props con sombra de contacto: una elipse aplanada bajo la base de cada uno, que solo oscurece un paso la hierba que tiene debajo (cada verde pasa al siguiente más oscuro). Ahora pesan y tocan el suelo.", ["prop", "integración"], b.pal, b.rows);
+  add("props-shadow-wrong", "Error: la sombra en negro puro, separada 2 px de la base y desplazada a la derecha. No oscurece la hierba, la tapa: parece un agujero, y el hueco entre el objeto y su sombra hace que siga flotando.", ["prop", "integración", "error"], c.pal, c.rows);
+}
+
 // ---------- escribir y validar
 let bad = 0;
 for (const s of out) {

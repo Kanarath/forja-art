@@ -1,0 +1,37 @@
+{
+  "name": "coin-6",
+  "description": "Moneda, frame 6: el reverso girando hacia el frente. 8 px de cara, canto a la izquierda. Después vuelve el frame 1.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "prop",
+    "animación",
+    "moneda"
+  ],
+  "palette": {
+    "o": "#5a3a10",
+    "y": "#f2c14e",
+    "L": "#ffe58a",
+    "Y": "#c98a2a",
+    "c": "#a8661c",
+    "w": "#ffffff"
+  },
+  "rows": [
+    "................",
+    ".....ooooo......",
+    "....ocLLLLo.....",
+    "...ocLLyyLLo....",
+    "..ocLLwyyyYYo...",
+    "..ocLyyyyyyYo...",
+    "..ocLyyyyyyYo...",
+    "..ocLyyyyyyYo...",
+    "..ocLyyyyyyYo...",
+    "..ocLyyyyyyYo...",
+    "..ocLyyyyyyYo...",
+    "..ocLLyyyyYYo...",
+    "...ocYYyyYYo....",
+    "....ocYYYYo.....",
+    ".....ooooo......",
+    "................"
+  ]
+}

@@ -151,6 +151,15 @@
   - fondo de tres capas con parallax en 16 frames, la capa lejana sola y la versión plana como error;
   - modelos «cofre-viejo» (limpio, gastado y con historia) y «murcielago».
 
+**Contenido · undécimo bloque: 5 lecciones más (68 en total).**
+- **Pixel:** P4-05 Rotación falsa (una moneda que gira), P7-04 Plataformas (un tileset de 3×3 en vista lateral), P7-05 Sombras de contacto.
+- **Voxel:** V4-04 Miniaturas (una poción de 8×8×8), V6-03 Escaleras y puentes.
+- **Arte nuevo:**
+  - moneda que gira en seis frames y su versión escalada como error;
+  - tileset de plataformas de 3×3, un nivel montado con él y su versión sin bordes;
+  - props sobre la hierba sin sombra, con sombra de contacto y con una sombra mal puesta;
+  - modelos «puente» (alturas, escaleras y tablero) y «pocion».
+
 **Lecciones aprendidas durante la fase 1:**
 - **`BASE_URL` sin barra final.** Astro 7 da `BASE_URL` sin barra final, así que hay que usar siempre `src/lib/url.ts`. El validador detecta enlaces sin la base.
 - **Colecciones nuevas en local.** El servidor de desarrollo no ve colecciones de contenido nuevas: hay que reiniciarlo (`npx astro dev --force`).

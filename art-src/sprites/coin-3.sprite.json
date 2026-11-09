@@ -1,0 +1,36 @@
+{
+  "name": "coin-3",
+  "description": "Moneda, frame 3: casi de perfil. La cara mide 4 px y el canto sigue asomando a la derecha. Ya no caben ni el emblema ni el brillo.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "prop",
+    "animación",
+    "moneda"
+  ],
+  "palette": {
+    "o": "#5a3a10",
+    "y": "#f2c14e",
+    "L": "#ffe58a",
+    "Y": "#c98a2a",
+    "c": "#a8661c"
+  },
+  "rows": [
+    "................",
+    ".......ooo......",
+    "......oLLco.....",
+    ".....oLyyLco....",
+    ".....oLyyYco....",
+    ".....oyyyyco....",
+    ".....oyyyyco....",
+    ".....oyyyyco....",
+    ".....oyyyyco....",
+    ".....oyyyyco....",
+    ".....oyyyyco....",
+    ".....oLyyYco....",
+    ".....oYyyYco....",
+    "......oYYco.....",
+    ".......ooo......",
+    "................"
+  ]
+}

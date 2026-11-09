@@ -1,0 +1,278 @@
+---
+id: p4-05
+discipline: pixel
+level: 4
+order: 5
+title: "Rotación falsa: una moneda que gira"
+summary: "Una moneda no gira escalándola: se redibuja. La cara se estrecha de 12 a 9 a 5 px, asoma el canto, hay un frame de canto y la luz se queda quieta mientras la moneda gira."
+duration: 40
+status: borrador
+objectives:
+  - "Simular un giro en 3D redibujando el ancho de la cara en cada frame, de forma ordenada"
+  - "Entender por qué el canto y el frame de canto convierten un disco plano en un objeto"
+  - "Mantener la luz fija (bisel y brillo) mientras el objeto gira, como en P3-01"
+  - "Saber por qué escalar un frame destruye el pixel art y redibujar el contorno en cada frame"
+  - "Montar en Aseprite un bucle de 6 frames con timing uniforme y exportarlo como spritesheet"
+prerequisites: [p4-03, p3-01]
+fundamentals: [f05]
+tools: [aseprite]
+piece:
+  name: "Una moneda de 16×16 que gira en 6 frames en bucle, redibujada frame a frame"
+  canvas: "16x16"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [moneda]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Vas a forjar **una moneda que gira**. Es el coleccionable clásico de los plataformas: da vueltas sin parar y el jugador sabe que tiene que cogerla.
+
+Dale a *Reproducir*. Son 6 frames de 16×16, todos de 100 ms.
+
+<Animator sprites={["coin-1", "coin-2", "coin-3", "coin-4", "coin-5", "coin-6"]} durations={[100, 100, 100, 100, 100, 100]} />
+
+Aquí no hay 3D. Ningún frame está escalado ni rotado por un programa. Cada uno está **dibujado a mano** con un ancho distinto, y el ojo pone el giro.
+
+<Sprite name="coin-1" scale={10} caption="coin-1 · De frente: 12 px de cara dentro del contorno, bisel claro arriba a la izquierda y oscuro abajo a la derecha, una barra de 2 px como emblema y un brillo blanco" />
+</Block>
+
+<Block kind="concepto">
+### El truco: el ancho dice el ángulo
+
+En [P4-03](/forja-art/pixel/p4-03/) animaste un brillo **sobre** un objeto quieto. Ahora se mueve el objeto entero.
+
+Una moneda de frente es un círculo. Cuando gira sobre su eje vertical, la ves cada vez más estrecha, hasta que solo queda su grosor. Pero la **altura no cambia**. El ojo lee ese estrechamiento como un ángulo: si la cara se estrecha y el alto se mantiene, la moneda está girando.
+
+<Why title="Si vienes de Blender">
+Es tu moneda girando sobre el eje Z, vista de frente con cámara ortográfica. En 3D el programa calcula cada vista. En pixel art haces tú de motor: decides cuántos píxeles ocupa la cara en cada ángulo y la redibujas.
+</Why>
+
+### Los seis frames, uno a uno
+
+Mide siempre **dentro del contorno**, de izquierda a derecha, en la fila más ancha:
+
+| Frame | Qué se ve | Cara | Canto | Total |
+| --- | --- | --- | --- | --- |
+| 1 | De frente | 12 px | — | 12 px |
+| 2 | Girando | 8 px | 1 px a la derecha | 9 px |
+| 3 | Casi de perfil | 4 px | 1 px a la derecha | 5 px |
+| 4 | De canto | — | franja de 2 px | 2 px |
+| 5 | Reverso, casi de perfil | 4 px | 1 px a la izquierda | 5 px |
+| 6 | Reverso, girando | 8 px | 1 px a la izquierda | 9 px |
+
+El alto es el mismo en todos: 12 filas dentro del contorno.
+
+<Sprite name="coin-2" scale={10} caption="coin-2 · Girando: 8 px de cara y una columna de canto, más oscura, a la derecha. El emblema y el brillo siguen ahí" />
+
+<Sprite name="coin-3" scale={10} caption="coin-3 · Casi de perfil: 4 px de cara y el canto a la derecha. Ya no caben el emblema ni el brillo: solo queda el bisel" />
+
+<Sprite name="coin-4" scale={10} caption="coin-4 · De canto: una franja de 2 px, la columna izquierda en oro oscuro y la derecha en el color del canto, con el contorno alrededor" />
+
+<Sprite name="coin-5" scale={10} caption="coin-5 · Reverso, casi de perfil: el canto ahora asoma a la izquierda y la cara no tiene emblema" />
+
+<Sprite name="coin-6" scale={10} caption="coin-6 · Reverso girando: 8 px de cara, canto a la izquierda, sin emblema. El brillo vuelve a aparecer arriba a la izquierda. Después viene el frame 1" />
+
+### El ancho baja con orden
+
+12, 9, 5, 2: cada paso quita 3 o 4 píxeles. Es la misma regla que las curvas de [P2-01](/forja-art/pixel/p2-01/): los tramos crecen o decrecen **con orden**. Si un frame se queda casi igual que el anterior y el siguiente pega un salto, la moneda parece frenar y acelerar a tirones.
+
+### El canto: el grosor que la hace objeto
+
+En los frames 2 y 3 asoma **1 píxel de canto**, de un oro más oscuro que la cara. Y el frame 4 es solo canto.
+
+<Why title="Por qué el canto es imprescindible">
+Un círculo que se estrecha hasta desaparecer y vuelve a crecer es una **carta plana**, o un globo que se desinfla. El canto le da **grosor**: dice que hay un objeto sólido de lado. El frame 4 es el momento en que la moneda está exactamente de perfil. Sin él, el ojo no ve el giro: ve algo que encoge y crece.
+</Why>
+
+El canto cambia de lado al pasar por el frame 4: a la derecha en 2 y 3, a la izquierda en 5 y 6. Es lo que pasa con un disco de verdad: tras ponerse de perfil, te enseña la otra cara y el canto queda del otro lado.
+
+### El reverso no lleva emblema
+
+En los frames 5 y 6 la cara es lisa. Así el ojo sabe que está viendo **la otra cara**. Si el reverso tuviera el mismo emblema que el anverso, la moneda parecería ir y volver, no dar la vuelta.
+
+<Tip title="Una trampa honesta">
+Una vuelta completa tendría también el reverso de frente y un segundo frame de canto. Esta moneda se lo salta: del frame 6, el reverso a 9 px, pasa directamente al anverso de frente. A 100 ms por frame es una simplificación habitual. Si a ti te chirría, en la versión puedes hacer la vuelta entera.
+</Tip>
+
+### La luz no gira con la moneda
+
+Fíjate en el bisel de todos los frames: el borde **claro** está siempre arriba a la izquierda **en pantalla**, y el oscuro abajo a la derecha. El brillo blanco, en los frames que lo tienen (1, 2 y 6), también está arriba a la izquierda de la cara.
+
+<Why title="La luz es del mundo, no del objeto (P3-01 y f05)">
+En [P3-01](/forja-art/pixel/p3-01/) decidiste una fuente de luz. Esa luz está en la escena: el sol no da vueltas porque la moneda las dé. Lo que gira es la moneda **por debajo** de la luz, así que la luz siempre cae por el mismo lado. Si el brillo se moviera con la cara, parecería que la moneda lleva una pegatina blanca, no que refleja una luz. Es el mismo principio que en [F05-01](/forja-art/fundamentos/f05-01/): primero la luz, luego el objeto.
+</Why>
+
+### Por qué no se puede escalar
+
+La tentación es dibujar el frame 1 y estrecharlo con la herramienta de escalar. No funciona. El pixel art está hecho de detalles de **1 píxel**: el contorno, el bisel, el brillo. Al escalar a un tamaño que no es entero, el programa tiene que tirar columnas enteras. Unas veces tira el contorno; otras, el emblema o el brillo. Y el canto no aparece nunca, porque en el frame 1 no existe.
+
+Lo verás en los errores. La regla es la de siempre: **escalas enteras o redibujar**.
+
+### Timing uniforme y bucle
+
+Los 6 frames duran lo mismo, 100 ms: una vuelta cada 600 ms. En P4-03 el brillo quería una pausa larga para sorprender. Aquí no: una moneda que gira lo hace a **velocidad constante**, así que todos los frames pesan igual. Si uno durara más, la moneda daría un tirón en ese ángulo.
+
+El bucle cierra porque el frame 6 (reverso a 9 px) lleva de forma natural al 1 (anverso a 12 px): la cara sigue abriéndose.
+
+<Tip title="Experimenta en el animador">
+1. Pon todos los frames a 60 ms: una moneda nerviosa, de bonus.
+2. Pon todos a 200 ms: gira con pereza y se ven los escalones.
+3. Pon solo el frame 4 a 300 ms: la moneda se queda de canto y el giro se rompe.
+</Tip>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Lienzo y moneda de frente">
+1. <Keys k="Ctrl+N" />: **16×16**, fondo transparente. Activa *View → Grid*.
+2. Dibuja la moneda de frente con el lápiz (<Keys k="B" />) y *Pixel-perfect* activado: un círculo de **12×12** dentro del contorno, con tramos ordenados como el `circle-clean` de P2-01.
+3. Rellena con el cubo (<Keys k="G" />) el oro base. Pinta el bisel: una fila o dos de oro claro en el borde de arriba a la izquierda y de oro oscuro abajo a la derecha.
+4. Añade un emblema sencillo en el centro (una barra o un símbolo de 2 px de ancho) y un píxel de brillo blanco arriba a la izquierda.
+5. Guarda con <Keys k="Ctrl+S" /> como `moneda.aseprite`.
+
+<Why>
+El frame 1 marca la paleta, la luz y el alto de todos los demás. Decide aquí dónde está la luz: no la vas a mover en toda la animación.
+</Why>
+
+<Tip>
+Usa 5–6 colores y no más: contorno, oro, oro claro, oro oscuro, canto (un oro más oscuro y algo más rojo) y blanco. Con pocos colores es fácil que cada frame use exactamente los mismos.
+</Tip>
+</Step>
+
+<Step n={2} title="Seis frames con el mismo tiempo">
+Añade frames desde el menú *Frame* hasta tener **6**. Aseprite copia el contenido del frame actual, así que tendrás seis monedas de frente iguales.
+
+Selecciona los 6 frames en la línea de tiempo, clic derecho sobre el número de uno de ellos, *Frame Properties*, y pon **100 ms** a todos.
+
+<Why>
+El timing va antes del dibujo, como en P4-03. Así, cada vez que reproduzcas, verás el giro a su velocidad real.
+</Why>
+</Step>
+
+<Step n={3} title="Frame 4: de canto">
+Ve al frame 4. Borra la moneda con la goma (<Keys k="E" />), o selecciónala con <Keys k="M" /> y bórrala.
+
+Dibuja el canto: una franja de **2 px de ancho y el mismo alto** que la cara (12 filas), centrada. La columna de la izquierda en oro oscuro y la de la derecha en el color del canto. Cierra el contorno alrededor: un píxel a cada lado y dos arriba y abajo.
+
+<Why>
+Dibuja primero los extremos, de frente (1) y de canto (4). Los intermedios se colocan entre ellos. Es como en 3D: primero las poses clave, luego las intermedias.
+</Why>
+</Step>
+
+<Step n={4} title="Frames 2 y 3: redibuja cada ancho">
+Activa el onion skin (el botón está en la línea de tiempo). Verás el frame anterior en transparencia.
+
+1. **Frame 2:** borra la moneda y redibuja la cara con **8 px** de ancho y el mismo alto. Añade **1 px de canto** a la derecha.
+2. **Frame 3:** igual, con **4 px** de cara y 1 px de canto a la derecha. Aquí ya no cabe el emblema: quítalo, o déjalo en una sola columna si tu moneda es más grande.
+3. En los dos, el bisel claro sigue **arriba a la izquierda** y el oscuro abajo a la derecha. El brillo, si cabe, también arriba a la izquierda.
+4. Redibuja el **contorno** a mano, de 1 px, en cada frame. Revisa que no le falte ningún píxel y que los tramos de la curva sigan ordenados.
+
+<Why>
+El onion skin te deja comprobar dos cosas a la vez: que el alto es exactamente el mismo y que el ancho baja con orden respecto al frame anterior.
+</Why>
+
+<Warn>
+No uses la herramienta de escalar ni la de transformar para estrechar la moneda. Ahorra un minuto y rompe el contorno. Redibuja.
+</Warn>
+</Step>
+
+<Step n={5} title="Frames 5 y 6: el reverso">
+Los frames 5 y 6 tienen las mismas siluetas que el 3 y el 2, pero con el canto **a la izquierda** y la cara **sin emblema**.
+
+Puedes redibujarlos o copiar el frame 3 en el 5 (y el 2 en el 6) y voltearlos en horizontal (en el menú *Edit* hay una opción de volteo horizontal). Si los volteas, el canto pasa a la izquierda, que es lo que quieres. Pero **el bisel y el brillo también se voltean** y quedan a la derecha: repíntalos arriba a la izquierda. Después borra el emblema con el oro base.
+
+<Why>
+Voltear es girar la moneda **y la luz** a la vez. La moneda puede girar; la luz, no. Por eso, tras voltear, hay que devolver el bisel y el brillo a su sitio.
+</Why>
+</Step>
+
+<Step n={6} title="Prueba el giro">
+Reproduce (botón de *play* de la línea de tiempo) y deja correr varias vueltas. Mírala también a 1×.
+
+- ¿El ancho baja y sube con orden: 12, 9, 5, 2, 5, 9?
+- ¿El alto es el mismo en todos los frames?
+- ¿El contorno está cerrado en cada frame?
+- ¿El bisel claro está siempre arriba a la izquierda?
+- ¿Se ve el canto en el frame 4 y cambia de lado al pasar?
+
+<Tip>
+Si la moneda tiembla, pasa con el onion skin de un frame al siguiente: casi siempre es un frame descentrado 1 px, o con una fila de más o de menos.
+</Tip>
+</Step>
+
+<Step n={7} title="Exporta">
+1. Para enseñarla: *File → Export → Export As*, formato **GIF**, **Resize** al 400 % o más.
+2. Para un juego: *File → Export → Export Sprite Sheet*, en una fila, PNG a 1× y fondo transparente. Apunta la duración (6 × 100 ms) para ponerla en el motor.
+</Step>
+
+<Warn title="Verifica en tu versión">
+Los nombres y la posición pueden variar según la versión de Aseprite: la opción de frame nuevo del menú *Frame*, *Frame Properties* con varios frames seleccionados (clic derecho sobre el frame), el botón de onion skin, la opción de volteo horizontal del menú *Edit* (y si voltea solo la selección o el frame entero) y las opciones de *Export Sprite Sheet* (disposición en fila, formato).
+</Warn>
+</Block>
+
+<Block kind="version">
+Ahora a tu manera. Mantén el ancho ordenado, el frame de canto, el reverso distinto, la luz fija y el contorno redibujado en cada frame. Elige uno:
+
+- **La vuelta completa:** 8 frames. Añade el reverso de frente (12 px, sin emblema) y un segundo frame de canto, de modo que el orden sea anverso, girando, perfil, canto, perfil, reverso, perfil, canto… Compara si se ve mejor o si la versión de 6 ya bastaba.
+- **Otro metal u otro objeto:** una moneda de plata con un símbolo distinto, o una ficha hexagonal. En una ficha, la silueta de frente no es un círculo, pero la regla es la misma: el alto se queda y el ancho baja con orden.
+- **Gira y descansa:** combina con P4-03. Deja el frame 1 en 600 ms y el resto en 80 ms: la moneda descansa de frente y da una vuelta rápida.
+
+<Tip>
+Si haces la moneda más grande (por ejemplo 24×24), te caben más anchos intermedios. Pero no metas más frames de los que puedas redibujar bien: 6 frames limpios valen más que 12 con el contorno roto.
+</Tip>
+</Block>
+
+<Block kind="errores">
+<Mistake title="Escalar en vez de redibujar" wrongLabel="coin-squeezed: el frame 1 escalado" rightLabel="coin-3: redibujado">
+  <Sprite slot="wrong" name="coin-squeezed" scale={8} />
+  <Sprite slot="right" name="coin-3" scale={8} />
+
+Los dos ocupan unos 5 px de ancho por dentro. A la izquierda, el frame 1 estrechado con vecino más cercano. Al contorno le faltan trozos: en la mayoría de las filas, un lado de la moneda toca directamente el vacío, sin borde oscuro. El brillo ha desaparecido y no hay canto, porque el frame 1 no lo tenía. Parece una moneda aplastada, no una que gira. A la derecha, el mismo ancho redibujado: contorno cerrado, bisel en su sitio y 1 px de canto. Corrígelo borrando el frame y redibujándolo con onion skin.
+</Mistake>
+
+<Mistake title="Sin frame de canto" wrongLabel="5 frames: falta coin-4" rightLabel="coin-4: el frame de canto">
+  <Animator slot="wrong" sprites={["coin-1", "coin-2", "coin-3", "coin-5", "coin-6"]} durations={[100, 100, 100, 100, 100]} />
+  <Sprite slot="right" name="coin-4" scale={8} />
+
+Reproduce la de la izquierda y compárala con la de la pieza. Sin el frame 4, la moneda pasa de 5 px a 5 px sin ponerse nunca de perfil: parece que encoge y vuelve a crecer, como una carta plana. Corrígelo metiendo el frame de canto en el centro del giro: la franja de 2 px es la que dice que la moneda tiene grosor.
+</Mistake>
+
+<Warn title="El brillo que gira con la moneda">
+Si en los frames del reverso el bisel claro y el brillo pasan a la derecha (lo típico al voltear un frame), la luz parece dar la vuelta con la moneda. El ojo lo lee como una mancha pintada en la moneda, no como un reflejo. Corrígelo devolviendo el bisel claro y el brillo arriba a la izquierda en **todos** los frames: la luz es de la escena ([P3-01](/forja-art/pixel/p3-01/)).
+</Warn>
+
+<Warn title="Un ancho que no baja con orden">
+Si los anchos son, por ejemplo, 12, 11, 4, 2, la moneda casi no se mueve en el primer paso y luego pega un salto. Gira a tirones, como un mecanismo atascado. Corrígelo repartiendo el cambio: cada paso, más o menos lo mismo, como 12, 9, 5, 2. Y vigila también el alto: si un frame tiene una fila de más, la moneda «respira» mientras gira.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+Juzga tu moneda **a 1×** y a su velocidad real, no solo ampliada y frame a frame.
+
+<Checklist items={[
+  "Tengo 6 frames (u 8) y todos duran lo mismo",
+  "Ningún frame está escalado: todos están redibujados",
+  "El ancho baja y sube con orden, sin frames casi iguales ni saltos",
+  "El alto es exactamente el mismo en todos los frames",
+  "Hay un frame de canto en el centro del giro",
+  "El canto asoma por un lado antes del frame de canto y por el otro después",
+  "El reverso se distingue del anverso (sin emblema u otro distinto)",
+  "El bisel claro y el brillo están arriba a la izquierda en todos los frames",
+  "El contorno está cerrado en cada frame, sin huecos",
+  "El paso del último frame al primero no da tirón",
+  "He exportado un GIF ampliado y una spritesheet PNG a 1×",
+]} />
+
+<Quiz q="Pasas del frame de frente al de casi perfil con la herramienta de escalar. ¿Qué pasa?" options={["Nada: Aseprite escala sin perder detalle", "La moneda queda más nítida", "Se pierden columnas: el contorno se rompe, desaparecen detalles y no aparece el canto"]} answer={2}>
+A un tamaño que no es entero, el escalado tira columnas de 1 px: unas veces del contorno y otras del brillo o el emblema. Y no puede inventar un canto que no existe. Hay que redibujar.
+</Quiz>
+
+<Quiz q="¿Para qué sirve el frame de canto?" options={["Para que la moneda tenga grosor: sin él parece una carta que encoge y crece", "Para que la animación dure más", "Para cambiar el color de la moneda"]} answer={0}>
+La franja de 2 px es el momento de perfil. Es lo que convierte un disco plano en un objeto sólido que gira.
+</Quiz>
+
+<Quiz q="La moneda gira hacia la derecha. ¿Dónde va el brillo en el reverso?" options={["A la derecha, porque la moneda ha dado la vuelta", "En el mismo sitio que en el anverso, arriba a la izquierda", "No lleva brillo nunca"]} answer={1}>
+La luz es de la escena, no de la moneda. La moneda gira por debajo de una luz que no se mueve, así que el reflejo cae siempre por el mismo lado.
+</Quiz>
+</Block>
