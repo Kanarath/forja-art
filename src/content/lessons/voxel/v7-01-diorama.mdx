@@ -1,0 +1,245 @@
+---
+id: v7-01
+discipline: voxel
+level: 7
+order: 1
+title: "Dioramas: un trozo de mundo"
+summary: "Recorta un trozo de suelo con estratos, coloca encima props de tu propio kit a una escala común y compón la escena con un punto focal, un recorrido y detalles que cuentan quién vive ahí."
+duration: 45
+status: borrador
+prerequisites: [v6-01]
+fundamentals: [f07]
+objectives:
+  - "Entender qué es un diorama: una escena pequeña sobre una base recortada"
+  - "Construir una base con grosor y estratos que se vean en el corte"
+  - "Medir todos los props con una pieza de referencia para que compartan escala"
+  - "Componer con un punto focal y un recorrido que lleve hasta él"
+  - "Añadir pocos detalles agrupados que cuenten una historia"
+tools: [magicavoxel]
+piece:
+  name: "Diorama propio con al menos 3 props de tu kit, un punto focal y un render"
+  canvas: "base de 20x20 a 32x32"
+xp: { concept: 10, guided: 20, piece: 70 }
+achievements: [diorama]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Hoy forjas **un trozo de mundo**. No un prop suelto ni una casa sola: una escena pequeña, recortada del suelo como una porción de tarta, con su casa, su árbol, su camino y alguien que vive ahí.
+
+<VoxViewer model="diorama" stage={2} title="El diorama terminado: base, escena y detalle" />
+
+Gíralo y recorre las tres etapas del visor:
+
+1. **Base:** un bloque de 22×22×4. Piedra abajo, dos capas de tierra y hierba arriba.
+2. **Escena:** la casa modular de V6 y el árbol de 8³ de V1, un camino hasta la puerta y un estanque hundido.
+3. **Detalle:** farola, flores, una piedra, leña, hierba en dos tonos y el reflejo del cielo en el agua.
+
+Casi nada es nuevo. **Un diorama es tu kit, montado sobre un trozo de suelo.**
+
+Tu pieza final: un diorama propio sobre una base de entre 20×20 y 32×32, con **al menos 3 props de tu kit**, un **punto focal** claro y un **render**.
+</Block>
+
+<Block kind="concepto">
+**¿Qué es un diorama?** Una escena completa, pero pequeña, sobre una **base recortada**. Es el formato estrella del voxel art: cabe en una imagen, se entiende de un vistazo y luce mucho en un portfolio.
+
+Tiene cuatro ingredientes. Los verás uno a uno.
+
+**1. La base: un trozo de suelo con grosor**
+
+<VoxViewer model="diorama" stage={0} title="La base: 22×22×4 con el corte a la vista" />
+
+Baja el deslizador **Capas** del visor y mira el lateral:
+
+- **Altura 0:** piedra gris `#7d8698`.
+- **Alturas 1 y 2:** tierra en dos marrones, `#6b4430` abajo y `#8a5a3c` encima.
+- **Altura 3:** hierba `#3fbf7f`.
+
+<Why title="¿Por qué se ve el corte?">
+El corte lateral es lo que dice «esto es un **trozo** de un mundo más grande». Los estratos (piedra, tierra, hierba) cuentan qué hay debajo sin enseñarlo. Una base de un vóxel de grosor parece una alfombra; una con estratos parece arrancada del suelo.
+</Why>
+
+<Tip>
+Los estratos van **de oscuro abajo a claro arriba**. Es la rampa de valor de [la roca (V3-01)](/forja-art/voxel/v3-01/) aplicada a la base: lo de abajo recibe menos luz.
+</Tip>
+
+**2. Una escala común: todo se mide con la casa**
+
+<VoxViewer model="diorama" stage={1} title="La escena: casa, árbol, camino y estanque" />
+
+En el kit del herrero, el yunque mandaba. Aquí manda **la casa**: 8×8 de planta y 13 de alto. Y dentro de la casa, la **puerta**: 4 vóxels de alto. Esa es la altura de una persona en este mundo.
+
+Con esa regla mides todo lo demás:
+
+- **El árbol** de 8³ mide 8 de alto: dos personas. Un árbol joven a la altura del alero. Creíble.
+- **El camino** mide 2 de ancho: lo mismo que la puerta. Cabe una persona.
+- **El estanque** tiene unos 5 vóxels de diámetro: una charca, no un lago.
+
+<Why>
+El ojo no conoce los vóxels; compara. Si la puerta mide 4 y la farola mide 3, la farola parece de juguete. Si cada prop viene de un archivo distinto con su propia escala, el diorama parece una caja de juguetes revueltos, no un lugar.
+</Why>
+
+**3. Composición: un foco y un camino hasta él**
+
+Es lo de [Composición: dónde mira el ojo (F07-01)](/forja-art/fundamentos/f07-01/), ahora en 3D.
+
+<Sprite name="scene-focus" scale={5} caption="F07: el foco gana por posición, contraste y por lo que lo rodea" />
+
+En el diorama:
+
+- **El punto focal es la casa.** Es lo más grande, lo más alto (llega a 17 de altura total) y lo que más contraste tiene: tejado rojo sobre hierba verde.
+- **El recorrido es el camino.** Sale del borde delantero de la base y llega **justo a la puerta**. El ojo entra por ahí, como entraría un visitante.
+- **El contrapeso:** la casa está centrada a lo ancho, pero retrasada. El estanque va **delante a la izquierda** y el árbol **detrás a la derecha**: una diagonal que equilibra la escena sin competir con la casa.
+
+<Why title="El camino es una flecha">
+Una línea que nace en el borde y muere en un sitio es la forma más clara de decir «mira aquí». El camino no es decoración: es la flecha que apunta a la puerta.
+</Why>
+
+**4. Detalles que cuentan una historia**
+
+En la etapa **Detalle** no se añade ningún prop grande. Se añaden pistas:
+
+- **Leña** y un poste junto a la esquina de la casa: alguien corta leña. Hay fuego dentro.
+- **Una farola** junto al camino, con la llama en material Emit: alguien vuelve de noche.
+- **Flores** en dos pequeños grupos: alguien cuida esto.
+- **Una piedra** junto al estanque, la hierba en dos tonos y un reflejo claro en el agua: el suelo no es plano ni de plástico.
+
+<Why title="Alguien vive aquí">
+Ningún detalle es un personaje, pero todos dicen lo mismo: **aquí vive alguien**. Un detalle que no cuenta nada sobra; uno que cuenta algo convierte una maqueta en un lugar.
+</Why>
+
+<Warn title="El visor no simula los materiales">
+En el visor, la llama de la farola es solo un vóxel amarillo y el agua es solo azul. El brillo de la llama (Emit) lo verás en el modo **Render** de MagicaVoxel, como en [el farol (V3-02)](/forja-art/voxel/v3-02/).
+</Warn>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Parte de tu casa, no de cero">
+1. Abre `casa_modular_v1.vox`, la escena de V6. Ya tiene la casa, su árbol o roca y la paleta.
+2. Guárdala enseguida con otro nombre: `diorama_v1.vox`. Así no estropeas la casa original.
+3. Pasa al modo **World**: ves todos los modelos de la escena.
+
+<Why>
+El diorama reutiliza tu kit. Partir de la escena de la casa te da gratis la **pieza de referencia** (la puerta de 4 de alto) y una paleta ya coherente.
+</Why>
+</Step>
+
+<Step n={2} title="Modela la base con estratos">
+1. Crea un modelo nuevo para la base. Tamaño: entre 20×20 y 32×32 de planta y 4 de alto (22×22×4 como el del visor).
+2. En modo **Attach**, con el pincel **Box**, rellena todo el bloque en tierra.
+3. Pasa a **Paint**: la capa de abajo en piedra (usa el gris del zócalo de la casa), la de arriba en hierba y deja dos tierras en medio, una más oscura que otra.
+4. Gira la cámara con el botón derecho y mira el lateral: tienen que verse las cuatro bandas.
+
+<Tip>
+Usa colores que ya estén en la paleta: el gris del zócalo para la piedra, el verde del árbol para la hierba. Compartir colores ata la casa al suelo.
+</Tip>
+</Step>
+
+<Step n={3} title="Coloca la casa y elige el foco">
+1. En **World**, coloca la casa (paredes y tejado) **sobre** la base, apoyada en la hierba.
+2. Retrásala un poco: deja delante sitio para un camino.
+3. Mira la escena de frente y decide: la casa es el punto focal. Lo demás estará a su servicio.
+
+<Why>
+Primero el foco, después lo demás. Si colocas todo a la vez, cada prop se queda donde cayó y nadie manda.
+</Why>
+</Step>
+
+<Step n={4} title="Añade al menos dos props más, a la misma escala">
+1. Coloca el árbol (o la roca) en el lado contrario a donde irá el elemento grande que falta.
+2. Trae otro prop de tu kit: el farol de V3-02, la roca de V3-01 o algo del kit del herrero. Si no sabes traerlo de su archivo, vuelve a modelarlo: son pequeños.
+3. Compara cada prop con la **puerta**: ¿cabe por ella una persona de 4 vóxels? ¿El farol le llega por el hombro o le dobla la altura?
+4. Reparte en diagonal: uno delante a un lado, otro detrás al otro.
+
+<Warn>
+No escales un prop para que «quede bien». Si el farol de V3-02 se ve enano, el problema no se arregla estirándolo: o lo rehaces a la escala de la puerta, o eliges otro prop.
+</Warn>
+</Step>
+
+<Step n={5} title="Traza el recorrido">
+1. Selecciona la base y pasa a **Paint**.
+2. Pinta un camino de 2 de ancho (el de la puerta) desde el **borde delantero** de la base **hasta la puerta**. Alterna dos grises para que se lean las losas.
+3. Si quieres agua: en **Erase**, quita la hierba en una mancha redonda y pinta de azul la tierra que queda debajo. El agua queda hundida un vóxel.
+
+<Tip>
+Mira la escena desde la cámara del render. Si al seguir el camino con el dedo no llegas a la puerta, el recorrido no funciona.
+</Tip>
+</Step>
+
+<Step n={6} title="Detalles que cuenten algo">
+1. Añade como mucho **tres o cuatro** detalles, cerca del foco y del camino: leña junto a la casa, flores en un grupo, una piedra junto al agua.
+2. Pinta unos pocos vóxels de hierba en un verde más claro y un reflejo claro en el agua.
+3. Para cada detalle, pregúntate: «¿qué dice sobre quien vive aquí?». Si no dice nada, bórralo.
+</Step>
+
+<Step n={7} title="Renderiza">
+1. Pulsa **Render**. Prueba los modos de proyección de la cámara (perspectiva, ortográfica, isométrica) y elige el que mejor enseñe el corte de la base **y** la puerta.
+2. Elige un ángulo en el que el camino entre desde abajo de la imagen hacia la casa.
+3. Si tienes una llama en material **Emit**, mírala en el render: el visor no la ilumina.
+4. Guarda `diorama_v1.vox` y la imagen del render en tu portfolio.
+</Step>
+
+<Warn title="Verifica en tu versión">
+El modo **World** existe, pero la forma de crear un modelo nuevo, fijar su tamaño, moverlo, duplicarlo o traer un modelo desde otro archivo `.vox` cambia entre versiones de MagicaVoxel. Comprueba también los nombres de **Attach**, **Erase**, **Paint** y del pincel **Box**. En el modo **Render**, los paneles de luz, cámara (proyección), materiales y el botón para guardar la imagen tienen nombres distintos según la versión: búscalos por su función.
+</Warn>
+</Block>
+
+<Block kind="version">
+Haz **tu propio** trozo de mundo. Misma receta: base con estratos, escala común, un foco, un recorrido y pocos detalles. Elige un reto:
+
+- **La forja:** el foco es el yunque del kit del herrero, bajo un tejadillo. El recorrido, un camino de brasas o de losas hasta él. Detalles: el cubo de agua, el martillo, una pila de hierro.
+- **La torre del vigía:** la torre de V2-02 como foco, sobre una base con un desnivel (una capa más de piedra en un lado). El recorrido sube por escalones.
+- **De noche:** el mismo diorama de la lección con el farol encendido como foco secundario. En el render, baja la luz del cielo y deja que la llama (Emit) cuente la historia.
+
+Antes de darlo por bueno, mira el render en pequeño, como una miniatura: ¿se sabe en un segundo dónde mirar?
+</Block>
+
+<Block kind="errores">
+<Mistake title="Props a escalas distintas" wrongLabel="Cada prop de su padre" rightLabel="Todo medido con la puerta">
+  <p slot="wrong">La casa tiene una puerta de 4 de alto, el árbol mide el triple que la casa, y el farol mide 2. Cada pieza está bien sola; juntas, no son del mismo mundo.</p>
+  <p slot="right">Todo se compara con la puerta: el camino mide su ancho, el árbol mide dos personas, la farola un poco más que una. La escena se lee como un lugar.</p>
+
+Elige **una** pieza de referencia (aquí, la casa y su puerta) y mide con ella todo lo que pongas. Es la regla del yunque del kit del herrero, aplicada a una escena.
+</Mistake>
+
+<Mistake title="Base sin grosor" wrongLabel="Una alfombra" rightLabel="Un trozo de suelo">
+  <p slot="wrong">La base es una lámina de 1 vóxel de hierba. Desde el lateral no hay nada: la escena parece flotar sobre un tapete.</p>
+  <p slot="right">La base mide 4 de alto: piedra, dos tierras y hierba. El corte lateral dice que esto se ha recortado de un mundo más grande.</p>
+
+Dale a la base grosor y estratos, de oscuro abajo a claro arriba. En el visor, baja **Capas** en la etapa «Base» para ver las cuatro bandas.
+</Mistake>
+
+<Warn title="Error típico: todo repartido, sin foco">
+Pones la casa, el árbol, el farol y la roca en las cuatro esquinas, a la misma distancia y del mismo tamaño. El ojo salta de uno a otro y no se queda en ninguno: es el `scene-flat` de F07 en 3D. **Corrección:** un prop manda (el más grande y con más contraste), un camino lleva hasta él y el resto se agrupa para equilibrar, no para competir.
+</Warn>
+
+<Warn title="Error típico: detalle por todas partes">
+Flores en cada vóxel libre, piedras por toda la base, cinco farolas. El detalle repartido por igual es ruido, y además le roba el foco a la casa. **Corrección:** pocos detalles, agrupados cerca del foco y del recorrido, y cada uno con algo que contar. Deja zonas de hierba tranquila: el descanso también compone.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+<Checklist items={[
+  "La base mide entre 20×20 y 32×32 y tiene grosor, con al menos tres estratos visibles en el corte",
+  "Hay al menos 3 props de mi kit, todos a la escala de la misma pieza de referencia",
+  "Hay un punto focal claro: el prop más grande y con más contraste",
+  "Un camino (u otro recorrido) lleva desde el borde de la base hasta el foco",
+  "Los detalles son pocos, están agrupados y cada uno cuenta algo",
+  "Hay zonas tranquilas sin detalle",
+  "He guardado diorama_v1.vox y un render en mi portfolio",
+]} />
+
+<Quiz q="Tu farol de V3-02 se ve enano junto a la puerta de la casa. ¿Qué haces?" options={["Lo escalo en MagicaVoxel hasta que quede bien", "Lo rehago a la escala de la puerta, o elijo otro prop que ya la respete", "Lo pongo más cerca de la cámara para que parezca más grande"]} answer={1}>
+Escalar un modelo voxel estropea su dibujo: los detalles se vuelven bloques dobles o desaparecen, y deja de parecer del mismo kit. La pieza de referencia (la puerta) manda: el prop se adapta a ella, no al revés.
+</Quiz>
+
+<Quiz q="¿Qué función tiene el camino de piedra en el diorama de la lección?" options={["Rellenar la hierba, que estaba vacía", "Es el recorrido: nace en el borde y lleva el ojo hasta la puerta, el punto focal", "Marcar la escala del estanque"]} answer={1}>
+Una línea que entra por el borde y termina en un sitio es una flecha. El camino conduce la mirada hasta la casa, como conduciría a un visitante.
+</Quiz>
+
+<Quiz q="¿Por qué la base tiene 4 vóxels de grosor y no 1?" options={["Para que el render tarde menos", "Porque el corte con estratos dice que es un trozo recortado de un mundo más grande", "Porque MagicaVoxel no deja modelos de 1 de alto"]} answer={1}>
+Con un vóxel de grosor la escena parece posada sobre un tapete. Piedra, tierra y hierba en el corte cuentan lo que hay debajo y dan peso al conjunto.
+</Quiz>
+</Block>

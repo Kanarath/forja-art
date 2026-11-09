@@ -55,3 +55,9 @@ main.wrap { padding-block: 32px 80px; min-height: 70vh; }
 @keyframes toast-in { from { opacity: 0; transform: translateY(12px); } }
 
 .soon { display: inline-block; font: 500 .72rem var(--font-mono); color: var(--accent); border: 1px dashed var(--accent); padding: 2px 8px; }
+
+/* tablas de las lecciones (Markdown): con bordes y desplazamiento propio en pantallas estrechas */
+main table { display: block; max-width: 100%; overflow-x: auto; border-collapse: collapse; margin: 16px 0; font-size: .9rem; }
+main th, main td { border: 1px solid var(--line); padding: 8px 10px; text-align: left; vertical-align: top; }
+main th { background: var(--panel-2); font-family: var(--font-head); }
+main tbody tr:nth-child(even) td { background: #ffffff05; }

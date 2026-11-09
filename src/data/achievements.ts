@@ -44,5 +44,11 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   { id: "casa-modular", name: "Casa modular", description: "Una casa voxel construida con módulos reutilizados en rejilla (V6-01).", color: "#e8dcc0" },
   { id: "foco", name: "Foco", description: "Una escena con un punto focal claro, comprobado en escala de grises (F07).", color: "#ff4fa3" },
   { id: "tres-vistas", name: "Tres vistas", description: "El mismo objeto en vista lateral, 3/4 e isométrica (F08).", color: "#d08a50" },
+  { id: "squash-stretch", name: "Gelatina", description: "Un salto con anticipación, squash y stretch que conserva el volumen (P6-03).", color: "#4ade80" },
+  { id: "impacto", name: "Impacto", description: "Un efecto de golpe de 4–6 frames que crece rápido y se apaga despacio (P6-04).", color: "#ff8f3a" },
+  { id: "agua-viva", name: "Agua viva", description: "Un tile de agua animado que se repite sin costuras y fluye en bucle (P7-02).", color: "#2a6fc9" },
+  { id: "diorama", name: "Diorama", description: "Un trozo de mundo voxel sobre una base, con escala común y detalles que cuentan algo (V7-01).", color: "#6b4430" },
+  { id: "render-final", name: "Render final", description: "Un render de portfolio con cámara, luz y acabado elegidos con intención (V8-01).", color: "#fff3c4" },
+  { id: "cuatro-superficies", name: "Cuatro superficies", description: "La misma forma en mate, brillante, metal y cristal, en pixel y en voxel (F06).", color: "#a9b4c4" },
   { id: "forma-primero", name: "Forma antes que detalle", description: "Un modelo voxel con su blockout guardado como primera versión (V2-01).", color: "#38e1ff" },
 ];

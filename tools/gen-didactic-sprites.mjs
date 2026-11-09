@@ -495,6 +495,117 @@ function compose(w, h, groundPal, placements) {
   add("scene-focus", "La misma escena con foco: el héroe en el tercio izquierdo frente al slime, la hierba más oscura para que los personajes destaquen y rocas y setas en las esquinas enmarcando. Menos elementos, una historia.", ["escena", "composición"], focus.pal, focus.rows);
 }
 
+// ---------- squash & stretch: el salto del slime (lienzo de 16×20, el suelo es la última fila)
+// La forma se calcula: una cúpula apoyada (o una elipse en el aire) de ancho w y alto h.
+// El volumen se conserva a ojo: si se aplasta, se ensancha; si se estira, se estrecha.
+const SLIME_PAL = { o: "#1b1030", g: "#4ade80", G: "#1f8a4c", h: "#d8ffe6", e: "#1b1030" };
+function slimeFrame(w, h, bottom, { air = false } = {}) {
+  const W = 16, H = 20, cx = W / 2;
+  const inside = (x, y) => {
+    if (y > bottom || y < bottom - h + 1) return false;
+    const t = air ? Math.abs((bottom - y) - (h - 1) / 2) / (h / 2) : (bottom - y + 0.5) / h; // 0 abajo/centro → 1 arriba
+    const hw = (w / 2) * Math.sqrt(Math.max(0, 1 - t * t)) + (air ? 0.15 : 0.35);
+    return Math.abs(x + 0.5 - cx) <= hw;
+  };
+  const g = Array.from({ length: H }, (_, y) => Array.from({ length: W }, (_, x) => {
+    if (!inside(x, y)) return ".";
+    const edge = !inside(x - 1, y) || !inside(x + 1, y) || !inside(x, y - 1) || !inside(x, y + 1);
+    return edge ? "o" : "g";
+  }));
+  const rowsIn = []; // filas con interior
+  g.forEach((r, y) => { if (r.includes("g")) rowsIn.push(y); });
+  const first = rowsIn[0], last = rowsIn[rowsIn.length - 1];
+  // ojos: a media altura del interior, separados 3 píxeles (nunca en la primera ni en la última fila)
+  const ey = rowsIn[Math.max(1, Math.min(rowsIn.length - 2, Math.floor((rowsIn.length - 1) / 2)))];
+  for (const x of [6, 9]) g[ey][x] = "e";
+  // brillo: los dos primeros píxeles interiores de la primera fila (luz arriba a la izquierda)
+  const hx = g[first].indexOf("g");
+  g[first][hx] = "h"; if (g[first][hx + 1] === "g") g[first][hx + 1] = "h";
+  // sombra: la última fila interior
+  for (let x = 0; x < W; x++) if (g[last][x] === "g") g[last][x] = "G";
+  return g.map((r) => r.join(""));
+}
+add("slime-rest", "Slime en reposo dentro de un lienzo de 16×20: 10 de ancho y 8 de alto, apoyado en la última fila. Es el frame de partida y de llegada del salto.", ["criatura", "animación"], SLIME_PAL, slimeFrame(10, 8, 19));
+add("slime-squash", "Anticipación (y aterrizaje): el slime se aplasta a 5 de alto y se ensancha a 14. Ocupa más o menos lo mismo que en reposo: el volumen se conserva.", ["criatura", "animación"], SLIME_PAL, slimeFrame(14, 5, 19));
+add("slime-stretch", "Despegue: el slime se estira a 11 de alto y se estrecha a 7, ya separado del suelo. La forma dice hacia dónde va.", ["criatura", "animación"], SLIME_PAL, slimeFrame(7, 11, 16, { air: true }));
+add("slime-apex", "Punto más alto del salto: el slime recupera su forma redonda y queda un instante quieto arriba.", ["criatura", "animación"], SLIME_PAL, slimeFrame(10, 8, 9, { air: true }));
+add("slime-rigid", "Error: el mismo salto sin deformar, el slime de reposo subido 7 píxeles. Se mueve, pero parece una pieza dura, no gelatina.", ["criatura", "animación", "error"], SLIME_PAL,
+  [...slimeFrame(10, 8, 19).slice(7), ...Array(7).fill(".".repeat(16))]);
+add("slime-shrunk", "Error: aplastado a 5 de alto pero sin ensancharse (10 de ancho). Pierde volumen: parece que encoge en vez de aplastarse.", ["criatura", "animación", "error"], SLIME_PAL, slimeFrame(10, 5, 19));
+
+// ---------- VFX: un impacto de 16×16 en 5 frames (destello → estallido → anillo → humo → restos)
+// Cada frame es una forma sencilla; la paleta va del blanco al humo: el color también «se enfría».
+const VFX = { w: "#ffffff", y: "#ffe58a", O: "#ff8f3a", r: "#d8343f", s: "#9a95ad", S: "#5c5872" };
+function vfxFrame(fn) {
+  return Array.from({ length: 16 }, (_, y) => Array.from({ length: 16 }, (_, x) => {
+    const dx = x - 7.5, dy = y - 7.5;
+    return fn(dx, dy, Math.hypot(dx, dy), Math.atan2(dy, dx)) ?? ".";
+  }).join(""));
+}
+const star = (a, k) => Math.abs(Math.cos(a * k)); // 1 en las puntas
+const vfx = [
+  // 1: destello pequeño y muy brillante (la forma más simple: un rombo)
+  vfxFrame((dx, dy) => (Math.abs(dx) + Math.abs(dy) <= 2 ? "w" : Math.abs(dx) + Math.abs(dy) <= 3 ? "y" : null)),
+  // 2: estallido en estrella de 4 puntas, núcleo blanco y bordes naranjas
+  vfxFrame((dx, dy, d, a) => { const r = 3 + 4.5 * star(a, 2) ** 6; return d <= 2 ? "w" : d <= r - 1.5 ? "y" : d <= r ? "O" : null; }),
+  // 3: anillo que se abre con chispas en diagonal; el centro ya se ha vaciado
+  vfxFrame((dx, dy, d, a) => (d >= 5 && d <= 6.6 ? (star(a + Math.PI / 4, 2) > 0.9 ? "y" : "O") : d > 6.6 && d <= 7.9 && star(a + Math.PI / 4, 2) > 0.97 ? "r" : null)),
+  // 4: humo: tres bolas grises donde estuvo el anillo, con la parte de arriba algo más clara
+  vfxFrame((dx, dy) => { for (const [cx, cy, r] of [[-3.5, -2.5, 2.4], [3.5, -1.5, 2.1], [0, 3.5, 2.6]]) { const d = Math.hypot(dx - cx, dy - cy); if (d <= r) return d <= r - 0.6 && dy - cy < 0.5 ? "s" : "S"; } return null; }),
+  // 5: restos de humo, casi nada: el efecto se apaga en vez de cortarse
+  vfxFrame((dx, dy) => { for (const [cx, cy, r] of [[-4.5, -4, 1.3], [4.5, -3, 1.1], [0.5, 5, 1.4]]) if (Math.hypot(dx - cx, dy - cy) <= r) return "S"; return null; }),
+];
+const usedPal = (rows) => Object.fromEntries(Object.entries(VFX).filter(([k]) => rows.some((r) => r.includes(k))));
+const VFX_D = [
+  "Impacto, frame 1: un destello pequeño y blanco. Dura muy poco; su trabajo es marcar el instante del golpe.",
+  "Impacto, frame 2: el estallido en estrella de 4 puntas, el frame más grande y brillante.",
+  "Impacto, frame 3: el centro se vacía y queda un anillo con chispas: la energía se aleja.",
+  "Impacto, frame 4: humo gris donde estuvo el anillo. Los colores ya son fríos y oscuros.",
+  "Impacto, frame 5: restos de humo, casi nada. El efecto se apaga en lugar de desaparecer de golpe.",
+];
+vfx.forEach((rows, i) => add(`vfx-hit-${i + 1}`, VFX_D[i], ["vfx", "animación"], usedPal(rows), rows));
+
+// ---------- agua animada: un tile de 16×16 en 3 frames que también se repite sin costuras
+// Las franjas oscuras están quietas; las crestas claras avanzan en x y envuelven (lo que sale por la derecha entra por la izquierda).
+const WATER = { b: "#2a6fc9", d: "#1f4f9a", l: "#6fb8ff", w: "#d8f0ff" };
+function waterTile(off, crests = [[0, 2], [8, 7], [3, 13], [11, 10], [6, 4]]) {
+  const g = Array.from({ length: 16 }, () => Array(16).fill("b"));
+  const set = (x, y, c) => { g[((y % 16) + 16) % 16][((x % 16) + 16) % 16] = c; };
+  for (const [x, y] of [[1, 6], [9, 13], [12, 2], [5, 11]]) for (let k = 0; k < 4; k++) set(x + k, y, "d");
+  for (const [x, y] of crests) {
+    for (let k = 0; k < 3; k++) set(x + k + off, y, "l");
+    set(x + 1 + off, y - 1, "w");
+  }
+  return g.map((r) => r.join(""));
+}
+[0, 1, 2].forEach((i) => add(`tile-water-${i + 1}`, `Agua, frame ${i + 1} de 3: tile de 16×16 sin costuras. Las franjas oscuras están quietas y las crestas claras avanzan ${i} píxel${i === 1 ? "" : "es"} hacia la derecha respecto al frame 1.`, ["tile", "animación"], WATER, waterTile(i)));
+add("tile-water-noise", "Error: un frame de agua con las crestas en sitios distintos y sin relación con el frame 1. Alternado con él, el agua no fluye: parpadea, como si hirviera.", ["tile", "animación", "error"], WATER,
+  waterTile(0, [[10, 3], [2, 9], [13, 14], [5, 1], [7, 12]]));
+
+// ---------- materiales: la MISMA esfera de 16×16 con la misma luz (arriba a la izquierda), cuatro superficies
+// Lo único que cambia es cómo responde a la luz: dónde está el brillo, cuánto contraste y qué refleja.
+function sphere(shade) {
+  const inside = (xx, yy) => ((xx - 7.5) / 7.2) ** 2 + ((yy - 7.5) / 7.2) ** 2 <= 1;
+  return Array.from({ length: 16 }, (_, y) => Array.from({ length: 16 }, (_, x) => {
+    if (!inside(x, y)) return ".";
+    if (!inside(x - 1, y) || !inside(x + 1, y) || !inside(x, y - 1) || !inside(x, y + 1)) return "o";
+    const nx = (x - 7.5) / 6.6, ny = (y - 7.5) / 6.6, nz = Math.sqrt(Math.max(0, 1 - nx * nx - ny * ny));
+    const L = [-0.55, -0.6, 0.58]; // luz arriba a la izquierda, algo de frente
+    const dif = Math.max(0, nx * L[0] + ny * L[1] + nz * L[2]);
+    const spec = Math.max(0, 2 * dif * nz - L[2]); // reflejo hacia la vista
+    return shade({ dif, spec, nx, ny, nz });
+  }).join(""));
+}
+const MAT_O = "#1b1030";
+add("ball-mate", "Esfera mate (arcilla): la luz se reparte de forma suave en tres tonos y no hay brillo. El tono más claro ocupa una zona amplia.", ["material"],
+  { o: MAT_O, "1": "#8a4a3a", "2": "#b8664a", "3": "#d98a64" }, sphere(({ dif }) => (dif > 0.8 ? "3" : dif > 0.42 ? "2" : "1")));
+add("ball-gloss", "Esfera brillante (plástico o barniz): los mismos tonos que la mate más un punto de brillo pequeño y casi blanco. El brillo es la luz reflejada.", ["material"],
+  { o: MAT_O, "1": "#8a4a3a", "2": "#b8664a", "3": "#d98a64", w: "#fff3e6" }, sphere(({ dif, spec }) => (spec > 0.93 ? "w" : dif > 0.8 ? "3" : dif > 0.42 ? "2" : "1")));
+add("ball-metal", "Esfera de metal: contraste muy alto, saltos bruscos entre tonos y una banda oscura que refleja el horizonte. El metal enseña su entorno más que su color.", ["material"],
+  { o: MAT_O, "1": "#2f3442", "2": "#5c6676", "3": "#a9b4c4", w: "#ffffff" }, sphere(({ dif, spec, ny }) => (spec > 0.85 ? "w" : ny > 0.15 && ny < 0.45 ? "1" : ny >= 0.45 ? "2" : dif > 0.45 ? "3" : "2")));
+add("ball-glass", "Esfera de cristal: el centro deja ver el fondo oscuro, un brillo duro arriba y la luz que lo atraviesa se acumula ABAJO, en el lado contrario a la fuente.", ["material"],
+  { o: MAT_O, "1": "#2a5a7a", "2": "#5aa8d8", "3": "#b8e8ff", w: "#ffffff" }, sphere(({ spec, nx, ny, nz }) => (spec > 0.9 ? "w" : nz < 0.6 && nx > -0.3 && ny > 0.3 ? "3" : nz < 0.5 ? "2" : "1")));
+
 // ---------- escribir y validar
 let bad = 0;
 for (const s of out) {

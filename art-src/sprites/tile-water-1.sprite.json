@@ -1,0 +1,34 @@
+{
+  "name": "tile-water-1",
+  "description": "Agua, frame 1 de 3: tile de 16×16 sin costuras. Las franjas oscuras están quietas y las crestas claras avanzan 0 píxeles hacia la derecha respecto al frame 1.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "tile",
+    "animación"
+  ],
+  "palette": {
+    "b": "#2a6fc9",
+    "d": "#1f4f9a",
+    "l": "#6fb8ff",
+    "w": "#d8f0ff"
+  },
+  "rows": [
+    "bbbbbbbbbbbbbbbb",
+    "bwbbbbbbbbbbbbbb",
+    "lllbbbbbbbbbdddd",
+    "bbbbbbbwbbbbbbbb",
+    "bbbbbblllbbbbbbb",
+    "bbbbbbbbbbbbbbbb",
+    "bddddbbbbwbbbbbb",
+    "bbbbbbbblllbbbbb",
+    "bbbbbbbbbbbbbbbb",
+    "bbbbbbbbbbbbwbbb",
+    "bbbbbbbbbbblllbb",
+    "bbbbbddddbbbbbbb",
+    "bbbbwbbbbbbbbbbb",
+    "bbblllbbbddddbbb",
+    "bbbbbbbbbbbbbbbb",
+    "bbbbbbbbbbbbbbbb"
+  ]
+}

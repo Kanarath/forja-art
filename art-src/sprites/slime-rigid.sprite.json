@@ -1,0 +1,40 @@
+{
+  "name": "slime-rigid",
+  "description": "Error: el mismo salto sin deformar, el slime de reposo subido 7 píxeles. Se mueve, pero parece una pieza dura, no gelatina.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "criatura",
+    "animación",
+    "error"
+  ],
+  "palette": {
+    "o": "#1b1030",
+    "g": "#4ade80",
+    "G": "#1f8a4c",
+    "h": "#d8ffe6",
+    "e": "#1b1030"
+  },
+  "rows": [
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "......oooo......",
+    ".....ohhggo.....",
+    "....oggggggo....",
+    "....ogeggego....",
+    "...oggggggggo...",
+    "...oggggggggo...",
+    "...oGGGGGGGGo...",
+    "...oooooooooo...",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................"
+  ]
+}

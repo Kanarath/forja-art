@@ -1,0 +1,33 @@
+{
+  "name": "vfx-hit-2",
+  "description": "Impacto, frame 2: el estallido en estrella de 4 puntas, el frame más grande y brillante.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "vfx",
+    "animación"
+  ],
+  "palette": {
+    "w": "#ffffff",
+    "y": "#ffe58a",
+    "O": "#ff8f3a"
+  },
+  "rows": [
+    "................",
+    ".......OO.......",
+    ".......yy.......",
+    ".......yy.......",
+    ".......yy.......",
+    "......OyyO......",
+    ".....OOwwOO.....",
+    ".OyyyywwwwyyyyO.",
+    ".OyyyywwwwyyyyO.",
+    ".....OOwwOO.....",
+    "......OyyO......",
+    ".......yy.......",
+    ".......yy.......",
+    ".......yy.......",
+    ".......OO.......",
+    "................"
+  ]
+}

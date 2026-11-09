@@ -1,0 +1,33 @@
+{
+  "name": "vfx-hit-3",
+  "description": "Impacto, frame 3: el centro se vacía y queda un anillo con chispas: la energía se aleja.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "vfx",
+    "animación"
+  ],
+  "palette": {
+    "y": "#ffe58a",
+    "O": "#ff8f3a",
+    "r": "#d8343f"
+  },
+  "rows": [
+    "................",
+    ".......OO.......",
+    "..rryOOOOOOyrr..",
+    "..ryyO....Oyyr..",
+    "..yy........yy..",
+    "..OO........OO..",
+    "..O..........O..",
+    ".OO..........OO.",
+    ".OO..........OO.",
+    "..O..........O..",
+    "..OO........OO..",
+    "..yy........yy..",
+    "..ryyO....Oyyr..",
+    "..rryOOOOOOyrr..",
+    ".......OO.......",
+    "................"
+  ]
+}

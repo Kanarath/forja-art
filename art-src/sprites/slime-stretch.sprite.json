@@ -1,0 +1,39 @@
+{
+  "name": "slime-stretch",
+  "description": "Despegue: el slime se estira a 11 de alto y se estrecha a 7, ya separado del suelo. La forma dice hacia dónde va.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "criatura",
+    "animación"
+  ],
+  "palette": {
+    "o": "#1b1030",
+    "g": "#4ade80",
+    "G": "#1f8a4c",
+    "h": "#d8ffe6",
+    "e": "#1b1030"
+  },
+  "rows": [
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "......oooo......",
+    ".....ohhggo.....",
+    ".....oggggo.....",
+    ".....oggggo.....",
+    "....oggggggo....",
+    "....ogeggego....",
+    "....oggggggo....",
+    ".....oggggo.....",
+    ".....oggggo.....",
+    ".....oGGGGo.....",
+    "......oooo......",
+    "................",
+    "................",
+    "................"
+  ]
+}

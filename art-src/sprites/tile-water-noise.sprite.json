@@ -1,0 +1,35 @@
+{
+  "name": "tile-water-noise",
+  "description": "Error: un frame de agua con las crestas en sitios distintos y sin relación con el frame 1. Alternado con él, el agua no fluye: parpadea, como si hirviera.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "tile",
+    "animación",
+    "error"
+  ],
+  "palette": {
+    "b": "#2a6fc9",
+    "d": "#1f4f9a",
+    "l": "#6fb8ff",
+    "w": "#d8f0ff"
+  },
+  "rows": [
+    "bbbbbbwbbbbbbbbb",
+    "bbbbblllbbbbbbbb",
+    "bbbbbbbbbbbwdddd",
+    "bbbbbbbbbblllbbb",
+    "bbbbbbbbbbbbbbbb",
+    "bbbbbbbbbbbbbbbb",
+    "bddddbbbbbbbbbbb",
+    "bbbbbbbbbbbbbbbb",
+    "bbbwbbbbbbbbbbbb",
+    "bblllbbbbbbbbbbb",
+    "bbbbbbbbbbbbbbbb",
+    "bbbbbdddwbbbbbbb",
+    "bbbbbbblllbbbbbb",
+    "bbbbbbbbbddddbwb",
+    "bbbbbbbbbbbbblll",
+    "bbbbbbbbbbbbbbbb"
+  ]
+}

@@ -1,0 +1,255 @@
+---
+id: v8-01
+discipline: voxel
+level: 8
+order: 1
+title: "Render final: cámara, luz y acabado"
+summary: "Convierte tu diorama en una imagen de portfolio: cámara de tres cuartos, un sol bajo con dirección, la farola como único emisivo y un fondo que no compite."
+duration: 45
+status: borrador
+prerequisites: [v7-01, v3-02]
+fundamentals: [f05]
+objectives:
+  - "Elegir cámara y encuadre: perspectiva u ortográfica, tres cuartos y margen"
+  - "Iluminar con un sol bajo y lateral y usar el cielo como relleno frío"
+  - "Usar un único material emisivo como acento y un fondo neutro"
+  - "Trabajar con renders de prueba pequeños y ajustes de uno en uno"
+  - "Exportar el render final sin ruido y a la resolución decidida"
+tools: [magicavoxel]
+piece:
+  name: "Dos renders del mismo diorama: prueba plana y final con intención"
+  canvas: "22x22x17"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [render-final]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Tu diorama ya está modelado. Hoy lo conviertes en **la imagen que enseñarías**.
+
+Vas a forjar **dos renders del mismo diorama**, a la misma resolución:
+
+- **Render de prueba:** cámara y luz por defecto, sin tocar nada. Es tu punto de partida.
+- **Render final:** cámara de tres cuartos, sol bajo y lateral, la farola como único punto de luz y un fondo neutro.
+
+Los guardas como **dos versiones** de la misma pieza en el portfolio. La diferencia entre las dos es lo que has aprendido hoy.
+
+<VoxViewer model="diorama" stage={2} title="El objeto a renderizar: tu diorama (22×22, alto 17)" />
+
+<Warn title="El visor web no es un render">
+Este visor enseña **colores planos** con una luz fija. No calcula sombras proyectadas, ni el brillo de la farola, ni el cielo. Sirve para ver la forma y para elegir el ángulo. La imagen de verdad sale del **modo Render de MagicaVoxel**.
+</Warn>
+</Block>
+
+<Block kind="concepto">
+En Blender ya sabes que un buen modelo con un mal render parece un mal modelo. Aquí pasa igual. Un render final son **cuatro decisiones**: cámara, luz, acento y fondo. El acabado (postproceso, resolución) viene al final y con poco.
+
+### 1. La cámara: qué se ve y desde dónde
+
+- **Perspectiva:** lo cercano se ve más grande. Da sensación de maqueta real. Con un campo de visión estrecho, deforma poco.
+- **Ortográfica / isométrica:** sin fuga, las líneas paralelas siguen paralelas. Es el aspecto «de juego» y de pixel art isométrico.
+
+Las dos valen. Lo que **no** vale es la cámara de frente.
+
+- **Tres cuartos:** gira la cámara unos 45° y bájala un poco desde arriba. Así enseñas **dos caras** del diorama y el **techo**, y se ve el **corte de la base**: piedra, tierra y hierba. Ese corte es lo que dice «trozo de mundo».
+- **Encuadre con margen:** deja aire alrededor. El diorama no toca los bordes de la imagen.
+
+<Why title="Por qué tres cuartos">
+De frente, una caja es un cuadrado: el volumen desaparece. En tres cuartos ves tres planos (techo, frente y lateral) y el ojo reconstruye la forma. Es el mismo motivo por el que el icono isométrico de una caja enseña tapa y dos caras.
+</Why>
+
+### 2. La luz: una dirección clara
+
+Lo aprendiste en F05: **una fuente principal con dirección**.
+
+- **Sol bajo y lateral.** Con el sol bajo, cada escalón del tejado, cada flor y la farola proyectan **sombra**. Esas sombras dibujan la forma.
+- **El cielo como relleno frío.** El cielo ilumina un poco las sombras desde todas partes. Si es algo azulado, las sombras son frías y la luz del sol, cálida: contraste de temperatura.
+- **El sol de lado respecto a la cámara**, no detrás de ella. Si viene de donde miras, todo queda de cara a la luz y se aplana.
+
+<Sprite name="ball-lit" scale={10} caption="Luz con dirección: luz, terminador, sombra propia y luz rebotada. La forma se lee." />
+
+<Sprite name="ball-pillow" scale={10} caption="Luz plana: claro en el centro, oscuro en todo el borde. Sin dirección, la forma se hincha y se aplana." />
+
+<Why>
+Un render es luz calculada, pero **la dirección la decides tú**. Una luz cenital (justo encima) o frontal da lo mismo que `ball-pillow`: todo iluminado por igual y sin sombras que cuenten la forma.
+</Why>
+
+### 3. Un acento: un solo emisivo
+
+En tu diorama hay **una farola** junto al camino, con una llama. Esa llama en material **Emit** (V3-02) es el acento: un punto cálido que atrae la mirada.
+
+- **Un emisivo, no cinco.** Si las flores, la ventana y la llama emiten, nada destaca.
+- **Las flores claras no son luces.** Son colores claros en **Diffuse**.
+
+### 4. El fondo: neutro
+
+El fondo no es parte de la pieza. Un gris medio o un color apagado y frío deja que el diorama sea lo más saturado y contrastado de la imagen.
+
+<Why title="Foco (F07)">
+El ojo va primero a lo que más contrasta. Si el fondo es un degradado naranja intenso, compite con la farola y con la casa. Fondo tranquilo, pieza protagonista.
+</Why>
+
+### 5. Acabado: postproceso, muestras y resolución
+
+- **Postproceso con moderación.** Un poco de bloom alrededor de la llama ayuda. Mucho bloom emborrona todo y parece niebla.
+- **Muestras.** El render de MagicaVoxel se va limpiando poco a poco: cada pasada es una **muestra**. Con pocas muestras la imagen tiene **ruido** (grano). El final necesita bastantes más que la prueba.
+- **Resolución.** Decide el tamaño de la imagen **antes** de empezar y no lo cambies: la prueba y el final se comparan al mismo tamaño. Mientras ajustas, no esperes a que cada render quede limpio: con unos segundos ya ves si la luz va bien.
+
+<Tip title="Proceso de estudio">
+**Render de prueba rápido → cambia UNA cosa → otra prueba → … → render final con todas las muestras.** Si cambias tres cosas a la vez y empeora, no sabes cuál ha sido.
+</Tip>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="El render de prueba, sin tocar nada">
+1. Abre tu diorama (`diorama_v1.vox` de V7-01). Si no lo tienes, descarga el de referencia del visor de arriba.
+2. Pulsa **Render** arriba.
+3. En los ajustes del render, elige la **resolución** de la imagen. Apúntala: la final tendrá **la misma**.
+4. No toques ni cámara ni luz. Espera a que la imagen se limpie y **guárdala** con el botón de guardar imagen del modo Render: `diorama_render_prueba.png`.
+
+<Why>
+Esta es la versión 1 de tu pieza. Sin ella no puedes demostrar qué ha mejorado.
+</Why>
+
+<Tip>
+Mientras ajustas (pasos 2 a 5), no esperes a que cada render quede perfecto: con unos segundos ya ves si la luz o la cámara van bien. Si tu versión deja bajar la resolución de forma temporal, úsala para ir más rápido y vuelve a la apuntada antes del final.
+</Tip>
+</Step>
+
+<Step n={2} title="Cámara: tres cuartos y margen">
+1. En los ajustes de cámara del render, prueba la **perspectiva** con un campo de visión estrecho y después la **ortográfica** o la **isométrica**. Elige una.
+2. Gira la vista (botón derecho del ratón) hasta ver el diorama **en diagonal**: frente y lateral a la vez.
+3. Súbela un poco para ver el tejado y el estanque, sin llegar a la vista cenital. El **corte de la base** (piedra, tierra, hierba) tiene que verse.
+4. Aleja con la rueda hasta dejar **margen** alrededor. Desplaza con el botón central para centrarlo.
+5. Render de prueba. ¿Se ven dos caras, el tejado y el corte?
+
+<Tip>
+Deja la **farola y el camino** del lado de la cámara: son lo que cuenta la escena.
+</Tip>
+
+<Warn>
+Cuando tengas la cámara, **no la vuelvas a tocar**. La luz se coloca respecto a la cámara: si la mueves después, tendrás que recolocar el sol.
+</Warn>
+</Step>
+
+<Step n={3} title="Luz: sol bajo y lateral, cielo frío">
+1. Busca el ajuste de la **dirección del sol** y gíralo hasta que la luz entre **de lado** respecto a tu cámara (por ejemplo, desde la izquierda), no desde detrás de ti.
+2. Busca el ajuste de la **altura del sol** y bájala: las sombras de la casa, el árbol y la farola deben alargarse sobre la hierba.
+3. Si tu versión permite cambiar el color del sol, dale un tono ligeramente **cálido**.
+4. En los ajustes del **cielo**, baja su intensidad y dale un tono **algo azulado**: es la luz de relleno de las sombras.
+5. Render de prueba. Mira el tejado escalonado: ¿cada escalón deja su línea de sombra?
+
+<Why>
+Sol cálido y cielo frío: las caras al sol tiran a naranja y las sombras a azul. Es el hue shifting de la roca (V3-01), pero esta vez lo hace la luz.
+</Why>
+</Step>
+
+<Step n={4} title="La farola, único emisivo">
+1. Selecciona en la paleta el color de la **llama** de la farola. En el panel de materiales, ponlo en **Emit**.
+2. Comprueba que **ningún otro color** está en Emit: ni las flores, ni el reflejo del agua.
+3. Si quieres más ambiente, baja un poco la intensidad del sol: la llama gana presencia.
+4. Render de prueba.
+
+<Tip>
+Si el color de la llama lo compartes con otra pieza (por ejemplo, unas flores amarillas), al ponerlo en Emit se encienden las dos. Separa colores antes de asignar el material.
+</Tip>
+</Step>
+
+<Step n={5} title="Fondo neutro y postproceso con moderación">
+1. En los ajustes del fondo, elige un **color liso y apagado**: un gris medio o un azul grisáceo.
+2. Si tu versión pone un suelo bajo la escena, decide si lo quieres: un suelo del mismo tono que el fondo recoge la sombra del diorama sin distraer.
+3. En el postproceso, sube el **bloom** solo hasta que la llama tenga un halo pequeño. Si la casa o el cielo también brillan, te has pasado.
+4. Toca la **exposición** solo si el render sale demasiado claro u oscuro.
+5. Render de prueba. Míralo entornando los ojos: ¿lo más contrastado es el diorama, y no el fondo?
+</Step>
+
+<Step n={6} title="Render final y exportación">
+1. Comprueba que la resolución es **la misma** que la de la prueba del paso 1.
+2. Sube el **número de muestras** (o deja que el render siga trabajando) hasta que el grano desaparezca de las sombras y del cielo.
+3. Espera a que termine. No guardes a medias.
+4. Guarda la imagen: `diorama_render_final.png`.
+5. Guarda también la escena: `diorama_render.vox`.
+
+<Why>
+Las dos imágenes al mismo tamaño se comparan lado a lado. Si la final fuera más grande, parecería mejor solo por la resolución.
+</Why>
+</Step>
+
+<Warn title="Verifica en tu versión">
+Los nombres y la ubicación de los ajustes del modo Render cambian entre versiones de MagicaVoxel: la dirección y la altura del sol, su color, la intensidad y el color del cielo, el tipo de proyección y el campo de visión de la cámara, el color del fondo, el suelo, el bloom y la exposición, el número de muestras, la resolución y el botón de guardar la imagen. Aquí los nombramos **por su función**. Busca el equivalente en la tuya; puede que alguno no exista o esté agrupado de otra forma. Tampoco damos valores concretos: ajústalos mirando el render. Si la cámara y los ajustes de render no se guardan con el .vox en tu versión, apúntalos.
+</Warn>
+</Block>
+
+<Block kind="version">
+Mismo diorama, otra intención. Elige un reto y haz su render final:
+
+- **Atardecer:** sol muy bajo y anaranjado, cielo violeta apagado. La farola, más protagonista.
+- **Noche:** sol casi apagado y cielo azul oscuro. La farola es la luz principal y la escena se lee solo por ella.
+- **Isométrica de juego:** cámara ortográfica o isométrica, luz de mediodía con algo de lado y fondo liso. Como la imagen de un pack de assets.
+
+Cambia **solo** la luz y el fondo; la cámara, la misma. Así se compara de verdad.
+
+<VoxViewer model="farol" stage={2} title="Opcional: renderiza también el farol de V3-02 con la misma luz" />
+
+Si lo renderizas con la misma cámara y la misma luz que el diorama, las dos imágenes parecerán del mismo juego.
+</Block>
+
+<Block kind="errores">
+<Mistake title="Luz cenital o plana: sin sombras que dibujen la forma" wrongLabel="Luz sin dirección" rightLabel="Sol bajo y lateral">
+  <Sprite slot="wrong" name="ball-pillow" scale={8} />
+  <Sprite slot="right" name="ball-lit" scale={8} />
+
+Con el sol justo encima, o detrás de la cámara, todo recibe la misma luz: las sombras se esconden bajo los objetos. El diorama parece un recorte. **Corrección:** baja el sol y llévalo de lado respecto a la cámara.
+</Mistake>
+
+<Mistake title="Cámara de frente" wrongLabel="Frontal" rightLabel="Tres cuartos">
+  <p slot="wrong">La casa es un rectángulo, el tejado una franja y el corte de la base no dice nada.</p>
+  <p slot="right">En diagonal y algo desde arriba: dos caras, el tejado y el corte de piedra, tierra y hierba.</p>
+
+De frente se pierde el volumen. **Corrección:** gira unos 45° y sube un poco la cámara. Comprueba que se ven tres planos.
+</Mistake>
+
+<Warn title="Error típico: demasiados emisivos o bloom exagerado">
+Flores, agua y llama en Emit, y el bloom al máximo: la imagen se quema y parece niebla. **Corrección:** un solo emisivo (la llama) y bloom solo hasta un halo pequeño.
+</Warn>
+
+<Warn title="Error típico: fondo saturado que compite">
+Un degradado de colores intensos detrás del diorama roba la mirada. **Corrección:** fondo liso, apagado y de valor medio. Lo saturado tiene que estar en la pieza.
+</Warn>
+
+<Warn title="Error típico: render final con ruido">
+Guardar antes de que el render termine deja grano en sombras y cielo. En pequeño no se nota; en el portfolio, sí. **Corrección:** más muestras y espera a que acabe.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+<Checklist items={[
+  "Tengo un render de prueba con la cámara y la luz por defecto",
+  "La cámara está en tres cuartos: se ven dos caras, el tejado y el corte de la base",
+  "Hay margen alrededor del diorama; no toca los bordes",
+  "El sol está bajo y de lado: el tejado escalonado y la farola proyectan sombra",
+  "El cielo es un relleno frío y suave, no otra luz principal",
+  "Solo la llama de la farola está en Emit y el bloom es discreto",
+  "El fondo es liso y apagado: no compite con la pieza",
+  "El render final no tiene ruido y tiene la misma resolución que la prueba",
+  "He guardado los dos PNG como dos versiones de la misma pieza en el portfolio",
+]} />
+
+<Quiz q="¿Por qué el sol bajo y lateral funciona mejor que el sol justo encima?" options={["Porque el render tarda menos", "Porque los escalones y los objetos proyectan sombras que dibujan la forma", "Porque así el fondo se ve más claro"]} answer={1}>
+Con el sol cenital las sombras quedan escondidas bajo cada objeto y todo se ve igual de iluminado. Bajo y de lado, cada volumen deja su sombra.
+</Quiz>
+
+<Quiz q="Tu render final tiene grano en las sombras. ¿Qué haces?" options={["Subo el bloom para taparlo", "Aumento las muestras y espero a que termine", "Cambio el fondo a negro"]} answer={1}>
+El grano es ruido por falta de muestras. El render se limpia con más pasadas.
+</Quiz>
+
+<Quiz q="Quieres comparar tu render de prueba con el final. ¿Qué mantienes igual?" options={["La resolución", "El color del cielo", "La posición del sol"]} answer={0}>
+Misma resolución: así la mejora se debe a tus decisiones de cámara, luz y acabado, no al tamaño.
+</Quiz>
+
+<Quiz q="En el visor de esta web tu diorama no tiene sombras ni brillo en la farola. ¿Por qué?" options={["Porque la farola no está en Emit", "Porque el visor solo muestra colores; el render está en MagicaVoxel", "Porque faltan muestras"]} answer={1}>
+El visor web no es un render: no calcula luz, sombras ni materiales.
+</Quiz>
+</Block>

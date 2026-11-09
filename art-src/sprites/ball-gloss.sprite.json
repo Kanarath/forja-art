@@ -1,0 +1,34 @@
+{
+  "name": "ball-gloss",
+  "description": "Esfera brillante (plástico o barniz): los mismos tonos que la mate más un punto de brillo pequeño y casi blanco. El brillo es la luz reflejada.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "material"
+  ],
+  "palette": {
+    "1": "#8a4a3a",
+    "2": "#b8664a",
+    "3": "#d98a64",
+    "o": "#1b1030",
+    "w": "#fff3e6"
+  },
+  "rows": [
+    "................",
+    ".....oooooo.....",
+    "...oo333222oo...",
+    "..o3333322211o..",
+    "..o3333322211o..",
+    ".o333ww3222111o.",
+    ".o333ww2222111o.",
+    ".o333222221111o.",
+    ".o222222211111o.",
+    ".o222222111111o.",
+    ".o222211111111o.",
+    "..o1111111111o..",
+    "..o1111111111o..",
+    "...oo111111oo...",
+    ".....oooooo.....",
+    "................"
+  ]
+}

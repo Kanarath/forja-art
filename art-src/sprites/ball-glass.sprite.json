@@ -1,0 +1,34 @@
+{
+  "name": "ball-glass",
+  "description": "Esfera de cristal: el centro deja ver el fondo oscuro, un brillo duro arriba y la luz que lo atraviesa se acumula ABAJO, en el lado contrario a la fuente.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "material"
+  ],
+  "palette": {
+    "1": "#2a5a7a",
+    "2": "#5aa8d8",
+    "3": "#b8e8ff",
+    "o": "#1b1030",
+    "w": "#ffffff"
+  },
+  "rows": [
+    "................",
+    ".....oooooo.....",
+    "...oo211112oo...",
+    "..o2111111112o..",
+    "..o111w111111o..",
+    ".o211www111112o.",
+    ".o111ww1111111o.",
+    ".o111111111111o.",
+    ".o111111111111o.",
+    ".o111111111111o.",
+    ".o211111111113o.",
+    "..o1111111113o..",
+    "..o2111111133o..",
+    "...oo233333oo...",
+    ".....oooooo.....",
+    "................"
+  ]
+}

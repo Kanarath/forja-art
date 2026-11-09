@@ -1,0 +1,32 @@
+{
+  "name": "vfx-hit-4",
+  "description": "Impacto, frame 4: humo gris donde estuvo el anillo. Los colores ya son fríos y oscuros.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "vfx",
+    "animación"
+  ],
+  "palette": {
+    "s": "#9a95ad",
+    "S": "#5c5872"
+  },
+  "rows": [
+    "................",
+    "................",
+    "................",
+    "...SSS..........",
+    "..SsssS....S....",
+    "..SsssS...sss...",
+    "..SSSSS..SsssS..",
+    "...SSS....SSS...",
+    "...........S....",
+    "......SSSS......",
+    "......ssss......",
+    ".....SssssS.....",
+    "......SSSS......",
+    "......SSSS......",
+    "................",
+    "................"
+  ]
+}

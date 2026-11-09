@@ -1,0 +1,33 @@
+{
+  "name": "ball-mate",
+  "description": "Esfera mate (arcilla): la luz se reparte de forma suave en tres tonos y no hay brillo. El tono más claro ocupa una zona amplia.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "material"
+  ],
+  "palette": {
+    "1": "#8a4a3a",
+    "2": "#b8664a",
+    "3": "#d98a64",
+    "o": "#1b1030"
+  },
+  "rows": [
+    "................",
+    ".....oooooo.....",
+    "...oo333222oo...",
+    "..o3333322211o..",
+    "..o3333322211o..",
+    ".o333333222111o.",
+    ".o333332222111o.",
+    ".o333222221111o.",
+    ".o222222211111o.",
+    ".o222222111111o.",
+    ".o222211111111o.",
+    "..o1111111111o..",
+    "..o1111111111o..",
+    "...oo111111oo...",
+    ".....oooooo.....",
+    "................"
+  ]
+}

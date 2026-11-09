@@ -1,0 +1,31 @@
+{
+  "name": "vfx-hit-5",
+  "description": "Impacto, frame 5: restos de humo, casi nada. El efecto se apaga en lugar de desaparecer de golpe.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "vfx",
+    "animación"
+  ],
+  "palette": {
+    "S": "#5c5872"
+  },
+  "rows": [
+    "................",
+    "................",
+    "................",
+    "..SSS...........",
+    "..SSS.......S...",
+    "............S...",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    ".......SSS......",
+    ".......SSS......",
+    "................",
+    "................"
+  ]
+}

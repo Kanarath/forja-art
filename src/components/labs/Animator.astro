@@ -1,7 +1,7 @@
 ---
 // LAB · Mini-animador. NO es un editor: sirve para entender frames, timing y onion skin.
 // Uso en MDX:  <Animator preset="slime-idle" />   o   <Animator />  (lienzo vacío de 16×16)
-//   o con frames que son sprites del curso (mismo tamaño y misma paleta):
+//   o con frames que son sprites del curso (mismo tamaño; las paletas no pueden contradecirse):
 //   <Animator sprites={["hero-chibi", "hero-walk-a", "hero-chibi", "hero-walk-b"]} durations={[180, 180, 180, 180]} />
 // Clic para pintar, clic derecho (o el color «goma») para borrar.
 import { getSprite } from "../../data/sprites";
@@ -19,11 +19,18 @@ const squash = (s: S): string[] => {
 let frames: string[][], palette: Record<string, string>, durations: number[];
 if (sprites?.length) {
   const list = sprites.map(getSprite);
-  const key = (x: S) => `${x.rows[0].length}×${x.rows.length} ${JSON.stringify(x.palette)}`;
-  if (list.some((x) => key(x) !== key(list[0])))
-    throw new Error(`Animator: los sprites ${sprites.join(", ")} deben tener el mismo tamaño y la misma paleta`);
+  // mismo tamaño; las paletas se unen (un frame puede no usar todos los colores),
+  // pero una misma letra no puede ser dos colores distintos
+  const size = (x: S) => `${x.rows[0].length}×${x.rows.length}`;
+  palette = {};
+  for (const x of list) {
+    if (size(x) !== size(list[0])) throw new Error(`Animator: los sprites ${sprites.join(", ")} deben tener el mismo tamaño`);
+    for (const [k, c] of Object.entries(x.palette)) {
+      if (palette[k] && palette[k] !== c) throw new Error(`Animator: el color «${k}» es distinto en ${sprites.join(", ")}`);
+      palette[k] = c;
+    }
+  }
   frames = list.map((x) => x.rows);
-  palette = list[0].palette;
   durations = sprites.map((_, i) => customDurations?.[i] ?? 150);
 } else if (preset === "slime-idle") {
   const sl = getSprite("slime");

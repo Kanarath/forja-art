@@ -263,7 +263,44 @@ for (let i = 0; i <= 4; i++) { // tejado a dos aguas: cada capa se estrecha un v
   for (let x = -1; x <= 8; x++) for (let y = -1 + i; y <= 8 - i; y++) houseRoof.push({ x, y, z: 8 + i, c: i % 2 ? ROOF.dark : ROOF.light });
 }
 
+// ---------- DIORAMA: una base de 22×22 con estratos, una escena pequeña encima y detalles que cuentan algo
+// Reutiliza la casa modular y el árbol de 8³: un diorama es un kit montado sobre un trozo de suelo.
+const DIRT = { light: "#8a5a3c", dark: "#6b4430" }, PATH = { light: "#b4ab9f", dark: "#8a8698" };
+const WATER_D = "#1f4f9a", WATER_L = "#6fb8ff";
+const move = (vox, dx, dy, dz) => vox.map((v) => ({ ...v, x: v.x + dx, y: v.y + dy, z: v.z + dz }));
+const dioramaBase = box(0, 0, 0, 21, 21, 3, null).map((v) => ({
+  ...v, c: v.z === 3 ? LEAF.mid : v.z === 0 ? STONE.dark : v.z === 2 ? DIRT.light : DIRT.dark,
+}));
+const inPond = (v) => Math.hypot(v.x - 4, v.y - 4.5) <= 2.8;
+const onPath = (v) => v.x >= 10 && v.x <= 11 && v.y <= 8;
+const dioramaScene = [
+  ...dioramaBase
+    .filter((v) => !(inPond(v) && v.z === 3)) // el estanque se hunde un vóxel en la hierba
+    .map((v) => (inPond(v) && v.z === 2 ? { ...v, c: WATER_D } : onPath(v) && v.z === 3 ? { ...v, c: (v.y % 3 ? PATH.light : PATH.dark) } : v)),
+  ...move([...houseWalls, ...houseRoof], 7, 9, 4), // la puerta (x 10–11) da al camino
+  ...move(tree(1), 14, 12, 4),
+];
+const dioramaDetail = [
+  ...dioramaScene.map((v) => {
+    if (v.z === 2 && v.c === WATER_D && Math.hypot(v.x - 3.5, v.y - 4) <= 1.2) return { ...v, c: WATER_L }; // reflejo del cielo
+    if (v.z === 3 && v.c === LEAF.mid && (v.x * 7 + v.y * 13) % 9 === 0) return { ...v, c: LEAF.light }; // la hierba no es un color plano
+    return v;
+  }),
+  ...box(13, 4, 4, 13, 4, 8, IRON), { x: 13, y: 4, z: 9, c: FLAME }, // farola junto al camino (llama en Emit)
+  ...[[2, 13], [4, 15], [3, 17], [17, 4], [19, 7]].map(([x, y], i) => ({ x, y, z: 4, c: i % 2 ? "#ffb84d" : "#fff3c4" })), // flores
+  ...box(7, 2, 4, 8, 3, 4, STONE.light), { x: 8, y: 3, z: 5, c: STONE.dark }, // piedra junto al estanque
+  ...box(5, 9, 4, 5, 9, 6, WOOD.mid), ...box(4, 9, 4, 4, 9, 4, WOOD.dark), // poste y cubo de leña junto a la casa
+];
+
 export const MODELS = {
+  diorama: {
+    description: "Diorama: una base con estratos, una escena y detalles que cuentan algo",
+    stages: [
+      { label: "Base", note: "Un bloque de 22×22×4: piedra abajo, dos capas de tierra y la hierba arriba. El corte lateral, a la vista, ya dice «trozo de mundo».", voxels: dioramaBase },
+      { label: "Escena", note: "La casa modular y un árbol de 8³ (el mismo de V1) sobre la base, un camino hasta la puerta y un estanque hundido un vóxel. Escala común: todo se mide con la casa.", voxels: dioramaScene },
+      { label: "Detalle", note: "Una farola (llama en Emit), flores, una piedra, leña junto a la puerta, hierba en dos tonos y el reflejo del cielo en el agua. Ningún detalle es nuevo: todos dicen que aquí vive alguien.", voxels: dioramaDetail },
+    ],
+  },
   "chibi-pose": {
     description: "El chibi voxel: de la pose neutra a una pose con intención",
     stages: [

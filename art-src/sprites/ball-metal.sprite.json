@@ -1,0 +1,34 @@
+{
+  "name": "ball-metal",
+  "description": "Esfera de metal: contraste muy alto, saltos bruscos entre tonos y una banda oscura que refleja el horizonte. El metal enseña su entorno más que su color.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "material"
+  ],
+  "palette": {
+    "1": "#2f3442",
+    "2": "#5c6676",
+    "3": "#a9b4c4",
+    "o": "#1b1030",
+    "w": "#ffffff"
+  },
+  "rows": [
+    "................",
+    ".....oooooo.....",
+    "...oo333333oo...",
+    "..o3333333322o..",
+    "..o33www33322o..",
+    ".o33wwww333222o.",
+    ".o33wwww332222o.",
+    ".o333w33332222o.",
+    ".o333333322222o.",
+    ".o111111111111o.",
+    ".o111111111111o.",
+    "..o2222222222o..",
+    "..o2222222222o..",
+    "...oo222222oo...",
+    ".....oooooo.....",
+    "................"
+  ]
+}

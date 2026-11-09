@@ -1,0 +1,252 @@
+---
+id: p6-04
+discipline: pixel
+level: 6
+order: 4
+title: "VFX: un impacto en cinco frames"
+summary: "Un efecto se lee por forma y timing, no por detalle. Anima un impacto de 16×16 que crece rápido y se apaga despacio: destello, estallido, anillo, humo y nada, en su propia capa."
+duration: 40
+status: borrador
+objectives:
+  - "Leer un efecto por su forma y su timing antes que por su detalle"
+  - "Ordenar un impacto en fases: destello, estallido, disipación, humo y nada"
+  - "Dar al efecto un timing asimétrico: crece rápido y se apaga despacio"
+  - "Enfriar el color y vaciar el centro a medida que el efecto muere"
+  - "Animar el efecto en su propia capa de Aseprite y probarlo sobre fondos claros y oscuros"
+prerequisites: [p6-01]
+fundamentals: [f01]
+tools: [aseprite]
+piece:
+  name: "Un impacto propio de 16×16 en 4–6 frames, en capa aparte, probado sobre fondo claro y oscuro"
+  canvas: "16x16"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [impacto]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Vas a forjar **un impacto de 16×16**: el efecto que salta cuando una espada golpea o un proyectil choca. Dura menos de medio segundo y, aun así, es lo que hace que un golpe **se sienta**.
+
+Dale a *Reproducir*. Son 5 frames y el primero apenas se ve.
+
+<Animator sprites={["vfx-hit-1", "vfx-hit-2", "vfx-hit-3", "vfx-hit-4", "vfx-hit-5"]} durations={[40, 70, 90, 130, 200]} />
+
+El laboratorio lo repite en bucle para que lo estudies. En un juego se reproduce **una vez** y, tras el último frame, la capa queda vacía.
+</Block>
+
+<Block kind="concepto">
+**Un efecto se lee por forma y timing, no por detalle.** Pasa tan rápido que el ojo no tiene tiempo de ver texturas. Solo capta tres cosas: qué tamaño tiene, qué forma tiene y cuánto dura cada momento.
+
+### Las cinco fases
+
+Mira cada frame por separado:
+
+<Sprite name="vfx-hit-1" scale={10} caption="Frame 1 · destello: un rombo de 6×6 en el centro, blanco por dentro y con borde amarillo. Solo 24 píxeles" />
+
+<Sprite name="vfx-hit-2" scale={10} caption="Frame 2 · estallido: una estrella de 4 puntas de 14×14. El centro es blanco, los brazos amarillos y las puntas naranjas. Es el frame más grande y más brillante" />
+
+<Sprite name="vfx-hit-3" scale={10} caption="Frame 3 · disipación: un anillo naranja abierto con el centro vacío. En las cuatro diagonales hay chispas amarillas y rojas. Ya no queda blanco" />
+
+<Sprite name="vfx-hit-4" scale={10} caption="Frame 4 · humo: tres bolas de humo gris, con el centro claro y el borde oscuro, donde estuvo el anillo" />
+
+<Sprite name="vfx-hit-5" scale={10} caption="Frame 5 · restos: tres manchas pequeñas de humo oscuro. Casi nada" />
+
+Y después, **nada**: el efecto se ha ido.
+
+| Frame | Fase | Colores | Forma |
+| --- | --- | --- | --- |
+| 1 | Destello | blanco, amarillo | rombo pequeño, macizo |
+| 2 | Estallido | blanco, amarillo, naranja | estrella grande, maciza |
+| 3 | Disipación | amarillo, naranja, rojo | anillo, centro vacío |
+| 4 | Humo | dos grises | tres bolas |
+| 5 | Restos | gris oscuro | tres manchas |
+
+### Tres reglas que se ven en la tabla
+
+**1. Crece rápido y se apaga despacio.** El destello y el estallido duran 40 y 70 ms. El humo, 130 y 200 ms. El golpe es instantáneo; lo que deja detrás tarda en irse.
+
+<Why>
+Es el principio de **timing** que viste en P6-01, llevado al extremo. Un golpe real libera la energía de golpe: si el estallido tarda en llegar, se lee como un globo que se hincha, no como un impacto. Y si todo desaparece igual de rápido, el ojo no tiene tiempo de registrar que ha pasado algo. El primer frame es tan corto que casi no se ve, pero marca **el instante exacto** del golpe.
+</Why>
+
+**2. El color se enfría.** Del blanco y el amarillo (lo más caliente y claro) al naranja y el rojo, y de ahí al gris. Cada frame usa menos colores y más oscuros: 2, 3, 3, 2 y 1.
+
+<Why>
+Es el fundamento de **valor** (F01): el frame más claro es el más importante. El blanco del estallido es el punto más claro de toda la pantalla y por eso atrae la vista justo cuando debe. Luego el valor baja y el efecto deja de competir con el personaje. El fuego real hace lo mismo: blanco donde quema más, rojo al enfriarse y humo al final.
+</Why>
+
+**3. El centro se vacía.** Los frames 1 y 2 son macizos. En el 3 el centro está vacío: la energía se aleja hacia fuera, como una onda. En el 4 y el 5 solo quedan trozos sueltos en la zona del anillo.
+
+<Tip title="Cuenta los píxeles">
+Frame a frame, el efecto ocupa 24, 64, 72, 52 y 14 píxeles. Crece hasta el anillo y luego decrece. Pero fíjate en el **brillo**, no solo en el tamaño: el frame 3 tiene más píxeles que el 2 y, aun así, se ve más débil, porque ha perdido el blanco y el centro.
+</Tip>
+
+### El mismo dibujo con el timing plano
+
+Estos son los mismos 5 frames con **100 ms cada uno**:
+
+<Animator sprites={["vfx-hit-1", "vfx-hit-2", "vfx-hit-3", "vfx-hit-4", "vfx-hit-5"]} durations={[100, 100, 100, 100, 100]} />
+
+El destello se queda demasiado y parece un objeto, no un fogonazo. El humo se va igual de rápido que llegó el estallido. El resultado es un parpadeo de colores, sin peso.
+
+Prueba en el primer animador:
+
+1. Sube el frame 1 a 200 ms. El golpe se vuelve lento, como si «cargara».
+2. Baja los frames 4 y 5 a 40 ms. El humo desaparece de golpe y el impacto se siente seco y barato.
+3. Sube el frame 5 a 400 ms. El humo flota más. Va bien para una explosión grande; para un golpe de espada, sobra.
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Lienzo y capas">
+1. <Keys k="Ctrl+N" />: 16×16, fondo transparente. Activa *View → Grid*.
+2. Guarda con <Keys k="Ctrl+S" /> como `impacto.aseprite`.
+3. Desde el menú *Layer*, crea capas nuevas hasta tener **cuatro**. Renómbralas con doble clic sobre su nombre en la línea de tiempo. De abajo arriba:
+   - `fondo claro`: rellénala con el cubo (<Keys k="G" />) de un color claro, por ejemplo un beige o un verde hierba;
+   - `fondo oscuro`: rellénala de un color oscuro, por ejemplo un azul noche;
+   - `personaje` (opcional): pega un sprite tuyo o deja la capa vacía;
+   - `vfx`: aquí va el efecto. Siempre **arriba del todo**.
+4. Oculta `fondo oscuro` con el icono del ojo de su capa.
+
+<Why>
+El efecto en su propia capa se puede borrar, mover o reutilizar sin tocar nada más. Y es así como llegará al juego: un sprite aparte que se dibuja **encima** del personaje golpeado. Si lo pintas sobre el personaje en la misma capa, no podrás separarlos nunca.
+</Why>
+
+<Tip>
+Crea las cuatro capas **antes** de añadir frames. Cada frame nuevo copia lo que hay en el actual, así que los fondos aparecerán en todos los frames sin rellenarlos uno a uno.
+</Tip>
+</Step>
+
+<Step n={2} title="Cinco frames con su duración">
+Selecciona la capa `vfx`. Añade frames nuevos desde el menú *Frame* hasta tener **5**. Luego, clic derecho sobre el número de cada frame y abre *Frame Properties*. Pon:
+
+- Frame 1: **40 ms**.
+- Frame 2: **70 ms**.
+- Frame 3: **90 ms**.
+- Frame 4: **130 ms**.
+- Frame 5: **200 ms**.
+
+<Why>
+Pones el timing **antes** de dibujar porque en un efecto el timing manda. Así, cada vez que pruebes la animación, ya la verás a su velocidad real.
+</Why>
+</Step>
+
+<Step n={3} title="Destello y estallido">
+Trabaja siempre en la capa `vfx`, con el lápiz (<Keys k="B" />).
+
+1. **Frame 1:** un rombo pequeño en el centro, de unos 6×6: blanco dentro y un borde amarillo.
+2. **Frame 2:** el estallido. Una estrella de 4 puntas que llegue casi al borde del lienzo: el centro blanco, los brazos amarillos y las puntas naranjas. Que sea el frame **más grande y más claro** de todos.
+
+<Tip>
+Dibuja formas macizas y simples. A 16×16 y en 70 ms nadie verá un degradado de 5 tonos. Con 2–3 colores por frame basta.
+</Tip>
+</Step>
+
+<Step n={4} title="Anillo: el centro se vacía">
+**Frame 3:** borra el centro con la goma (<Keys k="E" />) y deja un anillo abierto alrededor, casi tan ancho como el estallido. Usa naranja y añade unas chispas amarillas y rojas fuera de los ejes, por ejemplo en las diagonales.
+
+Aquí **ya no hay blanco**: es el primer paso del enfriamiento.
+
+<Why>
+El hueco del centro dice que la energía se aleja del punto del golpe. Sin él, el anillo parece una mancha que se queda quieta.
+</Why>
+</Step>
+
+<Step n={5} title="Humo y restos">
+1. Activa el onion skin (el botón está en la línea de tiempo) para ver el anillo del frame 3 en transparencia.
+2. **Frame 4:** dibuja 2–4 bolas de humo **sobre el recorrido del anillo**, con dos grises: uno claro dentro y uno oscuro en el borde.
+3. **Frame 5:** deja solo unos restos pequeños con el gris oscuro, en los mismos sitios que las bolas.
+
+<Why>
+El humo nace donde estaba el fuego. Si las bolas aparecen en otro sitio, el ojo ve dos efectos distintos en vez de uno que se disipa. El onion skin te dice dónde estaba.
+</Why>
+</Step>
+
+<Step n={6} title="Prueba sobre los dos fondos">
+Reproduce (botón de *play* de la línea de tiempo) sobre el `fondo claro`. Luego oculta esa capa, muestra `fondo oscuro` y reprodúcelo otra vez.
+
+Pregúntate en cada fondo:
+
+- ¿Se ve el destello aunque dure 40 ms?
+- ¿Se distingue el humo del fondo, o desaparece antes de tiempo?
+
+Si en el fondo claro el estallido se pierde, oscurece el borde naranja. Si en el oscuro el humo se funde, aclara un poco el gris oscuro.
+
+<Warn>
+Un efecto que solo funciona sobre un fondo no sirve: en el juego pasará por encima de hierba, piedra, agua y cielo. Pruébalo siempre en los dos extremos.
+</Warn>
+</Step>
+
+<Step n={7} title="Exporta solo el efecto">
+Oculta las dos capas de fondo y la del personaje, y deja visible solo `vfx`.
+
+1. Para enseñarlo: *File → Export → Export As*, formato **GIF**, con **Resize** al 400 % o más. Puedes hacer otro GIF con un fondo visible para que se vea en contexto.
+2. Para un juego: *File → Export → Export Sprite Sheet*, en una fila horizontal, PNG a 1× y fondo transparente. Apunta las duraciones (40, 70, 90, 130, 200) o exporta también el JSON.
+</Step>
+
+<Warn title="Verifica en tu versión">
+Los nombres y la posición pueden variar según la versión de Aseprite: el menú *Layer* para crear capas, el icono del ojo, el doble clic para renombrar, la opción de frame nuevo del menú *Frame*, *Frame Properties* (clic derecho sobre el frame), el botón de onion skin y las opciones de *Export Sprite Sheet* (qué capas se exportan, salida JSON). Comprueba también que la exportación deja fuera las capas ocultas. Si no encuentras algo, búscalo por nombre en los menús.
+</Warn>
+</Block>
+
+<Block kind="version">
+Ahora a tu manera. Mantén el orden de las fases, el timing asimétrico y la capa aparte. Elige uno:
+
+- **Otro elemento:** un impacto de hielo (del blanco al azul claro y de ahí a cristales que se deshacen) o de magia (del blanco al violeta y a chispas que caen). Las fases son las mismas; cambian los colores y la forma de los restos.
+- **Otra fuerza:** un golpe flojo en 4 frames, más pequeño y sin humo, y un golpe crítico en 6, con un estallido más grande y un humo más largo. Compara sus duraciones.
+- **Con dirección:** un impacto que salga hacia un lado, como si el golpe viniera de la izquierda: el estallido y las chispas se abren hacia la derecha.
+</Block>
+
+<Block kind="errores">
+<Mistake title="Todos los frames con la misma duración" wrongLabel="5 × 100 ms" rightLabel="40 + 70 + 90 + 130 + 200 ms">
+  <p slot="wrong">El destello dura tanto como el humo. El golpe parece un parpadeo de colores, sin peso y sin instante.</p>
+  <p slot="right">Crece en 110 ms y se apaga en 420. El golpe es seco y el humo deja que el ojo lo registre.</p>
+
+Compara los dos animadores del concepto: son los mismos 5 dibujos. Corrígelo acortando el arranque (destello y estallido) y alargando la cola (humo y restos).
+</Mistake>
+
+<Mistake title="Que desaparezca de golpe" wrongLabel="Último frame: el estallido" rightLabel="Último frame: los restos">
+  <Sprite slot="wrong" name="vfx-hit-2" scale={8} />
+  <Sprite slot="right" name="vfx-hit-5" scale={8} />
+
+Si la animación termina en el estallido (izquierda) y el siguiente frame ya está vacío, el efecto se corta: el frame más grande y más claro se apaga de un tirón y el ojo lo lee como un error. Corrígelo añadiendo la cola: anillo, humo y unos restos pequeños y oscuros (derecha) antes de la nada. Cada frame de la cola debe ser más pequeño o más oscuro que el anterior.
+</Mistake>
+
+<Warn title="Demasiado detalle o ruido">
+Un efecto lleno de píxeles sueltos, degradados de muchos tonos o chispas por todas partes no se lee a 70 ms: solo se ve una mancha que vibra. Además, cada píxel suelto cambia de sitio en cada frame y el efecto «hierve». Corrígelo con formas grandes y macizas (rombo, estrella, anillo, bolas) y 1–3 colores por frame. Las chispas, pocas y con un sitio claro, como las cuatro diagonales del frame 3.
+</Warn>
+
+<Warn title="Colores que no destacan sobre el fondo">
+Si el efecto tiene un valor parecido al del fondo, se pierde: un estallido amarillo sobre un cielo claro, o un humo gris oscuro sobre una cueva. Corrígelo con contraste de valor: el estallido debe ser **lo más claro de la pantalla**, y el humo, distinto del fondo en los dos extremos que pruebas. Si no basta, ponle al estallido un borde más oscuro (como el naranja de las puntas del frame 2), que lo separa de los fondos claros.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+Juzga tu impacto **a 1×** y a su velocidad real, sobre los dos fondos. Si tienes que pararlo para entenderlo, la forma no está clara.
+
+<Checklist items={[
+  "Tengo entre 4 y 6 frames en una capa propia, encima de todo",
+  "El orden es destello, estallido, disipación, humo y nada",
+  "El primer frame es el más corto y los últimos, los más largos",
+  "El estallido es el frame más grande y más claro",
+  "El color se enfría: del blanco y el amarillo al gris",
+  "El centro se vacía después del estallido",
+  "El último frame es pequeño y oscuro: el efecto no se corta de golpe",
+  "Uso formas simples y pocos colores por frame, sin ruido",
+  "Lo he probado sobre un fondo claro y otro oscuro y se lee en los dos",
+  "He exportado solo la capa del efecto, con fondo transparente, y he apuntado las duraciones",
+]} />
+
+<Quiz q="¿Qué frame de un impacto debería durar menos?" options={["El humo final, para que no estorbe", "El destello inicial", "Todos igual, para que sea regular"]} answer={1}>
+El destello marca el instante del golpe: muy corto. Lo que tarda es la cola, el humo que se disipa.
+</Quiz>
+
+<Quiz q="¿Por qué el efecto pasa del blanco y el amarillo al gris?" options={["Porque el valor baja: el momento clave es el más claro y luego deja de competir con el personaje", "Porque Aseprite limita los colores por frame", "Para que el archivo pese menos"]} answer={0}>
+Es valor antes que tono. El blanco atrae la vista justo en el golpe; el gris se retira para que vuelvas a mirar a los personajes.
+</Quiz>
+
+<Quiz q="¿Por qué conviene dibujar el efecto en su propia capa?" options={["Porque así se reproduce más rápido", "Porque Aseprite no deja animar en la capa del personaje", "Porque se puede exportar y reutilizar aparte, y en el juego se dibuja encima de lo que recibe el golpe"]} answer={2}>
+Un efecto es un sprite independiente: el mismo impacto sirve para cualquier personaje y cualquier fondo.
+</Quiz>
+</Block>

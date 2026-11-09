@@ -1,0 +1,258 @@
+---
+id: f06-01
+discipline: fundamentos
+level: 6
+order: 1
+title: "Materiales: cómo responde cada superficie a la luz"
+summary: "Misma forma, misma luz: el material es cómo responde la superficie. Cuatro preguntas para leer cualquier material y pintarlo en pixel o asignarlo en voxel."
+duration: 45
+status: borrador
+prerequisites: [f05-01]
+fundamentals: [f06]
+objectives:
+  - "Entender el material como respuesta a la luz, no como forma ni como color"
+  - "Analizar cualquier material con cuatro preguntas: difusa, brillo, entorno y transmisión"
+  - "Traducir esas respuestas a tonos y brillos en pixel art"
+  - "Traducirlas a materiales de render de MagicaVoxel (Diffuse, Metal, Glass)"
+tools: [aseprite, magicavoxel]
+piece:
+  name: "La misma esfera en cuatro materiales en pixel (16×16) y una esfera voxel renderizada con dos materiales"
+  canvas: "16x16"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [cuatro-superficies]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Ya pintaste materiales en P4-01 y los asignaste en el render en V3-02. Hoy juntas las dos cosas en **un solo principio**.
+
+Vas a forjar:
+
+- **la misma esfera de 16×16 en cuatro materiales**: mate, brillante, metal y cristal. Misma forma, misma luz arriba a la izquierda;
+- **la misma esfera voxel renderizada dos veces** en MagicaVoxel, con el mismo color, la misma cámara y el mismo sol, pero con **dos materiales distintos**.
+
+<Sprite name="ball-mate" scale={10} caption="ball-mate: arcilla. Tres tonos cálidos, sin brillo" />
+
+<Sprite name="ball-gloss" scale={10} caption="ball-gloss: los mismos tres tonos más un brillo de 2×2 casi blanco. Plástico o barniz" />
+
+<Sprite name="ball-metal" scale={10} caption="ball-metal: grises azulados, brillo blanco grande, banda casi negra bajo el centro y tono medio abajo" />
+
+<Sprite name="ball-glass" scale={10} caption="ball-glass: azul oscuro casi uniforme, brillo blanco arriba a la izquierda y la luz acumulada abajo a la derecha" />
+
+Las cuatro tienen **el mismo contorno y la misma silueta**. Lo único que cambia es cómo reparten la luz.
+</Block>
+
+<Block kind="concepto">
+**La forma la da la luz. El material es la manera de responderle.** Con la forma y la luz fijas, un material se define por cuatro respuestas.
+
+### Las cuatro preguntas
+
+Delante de cualquier superficie, real o pintada, pregúntate:
+
+1. **¿Cómo reparte la luz difusa?** ¿Cuántos tonos, cómo de separados en valor y cómo de suave es el paso al terminador?
+2. **¿Tiene brillo especular?** Si lo tiene: ¿grande o pequeño? ¿De borde duro o difuminado?
+3. **¿Refleja el entorno?** ¿Ves en la superficie el cielo, el horizonte o el suelo, en vez de su propio color?
+4. **¿Deja pasar la luz?** ¿Se ve el fondo a través? ¿Se acumula luz en el lado **contrario** a la fuente?
+
+Con esas cuatro respuestas puedes pintar o configurar casi cualquier material.
+
+<Why title="Lo mismo que en Blender">
+Vienes de Blender: las cuatro preguntas son, a grandes rasgos, el color base con la *Roughness* (difusa y tamaño del brillo), el nivel especular, el *Metallic* (refleja el entorno) y la *Transmission* (deja pasar la luz). En pixel art no hay motor: **cada respuesta es una decisión de tonos que tomas tú**.
+</Why>
+
+### Las cuatro esferas, pregunta a pregunta
+
+**Mate (`ball-mate`).** Difusa amplia y suave: el tono claro ocupa casi todo el cuadrante de arriba a la izquierda y baja en diagonal hasta el oscuro. Sin brillo, sin entorno, sin transmisión.
+
+**Brillante (`ball-gloss`).** Es **exactamente** la mate más 4 píxeles: un brillo de 2×2 casi blanco dentro de la zona clara. La difusa no cambia. El brillo pequeño y de borde duro dice «superficie lisa».
+
+<Tip title="Un brillo cambia el material">
+Compara `ball-mate` y `ball-gloss`: solo se diferencian en esos 4 píxeles. Un brillo pequeño basta para pasar de arcilla a plástico. Por eso **nunca** pongas un píxel blanco en un material que quieras mate.
+</Tip>
+
+**Metal (`ball-metal`).** Apenas tiene difusa propia: lo que ves es el **entorno reflejado**. Arriba, el cielo claro con un brillo blanco grande de borde duro. Bajo el centro, dos filas casi negras de lado a lado: el horizonte. Abajo, un tono medio: el suelo reflejado. Los saltos entre tonos son bruscos.
+
+**Cristal (`ball-glass`).** Casi todo el interior es un azul oscuro uniforme: es el **fondo que se ve a través**. Un brillo blanco duro arriba a la izquierda, por donde entra la luz. Y la clave: el tono más claro de la bola está **abajo a la derecha**, en el lado opuesto a la fuente. La luz cruza la esfera y se concentra al salir.
+
+<Why title="Por qué el cristal se ilumina al revés">
+Una esfera transparente funciona como una lente: la luz que entra por arriba a la izquierda se desvía y se junta en el lado contrario. En un objeto opaco, ese lado está en sombra. En el cristal, es lo más claro después del brillo. Si pintas la luz solo en el lado de la fuente, la bola se lee sólida.
+</Why>
+
+### Compáralas en valor
+
+Pon la mate y la metálica en grises. Misma bola, misma luz:
+
+<Sprite name="ball-mate" scale={8} view="gray" caption="Mate en grises: tres valores medios y juntos. Ni blanco ni casi negro" />
+
+<Sprite name="ball-metal" scale={8} view="gray" caption="Metal en grises: del blanco del brillo al casi negro de la banda. Usa todo el rango" />
+
+<Sprite name="ball-glass" scale={8} view="gray" caption="Cristal en grises: una masa oscura, un brillo arriba y lo claro abajo a la derecha. Lo contrario de una bola opaca" />
+
+El **rango de valor** es lo primero que lee el ojo: estrecho es mate, extremo es metal. El color viene después (F01).
+
+### La tabla mental
+
+| | Difusa | Brillo | Entorno | Transmisión |
+|---|---|---|---|---|
+| **Mate** | Amplia y suave | No | No | No |
+| **Brillante** | Amplia y suave | Pequeño y duro | Apenas | No |
+| **Metal** | Casi ninguna | Grande y duro | Sí: cielo, horizonte, suelo | No |
+| **Cristal** | Casi ninguna | Pequeño y duro | Algo | Sí: fondo visible y luz al otro lado |
+
+### Cómo se traduce en cada mundo
+
+- **En pixel**, cada respuesta es una decisión: cuántos tonos, cómo de separados en valor, si hay brillo y de qué tamaño, si hay banda de horizonte, dónde va lo claro.
+- **En voxel**, el material va pegado a un **color de la paleta** (V3-02). *Diffuse* responde como la mate; *Metal* refleja el entorno; *Glass* deja pasar la luz; *Emit* emite la suya. El render **calcula** las respuestas que en pixel pintas a mano. Tú eliges el tipo y sus parámetros (rugosidad, transparencia…).
+
+<Why title="El color sigue mandando">
+Ni en pixel ni en voxel el material arregla un mal valor. Un metal con valores juntos se lee plástico, y un cristal oscuro y macizo se lee piedra. Primero el valor; después el material.
+</Why>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Una bola base para los cuatro materiales">
+1. <Keys k="Ctrl+N" />: 16×16, modo RGBA, fondo transparente. Activa *View → Grid*.
+2. Lápiz (<Keys k="B" />) con *Pixel-perfect*: un círculo limpio de unos 14 píxeles de ancho, con contorno oscuro.
+3. Guarda con <Keys k="Ctrl+S" /> como `bola-base` y haz una copia por material.
+
+<Why>
+Si la forma, el contorno y la luz son idénticos, cualquier diferencia que veas es **solo** material. Es un experimento con una sola variable.
+</Why>
+</Step>
+
+<Step n={2} title="Mate: responde solo a la primera pregunta">
+Tres tonos de un color cálido, **cercanos en valor**. Rellena con el medio (<Keys k="G" />), pinta el claro en una zona amplia arriba a la izquierda y el oscuro abajo a la derecha. Terminador en diagonal y suave. Ni un píxel blanco.
+
+<Tip>
+Copia la estructura de `ball-mate`: la zona clara es grande y el paso a la sombra va en escalones tranquilos, sin saltos.
+</Tip>
+</Step>
+
+<Step n={3} title="Brillante: la mate más un brillo">
+Abre la copia de la mate. Añade **un brillo de 2×2** de un color casi blanco y algo cálido, **dentro** de la zona clara, cerca de la luz. No toques nada más.
+
+<Warn>
+El brillo no va pegado al contorno. Si lo pones en el borde, parece una mella o un píxel suelto. Déjalo al menos a un píxel de distancia.
+</Warn>
+</Step>
+
+<Step n={4} title="Metal: el entorno manda">
+1. Paleta fría: un casi negro, un gris medio, un gris claro y **blanco puro**.
+2. Mitad de arriba en gris claro: el cielo reflejado. Dentro, un **brillo blanco grande** de borde duro, arriba a la izquierda.
+3. Un poco por debajo del centro, **dos filas del casi negro** de lado a lado: el horizonte.
+4. Debajo, el gris medio: el suelo reflejado.
+
+<Why>
+El metal pulido no tiene una difusa que repartir: enseña lo que le rodea. Por eso los saltos son bruscos y la banda oscura cruza la bola entera.
+</Why>
+</Step>
+
+<Step n={5} title="Cristal: la luz sale por el otro lado">
+1. Rellena el interior con un azul oscuro casi uniforme: es el fondo visto a través.
+2. Un brillo blanco de unos 5–6 píxeles arriba a la izquierda, por donde entra la luz.
+3. Una media luna del azul **más claro** pegada al borde de **abajo a la derecha**: la luz que atraviesa la esfera y se acumula al salir.
+4. Algún píxel de un azul medio en el borde, para que el contorno no se trague la bola.
+
+<Tip title="Con transparencia de verdad">
+`ball-glass` simula el fondo con un color oscuro opaco. En P4-01 viste la otra vía (`mat-glass`): bajar el **alfa** del interior para que se vea el fondo real. Las dos valen; la de alfa funciona sobre cualquier fondo.
+</Tip>
+</Step>
+
+<Step n={6} title="Compruébalas en grises">
+Exporta las cuatro a 1× con *File → Export → Export As* y súbelas al Inspector una a una. Pulsa **Grises**.
+
+<Inspector upload title="Tus cuatro esferas en grises" />
+
+Comprueba: la mate, valores juntos; la brillante, igual más un punto claro; el metal, del blanco al casi negro; el cristal, oscuro con lo claro abajo a la derecha.
+</Step>
+
+<Step n={7} title="La misma esfera voxel con dos materiales">
+Este es el modelo de partida. Descárgalo del visor o modela una esfera parecida con *Attach*:
+
+<VoxViewer model="primitivas" stage={1} title="La esfera de las primitivas: un solo color" />
+
+1. Abre la esfera en MagicaVoxel. Tiene **un solo color** de la paleta.
+2. Pulsa *Render*. Fija la cámara y coloca el sol arriba a la izquierda, como en F05-01. Con el material *Diffuse* (el de por defecto), guarda la imagen: `esfera-diffuse.png`.
+3. **Sin tocar ni cámara ni sol**, selecciona ese color en la paleta y, en el panel de materiales, cambia el tipo a **Metal** (o a **Glass**). Renderiza y guarda: `esfera-metal.png` (o `esfera-glass.png`).
+4. Pon los dos PNG juntos y pasa las cuatro preguntas a cada uno.
+
+<Why>
+Mismo color, misma forma, misma luz: lo que cambia entre los dos renders es **exactamente** la respuesta del material. Es la versión voxel de tus cuatro esferas.
+</Why>
+
+<Tip>
+Si el metal sale casi negro, no hay nada claro que reflejar. Cambia el cielo o la luz del entorno en los paneles del modo Render (V3-02).
+</Tip>
+
+<Warn title="El visor web no simula materiales">
+El visor de esta página solo muestra colores planos. Metal, Glass y Emit se ven únicamente en el modo Render de MagicaVoxel.
+</Warn>
+</Step>
+
+<Warn title="Verifica en tu versión">
+El nombre y la ubicación del panel de materiales, de los tipos (*Diffuse*, *Metal*, *Glass*, *Emit*) y de sus parámetros (rugosidad, transparencia…) cambian entre versiones de MagicaVoxel. Lo mismo los ajustes del sol y el botón para guardar la imagen del render. Busca el equivalente en la tuya. En Aseprite, el canal alfa se ajusta en el selector de color; su nombre y su sitio también pueden variar.
+</Warn>
+</Block>
+
+<Block kind="version">
+Pasa las cuatro preguntas a un objeto tuyo. Elige un reto:
+
+- **Otra forma, cuatro materiales:** un cubo o un barril pequeño de 16×16 en mate, brillante, metal y cristal. Las cuatro preguntas son las mismas; solo cambia dónde caen las respuestas.
+- **Dos metales:** oro frente a hierro. Mismo rango de valor extremo; cambia solo el tono.
+- **Tercer render:** añade a tu esfera voxel un tercer material (*Glass* si usaste *Metal*, o al revés) y monta una tira con los tres renders.
+
+Antes de pintar, escribe las cuatro respuestas del material. Si no sabes responder alguna, busca una foto de referencia.
+</Block>
+
+<Block kind="errores">
+<Mistake title="Un metal que es solo un plástico" wrongLabel="Brillo sobre valores juntos" rightLabel="Rango extremo y horizonte">
+  <Sprite slot="wrong" name="ball-gloss" scale={8} view="gray" />
+  <Sprite slot="right" name="ball-metal" scale={8} view="gray" />
+
+Poner un brillo blanco a una bola de valores suaves no la hace metálica: la hace **brillante**. **Corrección**: abre el rango de valor del blanco al casi negro y pinta el entorno, con la banda oscura del horizonte de lado a lado.
+</Mistake>
+
+<Mistake title="Un píxel blanco en la arcilla" wrongLabel="Quería arcilla: sale plástico" rightLabel="Arcilla: sin brillo">
+  <Sprite slot="wrong" name="ball-gloss" scale={8} />
+  <Sprite slot="right" name="ball-mate" scale={8} />
+
+Es la misma bola; la de la izquierda solo tiene 4 píxeles más. Ese brillo dice «superficie lisa». **Corrección**: en un material mate, el tono más claro sigue siendo un tono de la difusa. Nada de blancos.
+</Mistake>
+
+<Mistake title="Cristal iluminado como un objeto opaco" wrongLabel="Luz solo del lado de la fuente" rightLabel="Luz acumulada en el lado opuesto">
+  <Sprite slot="wrong" name="ball-lit" scale={8} />
+  <Sprite slot="right" name="ball-glass" scale={8} />
+
+`ball-lit` es una bola opaca bien iluminada: clara arriba a la izquierda y oscura abajo a la derecha. Si pintas así el cristal, se lee sólido. **Corrección**: interior oscuro (el fondo), brillo pequeño donde entra la luz y lo claro **abajo a la derecha**, donde sale.
+</Mistake>
+
+<Warn title="Error en voxel: comparar renders con la luz cambiada">
+Si entre el render *Diffuse* y el *Metal* giras la cámara o mueves el sol, ya no comparas materiales: comparas luces. **Corrección**: fija cámara y sol antes del primer render y cambia **solo** el material.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+<Checklist items={[
+  "Mis cuatro esferas tienen la misma forma, el mismo contorno y la luz arriba a la izquierda",
+  "La mate no tiene ningún píxel blanco y sus valores están juntos",
+  "La brillante es la mate más un brillo pequeño dentro de la zona clara",
+  "En grises, el metal va del blanco al casi negro y tiene la banda del horizonte",
+  "En el cristal, lo más claro después del brillo está abajo a la derecha",
+  "Mis dos renders voxel tienen el mismo color, la misma cámara y el mismo sol; solo cambia el material",
+  "He guardado los cuatro .aseprite, el .vox y los PNG en mi portfolio",
+]} />
+
+<Quiz q="Pintas una bola con tres tonos suaves y le añades un brillo blanco de 2×2. ¿Qué material lee el ojo?" options={["Metal pulido", "Plástico o barniz brillante", "Cristal"]} answer={1}>
+La difusa sigue siendo suave y el rango de valor, estrecho. El brillo pequeño solo dice «liso». Para metal hace falta contraste extremo y el entorno reflejado.
+</Quiz>
+
+<Quiz q="Luz arriba a la izquierda. ¿Dónde va la zona clara más grande (sin contar el brillo) en una esfera de cristal?" options={["Arriba a la izquierda, junto al brillo", "Abajo a la derecha, en el lado opuesto a la luz", "Repartida por todo el borde"]} answer={1}>
+La luz atraviesa la esfera y se concentra al salir, en el lado contrario a la fuente. Es lo que distingue el cristal de un objeto opaco.
+</Quiz>
+
+<Quiz q="En MagicaVoxel, ¿qué tipo de material corresponde a la tercera pregunta, «¿refleja el entorno?»?" options={["Diffuse", "Metal", "Emit"]} answer={1}>
+*Metal* toma su aspecto de lo que le rodea. *Diffuse* responde como la arcilla y *Emit* emite luz propia.
+</Quiz>
+</Block>

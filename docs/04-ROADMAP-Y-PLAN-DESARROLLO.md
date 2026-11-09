@@ -102,6 +102,18 @@
   - **El Inspector con subida de imagen desbordaba la página** unos 40–60 px: un canvas vacío mide 300 px y el campo de archivo no encogía.
   - **Los sprites grandes** se encogen a su columna.
 
+**Contenido · sexto bloque: 6 lecciones más (43 en total).**
+- **Pixel:** P6-03 Squash & stretch (el salto del slime), P6-04 VFX (un impacto en cinco frames), P7-02 Agua animada.
+- **Voxel:** V7-01 Dioramas, V8-01 Render final.
+- **Fundamentos:** F06-01 Materiales.
+- **Arte nuevo:**
+  - salto del slime en 16×20 (reposo, squash, stretch, punto alto y dos errores: rígido y sin volumen);
+  - impacto de 16×16 en 5 frames, del destello al humo;
+  - tile de agua en 3 frames sin costuras y un frame «que hierve» como error;
+  - la misma esfera en mate, brillante, metal y cristal;
+  - modelo «diorama» (base con estratos, casa y árbol del kit, detalles).
+- **Componentes:** `<Animator sprites={[…]}>` acepta frames con paletas distintas si no se contradicen (los VFX usan menos colores según el frame).
+
 **Lecciones aprendidas durante la fase 1:**
 - **`BASE_URL` sin barra final.** Astro 7 da `BASE_URL` sin barra final, así que hay que usar siempre `src/lib/url.ts`. El validador detecta enlaces sin la base.
 - **Colecciones nuevas en local.** El servidor de desarrollo no ve colecciones de contenido nuevas: hay que reiniciarlo (`npx astro dev --force`).

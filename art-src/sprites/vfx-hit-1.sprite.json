@@ -1,0 +1,32 @@
+{
+  "name": "vfx-hit-1",
+  "description": "Impacto, frame 1: un destello pequeño y blanco. Dura muy poco; su trabajo es marcar el instante del golpe.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "vfx",
+    "animación"
+  ],
+  "palette": {
+    "w": "#ffffff",
+    "y": "#ffe58a"
+  },
+  "rows": [
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    ".......yy.......",
+    "......ywwy......",
+    ".....ywwwwy.....",
+    ".....ywwwwy.....",
+    "......ywwy......",
+    ".......yy.......",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................"
+  ]
+}

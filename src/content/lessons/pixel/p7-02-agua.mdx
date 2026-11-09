@@ -1,0 +1,263 @@
+---
+id: p7-02
+discipline: pixel
+level: 7
+order: 2
+title: "Agua animada: un tile que fluye"
+summary: "Anima un tile de agua de 16×16 en 3–4 frames: sin costuras en ningún frame, con un bucle que cierra, pocas crestas que se mueven con coherencia y un valor oscuro que deja destacar lo que va encima."
+duration: 45
+status: borrador
+objectives:
+  - "Entender las dos condiciones de un tile animado: sin costuras en cada frame y bucle que cierra en el tiempo"
+  - "Separar una base quieta de unas pocas crestas que se mueven"
+  - "Distinguir el movimiento coherente del parpadeo («agua que hierve»)"
+  - "Cerrar el bucle con ida y vuelta (1 → 2 → 3 → 2)"
+  - "Dibujar con el Tiled Mode de Aseprite y exportar una spritesheet"
+prerequisites: [p7-01, p6-01]
+fundamentals: [f01]
+tools: [aseprite]
+piece:
+  name: "Tile de agua de 16×16 en 3–4 frames, sin costuras en ningún frame, exportado como spritesheet"
+  canvas: "16x16"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [agua-viva]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Vas a forjar un **tile de agua de 16×16 animado**: 3 dibujos, 4 frames en bucle. Repetido, forma un lago o un río que se mece sin que se vea la rejilla.
+
+Primero, un frame repetido en 3×3:
+
+<Sprite name="tile-water-1" tile={3} scale={4} caption="tile-water-1 repetido: base azul, franjas oscuras y cinco crestas claras por tile. No se ve dónde acaba cada copia" />
+
+Ahora, el tile en movimiento. Dale a *Reproducir*:
+
+<Animator sprites={["tile-water-1", "tile-water-2", "tile-water-3", "tile-water-2"]} durations={[250, 250, 250, 250]} />
+
+<Tip>
+El animador muestra un solo tile, no la cuadrícula. Imagina ese movimiento repetido en todo el lago: por eso cada frame tiene que encajar sin costuras.
+</Tip>
+</Block>
+
+<Block kind="concepto">
+Un tile animado tiene que cumplir **dos cosas a la vez**:
+
+1. **En el espacio:** ningún frame puede tener costuras. El mapa repite el frame que toque en cada momento, así que los tres dibujos tienen que encajar consigo mismos, como el prado de P7-01.
+2. **En el tiempo:** el bucle tiene que **cerrar**. Al pasar del último frame al primero no puede haber un salto.
+
+Si falla la primera, ves la rejilla. Si falla la segunda, ves un tirón cada vez que el bucle vuelve a empezar.
+
+### Base quieta, pocas crestas que se mueven
+
+Compara los tres frames:
+
+<Sprite name="tile-water-1" scale={8} caption="Frame 1" />
+<Sprite name="tile-water-2" scale={8} caption="Frame 2: cada cresta, 1 píxel a la derecha" />
+<Sprite name="tile-water-3" scale={8} caption="Frame 3: cada cresta, 2 píxeles a la derecha del frame 1" />
+
+Qué cambia y qué no:
+
+- **La base** (azul medio) y las **cuatro franjas oscuras** de 4 píxeles son idénticas en los tres frames. Son el «fondo» del agua.
+- **Las cinco crestas** son lo único que se mueve. Cada una tiene 4 píxeles: tres de azul claro en fila y uno de espuma casi blanca encima, en el centro. En cada frame, las cinco avanzan **1 píxel a la derecha**, todas a la vez.
+- Entre un frame y el siguiente cambian **20 píxeles** de 256. Menos de un 8 %.
+
+<Why>
+El ojo sigue lo que se mueve de forma coherente: cinco crestas que avanzan juntas en la misma dirección se leen como **una corriente**. Lo quieto (base y franjas) hace de referencia: sin algo fijo, no hay forma de notar el desplazamiento. Es lo mismo que en el idle de P6-01: anima solo lo que cambia.
+</Why>
+
+Fíjate también en los bordes: la fila de arriba y la de abajo son de base lisa en todos los frames, y las crestas nunca se cortan contra un borde. En el frame 3, la cresta de la fila 10 llega justo a la última columna, sin pasarse. Si siguieras moviéndola, tendría que salir por la derecha y **entrar por la izquierda**, como las matas de P7-01.
+
+### Fluir frente a hervir
+
+Este animador alterna el frame 1 con `tile-water-noise`, un frame con las crestas en sitios que **no tienen relación** con el frame 1:
+
+<Animator sprites={["tile-water-1", "tile-water-noise"]} durations={[250, 250]} />
+
+<Sprite name="tile-water-noise" scale={8} caption="tile-water-noise: las mismas cinco crestas y casi las mismas franjas, pero las crestas están en otras filas" />
+
+Las franjas oscuras casi no cambian (solo pierden un píxel, tapado por la espuma), pero las crestas saltan de unas filas a otras: cambian **40 píxeles** de golpe. El ojo no puede seguir ninguna: ve crestas que aparecen y desaparecen. El agua no fluye, **parpadea**, como si hirviera.
+
+<Why>
+Para que algo se lea como movimiento, cada elemento tiene que estar **cerca de donde estaba** en el frame anterior. Si salta lejos, el cerebro no lo une con el anterior y lo interpreta como «uno se apaga y otro se enciende». Es el mismo *boiling* que viste en P6-01, pero aquí el tile lo repite por todo el mapa.
+</Why>
+
+### El bucle que no cierra
+
+Ahora el error clásico. Las crestas avanzan 1 píxel por frame: frame 1 → 2 (+1), 2 → 3 (+1). Si el bucle fuera **1 → 2 → 3 → 1**, al volver al frame 1 las crestas tendrían que saltar **2 píxeles hacia atrás**. Entre el frame 3 y el 1 cambian 30 píxeles, no 20. El ojo lo ve: avanza, avanza, **tirón atrás**.
+
+Pruébalo: en el primer animador de la lección, ve al último frame (el 4.º, que repite el frame 2) y pulsa *Borrar frame*. Reproduce y mira el tirón.
+
+Hay dos formas de cerrar el bucle:
+
+- **Ida y vuelta (ping-pong): 1 → 2 → 3 → 2.** Las crestas van +1, +1, −1, −1 y vuelven exactamente a su sitio. El agua no avanza: **se mece**, como un lago o una orilla. Cuesta 3 dibujos. Es la que usa esta lección.
+- **Avanzar hasta dar la vuelta entera.** Si cada frame mueve 1 píxel, el bucle cierra cuando la suma llega al ancho del tile: **16 frames**. Entonces cada cresta ha cruzado el borde y ha vuelto a su sitio. Sirve para un río que corre en una dirección, pero son muchos frames para un tile de 16×16.
+
+<Why>
+Un bucle cierra cuando la suma de todos los desplazamientos es 0 (ida y vuelta) o un múltiplo exacto del tamaño del tile (dar la vuelta). Cualquier otra suma deja un salto al final. Haz la cuenta **antes** de dibujar.
+</Why>
+
+### Pocos colores y valor oscuro
+
+`tile-water-1` usa solo **4 colores**: base `#2a6fc9`, franjas `#1f4f9a`, crestas `#6fb8ff` y espuma `#d8f0ff`. De 256 píxeles, 236 son base o franja: el agua es, sobre todo, un azul **medio-oscuro**. Lo claro (crestas y espuma) son solo 20 píxeles.
+
+<Sprite name="tile-water-1" tile={3} scale={4} view="gray" caption="En grises: una masa oscura con algunos destellos. Así lo que vaya encima (el héroe, un barco, la orilla de hierba) destaca por valor" />
+
+<Why>
+Es el principio de **valor** (F01): lo que más contrasta atrae la mirada. El agua es un fondo enorme; si fuera clara o tuviera mucho contraste, competiría con los personajes y, al moverse, cansaría la vista. Un valor oscuro y pocos destellos la dejan detrás, donde debe estar.
+</Why>
+
+<Tip>
+En Godot, el tile acabará en un **TileSet** con animación (los frames del tile en el atlas) o en un **AnimatedSprite2D**. Lo verás en el nivel 9; por ahora, con una spritesheet limpia basta.
+</Tip>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Lienzo, cuatro colores y Tiled Mode">
+1. <Keys k="Ctrl+N" />: 16×16. Activa *View → Grid* y *View → Tiled Mode* en los dos ejes, como en P7-01.
+2. Prepara **4 colores**: base, franja oscura (un poco más oscura que la base), cresta (bastante más clara) y espuma (casi blanca). Sirven los de `tile-water-1`: `#2a6fc9`, `#1f4f9a`, `#6fb8ff` y `#d8f0ff`.
+3. Rellena el lienzo con la base usando el cubo (<Keys k="G" />).
+
+<Why>
+La base y la franja tienen valor **cercano**: son el agua. La cresta y la espuma, valor alto: son los destellos. Dos grupos claros, nada intermedio que ensucie.
+</Why>
+</Step>
+
+<Step n={2} title="Franjas oscuras: lo que no se mueve">
+Con el lápiz (<Keys k="B" />), dibuja 3 o 4 **franjas horizontales** de 3–5 píxeles con el color oscuro. Repártelas sin orden, como las matas de P7-01: ni en columna, ni a la misma distancia.
+
+Mira las copias del Tiled Mode. Si una franja toca el borde derecho, puede seguir por el izquierdo en la misma fila, pero no la cortes a medias.
+
+<Tip>
+Estas franjas no se tocarán en ningún frame. Termínalas bien ahora: cualquier cambio después tendrías que repetirlo en los tres frames.
+</Tip>
+</Step>
+
+<Step n={3} title="Cinco crestas con margen">
+Dibuja **5 crestas**: tres píxeles de cresta en fila y uno de espuma encima, en el centro. Repártelas sin orden y sin tocar las franjas.
+
+Regla para que la animación sea fácil: que ninguna cresta pase de la **columna 13** (contando desde 0). Así, al moverla 2 píxeles en el frame 3, todavía cabe en el lienzo sin cruzar el borde.
+
+<Warn>
+Si una cresta queda pegada a otra o a una franja, al moverse se fundirán en un frame y se separarán en otro: un parpadeo extra. Deja al menos un píxel de base alrededor.
+</Warn>
+
+Guarda con <Keys k="Ctrl+S" /> como `agua.aseprite`. Este es el frame 1.
+</Step>
+
+<Step n={4} title="Frames 2 y 3: todas las crestas, 1 píxel">
+1. Añade un frame nuevo desde el menú *Frame*. Copia el frame 1.
+2. Activa el **onion skin** en la línea de tiempo.
+3. En el frame 2, mueve **cada cresta 1 píxel a la derecha**: pinta de base el píxel izquierdo de la cresta, añade uno de cresta a su derecha y mueve la espuma una columna. Son 4 píxeles por cresta.
+4. Repite en el frame 3: otra vez 1 píxel a la derecha desde el frame 2.
+
+<Why>
+Todas a la vez, todas en la misma dirección y todas la misma distancia. Eso es lo que hace que el ojo vea corriente y no ruido. El onion skin te enseña el fantasma del frame anterior: cada cresta debe asomar exactamente 1 píxel por delante de él.
+</Why>
+
+<Tip>
+Si prefieres, selecciona cada cresta con la selección rectangular (<Keys k="M" />) y arrástrala 1 píxel, mirando el onion skin. Comprueba que no arrastras también un trozo de franja.
+</Tip>
+</Step>
+
+<Step n={5} title="Cierra el bucle: 1 → 2 → 3 → 2">
+Añade un **cuarto frame** que sea una copia exacta del frame 2. Puedes crear el frame 4 al final y copiar en él el contenido del frame 2 con la selección rectangular.
+
+Pon todos los frames a **250 ms** (clic derecho sobre el frame, *Frame Properties*) y reproduce varias vueltas.
+
+<Why>
+Con el frame 4 las crestas vuelven: +1, +1, −1, −1. Al saltar del frame 4 al 1 se mueven 1 píxel, como en cualquier otro paso. No hay tirón.
+</Why>
+
+<Tip>
+Aseprite también permite que una etiqueta (*tag*) se reproduzca en ida y vuelta. Pero muchos motores leen la spritesheet frame a frame: con el frame 4 dibujado, el bucle funciona en cualquier sitio.
+</Tip>
+</Step>
+
+<Step n={6} title="Revisa cada frame repetido">
+Con el Tiled Mode activo y el zoom alejado (rueda del ratón), recorre los cuatro frames uno a uno.
+
+1. ¿En algún frame aparece una cuadrícula o una línea recta en el borde? Corrígelo en ese frame.
+2. ¿Hay una cresta que, repetida, forma retícula con sus copias? Muévela en los tres dibujos por igual.
+3. Reproduce: ¿algo parpadea? Busca el píxel que cambia sin moverse con los demás.
+</Step>
+
+<Step n={7} title="Exporta la spritesheet">
+*File → Export Sprite Sheet*: los 4 frames **en una fila horizontal**, PNG a 1×. Si te deja guardar los datos en JSON, actívalo para conservar las duraciones.
+
+Para enseñarlo, exporta también un GIF ampliado con *File → Export → Export As* y **Resize** al 400 % o más.
+
+<Tip>
+La spritesheet PNG sola no guarda las duraciones. Apúntalas (4 × 250 ms) o exporta el JSON.
+</Tip>
+</Step>
+
+<Warn title="Verifica en tu versión">
+Los nombres y la posición pueden variar según la versión de Aseprite: el submenú de *Tiled Mode*, la creación de frames del menú *Frame*, *Frame Properties*, el botón de onion skin, la dirección de reproducción de las etiquetas (ida y vuelta) y las opciones de *Export Sprite Sheet*. Si no encuentras algo, búscalo por nombre en los menús.
+</Warn>
+</Block>
+
+<Block kind="version">
+Ahora a tu manera. Mantén la base quieta, pocos destellos que se mueven juntos y un bucle que cierra. Elige uno:
+
+- **Lava:** base roja oscura, franjas casi negras y crestas naranja y amarillo. Más lenta: 400 ms por frame. Ojo con el valor: la lava puede ser más clara que el agua, pero el héroe tiene que seguir leyéndose encima.
+- **Pantano:** verdes oscuros y apagados. En lugar de crestas, 2 o 3 burbujas que crecen y vuelven a encogerse (1 → 2 → 3 → 2). Que crezcan en el sitio, no que salten.
+- **Río que corre:** las crestas avanzan siempre a la derecha y el bucle cierra porque la suma de desplazamientos es 16; por ejemplo, 8 frames de 2 píxeles. Las crestas tendrán que cruzar el borde derecho y entrar por el izquierdo en la misma fila. Compáralo con el vaivén.
+</Block>
+
+<Block kind="errores">
+<Mistake title="Agua que hierve" wrongLabel="Crestas en sitios nuevos" rightLabel="Las mismas crestas, 1 píxel más allá">
+  <Sprite slot="wrong" name="tile-water-noise" scale={8} />
+  <Sprite slot="right" name="tile-water-2" scale={8} />
+
+Los dos podrían ser el frame que va después de `tile-water-1`. A la izquierda, las crestas están en otras filas: alternado con el frame 1, cambian 40 píxeles y el agua parpadea. A la derecha, cada cresta está 1 píxel a la derecha de donde estaba: cambian 20 píxeles y el ojo ve corriente. **Arréglalo:** parte siempre de una copia del frame anterior y desplaza las **mismas** crestas.
+</Mistake>
+
+<Mistake title="El bucle que no cierra" wrongLabel="1 → 2 → 3 → 1" rightLabel="1 → 2 → 3 → 2">
+  <p slot="wrong">Las crestas avanzan +1, +1 y, al volver al frame 1, saltan 2 píxeles hacia atrás. En cada vuelta del bucle se nota un tirón.</p>
+  <p slot="right">+1, +1, −1, −1: la suma es 0. El agua se mece y el paso del último frame al primero es igual que los demás.</p>
+
+Haz la cuenta antes de dibujar: la suma de los desplazamientos de todo el bucle tiene que ser 0 (ida y vuelta) o el ancho del tile (16 píxeles). **Arréglalo:** añade el frame 2 al final, o dibuja frames hasta que la suma llegue a 16.
+</Mistake>
+
+<Mistake title="Revisar solo el primer frame" wrongLabel="Un tile solo: parece bien" rightLabel="Repetido: la verdad">
+  <Sprite slot="wrong" name="tile-water-3" scale={8} />
+  <Sprite slot="right" name="tile-water-3" tile={3} scale={4} />
+
+Un frame puede verse perfecto solo y formar costuras o retícula repetido. En `tile-water-3` no pasa, pero tienes que comprobarlo **en cada frame**, no solo en el primero: al mover las crestas, una puede acabar cortada contra un borde o alineada con la de la copia vecina. **Arréglalo:** recorre todos los frames con el Tiled Mode activo.
+</Mistake>
+
+<Warn title="Agua demasiado clara o con demasiado contraste">
+Si la base es clara o hay muchas crestas blancas, el agua se convierte en lo más llamativo de la pantalla y, encima, se mueve. Los personajes y las orillas se pierden. Oscurece la base y deja los destellos en pocos píxeles: en `tile-water-1`, solo 20 de 256.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+Sube **uno de tus frames a 1×** y revísalo con la rejilla y la vista de grises: debe leerse como una masa oscura con algunos destellos. Después, vuelve a Aseprite y reproduce el bucle con el Tiled Mode activo.
+
+<Inspector upload title="Revisa un frame de tu agua" />
+
+<Checklist items={[
+  "Mi tile mide 16×16 y su bucle cierra: 1, 2, 3, 2, o una suma de desplazamientos de 16",
+  "Ningún frame tiene costuras: los he revisado todos con el Tiled Mode",
+  "La base y las franjas oscuras son idénticas en todos los frames",
+  "Solo se mueven unas pocas crestas, todas en la misma dirección y la misma distancia",
+  "Al reproducir no hay parpadeo ni tirón al volver al principio",
+  "Uso 4 colores o menos y el agua es de valor medio-oscuro",
+  "Exporté la spritesheet en una fila a 1×, apunté las duraciones y guardé el .aseprite",
+]} />
+
+<Quiz q="Tus crestas avanzan 1 píxel por frame en 3 frames y el bucle es 1 → 2 → 3 → 1. ¿Qué pasa?" options={["Nada: 3 frames siempre cierran", "Al volver al frame 1, las crestas saltan 2 píxeles hacia atrás", "El tile tiene costuras"]} answer={1}>
+La suma de desplazamientos es +2, no 0 ni 16. Ese salto se ve como un tirón en cada vuelta. Con 1 → 2 → 3 → 2 la suma es 0 y el bucle cierra.
+</Quiz>
+
+<Quiz q="¿Por qué tile-water-1 alternado con tile-water-noise parece hervir?" options={["Porque usa demasiados colores", "Porque las crestas aparecen en sitios sin relación y el ojo no puede seguirlas", "Porque las franjas oscuras se mueven"]} answer={1}>
+El movimiento se lee cuando cada elemento está cerca de donde estaba. Si las crestas saltan a otras filas, el ojo ve destellos que se encienden y se apagan.
+</Quiz>
+
+<Quiz q="¿Por qué conviene que el agua tenga un valor oscuro?" options={["Para que personajes y orillas destaquen encima", "Porque el agua siempre es oscura en la realidad", "Para que la spritesheet pese menos"]} answer={0}>
+El agua es un fondo grande y en movimiento. Si contrasta mucho, compite con lo importante. Oscura y con pocos destellos, se queda detrás.
+</Quiz>
+</Block>

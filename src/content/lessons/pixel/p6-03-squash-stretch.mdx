@@ -1,0 +1,281 @@
+---
+id: p6-03
+discipline: pixel
+level: 6
+order: 3
+title: "Squash & stretch: el salto del slime"
+summary: "Un salto con peso: anticipación aplastada, despegue estirado, una pausa arriba y un aterrizaje que vuelve a aplastar. La forma cambia, pero el volumen se conserva."
+duration: 45
+status: borrador
+objectives:
+  - "Reconocer las fases de un salto: anticipación, despegue, punto alto, caída y aterrizaje"
+  - "Aplastar y estirar una forma conservando más o menos sus píxeles (su volumen)"
+  - "Repartir el timing: frames cortos en lo rápido y largos en el punto alto y en el reposo"
+  - "Animar el salto de tu slime en Aseprite en 6–8 frames en bucle"
+prerequisites: [p6-01]
+fundamentals: [f02]
+tools: [aseprite]
+piece:
+  name: "El salto de tu slime (o tu criatura) en 6–8 frames en bucle"
+  canvas: "16x20"
+xp: { concept: 10, guided: 20, piece: 65 }
+achievements: [squash-stretch]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Vas a forjar **el salto de tu slime**: un bote en el sitio que se repite sin fin. El slime es gelatina, así que no sube como un bloque. Se aplasta para coger impulso, se estira al salir, se redondea arriba y se vuelve a aplastar al caer.
+
+Dale a *Reproducir*. Son 6 frames hechos con solo 4 dibujos.
+
+<Animator sprites={["slime-rest", "slime-squash", "slime-stretch", "slime-apex", "slime-stretch", "slime-squash"]} durations={[300, 120, 80, 200, 80, 120]} />
+
+Ahora el mismo salto **sin deformar**: el slime de reposo sube y baja tal cual.
+
+<Animator sprites={["slime-rest", "slime-rigid"]} durations={[420, 360]} />
+
+El segundo se mueve, pero parece una pieza de plástico duro. El primero parece **blando y vivo**. Esa diferencia es lo que vas a aprender.
+</Block>
+
+<Block kind="concepto">
+**Squash & stretch** (aplastar y estirar) es el principio de animación que da peso y flexibilidad a las cosas. Una forma blanda se deforma cuando la empuja una fuerza: se aplasta al chocar o al coger impulso y se estira cuando sale disparada.
+
+Los cuatro dibujos del salto viven en el mismo lienzo de 16×20. La fila de abajo (la 20) es el suelo.
+
+<Sprite name="slime-rest" scale={8} caption="slime-rest · Reposo: 10 de ancho × 8 de alto, apoyado en el suelo. Una cúpula: estrecha arriba, ancha abajo" />
+<Sprite name="slime-squash" scale={8} caption="slime-squash · Aplastado: 14 de ancho × 5 de alto, apoyado. Es la anticipación y también el aterrizaje" />
+<Sprite name="slime-stretch" scale={8} caption="slime-stretch · Estirado: 11 de alto, 6 de ancho casi todo (8 en lo más ancho). Ya en el aire: 3 filas libres debajo" />
+<Sprite name="slime-apex" scale={8} caption="slime-apex · Punto alto: 10 × 8 otra vez, más redondo que en reposo, con 10 filas de aire debajo" />
+
+### Las fases del salto
+
+1. **Reposo** (`slime-rest`). El punto de partida y de llegada.
+2. **Anticipación** (`slime-squash`). Antes de saltar, el slime **baja** y se ensancha: coge impulso. El ojo lee «va a pasar algo».
+3. **Despegue** (`slime-stretch`). Sale disparado hacia arriba y se estira en la dirección del movimiento. Ya no toca el suelo.
+4. **Punto alto** (`slime-apex`). La velocidad es casi cero. Recupera su forma redonda y se queda un instante arriba.
+5. **Caída** (`slime-stretch` otra vez). Cae rápido y vuelve a estirarse.
+6. **Aterrizaje** (`slime-squash` otra vez). Choca contra el suelo y se aplasta. Después vuelve al reposo.
+
+Solo hay **4 dibujos distintos**. El estirado y el aplastado se usan dos veces: a la ida y a la vuelta.
+
+<Why title="Por qué la anticipación va hacia abajo">
+Para saltar hacia arriba, primero hay que agacharse. Tú lo haces con las rodillas; el slime, con todo el cuerpo. La anticipación es un movimiento **contrario** al principal que lo prepara y lo anuncia. Sin ella, el salto empieza de la nada y parece que lo levanta una mano invisible.
+</Why>
+
+### El volumen se conserva
+
+La gelatina no desaparece al aplastarse: **se reparte**. Si pierde altura, gana anchura. Si se estira, adelgaza. Cuenta los píxeles con dibujo (contorno incluido):
+
+- `slime-rest`: **66** píxeles.
+- `slime-squash`: **56**. Pierde 3 filas de alto, pero gana 4 columnas de ancho.
+- `slime-stretch`: **68**. Gana 3 filas, pero adelgaza.
+- `slime-apex`: **68**.
+
+No son idénticos, y no hace falta: a esta resolución basta con que **se parezcan**. Ahora mira este aplastado mal hecho:
+
+<Sprite name="slime-shrunk" scale={8} caption="slime-shrunk (ERROR) · 5 de alto pero los mismos 10 de ancho: solo 44 píxeles. No se aplasta: encoge" />
+
+Ha perdido un tercio de su cuerpo. En movimiento no parece que el slime se aplaste, sino que **se desinfla** y se vuelve a inflar.
+
+<Why title="Por qué el volumen importa">
+El ojo juzga el tamaño de las cosas por su área, no solo por su altura. Si la masa cambia entre frames, el cerebro deja de creer que es el mismo objeto deformándose y ve un objeto que crece y mengua. Conservar el volumen es lo que hace que la deformación se lea como **material blando** y no como un truco de escala.
+</Why>
+
+### El timing: rápido abajo, lento arriba
+
+Mira las duraciones del salto bueno:
+
+| Frame | Dibujo | ms | Por qué |
+| --- | --- | --- | --- |
+| 1 | reposo | 300 | Descansa antes del siguiente bote |
+| 2 | aplastado | 120 | Anticipación: breve, pero se tiene que ver |
+| 3 | estirado | 80 | Despegue: lo más rápido del salto |
+| 4 | punto alto | 200 | Arriba casi no se mueve: se queda flotando |
+| 5 | estirado | 80 | Cae rápido |
+| 6 | aplastado | 120 | El golpe contra el suelo |
+
+**Frames cortos donde el movimiento es rápido. Frames largos donde es lento.** Cerca del suelo el slime va deprisa; arriba se frena, se para un instante y empieza a caer. Es la gravedad.
+
+Este es el mismo salto con **todos los frames a 150 ms**:
+
+<Animator sprites={["slime-rest", "slime-squash", "slime-stretch", "slime-apex", "slime-stretch", "slime-squash"]} durations={[150, 150, 150, 150, 150, 150]} />
+
+Los dibujos son los mismos, pero el slime ya no pesa: sube y baja como en un ascensor, sin pausa arriba ni golpe abajo.
+
+<Tip title="Experimenta en el primer animador">
+1. Baja el punto alto (frame 4) a 80 ms. El slime rebota contra un techo invisible.
+2. Sube el punto alto a 400 ms. Parece que flota en la Luna.
+3. Pon la anticipación (frame 2) a 40 ms. Casi no se ve y el salto pierde fuerza.
+</Tip>
+
+### Arcos
+
+Todo lo que salta sigue un **arco**: una curva que sube, se aplana arriba y baja. Este slime salta en el sitio, así que su arco es una línea vertical. Si saltara hacia delante, su centro dibujaría una parábola, y cada frame tendría que caer sobre esa curva.
+
+Dos reglas del arco que ya estás aplicando:
+
+- **Arriba, los frames se juntan** (o duran más): la curva se aplana porque el objeto va lento.
+- **Abajo, se separan** (o duran menos): el objeto va rápido.
+
+<Tip>
+Con el onion skin activado, dibuja en una capa aparte un punto en el centro del slime en cada frame. Si los puntos no forman una curva limpia (o una línea recta, si salta en el sitio), algún frame está desplazado.
+</Tip>
+
+### Dónde está la silueta (f02)
+
+El salto se lee por la **silueta**: aplastado ancho, estirado alto, punto alto redondo. Si pones los cuatro dibujos en negro, siguen diciendo qué fase es cada uno. Los ojos y el brillo ayudan, pero el trabajo lo hace el contorno.
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Un lienzo con sitio para saltar">
+1. <Keys k="Ctrl+N" />: **16×20**, fondo transparente. Guárdalo como `slime-salto.aseprite` con *File → Save As*.
+2. Activa *View → Grid*.
+3. Dibuja tu slime en reposo **apoyado en la fila de abajo**: unos 10 de ancho y 8 de alto, con contorno, ojos y brillo. Puedes partir del slime de P5-03 o de tu propia criatura.
+
+<Why>
+El slime ocupa menos de la mitad del lienzo. El resto es aire para el salto: el punto alto necesita unas 10 filas libres. Si el lienzo es justo, el salto se corta contra el borde.
+</Why>
+
+<Tip>
+Cuenta los píxeles de tu reposo (o al menos apunta su ancho y su alto). Es tu referencia de volumen para todos los demás frames.
+</Tip>
+</Step>
+
+<Step n={2} title="Seis frames y su timing">
+1. En la línea de tiempo (*Timeline*), añade frames desde el menú *Frame* hasta tener **6 frames**. Cada uno copia el reposo.
+2. Clic derecho sobre cada número de frame, *Frame Properties*, y pon: **300, 120, 80, 200, 80, 120** ms.
+
+<Why>
+Pon el timing **antes** de dibujar. Así, cada vez que reproduces, ves el salto con su ritmo real y no un pase de diapositivas.
+</Why>
+</Step>
+
+<Step n={3} title="Frame 2: la anticipación (squash)">
+Ve al frame 2 y activa el onion skin (el botón está en la línea de tiempo). Verás el reposo en transparencia.
+
+1. Borra el slime de este frame con la selección rectangular (<Keys k="M" />) y la tecla Supr, o con la goma (<Keys k="E" />).
+2. Con el lápiz (<Keys k="B" />) y *Pixel-perfect* activado, redibuja el slime **más bajo y más ancho**: unos 5 de alto y 14 de ancho. La base sigue en la fila del suelo.
+3. Baja también los ojos y el brillo, y sepáralos un poco: la cara se aplasta con el cuerpo.
+
+<Why>
+Redibuja en vez de escalar. Escalar una selección de pocos píxeles deja escalones irregulares y píxeles sueltos. Con el onion skin ves el volumen del reposo debajo y puedes compensar: lo que quitas de alto, lo pones de ancho.
+</Why>
+
+<Warn>
+No subas la base. En la anticipación y en el aterrizaje el slime **toca el suelo**: si la base flota aunque sea 1 píxel, el impulso no tiene dónde apoyarse.
+</Warn>
+</Step>
+
+<Step n={4} title="Frame 3: el despegue (stretch)">
+Ve al frame 3. Borra y redibuja el slime **estirado**: unos 11 de alto y 6–8 de ancho, con la base **3 filas por encima del suelo**.
+
+- La parte de arriba más estrecha, como una gota al revés.
+- Los ojos, más juntos.
+
+<Why>
+El estirado apunta en la dirección del movimiento. Además, al separarlo del suelo ya en este frame, el ojo entiende que ha despegado. Si lo dejas apoyado, se lee como un slime que se pone de puntillas.
+</Why>
+</Step>
+
+<Step n={5} title="Frame 4: el punto alto">
+Ve al frame 4. Copia el reposo del frame 1 (selección rectangular, <Keys k="Ctrl+C" /> en el frame 1 y <Keys k="Ctrl+V" /> aquí) y súbelo hasta dejar **unas 10 filas de aire** debajo.
+
+Redondea un poco la forma: la base, que en reposo es plana porque se apoya, aquí puede cerrarse como la parte de arriba.
+
+<Why>
+Arriba no hay fuerza que lo deforme: ni el suelo lo aplasta ni la velocidad lo estira. Por eso vuelve a su forma, y por eso este frame dura más que los de alrededor.
+</Why>
+</Step>
+
+<Step n={6} title="Frames 5 y 6: caída y aterrizaje">
+1. Frame 5: copia el contenido del frame 3 (el estirado) y pégalo en la misma posición.
+2. Frame 6: copia el del frame 2 (el aplastado).
+3. Reproduce (botón de *play* de la línea de tiempo) y deja correr varias vueltas.
+
+<Tip>
+Si el aterrizaje te parece flojo, prueba un frame 7 de **rebote**: un aplastado más suave (6–7 de alto) durante unos 100 ms, antes de volver al reposo. Así llegas a 7 frames y el slime «tiembla» al asentarse, como la gelatina.
+</Tip>
+</Step>
+
+<Step n={7} title="Revisa, etiqueta y exporta">
+1. Con el onion skin, comprueba que el centro del slime solo se mueve **en vertical**.
+2. Selecciona todos los frames y crea una etiqueta (*tag*) desde el menú *Frame*. Llámala `salto`.
+3. Guarda con <Keys k="Ctrl+S" />.
+4. Para enseñarlo: *File → Export → Export As*, formato **GIF**, **Resize** al 400 % o más.
+5. Para el juego: *File → Export → Export Sprite Sheet*, PNG a 1×. Apunta las duraciones o exporta también el JSON.
+</Step>
+
+<Warn title="Verifica en tu versión">
+Los nombres y la posición pueden variar según la versión de Aseprite: el panel *Timeline*, la opción de frame nuevo del menú *Frame*, *Frame Properties* (clic derecho sobre el frame), el botón de onion skin, cómo se crea una etiqueta, si copiar y pegar mantiene la posición original o pega en otro sitio, y las opciones de *Export Sprite Sheet*. Si no encuentras algo, búscalo por nombre en los menús.
+</Warn>
+</Block>
+
+<Block kind="version">
+La pieza es un salto de 6–8 frames en bucle con anticipación, squash, stretch y punto alto. Ahora hazlo tuyo. Elige uno:
+
+- **Otro material:** el mismo salto con otro carácter. Una bola de goma dura se deforma poco (aplastado de 6–7 de alto) y rebota rápido; un slime de miel se aplasta mucho, tarda en despegar y se queda pegado al aterrizar (aplastado largo, 200 ms o más).
+- **Salto hacia delante:** amplía el lienzo a lo ancho y haz que el slime avance mientras salta. El centro tiene que dibujar un **arco**: compruébalo marcando un punto por frame con el onion skin. El estirado se inclina hacia donde va.
+- **Tu criatura:** si en P5-03 hiciste otra criatura (no un slime), aplícale el principio. Aunque no sea blanda del todo, un aplastado de 1 píxel en el aterrizaje ya le da peso.
+
+<Tip>
+Sea cual sea tu variante, cuenta píxeles en el reposo, el aplastado y el estirado. Si alguno tiene mucho menos que los otros, ensánchalo o alárgalo.
+</Tip>
+</Block>
+
+<Block kind="errores">
+<Mistake title="Salto rígido: se mueve sin deformarse" wrongLabel="slime-rigid: el reposo subido 7 px" rightLabel="slime-stretch: estirado al despegar">
+  <Sprite slot="wrong" name="slime-rigid" scale={8} />
+  <Sprite slot="right" name="slime-stretch" scale={8} />
+
+El slime rígido es el reposo tal cual, con 7 filas de aire debajo. Sube y baja como una pieza de plástico: no coge impulso ni nota el golpe. Compáralo con el segundo animador de la pieza. Corrígelo añadiendo un aplastado antes de despegar y al aterrizar, y un estirado en el aire.
+</Mistake>
+
+<Mistake title="Aplastar sin ensanchar: pierde volumen" wrongLabel="slime-shrunk: 10 × 5, 44 píxeles" rightLabel="slime-squash: 14 × 5, 56 píxeles">
+  <Sprite slot="wrong" name="slime-shrunk" scale={8} />
+  <Sprite slot="right" name="slime-squash" scale={8} />
+
+Los dos miden 5 de alto, pero el de la izquierda conserva los 10 de ancho del reposo. Ha perdido un tercio de su masa: en bucle, el slime se desinfla y se infla. Corrígelo ensanchando lo que aplastas: lo que pierde de alto lo gana de ancho.
+</Mistake>
+
+<Warn title="Todos los frames con la misma duración">
+Con todos los frames a 150 ms (el tercer animador del concepto), el salto no tiene peso: sube y baja a velocidad constante, como un ascensor. Corrígelo con frames cortos (80 ms) en el despegue y la caída, y largos en el punto alto (unos 200 ms) y en el reposo.
+</Warn>
+
+<Warn title="Deformar de más">
+Si el aplastado es una tortita de 2 píxeles de alto o el estirado parece un fideo, el slime deja de ser slime. Exagera, pero que la silueta siga siendo reconocible en todos los frames. Compruébalo a 1×.
+</Warn>
+
+<Warn title="Anticipación invisible">
+Si el aplastado de salida dura 40 ms o menos, el ojo no lo registra y el salto empieza de golpe. La anticipación tiene que durar lo suficiente para verse: unos 100–150 ms.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+Reprodúcelo varias vueltas **a 1×**. Un salto se juzga en movimiento, no frame a frame.
+
+<Checklist items={[
+  "Tengo entre 6 y 8 frames en bucle, etiquetados como salto",
+  "Hay una anticipación aplastada antes de despegar",
+  "En el despegue y en la caída el slime está estirado y ya no toca el suelo",
+  "En el punto alto recupera su forma redonda",
+  "Al aterrizar se aplasta otra vez con la base en el suelo",
+  "El aplastado es más ancho que el reposo y el estirado más estrecho: el volumen se parece en todos los frames",
+  "Los frames rápidos (despegue y caída) duran menos que el punto alto y el reposo",
+  "El centro del slime sigue un arco limpio (o una línea vertical si salta en el sitio)",
+  "He exportado un GIF ampliado y una spritesheet PNG a 1× con sus duraciones apuntadas",
+]} />
+
+<Quiz q="Aplastas el slime de 8 a 5 filas de alto. ¿Qué tienes que hacer con su ancho?" options={["Dejarlo igual, para que no cambie de tamaño", "Ensancharlo, para conservar el volumen", "Estrecharlo, para que el aplastado se note más"]} answer={1}>
+La gelatina no desaparece: se reparte. Lo que pierde de alto lo gana de ancho. Si no, encoge en vez de aplastarse.
+</Quiz>
+
+<Quiz q="¿Qué frame del salto debería durar más?" options={["El despegue estirado", "La caída estirada", "El punto alto"]} answer={2}>
+Arriba la velocidad es casi cero: el slime se queda un instante flotando. El despegue y la caída son lo más rápido, así que duran poco.
+</Quiz>
+
+<Quiz q="¿Para qué sirve el aplastado antes de despegar?" options={["Es la anticipación: prepara y anuncia el salto", "Para que el sprite ocupe menos en la spritesheet", "Para que el bucle tenga un número par de frames"]} answer={0}>
+Antes de saltar hay que agacharse. Ese movimiento contrario coge impulso y avisa al ojo de lo que viene.
+</Quiz>
+</Block>
