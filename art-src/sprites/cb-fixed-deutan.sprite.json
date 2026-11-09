@@ -1,0 +1,29 @@
+{
+  "name": "cb-fixed-deutan",
+  "description": "La versión corregida simulando deuteranopía: los tonos se parecen, pero uno es claro y el otro oscuro. Se distinguen al primer vistazo.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "color",
+    "accesibilidad"
+  ],
+  "palette": {
+    "a": "#06162f",
+    "b": "#ccbf86",
+    "c": "#f7f4e7",
+    "d": "#6c6336",
+    "e": "#c7be98",
+    "f": "#7e7550",
+    "g": "#37331e"
+  },
+  "rows": [
+    "....aaaa........aaaa....",
+    "...abcbba......adedda...",
+    "..abcbbbba....adedddda..",
+    "..ababbaba....adaddada..",
+    ".abbbbbbbba..adddddddda.",
+    ".abbbbbbffa..addddddgga.",
+    ".affffffffa..agggggggga.",
+    "..aaaaaaaa....aaaaaaaa.."
+  ]
+}

@@ -1,0 +1,239 @@
+---
+id: v6-04
+discipline: voxel
+level: 6
+order: 4
+title: "Vegetación: un kit de piezas y cómo repartirlas"
+summary: "Modela un kit de arbustos, piedras y matas en tres tamaños y repártelo en grupos, con huecos para descansar la vista, en vez de en rejilla."
+duration: 40
+status: borrador
+prerequisites: [v6-02, v2-03]
+fundamentals: [f07]
+objectives:
+  - "Modelar un kit de vegetación pequeño y reutilizable: tres tamaños, un estilo y una paleta"
+  - "Repartir las piezas en grupos (grande, mediano y pequeño pegados, piedra al pie, hierba alrededor)"
+  - "Dejar zonas vacías y pocas piezas sueltas para que el ojo descanse (F07)"
+  - "Evitar la rejilla y esconder la repetición girando y combinando piezas"
+  - "Separar las plantas del suelo con un suelo más apagado y más oscuro"
+tools: [magicavoxel]
+piece:
+  name: "Tu propio kit (3 arbustos, 2 piedras y 3 matas) y una parcela de 24×24 vestida con él, con render"
+  canvas: "24x24x8"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [vegetacion]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Hoy forjas **un kit de vegetación** y lo usas para vestir una parcela. No vas a modelar un bosque vóxel a vóxel: vas a hacer **ocho piezas pequeñas** y a colocarlas con cabeza.
+
+<VoxViewer model="vegetacion" stage={2} title="Tu pieza: el kit repartido en grupos sobre 24×24" />
+
+Recorre las tres etapas del visor:
+
+1. **Piezas:** el kit en fila. Tres arbustos, dos piedras y tres matas.
+2. **En rejilla:** el kit mal repartido, a propósito. Míralo y apunta qué te molesta.
+3. **En grupos:** las mismas piezas en dos grupos, con pocas matas sueltas y huecos vacíos.
+
+La etapa 2 y la 3 usan **exactamente las mismas piezas**. Solo cambia dónde están.
+
+Tu pieza final: **tu propio kit** (3 arbustos, 2 piedras y 3 matas) y una **parcela de 24×24** vestida con él, en un lienzo de 24×24×8, con un render.
+</Block>
+
+<Block kind="concepto">
+En Blender esparcirías instancias con un sistema de partículas o con *geometry nodes*. En MagicaVoxel no hay nada de eso: colocas tú cada pieza. Por eso hace falta **un kit** y **una regla de reparto**.
+
+**1. El kit: pocas piezas, tres tamaños, un estilo**
+
+<VoxViewer model="vegetacion" stage={0} title="El kit: tres arbustos, dos piedras y tres matas" />
+
+Gíralo y cuenta los vóxels de cada pieza:
+
+- **Arbustos:** el pequeño mide 5×5 de planta y 3 de alto; el mediano, 7×7 y 4 de alto; el grande, 9×9 y 5 de alto. Los tres son bolas achatadas con algún hueco suelto, para que no parezcan esferas de catálogo.
+- **Piedras:** una de 3×2 y 2 de alto y otra de 4×3 y 3 de alto. Les faltan **las cuatro esquinas de arriba**: es el canto gastado por el agua.
+- **Matas:** una de 1 vóxel, otra de 2 de alto y otra de dos tallos (uno de 2 y otro de 1 al lado).
+
+Los tres arbustos se pintan con la **misma regla**: la capa de abajo en verde oscuro `#2a8a5c`, las del medio en verde `#3fbf7f` y la de arriba en verde claro `#6ee59f`. Las piedras, igual: gris oscuro `#7d8698` y la cara de arriba en gris claro `#9aa3b5`. Las matas usan los mismos verdes, con la punta clara.
+
+<Why title="¿Por qué tres tamaños y una regla?">
+Los tamaños dan **variedad**: grande, mediano y pequeño se pueden combinar de muchas formas. La regla de color da **coherencia**: aunque las piezas sean distintas, se ven del mismo mundo. Es la copa de [el árbol orgánico (V2-03)](/forja-art/voxel/v2-03/) partida en piezas: masas de tamaños distintos, claro arriba y oscuro abajo.
+</Why>
+
+<Tip>
+Ocho piezas bastan. Con un kit de 30 tardas más en elegir que en colocar, y las piezas acaban sin estilo común.
+</Tip>
+
+**2. La regla de reparto: grupos, pocas sueltas, huecos**
+
+La naturaleza no reparte con regla. Las plantas crecen **juntas** donde hay agua y sombra, y dejan **claros** donde no. Un buen reparto tiene tres ingredientes:
+
+- **Grupos.** Una pieza grande con una mediana y una pequeña **pegadas**, una piedra **al pie** y matas **alrededor**. En la etapa 3, el grupo principal junta los tres arbustos, la piedra grande y las tres matas. Hay un segundo grupo, más pequeño, en la esquina opuesta: un arbusto mediano, uno pequeño, la piedra pequeña y una mata.
+- **Pocas piezas sueltas.** Solo tres matas, lejos de los grupos. Unen los grupos sin hacer ruido.
+- **Zonas vacías.** Las otras dos esquinas de la parcela se quedan casi sin nada. Solo suelo.
+
+<Why title="El descanso también compone (F07)">
+Es lo de [Composición: dónde mira el ojo (F07-01)](/forja-art/fundamentos/f07-01/). Si todo tiene el mismo peso, el ojo salta de pieza en pieza y no se queda en ninguna. Un grupo grande **manda**, uno pequeño lo **equilibra** en diagonal y los huecos dejan que el ojo **descanse** entre los dos.
+</Why>
+
+**3. Ni rejilla ni distancias iguales**
+
+En la etapa 2, las nueve piezas están en tres filas y tres columnas, a unos 7 u 8 vóxels unas de otras. El ojo ve el patrón antes que las plantas: parece un tablero o un vivero, no un prado.
+
+<Why>
+El cerebro detecta la repetición regular enseguida, como la flor del tile repetido de [P7-01](/forja-art/pixel/p7-01/). Distancias distintas y grupos de tamaños distintos rompen el patrón.
+</Why>
+
+**4. Esconder la repetición**
+
+Con ocho piezas, alguien acabará viendo dos arbustos iguales. Trucos:
+
+- **Pegarlos.** Un arbusto que toca a otro se lee como una sola masa, no como dos copias.
+- **Girarlos.** Un arbusto girado 90° enseña otra cara: sus huecos sueltos caen en otro sitio.
+- **Variar el tamaño con el kit, no escalando.** Si necesitas «el mismo arbusto, pero más grande», usa la pieza grande. Escalar un modelo voxel duplica los vóxels y rompe el estilo (lo viste con el farol en [V7-01](/forja-art/voxel/v7-01/)).
+
+<Warn title="El modelo del visor no gira nada">
+En el visor, todas las piezas tienen la misma orientación: el modelo solo enseña el reparto. Girarlas es un paso extra que harás tú en MagicaVoxel.
+</Warn>
+
+**5. Contraste con el suelo**
+
+El suelo de las etapas 2 y 3 es un verde oliva oscuro `#4a6a3a`, salpicado de un oliva más oscuro `#3a5a30`. Es **más oscuro y menos saturado** que el verde de los arbustos. Por eso las plantas se despegan del suelo sin contorno.
+
+<Why title="Valor y saturación (F01)">
+Si el suelo fuera del mismo verde `#3fbf7f` que los arbustos, la base de cada planta se fundiría con él y solo se leerían las puntas claras. El suelo apagado es el **fondo**; las plantas, la **figura**.
+</Why>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Prepara la paleta">
+1. Crea una escena nueva.
+2. En la **paleta** de la izquierda, prepara una fila: verde oscuro `#2a8a5c`, verde `#3fbf7f`, verde claro `#6ee59f`, gris oscuro `#7d8698`, gris claro `#9aa3b5`, y dos olivas para el suelo, `#4a6a3a` y `#3a5a30`.
+
+<Tip>
+Son los verdes del árbol y la hierba, y los grises de la torre. Si ya tienes la paleta de [el terreno (V6-02)](/forja-art/voxel/v6-02/), parte de ella: tu kit valdrá también para ese terreno.
+</Tip>
+</Step>
+
+<Step n={2} title="Modela cada pieza como un modelo aparte">
+1. Haz **un modelo por pieza**, cada uno con un tamaño justo: 9×9×5 para el arbusto grande, 7×7×4 para el mediano, 5×5×3 para el pequeño.
+2. En modo **Attach**, con el pincel **Voxel** o **Box**, construye cada arbusto capa a capa: la capa del medio es la más ancha y la de abajo y la de arriba, más estrechas. Quita algún vóxel suelto del borde con **Erase**.
+3. Pasa a **Paint**: abajo verde oscuro, en medio verde, arriba verde claro.
+4. Las dos piedras: un bloque con **Box** en gris oscuro, quita con **Erase** las cuatro esquinas de arriba y pinta la cara de arriba en gris claro.
+5. Las tres matas: 1 vóxel; 2 de alto; y dos tallos juntos de 2 y 1. Punta en verde claro.
+
+<Why>
+Un modelo por pieza es lo que hace que sea **un kit**: luego cada pieza se coloca, se duplica y se gira sin tocar las demás. Si lo modelas todo en un solo bloque, ya no es un kit, es un decorado.
+</Why>
+
+<Warn>
+Compara los tamaños antes de seguir. Si tus tres arbustos se diferencian en un vóxel, no son grande, mediano y pequeño: son tres copias del mismo.
+</Warn>
+</Step>
+
+<Step n={3} title="Haz el suelo">
+1. Crea otro modelo de 24×24 de planta para el suelo.
+2. En **Attach**, con **Box**, rellena una capa de 1 vóxel en oliva `#4a6a3a`.
+3. En **Paint**, salpica unos pocos vóxels con el oliva oscuro `#3a5a30`, sin dibujar líneas.
+
+<Tip>
+Si quieres un suelo con estratos, usa la base de [V6-02](/forja-art/voxel/v6-02/) o la del diorama. Lo que importa aquí es que la cara de arriba sea **más apagada** que las plantas.
+</Tip>
+</Step>
+
+<Step n={4} title="Coloca el grupo principal en el modo World">
+1. Pasa al modo **World**: ves todos los modelos de la escena.
+2. Pon el suelo debajo y deja las piezas fuera, a un lado, como una caja de herramientas.
+3. Coloca el **arbusto grande** sobre el suelo, lejos del centro, hacia una esquina.
+4. Pega el **mediano** y el **pequeño** al grande, a lados distintos, tocándolo.
+5. Pon la **piedra grande** al pie del grupo y dos o tres **matas** alrededor.
+
+<Why>
+Primero lo grande, después lo que lo acompaña. Es la misma regla que en el diorama: primero el foco y lo demás a su servicio.
+</Why>
+</Step>
+
+<Step n={5} title="Duplica, gira y haz el segundo grupo">
+1. Duplica el arbusto mediano, el pequeño, la piedra pequeña y una mata.
+2. Forma con ellos un **segundo grupo**, más pequeño, en la esquina opuesta en diagonal.
+3. Gira alguna copia 90° para que no enseñe la misma cara que el original.
+4. Pon **tres matas sueltas** en los espacios entre grupos, a distancias distintas.
+5. Deja **dos zonas vacías**, solo suelo.
+
+<Tip>
+Mira la parcela desde arriba. Si puedes trazar filas o columnas con las piezas, mueve alguna. Si ves dos copias iguales lado a lado, gira una o pégala a otra pieza.
+</Tip>
+</Step>
+
+<Step n={6} title="Render">
+1. Pulsa **Render** y pon la cámara un poco alta, para que se vean los grupos y los huecos a la vez.
+2. Elige una luz que caiga de lado: los arbustos proyectan sombra sobre el suelo y se despegan de él.
+3. Guarda `vegetacion_v1.vox` y un PNG del render.
+</Step>
+
+<Warn title="Verifica en tu versión">
+El modo **World** permite tener varios modelos en una escena, colocarlos y duplicarlos, pero cómo se crea un modelo nuevo, cómo se fija su tamaño, cómo se mueve, duplica o **gira** un modelo (y si el giro está en el modo World o en el de edición) cambia entre versiones de MagicaVoxel. Si no encuentras cómo girar, usa el reflejo o modela una segunda variante del arbusto. Comprueba también los nombres de **Attach**, **Erase**, **Paint** y de los pinceles **Box** y **Voxel**. En el **Render**, los controles de luz y el botón para guardar la imagen cambian de nombre: búscalos por su función.
+</Warn>
+</Block>
+
+<Block kind="version">
+Haz **tu propio kit** y viste con él tu parcela de 24×24. Misma receta: tres tamaños, una regla de color, grupos, pocas sueltas y huecos. Elige un reto:
+
+- **Bosque de otoño:** el mismo kit con hojas en naranja y ocre (claro arriba, oscuro abajo) y un suelo pardo apagado. Cuidado: el suelo sigue siendo más apagado que las hojas.
+- **Orilla:** un río o un estanque hundido que cruza la parcela, como el de V6-02. Los grupos crecen pegados al agua; lejos de ella, el suelo se queda casi vacío.
+- **Tres grupos:** uno grande, uno mediano y uno pequeño, cada uno con su piedra. Comprueba que el pequeño equilibra al grande en diagonal y que entre los tres quedan huecos.
+
+Antes de darlo por bueno, mira el render en pequeño: ¿ves grupos y claros, o puntos repartidos?
+</Block>
+
+<Block kind="errores">
+<Mistake title="Todo en rejilla" wrongLabel="Un tablero" rightLabel="Grupos y huecos">
+  <VoxViewer slot="wrong" model="vegetacion" stage={1} title="Nueve piezas a la misma distancia" />
+  <VoxViewer slot="right" model="vegetacion" stage={2} title="Las mismas piezas en dos grupos, con claros" />
+
+Cada pieza en su casilla, a 7 u 8 vóxels de la siguiente. El ojo ve filas y columnas, no un prado. **Corrección:** junta las piezas en uno o dos grupos que se toquen, deja pocas sueltas y vacía el resto. Distancias distintas, nunca iguales.
+</Mistake>
+
+<Mistake title="Todas las piezas del mismo tamaño" wrongLabel="Tres copias" rightLabel="Grande, mediano y pequeño">
+  <p slot="wrong">Tres arbustos de 7×7. Juntos forman un bulto uniforme; separados, parecen copias. No hay ninguno que mande.</p>
+  <p slot="right">Arbustos de 9, 7 y 5 de ancho. El grande es el centro del grupo y los otros lo acompañan.</p>
+
+**Corrección:** rehaz el kit con tamaños que se diferencien a simple vista (2 vóxels o más de ancho entre uno y otro). No escales: modela cada tamaño.
+</Mistake>
+
+<Warn title="Error típico: el suelo del mismo verde que las plantas">
+Pintas el suelo con el verde `#3fbf7f` de los arbustos. La base de cada planta desaparece y solo se ven las puntas claras flotando. **Corrección:** un suelo más oscuro y menos saturado, como el oliva `#4a6a3a` del modelo. Compruébalo en el render: cada arbusto tiene que despegarse del suelo.
+</Warn>
+
+<Warn title="Error típico: llenar todo sin huecos">
+Una pieza en cada sitio libre de la parcela. Aunque no estén en rejilla, todo tiene el mismo peso y el ojo no descansa. **Corrección:** quita piezas. Deja al menos dos zonas de solo suelo. Los claros hacen que los grupos se lean como grupos.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+<Checklist items={[
+  "Mi kit tiene 3 arbustos, 2 piedras y 3 matas, cada uno como modelo aparte",
+  "Los arbustos son claramente grande, mediano y pequeño",
+  "Todas las piezas siguen la misma regla de color: claro arriba, oscuro abajo",
+  "La parcela mide 24×24 y cabe en 8 de alto",
+  "Hay al menos un grupo con lo grande, lo mediano y lo pequeño pegados, una piedra al pie y hierba alrededor",
+  "Hay pocas piezas sueltas y al menos dos zonas vacías",
+  "No se ven filas, columnas ni distancias iguales",
+  "He girado o pegado las copias para esconder la repetición",
+  "El suelo es más apagado que las plantas",
+  "He guardado vegetacion_v1.vox y un render en mi portfolio",
+]} />
+
+<Quiz q="En la etapa «En rejilla» y en «En grupos» se usan las mismas piezas. ¿Por qué una se lee como un tablero y la otra como un prado?" options={["Porque en grupos hay más colores", "Porque en grupos los arbustos son más altos", "Porque en la rejilla todo está a la misma distancia y en grupos hay masas pegadas, piezas sueltas y huecos"]} answer={2}>
+El kit no cambia: cambia el reparto. Las distancias iguales forman un patrón que el ojo ve antes que las plantas. Los grupos y los claros imitan cómo crece la vegetación de verdad.
+</Quiz>
+
+<Quiz q="Tus arbustos se pierden sobre el suelo. ¿Qué es lo primero que revisas?" options={["Que el suelo sea más oscuro y menos saturado que las plantas", "Que los arbustos tengan más vóxels", "Que haya más matas alrededor"]} answer={0}>
+Las plantas son la figura y el suelo el fondo. Si comparten verde, la base de cada arbusto se funde con el suelo. Un suelo apagado las despega sin añadir nada.
+</Quiz>
+
+<Quiz q="Necesitas un arbusto más grande para el centro de un grupo. ¿Qué haces?" options={["Escalo el mediano al doble en MagicaVoxel", "Uso la pieza grande del kit, o modelo otra a ese tamaño con la misma regla de color", "Pongo dos medianos uno encima del otro"]} answer={1}>
+Escalar un modelo voxel duplica cada vóxel y rompe el estilo: los huecos sueltos se vuelven agujeros dobles. Por eso el kit trae tres tamaños modelados.
+</Quiz>
+</Block>

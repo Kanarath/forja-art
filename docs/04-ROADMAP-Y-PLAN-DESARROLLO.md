@@ -160,6 +160,16 @@
   - props sobre la hierba sin sombra, con sombra de contacto y con una sombra mal puesta;
   - modelos «puente» (alturas, escaleras y tablero) y «pocion».
 
+**Contenido · duodécimo bloque: 5 lecciones más (73 en total).**
+- **Pixel:** P6-07 Animar objetos (un cofre que se abre), P8-04 Luz local (una antorcha en la oscuridad).
+- **Fundamentos:** F03-02 Color para todos (distinguir sin depender del tono).
+- **Voxel:** V2-04 Ruinas (romper una forma con intención), V6-04 Vegetación (un kit de piezas y cómo repartirlas).
+- **Arte nuevo:**
+  - cofre que se abre en seis frames;
+  - cueva con antorcha en tres frames de parpadeo, más la luz como círculo plano y como degradado (errores);
+  - dos slimes con y sin simulación de deuteranopía, antes y después de corregir el valor;
+  - modelos «ruina» (intacta, rota y abandonada) y «vegetacion» (piezas, en rejilla y en grupos).
+
 **Lecciones aprendidas durante la fase 1:**
 - **`BASE_URL` sin barra final.** Astro 7 da `BASE_URL` sin barra final, así que hay que usar siempre `src/lib/url.ts`. El validador detecta enlaces sin la base.
 - **Colecciones nuevas en local.** El servidor de desarrollo no ve colecciones de contenido nuevas: hay que reiniciarlo (`npx astro dev --force`).

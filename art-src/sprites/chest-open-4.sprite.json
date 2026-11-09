@@ -1,0 +1,39 @@
+{
+  "name": "chest-open-4",
+  "description": "Cofre, frame 4: se entreabre. La tapa sube 1 px y por la rendija sale una franja de luz amarilla y crema.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "prop",
+    "animación",
+    "historia"
+  ],
+  "palette": {
+    "o": "#1b1030",
+    "l": "#d08a50",
+    "w": "#a0603a",
+    "W": "#6b3d2e",
+    "y": "#f2b33d",
+    "Y": "#a8661c",
+    "g": "#fff3c4",
+    "G": "#ffe58a"
+  },
+  "rows": [
+    "..............",
+    "..............",
+    "..............",
+    "..............",
+    "..............",
+    "..............",
+    "..oooooooooo..",
+    ".ollllyylllwo.",
+    ".owwwwyywwwwo.",
+    ".ogGGgGGgGGgo.",
+    ".oooooyyooooo.",
+    ".owwwoyyowwWo.",
+    ".owwwoYYowwWo.",
+    ".owwwwoowwwWo.",
+    ".oWWWWWWWWWWo.",
+    ".oooooooooooo."
+  ]
+}

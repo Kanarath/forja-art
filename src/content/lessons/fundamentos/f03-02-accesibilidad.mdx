@@ -1,0 +1,248 @@
+---
+id: f03-02
+discipline: fundamentos
+level: 3
+order: 2
+title: "Color para todos: distinguir sin depender del tono"
+summary: "Si dos cosas solo se diferencian por el tono, parte de tus jugadores no las distingue. Sepáralas también por valor, forma o iconos, en pixel y en voxel."
+duration: 35
+status: borrador
+prerequisites: [f03-01, f01-01]
+fundamentals: [f03, f01]
+objectives:
+  - "Explicar por qué el tono solo no basta para distinguir cosas importantes"
+  - "Comprobar una paleta en grises y con un simulador de daltonismo"
+  - "Separar por valor dos variantes que antes solo cambiaban de tono"
+  - "Reforzar la diferencia con forma, silueta, iconos o patrones"
+  - "Respetar los colores semánticos que el jugador ya espera"
+tools: [aseprite, magicavoxel]
+piece:
+  name: "Tres variantes de un enemigo (o una paleta tuya) que se distinguen en grises y con simulación de daltonismo"
+  canvas: "36x8"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [accesible]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+En [F03-01](/forja-art/fundamentos/f03-01/) aprendiste a usar el tono, la saturación y la temperatura. Hoy compruebas que tu color **funciona para todos los ojos**.
+
+Mira estos dos slimes: uno verde y uno coral. ¿Se distinguen?
+
+<Sprite name="cb-pair" scale={10} caption="cb-pair: un slime verde y uno coral. Con visión normal, se ven claramente distintos" />
+
+Ahora, los mismos dos slimes como los vería una persona con **deuteranopía**, un tipo de daltonismo rojo-verde:
+
+<Sprite name="cb-pair-deutan" scale={10} caption="cb-pair-deutan: simulación de deuteranopía. Los dos son casi el mismo ocre claro" />
+
+Si uno es un enemigo normal y el otro uno venenoso, este jugador **no sabe cuál es cuál**.
+
+Tu pieza: **tres variantes de un enemigo** (o una paleta tuya de 3 a 6 colores que tengan que distinguirse) en un lienzo de **36×8**. Tres slimes de 10 px de ancho con 2 px entre ellos y 1 px de margen: 1 + 10 + 2 + 10 + 2 + 10 + 1 = 36. Tienen que distinguirse **en grises** y **con un simulador de daltonismo**. Si prefieres trabajar en voxel, haz lo mismo con tres variantes de color de un modelo tuyo, renderizadas.
+</Block>
+
+<Block kind="concepto">
+### No todos ven los mismos colores
+
+Como aproximación habitual, alrededor de **1 de cada 12 hombres** y **1 de cada 200 mujeres** tiene algún tipo de daltonismo. El más común es el **rojo-verde**: rojos, verdes, naranjas y marrones se confunden entre sí.
+
+En un juego con cientos de jugadores, eso es mucha gente. Y no hace falta que tú lo tengas para que tu juego les falle.
+
+<Why title="Por qué falla el tono">
+El daltonismo rojo-verde quita, sobre todo, la diferencia de **tono** entre rojos y verdes. Lo que queda es la diferencia de **valor** (claro u oscuro). Si dos colores solo se diferenciaban en el tono, para esa persona son **el mismo color**.
+</Why>
+
+### Qué hay que distinguir
+
+No todo importa igual. Un árbol puede ser verde o marrón sin problema. El riesgo está en lo que el jugador **tiene que decidir** al verlo:
+
+- **Enemigos**: el normal frente al venenoso, o el débil frente al de élite.
+- **Equipos**: los tuyos frente a los rivales.
+- **Objetos**: la seta buena frente a la mala, la poción de vida frente a la de veneno.
+- **Interfaz**: la barra de vida frente a la de maná.
+
+Si alguno de estos pares se diferencia **solo por el tono**, es un problema.
+
+### La prueba de grises: lo que ya sabes de F01
+
+La prueba más segura es la de [F01](/forja-art/fundamentos/f01-01/): **mirarlo en grises**. Si en grises dos cosas se ven distintas, se distinguen por valor, y el valor sobrevive al daltonismo.
+
+<Sprite name="cb-pair" scale={10} view="gray" caption="cb-pair en grises: los dos slimes son casi el mismo gris" />
+
+En el Inspector, al pasar el ratón por cada píxel, ves su valor. En `cb-pair`, la base verde está en torno al **72 %** y la coral en torno al **69 %**. Las sombras, al 43 % y al 42 %. Casi iguales: la prueba de grises ya avisa del problema **sin necesidad de simular nada**.
+
+### La corrección: separar el valor
+
+En `cb-fixed` el segundo slime pasa a un **rojo mucho más oscuro**. La forma y el verde no cambian.
+
+<Sprite name="cb-fixed" scale={10} caption="cb-fixed: el verde de antes y un rojo oscuro, con su sombra casi negra" />
+<Sprite name="cb-fixed-deutan" scale={10} caption="cb-fixed-deutan: simulado. Los dos tiran a ocre, pero uno es claro y el otro oscuro" />
+
+Con la simulación, los tonos siguen pareciéndose: un ocre claro y un oliva oscuro. Pero ahora la diferencia es de **valor**: la base roja ha bajado a un 26 % frente al 72 % del verde. Se distinguen al primer vistazo.
+
+<Why title="No renuncias al color">
+Para quien ve todos los colores, el verde y el rojo siguen ahí y siguen contando algo. No has quitado el color: has añadido **una segunda diferencia** que no depende de él. Eso es diseñar para todos.
+</Why>
+
+Compruébalo tú en el laboratorio. Cambia entre **Normal** y **Grises** y pasa el ratón por las dos bases.
+
+<Inspector sprite="cb-pair" title="cb-pair: compara el valor de los dos slimes" />
+
+### Más allá del valor: forma, iconos y patrones
+
+El valor es la primera herramienta, pero no la única. Las mejores soluciones **suman** diferencias:
+
+- **Forma y silueta** ([F02](/forja-art/fundamentos/f02-01/)): el slime venenoso con pinchos (formas triangulares, amenaza) y el normal redondo. Se distingue incluso en negro.
+- **Iconos**: una calavera en la poción de veneno, una cruz en la de vida.
+- **Patrones**: rayas, motas o un borde distinto en el equipo rival.
+- **Tamaño y posición**: en una barra, lo que cuenta es **cuánto** está llena, no de qué color es.
+
+<Sprite name="ui-bar-full" scale={6} caption="ui-bar-full: la barra llena" />
+<Sprite name="ui-bar-low" scale={6} caption="ui-bar-low: 7 píxeles de rojo y el resto un hueco oscuro. Se lee por la longitud, no por el color" />
+
+<Tip>
+Si la vida y el maná tienen el mismo dibujo y solo cambian de color, ponlas en sitios fijos y distintos, o añade a cada una un icono (un corazón, una gota). El jugador aprende el sitio aunque no distinga el color.
+</Tip>
+
+### En voxel, igual
+
+En MagicaVoxel los colores salen de la **paleta del modelo**, y el render añade luz y sombra encima. Las dos cosas se comprueban:
+
+- **La paleta**: los colores que tienen que distinguirse deben estar separados en valor **antes** del render.
+- **El render**: la luz oscurece las caras en sombra de los dos modelos por igual. Si la diferencia de valor era pequeña, en las caras oscuras desaparece. Comprueba el PNG renderizado en grises, no solo la paleta.
+</Block>
+
+<Block kind="guiada">
+### Parte 1 · Aseprite
+
+<Step n={1} title="Monta las variantes">
+1. <Keys k="Ctrl+N" />: lienzo de **36×8**, fondo transparente. Activa *View → Grid* y amplía con la rueda.
+2. Dibuja (o pega) tu enemigo de 10×8 tres veces, con 2 px de separación: x = 1, x = 13 y x = 25. Puedes partir del `slime`.
+3. Pinta cada variante con su rampa: base, sombra y brillo. Por ejemplo verde, rojo y dorado.
+4. Guarda con <Keys k="Ctrl+S" />.
+
+<Why>
+Ponerlos juntos en el mismo lienzo es clave: el problema solo aparece cuando **comparas**. Un slime suelto siempre «se ve bien».
+</Why>
+</Step>
+
+<Step n={2} title="La prueba de grises">
+1. Ve a *Sprite → Color Mode → Grayscale*.
+2. Mira las tres variantes. ¿Hay dos que sean casi el mismo gris?
+3. Vuelve al color con <Keys k="Ctrl+Z" />.
+
+Ojo con una pareja traicionera: el verde y el dorado del curso.
+
+<Sprite name="slime" scale={8} view="gray" caption="slime en grises: base al 72 %, sombra al 43 %" />
+<Sprite name="slime-gold" scale={8} view="gray" caption="slime-gold en grises: base al 77 %, sombra también al 43 %. Casi gemelos" />
+
+<Warn>
+Deshaz **justo después** de mirar. Si sigues pintando en modo grises, pierdes el color de lo que pintes. Si dudas, guarda una copia antes.
+</Warn>
+</Step>
+
+<Step n={3} title="Ajusta la rampa">
+Elige la variante que se confunde y **mueve su rampa entera en valor**, más clara o más oscura:
+
+1. Con el cuentagotas (<Keys k="I" />) toma la base de esa variante.
+2. En el selector de color, baja (o sube) la claridad sin tocar mucho el tono. Repite con la sombra y el brillo, para que la rampa conserve su separación interna.
+3. Sustituye los colores con el cubo de pintura (<Keys k="G" />).
+4. Repite la prueba de grises del paso 2.
+
+<Why>
+Mueve **la rampa entera**, no solo la base. Si oscureces la base y dejas la sombra igual, la sombra se queda casi del mismo valor y el slime se aplana, como `slime-swap-flat` de [P5-04](/forja-art/pixel/p5-04/).
+</Why>
+
+<Tip>
+Una forma práctica: una variante **clara**, una **media** y una **oscura**. Así las tres se separan en grises aunque el tono cambie poco.
+</Tip>
+</Step>
+
+<Step n={4} title="Comprueba con el Inspector y con un simulador">
+1. Exporta a 1× con *File → Export → Export As*.
+2. Súbelo al Inspector de [F03-01](/forja-art/fundamentos/f03-01/) o de cualquier lección, ponlo en **Grises** y pasa el ratón por las tres bases. Busca una diferencia clara de porcentaje entre ellas.
+3. Si quieres ir más allá, usa un **simulador de daltonismo**: existen extensiones de navegador y modos de accesibilidad en algunos sistemas que filtran la pantalla. Mira tu PNG con el filtro rojo-verde.
+
+<Tip>
+Si tu enemigo sigue pidiendo más diferencia, añade una de **forma**: pinchos, un cuerno, un ojo distinto. Un píxel de silueta vale más que diez de tono.
+</Tip>
+</Step>
+
+### Parte 2 · MagicaVoxel
+
+<Step n={5} title="La paleta del modelo">
+1. Abre un modelo tuyo con varias variantes de color, o tu slime de [V5-01](/forja-art/voxel/v5-01/) guardado con otro nombre.
+2. En la **paleta de la izquierda**, localiza los colores que tienen que distinguirse (la base de cada variante).
+3. Edita esos colores para separarlos en valor: una variante clara y otra oscura, como en el paso 3. Como cada vóxel usa un índice de la paleta, el modelo entero cambia a la vez.
+
+<Why>
+Es el mismo ajuste que en Aseprite, pero en la paleta del modelo. La forma no cambia; cambia la claridad de los colores.
+</Why>
+</Step>
+
+<Step n={6} title="Render y prueba de grises">
+1. Coloca las variantes una junto a otra (por ejemplo, duplicando el modelo en el modo World) o renderiza cada una con la **misma cámara y la misma luz**.
+2. Pulsa *Render* y guarda la imagen.
+3. Abre el PNG en Aseprite y haz la prueba de *Sprite → Color Mode → Grayscale*. Fíjate sobre todo en las **caras en sombra**: ahí es donde las variantes se suelen fundir.
+4. Si se funden, vuelve a la paleta y separa más el valor.
+
+<Warn title="Verifica en tu versión">
+En Aseprite, la ruta *Sprite → Color Mode → Grayscale* y la forma de deshacerla pueden variar ligeramente entre versiones. En MagicaVoxel, la forma de editar un color de la paleta, el modo World para duplicar modelos y el botón para guardar el render pueden cambiar de nombre o de sitio: búscalos por su función. Aseprite y el Inspector calculan el gris con fórmulas que pueden diferir un poco: fíjate en las diferencias grandes, no en un punto arriba o abajo.
+</Warn>
+</Step>
+</Block>
+
+<Block kind="version">
+Aplica la prueba a tu manera. Elige un reto:
+
+- **Bueno y malo**: dos setas, una comestible y una venenosa. Que se distingan en grises **y** en silueta (la venenosa con el sombrero en punta, por ejemplo).
+- **Dos equipos**: el mismo personaje en dos colores de equipo. Separa el valor y añade un patrón (una franja, un escudo con símbolo distinto).
+- **Tu paleta entera**: coge la paleta de tu último proyecto y comprueba en grises cada par de colores que el jugador tenga que distinguir. Apunta los que fallan y corrígelos.
+
+**Prueba doble.** Pasa tu pieza por la vista de grises **y** por un simulador de daltonismo. Las dos tienen que aprobar.
+</Block>
+
+<Block kind="errores">
+<Mistake title="Depender solo del tono" wrongLabel="cb-pair-deutan: el mismo ocre" rightLabel="cb-fixed-deutan: claro y oscuro">
+  <Sprite slot="wrong" name="cb-pair-deutan" scale={8} />
+  <Sprite slot="right" name="cb-fixed-deutan" scale={8} />
+
+El verde y el coral de `cb-pair` tenían casi el mismo valor. Con deuteranopía, los dos quedan en el mismo ocre claro. **Corrección**: separa el valor de las rampas, como en `cb-fixed`. Con la simulación los tonos siguen pareciéndose, pero uno es claro y el otro oscuro.
+</Mistake>
+
+<Mistake title="Corregir subiendo la saturación" wrongLabel="cb-pair en grises" rightLabel="cb-fixed en grises">
+  <Sprite slot="wrong" name="cb-pair" scale={8} view="gray" />
+  <Sprite slot="right" name="cb-fixed" scale={8} view="gray" />
+
+«Lo pongo más intenso y ya se distingue». No: la saturación cambia lo puro que es el color, no lo claro que es. Y el daltonismo rojo-verde borra justo la diferencia entre rojos y verdes, por muy intensos que sean. Fíjate en la izquierda: dos slimes que con visión normal se ven muy distintos, y en grises son gemelos. **Corrección**: mueve el **valor**, no la saturación. A la derecha, la rampa roja oscura se separa sola.
+</Mistake>
+
+<Warn title="Error típico: colores semánticos invertidos">
+El jugador ya trae aprendido que el **verde** suele ser bueno (vida, curar, seguro) y el **rojo** peligroso (daño, enemigo, alerta). Si haces una poción verde que envenena y una roja que cura, confundes a todos, también a quien ve bien los colores. **Corrección**: respeta las convenciones o, si las rompes a propósito, que el juego lo diga con claridad (un icono, una forma, un aviso). Y recuerda que el color semántico **nunca** debe ser la única pista.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+<Checklist items={[
+  "Mi lienzo tiene tres variantes (o los colores de mi paleta que deben distinguirse) juntas",
+  "En la vista de grises, las tres variantes tienen valores claramente distintos",
+  "He movido la rampa entera de cada variante, y cada una conserva su base, sombra y brillo",
+  "He pasado la pieza por un simulador de daltonismo y se siguen distinguiendo",
+  "Al menos una diferencia no depende del color: forma, silueta, icono o patrón",
+  "Los colores semánticos (verde bueno, rojo peligro) no están invertidos sin aviso",
+  "En voxel, el render en grises distingue las variantes también en las caras en sombra",
+]} />
+
+<Quiz q="Dos slimes, uno verde y uno coral, se ven casi iguales en grises. ¿Qué pasa con un jugador con daltonismo rojo-verde?" options={["Probablemente no los distingue: les queda casi solo el valor, y el valor es casi el mismo", "Los distingue mejor, porque el coral es más saturado", "Los distingue igual que tú: el daltonismo solo afecta a los azules"]} answer={0}>
+El daltonismo rojo-verde quita sobre todo la diferencia de tono entre rojos y verdes. Si el valor tampoco cambia, no queda nada que los separe. Es lo que enseñan `cb-pair` y `cb-pair-deutan`.
+</Quiz>
+
+<Quiz q="Tu enemigo rojo y tu enemigo verde se confunden en la simulación. ¿Qué cambio ayuda MÁS?" options={["Subir la saturación de los dos", "Cambiar el rojo por un naranja del mismo valor", "Oscurecer la rampa entera de uno de los dos y, si puedes, cambiarle la silueta"]} answer={2}>
+La saturación y un tono vecino no cambian el valor. Separar el valor (y añadir una diferencia de forma) funciona con cualquier tipo de visión.
+</Quiz>
+
+<Quiz q="¿Por qué conviene comprobar el render de MagicaVoxel en grises y no solo la paleta?" options={["Porque el render cambia los tonos de la paleta", "Porque la luz y la sombra del render pueden fundir dos variantes de valor parecido, sobre todo en las caras oscuras", "Porque MagicaVoxel no tiene paleta"]} answer={1}>
+El render oscurece las caras en sombra de todos los modelos. Una diferencia de valor pequeña en la paleta puede desaparecer ahí. Por eso se comprueba la imagen final.
+</Quiz>
+</Block>

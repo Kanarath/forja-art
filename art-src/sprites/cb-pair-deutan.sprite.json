@@ -1,0 +1,30 @@
+{
+  "name": "cb-pair-deutan",
+  "description": "Los mismos dos slimes simulando deuteranopía (no se distingue el rojo del verde). Los dos se vuelven casi del mismo ocre claro: quien tenga este tipo de daltonismo no sabe cuál es cuál.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "color",
+    "accesibilidad",
+    "error"
+  ],
+  "palette": {
+    "a": "#06162f",
+    "b": "#ccbf86",
+    "c": "#f7f4e7",
+    "d": "#ccbe81",
+    "e": "#efe9d0",
+    "f": "#7e7550",
+    "g": "#7e754f"
+  },
+  "rows": [
+    "....aaaa........aaaa....",
+    "...abcbba......adedda...",
+    "..abcbbbba....adedddda..",
+    "..ababbaba....adaddada..",
+    ".abbbbbbbba..adddddddda.",
+    ".abbbbbbffa..addddddgga.",
+    ".affffffffa..agggggggga.",
+    "..aaaaaaaa....aaaaaaaa.."
+  ]
+}

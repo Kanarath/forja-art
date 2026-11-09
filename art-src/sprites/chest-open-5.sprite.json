@@ -1,0 +1,38 @@
+{
+  "name": "chest-open-5",
+  "description": "Cofre, frame 5: abierto. La tapa echada atrás, el oro a la vista y seis píxeles de luz crema alrededor de la tapa: el momento de más brillo.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "prop",
+    "animación",
+    "historia"
+  ],
+  "palette": {
+    "o": "#1b1030",
+    "l": "#d08a50",
+    "w": "#a0603a",
+    "W": "#6b3d2e",
+    "y": "#f2b33d",
+    "Y": "#a8661c",
+    "g": "#fff3c4"
+  },
+  "rows": [
+    "......gg......",
+    "...g......g...",
+    "..............",
+    ".g..........g.",
+    "..oooooooooo..",
+    ".oWWWWWWWWWWo.",
+    ".oWWWWWWWWWWo.",
+    ".ooyyyoyyyyoo.",
+    ".oyyyyyyyYyyo.",
+    ".oYyyYyyyyyYo.",
+    ".oooooooooooo.",
+    ".olllllllllwo.",
+    ".owwwoyyowwWo.",
+    ".owwwoYYowwWo.",
+    ".oWWWWWWWWWWo.",
+    ".oooooooooooo."
+  ]
+}

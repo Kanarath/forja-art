@@ -1130,6 +1130,109 @@ function platformMap(mask, { flat = false } = {}) {
   add("props-shadow-wrong", "Error: la sombra en negro puro, separada 2 px de la base y desplazada a la derecha. No oscurece la hierba, la tapa: parece un agujero, y el hueco entre el objeto y su sombra hace que siga flotando.", ["prop", "integración", "error"], c.pal, c.rows);
 }
 
+
+// ---------- el cofre que se abre: 6 frames de 14×16 (tembleque, rendija de luz, apertura y destellos)
+{
+  const closed = spriteByName("chest"), open = spriteByName("chest-open");
+  const OPEN_PAL = { ...closed.palette, ...open.palette, g: "#fff3c4", G: "#ffe58a" };
+  const frame = (spr, dx, dy, extra = []) => {
+    const g = Array.from({ length: 16 }, () => Array(14).fill("."));
+    spr.rows.forEach((r, y) => [...r].forEach((k, x) => { if (k !== ".") g[dy + y][dx + x] = k; }));
+    for (const [x, y, k] of extra) if (g[y]?.[x] !== undefined) g[y][x] = k;
+    return g.map((r) => r.join(""));
+  };
+  // rendija: la tapa (filas 0–2 del cofre cerrado) sube 1 px y por el hueco sale luz
+  const crack = { rows: [...closed.rows.slice(0, 3), "ogGGgGGgGGgo".replace(/./g, (c, i) => (i === 0 || i === 11 ? "o" : c)), ...closed.rows.slice(3)] };
+  const rays = (n) => [[3, 1], [6, 0], [7, 0], [10, 1], [1, 3], [12, 3]].slice(0, n).map(([x, y]) => [x, y, "g"]);
+  const sparks = [[2, 2, "G"], [11, 1, "g"], [5, 0, "G"]];
+  const F = [
+    ["chest-open-1", "Cofre, frame 1: cerrado y quieto, apoyado abajo del lienzo.", frame(closed, 1, 7)],
+    ["chest-open-2", "Cofre, frame 2: tiembla. El mismo cofre 1 px a la derecha: algo se mueve dentro.", frame(closed, 2, 7)],
+    ["chest-open-3", "Cofre, frame 3: tiembla al otro lado, 1 px a la izquierda del sitio original. Es la anticipación: avisa de que va a pasar algo.", frame(closed, 0, 7)],
+    ["chest-open-4", "Cofre, frame 4: se entreabre. La tapa sube 1 px y por la rendija sale una franja de luz amarilla y crema.", frame(crack, 1, 6)],
+    ["chest-open-5", "Cofre, frame 5: abierto. La tapa echada atrás, el oro a la vista y seis píxeles de luz crema alrededor de la tapa: el momento de más brillo.", frame(open, 1, 4, rays(6))],
+    ["chest-open-6", "Cofre, frame 6: se asienta. Abierto, sin la luz de alrededor y con solo tres destellos sueltos que se apagan. Es el frame en el que se queda.", frame(open, 1, 4, sparks)],
+  ];
+  F.forEach(([n, d, rows]) => add(n, d, ["prop", "animación", "historia"], usedOnly(OPEN_PAL, rows), rows));
+}
+
+// ---------- luz local: una antorcha en una cueva oscura (64×40). La luz sube la rampa del suelo en anillos
+const CAVE = ["#0e0c14", "#1a1622", "#2a2230", "#463238", "#6e4a3a", "#a8703e", "#e0a850"]; // de la oscuridad a la luz cálida
+const TORCH = { o: "#1b1030", w: "#6b3d2e", f: "#ff8f3a", F: "#ffe58a", c: "#fff3c4" };
+const caveBase = (x, y) => ((x * 7 + y * 13) % 17 === 0 ? 0 : (x * 3 + y * 5) % 11 === 0 ? 2 : 1) + (y % 8 === 0 && (x + Math.floor(y / 8) * 5) % 9 < 6 ? -1 : 0); // piedra: dos tonos y juntas
+function caveFrame({ r = 15, mode = "bands", flame = 0 } = {}) {
+  const tx = 20, ty = 22; // centro de la llama
+  const px = Array.from({ length: 40 }, (_, y) => Array.from({ length: 64 }, (_, x) => {
+    const b = Math.max(0, caveBase(x, y)), d = Math.hypot((x + 0.5 - tx) / 1.15, y + 0.5 - ty);
+    if (mode === "bands") { const lift = d < r * 0.4 ? 3 : d < r * 0.7 ? 2 : d < r ? 1 : 0; return CAVE[Math.min(6, b + lift)]; }
+    if (mode === "overlay") return d < r ? "#c07840" : CAVE[b]; // un círculo naranja encima: borra la piedra
+    // degradado continuo: cada píxel su propio color
+    const t = Math.max(0, 1 - d / r), a = CAVE[b], c = (h) => parseInt(h.slice(1), 16);
+    const mixc = (k) => Math.round(((c(a) >> k) & 255) * (1 - t) + ((c("#e0a850") >> k) & 255) * t);
+    return "#" + [16, 8, 0].map((k) => mixc(k).toString(16).padStart(2, "0")).join("");
+  }));
+  // la antorcha: un palo en la pared y la llama, que cambia de forma en cada frame
+  const stick = [[20, 24], [20, 25], [20, 26], [20, 27], [20, 28]];
+  for (const [x, y] of stick) px[y][x] = TORCH.w;
+  for (const [x, y] of [[19, 24], [21, 24], [19, 28], [21, 28], [20, 29]]) px[y][x] = TORCH.o;
+  const FL = [
+    [[20, 19, "F"], [19, 20, "f"], [20, 20, "c"], [21, 20, "f"], [19, 21, "f"], [20, 21, "F"], [21, 21, "f"], [19, 22, "f"], [20, 22, "f"], [21, 22, "f"], [20, 23, "f"]],
+    [[21, 19, "F"], [20, 20, "F"], [21, 20, "f"], [19, 21, "f"], [20, 21, "c"], [21, 21, "f"], [19, 22, "f"], [20, 22, "F"], [21, 22, "f"], [20, 23, "f"]],
+    [[19, 18, "f"], [20, 19, "F"], [19, 20, "f"], [20, 20, "F"], [21, 20, "f"], [19, 21, "f"], [20, 21, "c"], [21, 21, "f"], [19, 22, "f"], [20, 22, "f"], [21, 22, "f"], [20, 23, "f"]],
+  ][flame];
+  for (const [x, y, k] of FL) px[y][x] = TORCH[k];
+  return px;
+}
+{
+  // paleta fija para los tres frames del parpadeo: las mismas letras siempre
+  const letters = "0123456", FIX = Object.fromEntries(CAVE.map((h, i) => [letters[i], h]));
+  const PAL = { ...FIX, o: TORCH.o, w: TORCH.w, f: TORCH.f, F: TORCH.F, c: TORCH.c };
+  const toRows = (px) => px.map((r) => r.map((h) => Object.keys(PAL).find((k) => PAL[k] === h)).join(""));
+  const FR = [[15, 0], [14, 1], [16, 2]];
+  const DESC = [
+    "Cueva con antorcha, frame 1: la luz sube la piedra tres pasos de su rampa junto a la llama, dos en el anillo siguiente y uno en el borde. Fuera del radio, la cueva casi negra. Tres anillos, no un degradado.",
+    "Cueva con antorcha, frame 2: la llama se inclina y el radio de la luz se encoge 1 px: los anillos se cierran un poco.",
+    "Cueva con antorcha, frame 3: la llama se estira hacia arriba y el radio crece 1 px. Alternando los tres frames, la luz respira como un fuego.",
+  ];
+  FR.forEach(([r, fl], i) => { const rows = toRows(caveFrame({ r, flame: fl })); add(`torch-${i + 1}`, DESC[i], ["luz", "escena", "animación"], usedOnly(PAL, rows), rows); });
+  const ov = hexGridToSprite(caveFrame({ mode: "overlay" }));
+  add("torch-overlay", "Error: la luz como un círculo naranja plano pintado encima. Dentro del círculo, la piedra desaparece: no hay juntas ni texturas, y no se nota que la luz sea más fuerte junto a la llama.", ["luz", "escena", "error"], ov.pal, ov.rows);
+  const gr = caveFrame({ mode: "smooth" });
+  // el degradado continuo produce cientos de colores: se cuantiza a 60 para que quepa en la paleta, y sigue siendo un degradado
+  const q = gr.map((r) => r.map((h) => { const n = parseInt(h.slice(1), 16); return "#" + [16, 8, 0].map((k) => Math.min(255, Math.round(((n >> k) & 255) / 24) * 24).toString(16).padStart(2, "0")).join(""); }));
+  const gs = hexGridToSprite(q);
+  add("torch-smooth", "Error: la luz como un degradado continuo, con decenas de colores entre la oscuridad y el naranja. De cerca se ven escalones sucios; la paleta se dispara y ya no casa con el resto del juego.", ["luz", "escena", "error"], gs.pal, gs.rows);
+}
+
+// ---------- accesibilidad del color: dos slimes que solo se distinguen por el tono, simulados con deuteranopía
+// Simulación de Machado et al. (2009), deuteranopía completa, en RGB lineal
+const lin = (v) => { v /= 255; return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; };
+const unlin = (v) => Math.round(255 * (v <= 0.0031308 ? 12.92 * v : 1.055 * v ** (1 / 2.4) - 0.055));
+const DEUT = [[0.367322, 0.860646, -0.227968], [0.280085, 0.672501, 0.047413], [-0.01182, 0.04294, 0.968881]];
+const deutan = (hex) => {
+  const n = parseInt(hex.slice(1), 16), c = [n >> 16, (n >> 8) & 255, n & 255].map(lin);
+  return "#" + DEUT.map((row) => Math.min(255, Math.max(0, unlin(row.reduce((a, m, i) => a + m * c[i], 0))))).map((v) => v.toString(16).padStart(2, "0")).join("");
+};
+{
+  const sl = spriteByName("slime");
+  const pair = (palA, palB) => {
+    const px = Array.from({ length: 8 }, () => Array(24).fill(null));
+    [[palA, 1], [palB, 13]].forEach(([pal, x0]) => sl.rows.forEach((r, y) => [...r].forEach((k, x) => { if (k !== ".") px[y][x0 + x] = pal[k]; })));
+    return px;
+  };
+  // el coral está elegido para que, con deuteranopía, se vea casi igual que el verde (base y sombra)
+  const GREEN = sl.palette, RED = { ...sl.palette, g: "#faa082", G: "#a05f50", h: "#ffe0d0" };
+  const RED_DARK = { ...sl.palette, g: "#a8243a", G: "#5a1020", h: "#ff9a9a" }; // más oscuro: se distingue por valor, no solo por tono
+  const sim = (px) => px.map((r) => r.map((h) => (h ? deutan(h) : null)));
+  const S = [
+    ["cb-pair", "Dos slimes que solo se diferencian por el tono: uno verde y otro rojo coral de valor parecido. Con visión normal se distinguen bien.", pair(GREEN, RED), ["color", "accesibilidad"]],
+    ["cb-pair-deutan", "Los mismos dos slimes simulando deuteranopía (no se distingue el rojo del verde). Los dos se vuelven casi del mismo ocre claro: quien tenga este tipo de daltonismo no sabe cuál es cuál.", sim(pair(GREEN, RED)), ["color", "accesibilidad", "error"]],
+    ["cb-fixed", "El slime rojo con una rampa roja mucho más oscura: ahora los dos se diferencian también por el valor (claro frente a oscuro), no solo por el tono.", pair(GREEN, RED_DARK), ["color", "accesibilidad"]],
+    ["cb-fixed-deutan", "La versión corregida simulando deuteranopía: los tonos se parecen, pero uno es claro y el otro oscuro. Se distinguen al primer vistazo.", sim(pair(GREEN, RED_DARK)), ["color", "accesibilidad"]],
+  ];
+  for (const [n, d, px, tags] of S) { const s = hexGridToSprite(px); add(n, d, tags, s.pal, s.rows); }
+}
+
 // ---------- escribir y validar
 let bad = 0;
 for (const s of out) {

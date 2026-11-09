@@ -1,0 +1,39 @@
+{
+  "name": "chest-open-6",
+  "description": "Cofre, frame 6: se asienta. Abierto, sin la luz de alrededor y con solo tres destellos sueltos que se apagan. Es el frame en el que se queda.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "prop",
+    "animación",
+    "historia"
+  ],
+  "palette": {
+    "o": "#1b1030",
+    "l": "#d08a50",
+    "w": "#a0603a",
+    "W": "#6b3d2e",
+    "y": "#f2b33d",
+    "Y": "#a8661c",
+    "g": "#fff3c4",
+    "G": "#ffe58a"
+  },
+  "rows": [
+    ".....G........",
+    "...........g..",
+    "..G...........",
+    "..............",
+    "..oooooooooo..",
+    ".oWWWWWWWWWWo.",
+    ".oWWWWWWWWWWo.",
+    ".ooyyyoyyyyoo.",
+    ".oyyyyyyyYyyo.",
+    ".oYyyYyyyyyYo.",
+    ".oooooooooooo.",
+    ".olllllllllwo.",
+    ".owwwoyyowwWo.",
+    ".owwwoYYowwWo.",
+    ".oWWWWWWWWWWo.",
+    ".oooooooooooo."
+  ]
+}

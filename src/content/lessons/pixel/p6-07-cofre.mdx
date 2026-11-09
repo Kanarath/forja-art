@@ -1,0 +1,299 @@
+---
+id: p6-07
+discipline: pixel
+level: 6
+order: 7
+title: "Animar objetos: un cofre que se abre"
+summary: "Los objetos también actúan. Un cofre tiembla, deja escapar una rendija de luz, se abre con rayos y se queda abierto: anticipación, golpe y asentamiento con timing desigual."
+duration: 40
+status: borrador
+objectives:
+  - "Ordenar la animación de un objeto en anticipación, momento fuerte y asentamiento"
+  - "Dar un timing desigual: pausas largas antes y después, golpes muy cortos en medio"
+  - "Reutilizar frames: el tembleque con dos dibujos repetidos"
+  - "Usar la luz como recompensa y punto focal, y apagarla para que el objeto se asiente"
+  - "Animar el cofre en Aseprite con la luz en su propia capa y que termine en el último frame"
+prerequisites: [p6-03, p6-04]
+fundamentals: [f10]
+tools: [aseprite]
+piece:
+  name: "Tu cofre abriéndose en 16×16: tembleque, rendija de luz, apertura con rayos y frame final asentado"
+  canvas: "16x16"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [tesoro]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Vas a forjar **un cofre que se abre**. No es un personaje, pero actúa: duda, se resiste y, de golpe, enseña lo que guarda. Es el momento que el jugador ha estado esperando.
+
+Dale a *Reproducir*. Son 8 frames, pero solo 6 dibujos: el tembleque repite dos.
+
+<Animator sprites={["chest-open-1", "chest-open-2", "chest-open-3", "chest-open-2", "chest-open-3", "chest-open-4", "chest-open-5", "chest-open-6"]} durations={[400, 60, 60, 60, 60, 200, 120, 600]} />
+
+El laboratorio lo repite en bucle para que lo estudies. En un juego se reproduce **una vez**, cuando el jugador abre el cofre, y luego **se queda en el último frame**: abierto. Un cofre que se cierra solo y vuelve a empezar sería un error.
+
+Tu pieza será la misma idea con tu cofre (el de [P4-02](/forja-art/pixel/p4-02/) o uno nuevo) en un lienzo de **16×16**: el cofre abajo y sitio libre encima para la tapa y la luz.
+
+<Sprite name="chest-open-5" scale={10} caption="chest-open-5 · El momento fuerte: la tapa echada atrás, el oro a la vista y seis píxeles de luz crema alrededor" />
+</Block>
+
+<Block kind="concepto">
+### Seis dibujos, tres fases
+
+El lienzo mide 14×16. El cofre es el de siempre (12×9) y está apoyado abajo; encima quedan **7 filas vacías**: es el sitio que ocuparán la tapa abierta y los rayos.
+
+<Sprite name="chest-open-1" scale={10} caption="chest-open-1 · Cerrado y quieto, en su sitio. La tapa clara arriba, la cerradura dorada en el centro y la madera oscura a la derecha y abajo" />
+
+<Sprite name="chest-open-2" scale={10} caption="chest-open-2 · Tiembla: el mismo cofre, 1 píxel a la derecha. No cambia nada más" />
+
+<Sprite name="chest-open-3" scale={10} caption="chest-open-3 · Tiembla al otro lado: 1 píxel a la izquierda del sitio original. De este frame al anterior hay 2 píxeles de salto" />
+
+<Sprite name="chest-open-4" scale={10} caption="chest-open-4 · La rendija: el cuerpo vuelve a su sitio y la tapa sube 1 píxel. En el hueco, una fila de 10 píxeles de luz crema y amarilla alternadas, cerrada a los lados por el contorno" />
+
+<Sprite name="chest-open-5" scale={10} caption="chest-open-5 · Abierto: arriba, la cara interior de la tapa (oscura); en medio, tres filas de oro con sus sombras; alrededor, seis píxeles de luz crema: dos juntos en el centro arriba, uno a cada lado un poco más abajo y otro a cada lado a la altura de la tapa" />
+
+<Sprite name="chest-open-6" scale={10} caption="chest-open-6 · Asentado: el mismo cofre abierto. Los rayos se han ido y solo quedan tres destellos sueltos, en otros sitios y sin simetría: dos amarillos y uno crema" />
+
+| Frames | Fase | Qué pasa | Duración |
+| --- | --- | --- | --- |
+| 1 | Reposo | Cerrado y quieto | larga: 400 ms |
+| 2, 3, 2, 3 | Anticipación | Tiembla: «algo va a pasar» | muy corta: 60 ms cada uno |
+| 4 | Anticipación | La rendija de luz: «hay algo dentro» | media: 200 ms |
+| 5 | Momento fuerte | Se abre con rayos | corta: 120 ms |
+| 6 | Asentamiento | Abierto, con destellos sueltos. Se queda | larga: 600 ms (y para siempre) |
+
+### La anticipación: avisar antes de actuar
+
+Es la misma idea que el aplastamiento antes del salto de [P6-03](/forja-art/pixel/p6-03/), en un objeto. El tembleque y la rendija no «hacen» nada: **preparan**. Le dicen al jugador «mira aquí» y «algo bueno viene».
+
+<Why>
+Un cambio sin aviso llega antes de que el ojo esté mirando. Si el cofre pasa de cerrado a abierto en un frame, el jugador ve el resultado, pero se pierde el momento. La anticipación compra medio segundo de atención: cuando llega la apertura, ya estás mirando el cofre.
+</Why>
+
+Fíjate en lo **poco** que se mueve: 1 píxel a cada lado. En un objeto de 12 píxeles, 1 píxel ya es un temblor claro. Más sería un salto.
+
+La rendija es el segundo aviso, y el más fuerte: no se ve el tesoro, solo **su luz**. Es lo más claro del cofre hasta ese momento. El jugador lo adivina antes de verlo.
+
+### El timing: desigual a propósito
+
+Mira las duraciones: **400, 60, 60, 60, 60, 200, 120, 600**. Nada se repite por inercia. El reposo y el final son largos; el tembleque y el estallido, cortos.
+
+<Why title="Por qué no todo igual">
+El ritmo es contraste. Una pausa larga hace que el golpe que sigue parezca más rápido, y un golpe corto hace que la pausa siguiente pese más. Es el mismo patrón que el impacto de [P6-04](/forja-art/pixel/p6-04/) y el daño de [P6-06](/forja-art/pixel/p6-06/): **rápido en lo que pasa, despacio en lo que queda**. Con todos los frames iguales, el cofre se abre como una diapositiva tras otra.
+</Why>
+
+### Reutilizar frames
+
+El tembleque son 4 frames con solo **2 dibujos**: 2, 3, 2, 3. No hace falta dibujar cuatro posiciones; el ojo solo ve «tiembla».
+
+Reutilizar es lo normal en animación de juegos: menos dibujos, menos memoria y menos trabajo si luego cambias el cofre. La animación son 8 frames, pero tú solo dibujas 6.
+
+### La luz como recompensa
+
+Los dos colores nuevos, crema y amarillo, son **los más claros** de toda la animación. Es lo que hace que el ojo vaya al cofre ([F07-01](/forja-art/fundamentos/f07-01/)): el punto de más valor es el foco.
+
+Y la luz es **la recompensa**. Primero se escapa por la rendija, luego estalla en rayos y al final se apaga hasta quedar en tres destellos. El cofre abierto que queda cuenta la historia de lo que ha pasado ([F10-01](/forja-art/fundamentos/f10-01/)): «alguien lo ha abierto y había un tesoro».
+
+<Sprite name="chest-open-5" scale={6} view="gray" caption="chest-open-5 en grises: los rayos son los píxeles más claros del sprite, más incluso que el oro" />
+
+### El asentamiento: el frame que se queda
+
+El frame 5 es para **ver un instante**, no para mirarlo. Si los rayos se quedaran, el cofre estaría estallando para siempre: el ojo no podría dejar de mirarlo y el resto de la pantalla perdería el foco.
+
+Por eso el frame 6 los quita y deja tres destellos pequeños: el cofre sigue diciendo «aquí hay algo bonito», pero ya en voz baja. Es el frame en el que se queda.
+
+### El mismo cofre, sin anticipación
+
+Estos son solo los frames 1, 5 y 6:
+
+<Animator sprites={["chest-open-1", "chest-open-5", "chest-open-6"]} durations={[400, 120, 600]} />
+
+El cofre cambia de golpe: cerrado, y de pronto abierto. No hay sorpresa porque no había espera. Ahora vuelve al primer animador y compara.
+
+<Tip title="Experimenta en el primer animador">
+1. Pon **todos** los frames a 150 ms. El tembleque se vuelve lento y torpe, y la apertura deja de ser un golpe.
+2. Sube la rendija (frame 6 del animador) a 500 ms. La espera crece: funciona, pero si la alargas más, aburre.
+3. Sube los rayos (frame 7) a 500 ms. Dejan de ser un destello y se ven como un dibujo de rayos.
+</Tip>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Lienzo y capas">
+1. <Keys k="Ctrl+N" />: **16×16**, fondo transparente. Activa *View → Grid*.
+2. Guarda con <Keys k="Ctrl+S" /> como `cofre.aseprite`.
+3. Desde el menú *Layer*, crea una segunda capa. Renómbralas con doble clic sobre su nombre en la línea de tiempo. De abajo arriba:
+   - `cofre`: el cofre;
+   - `luz`: los rayos y los destellos. Por ahora, vacía.
+4. En la capa `cofre`, pega o dibuja tu cofre cerrado **abajo del todo**, centrado. Deja libres encima al menos **6 filas**.
+
+<Why>
+La luz va en su **propia capa** porque aparece, crece y se apaga sin que el cofre cambie. Así podrás borrar los rayos del último frame sin tocar ni un píxel de madera.
+</Why>
+
+<Tip>
+Si tu cofre mide como el del curso (12×9), quedan 7 filas libres. La tapa abierta necesita unas 3 y los rayos, el resto.
+</Tip>
+</Step>
+
+<Step n={2} title="El tembleque: frames 2 a 5">
+Cada frame nuevo copia lo que hay en el actual. Aprovéchalo:
+
+1. Añade un frame desde el menú *Frame* (frame 2). En la capa `cofre`, selecciona el cofre entero con <Keys k="M" /> y pulsa la **flecha derecha** una vez: 1 píxel a la derecha.
+2. Añade el frame 3. Selecciona el cofre y pulsa la **flecha izquierda** dos veces: queda 1 píxel a la izquierda del sitio original.
+3. Añade el frame 4 y muévelo **2 a la derecha**: es igual que el frame 2.
+4. Añade el frame 5 y muévelo **2 a la izquierda**: es igual que el frame 3.
+
+Activa el onion skin (el botón está en la línea de tiempo) y comprueba con el frame 1 que cada desplazamiento es de 1 píxel respecto al sitio original.
+
+<Why>
+Los frames 4 y 5 son **repeticiones**: no dibujas nada nuevo. Cuatro frames de tembleque cuestan dos dibujos.
+</Why>
+
+<Tip>
+Si prefieres no duplicar el dibujo, Aseprite puede **enlazar cels** (linked cels) para que los frames 4 y 5 compartan el dibujo de los frames 2 y 3: si cambias uno, cambia el otro.
+</Tip>
+</Step>
+
+<Step n={3} title="Frame 6: la rendija de luz">
+1. Añade el frame 6. Selecciona el cofre entero y pulsa la **flecha derecha** una vez: vuelve a su sitio. Compruébalo con el onion skin.
+2. Selecciona con <Keys k="M" /> **solo la tapa**: las filas por encima de la línea oscura de la junta. Pulsa la **flecha arriba** una vez.
+3. Queda una fila vacía entre la tapa y el cuerpo. Con el lápiz (<Keys k="B" />), pon el contorno en los dos extremos y rellena el resto alternando dos colores de luz: un **crema** casi blanco y un **amarillo** claro.
+
+<Why>
+La luz por la rendija es **la promesa**: el jugador no ve el tesoro, pero sabe que está ahí. Por eso tiene que ser lo más claro del cofre. Si la pintas en el mismo dorado de la cerradura, se pierde.
+</Why>
+
+<Warn>
+Solo sube la tapa, no el cuerpo. El cuerpo se queda apoyado en el suelo: si el cofre entero sube, parece que salta.
+</Warn>
+</Step>
+
+<Step n={4} title="Frame 7: abierto, con rayos">
+1. Añade el frame 7. En la capa `cofre`, borra la tapa con la goma (<Keys k="E" />) y dibuja el cofre **abierto**: la tapa echada atrás, encima del cuerpo, enseñando su cara interior en un marrón **oscuro**, y el oro asomando por encima del borde. Usa `chest-open-5` como modelo.
+2. Cambia a la capa `luz`. Con el lápiz y el **crema**, pon **6 píxeles** alrededor de la tapa, en arco: dos juntos arriba en el centro y los demás a los lados, cada vez más bajos.
+
+<Why>
+La cara interior oscura de la tapa hace de **fondo** para el oro: el dorado brilla más contra un marrón oscuro. Los rayos, en el valor más alto, rematan el foco.
+</Why>
+
+<Tip>
+Los rayos no tienen que pegarse a la madera. Que ninguno comparta lado con el contorno del cofre (en `chest-open-5`, como mucho se tocan en diagonal): así se leen como **luz que sale**, no como algo clavado en la tapa.
+</Tip>
+</Step>
+
+<Step n={5} title="Frame 8: se asienta">
+1. Añade el frame 8. La capa `cofre` se queda igual que en el frame 7.
+2. En la capa `luz`, borra los 6 rayos y pon **3 destellos** en sitios distintos, sin simetría. Usa el amarillo en dos y el crema en uno.
+
+<Why>
+Este es el frame que se queda en pantalla. Tiene que **descansar**: menos luz, menos píxeles y nada simétrico que parezca todavía un estallido. Los destellos dicen «aquí hubo algo especial» sin gritar.
+</Why>
+</Step>
+
+<Step n={6} title="El timing">
+Clic derecho sobre el número de cada frame, *Frame Properties*, y pon:
+
+- Frame 1 · cerrado: **400 ms**.
+- Frames 2 a 5 · tembleque: **60 ms** cada uno.
+- Frame 6 · rendija: **200 ms**.
+- Frame 7 · rayos: **120 ms**.
+- Frame 8 · asentado: **600 ms** (en el juego se queda para siempre).
+
+Reproduce (botón de *play* de la línea de tiempo) a tamaño real y ampliado:
+
+- ¿El tembleque se nota sin que el cofre salte?
+- ¿La rendija hace esperar?
+- ¿Los rayos son un destello o se quedan demasiado?
+- ¿El último frame descansa?
+</Step>
+
+<Step n={7} title="Exporta">
+1. Para enseñarlo: *File → Export → Export As*, formato **GIF**, **Resize** al 400 % o más.
+2. Para un juego: *File → Export → Export Sprite Sheet*, en una fila, PNG a 1× y fondo transparente. Apunta las duraciones o exporta también el JSON. Avisa de que la animación **no va en bucle**: se reproduce una vez y se queda en el último frame.
+</Step>
+
+<Warn title="Verifica en tu versión">
+Los nombres y la posición pueden variar según la versión de Aseprite: el menú *Layer*, el doble clic para renombrar, la opción de frame nuevo del menú *Frame*, *Frame Properties* (clic derecho sobre el frame), el botón de onion skin, los cels enlazados (linked cels) y las opciones de *Export Sprite Sheet*. Comprueba también: que cada frame nuevo copia el contenido del actual; que las flechas mueven 1 píxel el contenido de la selección; y, si los frames nuevos salen con cels enlazados, sepáralos antes de mover el cofre, o moverás también el frame anterior.
+</Warn>
+
+<ToolNote tool="godot">
+
+Esto es opcional; lo verás en el nivel 9. En Godot, la animación del cofre iría en un AnimatedSprite2D con su SpriteFrames. Cada animación tiene una casilla de bucle: **desmárcala**, para que se reproduzca una vez y se pare en el último frame. Verifica en tu versión.
+
+</ToolNote>
+</Block>
+
+<Block kind="version">
+Ahora a tu manera. Mantén la anticipación, el momento fuerte corto, el asentamiento y el timing desigual. Elige uno:
+
+- **Cofre con resistencia:** dos tandas de tembleque separadas por una pausa de 300 ms, como si la cerradura se resistiera. La segunda tanda, más rápida.
+- **Cofre trampa:** el mismo tembleque y la misma rendija, pero sale una luz **fría** (violetas o verdes) y dentro no hay oro, sino unos ojos. La anticipación es igual; la recompensa, otra.
+- **Otro objeto:** una puerta que se abre, una botella que se descorcha o una piedra que se resquebraja y deja salir luz. Las mismas tres fases.
+
+<Tip>
+Sea cual sea tu variante, el objeto **se queda** en su estado final. Si es una puerta, se queda abierta; si es una piedra, rota.
+</Tip>
+</Block>
+
+<Block kind="errores">
+<Mistake title="Sin anticipación" wrongLabel="Frames 1, 5 y 6" rightLabel="Con tembleque y rendija">
+  <p slot="wrong">El cofre pasa de cerrado a abierto en un frame. El jugador ve el resultado, pero no el momento: no hay espera, así que no hay sorpresa.</p>
+  <p slot="right">El cofre tiembla dos veces y deja escapar la luz antes de abrirse. Cuando llega la apertura, el ojo ya está mirando.</p>
+
+Compara los dos animadores del concepto. Corrígelo añadiendo el tembleque (dos dibujos repetidos) y un frame de rendija **antes** de la apertura. Son pocos píxeles y cambian toda la animación.
+</Mistake>
+
+<Mistake title="Todos los frames con la misma duración" wrongLabel="150 ms cada uno" rightLabel="400, 60…, 200, 120, 600 ms">
+  <p slot="wrong">Todo dura lo mismo: el tembleque es lento y torpe, la rendija pasa sin hacer esperar y los rayos se ven igual que el reposo. Parece una presentación de diapositivas.</p>
+  <p slot="right">Pausas largas al principio y al final, golpes cortos en medio. El contraste de tiempos es lo que da ritmo.</p>
+
+Pruébalo poniendo todos los frames del primer animador a 150 ms. Corrígelo acortando lo que es un golpe (tembleque, rayos) y alargando lo que se tiene que mirar (reposo, rendija y final).
+</Mistake>
+
+<Mistake title="Rayos que se quedan siempre" wrongLabel="Termina en chest-open-5" rightLabel="Termina en chest-open-6">
+  <Sprite slot="wrong" name="chest-open-5" scale={8} />
+  <Sprite slot="right" name="chest-open-6" scale={8} />
+
+Si la animación se para en el frame de los rayos (izquierda), el cofre está estallando para siempre: roba el foco a todo lo demás y nunca se asienta. Corrígelo con un último frame más tranquilo (derecha): sin rayos y con pocos destellos sueltos y asimétricos. Es ese el que se queda.
+</Mistake>
+
+<Warn title="Un tembleque demasiado grande">
+Si el cofre se mueve 2 o 3 píxeles a cada lado, ya no tiembla: **salta**. En un objeto de 12 píxeles, 1 píxel es un temblor claro (y de un lado al otro ya hay 2 de salto). Corrígelo dejando el desplazamiento en 1 píxel respecto al sitio original. Si quieres más tensión, añade más repeticiones, no más distancia.
+</Warn>
+
+<Warn title="La animación en bucle">
+Si exportas o montas la animación en bucle, el cofre se cierra solo y vuelve a abrirse una y otra vez. Corrígelo marcando que se reproduce **una vez** y se queda en el último frame.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+Juzga tu animación **a 1×** y a su velocidad real, y fíjate sobre todo en el último frame: es el que el jugador verá más tiempo.
+
+<Checklist items={[
+  "La animación tiene anticipación, momento fuerte y asentamiento, en ese orden",
+  "El tembleque se mueve 1 píxel respecto al sitio original, no más",
+  "El tembleque reutiliza frames: dos dibujos repetidos",
+  "Antes de abrirse, una rendija de luz deja ver que hay algo dentro",
+  "Solo sube la tapa: el cuerpo se queda apoyado",
+  "La luz es lo más claro de toda la animación",
+  "Los rayos están en una capa aparte y duran un instante",
+  "El último frame no tiene rayos: como mucho, unos destellos sueltos",
+  "Las duraciones son desiguales: pausas largas y golpes cortos",
+  "La animación se reproduce una vez y se queda en el último frame",
+]} />
+
+<Quiz q="¿Para qué sirven el tembleque y la rendija de luz?" options={["Para que la animación tenga más frames", "Para que el cofre parezca más pesado", "Para avisar: el jugador mira el cofre antes de que se abra"]} answer={2}>
+Son la anticipación. Compran medio segundo de atención, así que cuando llega la apertura el ojo ya está en el cofre.
+</Quiz>
+
+<Quiz q="¿En qué frame debe quedarse el cofre al terminar?" options={["En el asentado, abierto y con pocos destellos", "En el de los rayos, que es el más bonito", "En el cerrado, para que pueda volver a abrirse"]} answer={0}>
+El último frame es el que se ve más tiempo. Tiene que descansar: con rayos, el cofre estallaría para siempre y robaría el foco.
+</Quiz>
+
+<Quiz q="El tembleque tiene 4 frames. ¿Cuántos dibujos distintos necesitas?" options={["Cuatro, uno por frame", "Dos, repetidos: derecha, izquierda, derecha, izquierda", "Uno, porque el cofre no cambia"]} answer={1}>
+Basta con dos posiciones que se alternan. Reutilizar frames ahorra trabajo y el ojo solo lee «tiembla».
+</Quiz>
+</Block>

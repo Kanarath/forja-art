@@ -1,0 +1,37 @@
+{
+  "name": "chest-open-1",
+  "description": "Cofre, frame 1: cerrado y quieto, apoyado abajo del lienzo.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "prop",
+    "animación",
+    "historia"
+  ],
+  "palette": {
+    "o": "#1b1030",
+    "l": "#d08a50",
+    "w": "#a0603a",
+    "W": "#6b3d2e",
+    "y": "#f2b33d",
+    "Y": "#a8661c"
+  },
+  "rows": [
+    "..............",
+    "..............",
+    "..............",
+    "..............",
+    "..............",
+    "..............",
+    "..............",
+    "..oooooooooo..",
+    ".ollllyylllwo.",
+    ".owwwwyywwwwo.",
+    ".oooooyyooooo.",
+    ".owwwoyyowwWo.",
+    ".owwwoYYowwWo.",
+    ".owwwwoowwwWo.",
+    ".oWWWWWWWWWWo.",
+    ".oooooooooooo."
+  ]
+}

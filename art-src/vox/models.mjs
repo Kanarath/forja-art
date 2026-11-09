@@ -544,7 +544,76 @@ const potDetail = potLiquid.map((v) => {
   return v;
 });
 
+// ---------- RUINAS: un pórtico de piedra intacto, roto con intención y abandonado
+const RUIN = { a: "#b4ab9f", b: "#9a9184", c: "#7d7568", d: "#5e584e" };
+const rnoise = (x, y, z) => (((x * 92837111) ^ (y * 689287499) ^ (z * 283923481)) >>> 0) % 100;
+const stoneC = (v) => (v.z % 3 === 0 ? RUIN.c : (v.x + v.z) % 4 === 0 ? RUIN.b : RUIN.a); // hiladas de sillares
+const ruinFloor = box(0, -3, 0, 15, 7, 0, null).map((v) => ({ ...v, c: (v.x + v.y) % 2 ? RUIN.b : RUIN.c }));
+const pillar = (x0) => [...box(x0 - 1, 1, 1, x0 + 3, 5, 1, null), ...box(x0, 2, 2, x0 + 2, 4, 10, null), ...box(x0 - 1, 1, 11, x0 + 3, 5, 11, null)].map((v) => ({ ...v, c: v.z === 1 || v.z === 11 ? RUIN.d : stoneC(v) })); // basa, fuste y capitel
+const lintel = box(1, 1, 12, 13, 5, 13, null).map((v) => ({ ...v, c: v.z === 13 ? RUIN.a : RUIN.b }));
+const ruinIntact = [...ruinFloor, ...pillar(2), ...pillar(10), ...lintel];
+// rotura: una grieta diagonal corta el pilar derecho y el dintel se parte donde no tiene apoyo
+const crackZ = (x) => 6 + (x - 10) * 1.2; // el plano de rotura sube hacia el lado de fuera: el muñón es más bajo junto al hueco del pórtico
+const broken = ruinIntact.filter((v) => {
+  if (v.x >= 9 && v.z >= 2 && v.z <= 11 && v.z > crackZ(v.x) + (rnoise(v.x, v.y, 0) % 3) - 1) return false; // pilar partido con borde irregular
+  if (v.z >= 12 && v.x >= 8) return false; // sin el pilar, el dintel cae a partir de aquí
+  if (v.z >= 12 && v.x === 7 && rnoise(v.x, v.y, v.z) < 50) return false; // borde de la rotura del dintel, mellado
+  if (v.x <= 5 && v.z >= 2 && v.z <= 10 && (v.x === 2 || v.x === 4 || v.y === 2 || v.y === 4) && rnoise(v.x, v.y, v.z) < 8) return false; // desconchones en el pilar que queda
+  return true;
+});
+// cascotes: los trozos que faltan están en el suelo, al pie de donde cayeron
+const rubble = [
+  ...box(10, -2, 1, 13, 0, 2, null), // un trozo de dintel tumbado
+  ...box(14, 2, 1, 15, 3, 2, null), ...box(12, 6, 1, 13, 7, 1, null), { x: 9, y: 6, z: 1 }, { x: 15, y: 5, z: 1 }, { x: 11, y: -1, z: 3 },
+].map((v) => ({ ...v, c: v.z === 1 ? RUIN.c : RUIN.b }));
+const ruinBroken = [...broken, ...rubble];
+const ruinOld = [
+  ...ruinBroken.map((v) => {
+    const n = rnoise(v.x + 3, v.y, v.z);
+    if (v.z === 0 && n < 35) return { ...v, c: LEAF.dark }; // hierba entre las losas
+    if (v.z === 13 && n < 55) return { ...v, c: LEAF.mid }; // musgo encima del dintel, donde se queda el agua
+    if (v.z <= 2 && n < 30) return { ...v, c: LEAF.dark }; // humedad y musgo abajo
+    return v;
+  }),
+  // hiedra: baja por la cara de fuera del pilar izquierdo, en una línea que se ramifica
+  ...[[0, 3, 10], [0, 3, 9], [0, 2, 8], [0, 2, 7], [0, 3, 6], [0, 4, 5], [0, 4, 4], [0, 3, 3], [0, 2, 2], [0, 4, 7], [0, 4, 8]].map(([, y, z]) => ({ x: 1, y, z, c: z % 2 ? LEAF.mid : LEAF.light })), // pegada a la cara de fuera del fuste (x = 1)
+  { x: 3, y: 0, z: 1, c: LEAF.light }, { x: 14, y: 1, z: 1, c: LEAF.light }, { x: 6, y: 6, z: 1, c: LEAF.mid }, // matas
+];
+
+// ---------- KIT DE VEGETACIÓN: piezas pequeñas y cómo repartirlas
+const bush = (r, h, seed) => { const v = []; for (let x = -r; x <= r; x++) for (let y = -r; y <= r; y++) for (let z = 0; z < h; z++) if (Math.hypot(x / r, y / r, (z - h / 2 + 0.5) / (h / 2)) <= 1.05 && rnoise(x + seed, y, z) > 8) v.push({ x, y, z, c: z >= h - 1 ? LEAF.light : z === 0 ? LEAF.dark : LEAF.mid }); return v; };
+const stoneP = (w, d, h) => box(0, 0, 0, w - 1, d - 1, h - 1, null).filter((v) => !(v.z === h - 1 && (v.x === 0 || v.x === w - 1) && (v.y === 0 || v.y === d - 1))).map((v) => ({ ...v, c: v.z === h - 1 ? STONE.light : STONE.dark }));
+const tuft = (h) => box(0, 0, 0, 0, 0, h - 1, null).map((v) => ({ ...v, c: v.z === h - 1 ? LEAF.light : LEAF.mid }));
+const KIT = [bush(2, 3, 1), bush(3, 4, 2), bush(4, 5, 3), stoneP(3, 2, 2), stoneP(4, 3, 3), tuft(1), tuft(2), [...tuft(2), ...move(tuft(1), 1, 0, 0)]];
+const kitPieces = KIT.flatMap((p, i) => move(p, [0, 7, 16, 26, 32, 39, 42, 45][i], 0, 0));
+const vegGround = box(0, 0, 0, 23, 23, 0, null).map((v) => ({ ...v, c: (v.x * 3 + v.y) % 7 ? "#4a6a3a" : "#3a5a30" })); // suelo oliva oscuro: más apagado que las plantas, para que destaquen
+const place = (list) => [...vegGround, ...list.flatMap(([i, x, y]) => move(KIT[i], x, y, 1))];
+// error: cada pieza en una rejilla, a la misma distancia
+const vegGrid = place([[1, 4, 4], [3, 11, 3], [1, 19, 4], [6, 4, 11], [4, 11, 11], [6, 19, 11], [1, 4, 19], [3, 11, 19], [1, 19, 19]]);
+// en grupos: una masa grande con piezas medianas y pequeñas pegadas, piedras al pie y hierba alrededor; huecos vacíos
+const vegClusters = place([
+  [2, 6, 7], [1, 10, 5], [0, 4, 11], [4, 9, 9], [6, 12, 8], [5, 3, 4], [7, 13, 11], // grupo principal
+  [1, 18, 17], [0, 20, 20], [3, 15, 18], [6, 21, 16], // grupo secundario, más pequeño
+  [5, 9, 19], [6, 19, 4], [5, 2, 20], // hierba suelta, poca
+]);
+
 export const MODELS = {
+  ruina: {
+    description: "Ruinas: un pórtico de piedra intacto, roto con intención y abandonado",
+    stages: [
+      { label: "Intacto", note: "Un pórtico sobre un suelo de losas: dos pilares con basa, fuste de 3×3 en hiladas de sillares y capitel, y un dintel que los une. Primero se construye entero: así sabes qué falta después.", voxels: ruinIntact },
+      { label: "Roto", note: "Una grieta diagonal corta el pilar derecho; sin apoyo, el dintel se parte y cae. Los trozos que faltan están en el suelo, al pie de donde cayeron. El pilar izquierdo solo tiene algún desconchón.", voxels: ruinBroken },
+      { label: "Abandonado", note: "El tiempo después de la rotura: hierba entre las losas, musgo encima del dintel y en la parte baja, una hiedra que baja por la cara de fuera del pilar y matas sueltas.", voxels: ruinOld },
+    ],
+  },
+  vegetacion: {
+    description: "Kit de vegetación: piezas pequeñas y cómo repartirlas",
+    stages: [
+      { label: "Piezas", note: "Ocho piezas en fila: tres arbustos de tamaños distintos (claro arriba, oscuro abajo), dos piedras con las esquinas de arriba gastadas y tres matas de hierba de 1–2 vóxels.", voxels: kitPieces },
+      { label: "En rejilla", note: "Error: nueve piezas repartidas en una rejilla, a la misma distancia unas de otras. Se lee como un tablero, no como un prado: la naturaleza no reparte así.", voxels: vegGrid },
+      { label: "En grupos", note: "Las piezas del kit, ahora en grupos: un arbusto grande con otros más pequeños pegados, una piedra al pie y hierba alrededor; un segundo grupo más pequeño, unas pocas matas sueltas y zonas vacías para que el ojo descanse.", voxels: vegClusters },
+    ],
+  },
   puente: {
     description: "Puente y escaleras: conectar dos orillas a distinta altura",
     stages: [

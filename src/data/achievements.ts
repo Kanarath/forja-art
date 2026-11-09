@@ -75,5 +75,10 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   { id: "contacto", name: "Con los pies en el suelo", description: "Props integrados en el suelo con sombras de contacto (P7-05).", color: "#2c7a48" },
   { id: "puente", name: "Puente", description: "Dos alturas conectadas con escaleras y un puente con barandilla (V6-03).", color: "#9aa3b5" },
   { id: "miniatura", name: "Miniatura", description: "Un prop voxel de 8×8×8 que se lee con muy pocos vóxels (V4-04).", color: "#e8484f" },
+  { id: "tesoro", name: "Tesoro", description: "Un objeto que se anima con anticipación, momento fuerte y asentamiento: un cofre que se abre (P6-07).", color: "#ffe58a" },
+  { id: "antorcha", name: "Antorcha", description: "Una luz local en anillos que sube la rampa del suelo y parpadea (P8-04).", color: "#ff8f3a" },
+  { id: "accesible", name: "Para todos los ojos", description: "Una paleta comprobada con simulación de daltonismo y en grises (F03-02).", color: "#ccbf86" },
+  { id: "ruina", name: "Ruina", description: "Una construcción voxel rota con intención: grietas, cascotes y el paso del tiempo (V2-04).", color: "#b4ab9f" },
+  { id: "vegetacion", name: "Vegetación", description: "Un kit de piezas pequeñas repartidas en grupos, no en rejilla (V6-04).", color: "#6ee59f" },
   { id: "forma-primero", name: "Forma antes que detalle", description: "Un modelo voxel con su blockout guardado como primera versión (V2-01).", color: "#38e1ff" },
 ];

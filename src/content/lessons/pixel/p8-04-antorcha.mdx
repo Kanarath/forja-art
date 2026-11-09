@@ -1,0 +1,320 @@
+---
+id: p8-04
+discipline: pixel
+level: 8
+order: 4
+title: "Luz local: una antorcha en la oscuridad"
+summary: "Una luz dentro de la escena no se pinta encima: sube cada píxel 3, 2 o 1 pasos de su propia rampa, en tres anillos. La textura sigue, la llama es lo más claro y parpadea en 3 frames."
+duration: 45
+status: borrador
+prerequisites: [p8-02, p3-02]
+fundamentals: [f05, f03]
+objectives:
+  - "Iluminar subiendo cada color unos pasos de su propia rampa, en lugar de pintar un color encima"
+  - "Repartir la luz en tres anillos discretos según la distancia a la fuente, no en un degradado"
+  - "Construir la rampa de una cueva que va de oscuro y frío a claro y cálido (hue shifting)"
+  - "Conservar la textura dentro de la luz y dejar la llama como lo más claro de la escena"
+  - "Animar el parpadeo en Aseprite con 3 frames: radio ±1 px y una llama distinta en cada uno"
+tools: [aseprite]
+piece:
+  name: "Una cueva oscura de 64×40 con una antorcha: tres anillos de luz que suben la rampa de la piedra y un parpadeo de 3 frames"
+  canvas: "64x40"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [antorcha]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+En [P8-02](/forja-art/pixel/p8-02/) la luz venía de fuera: el sol, el cielo, la hora. Hoy la luz está **dentro** de la escena.
+
+Vas a forjar **una cueva oscura con una antorcha en la pared**. La luz cae sobre la piedra en tres anillos y **respira**: el fuego nunca está quieto.
+
+Dale a *Reproducir*.
+
+<Animator sprites={["torch-1", "torch-2", "torch-3", "torch-1", "torch-3", "torch-2"]} durations={[120, 100, 140, 120, 140, 100]} />
+
+Son solo **tres frames**, colocados en un orden irregular y con duraciones distintas. Fíjate en tres cosas:
+
+- La **llama** cambia de forma en cada frame.
+- Los **anillos de luz** se abren y se cierran 1 píxel.
+- Las **juntas y vetas de la piedra** se siguen viendo dentro de la luz.
+
+<Sprite name="torch-1" scale={8} caption="torch-1 · 64×40. La antorcha está a la izquierda del centro. Alrededor, tres anillos de piedra iluminada; fuera, la cueva casi negra" />
+</Block>
+
+<Block kind="concepto">
+### La luz no se pinta encima: sube la rampa
+
+Vienes de Blender: allí pones una luz puntual y el motor calcula cuánto recibe cada cara. En pixel art lo haces tú, y la regla es sencilla:
+
+**Cada píxel iluminado sube unos pasos de SU propia rampa.** La junta oscura sube y sigue siendo más oscura que la piedra de al lado. La veta clara sube y sigue siendo más clara. Nada se tapa.
+
+<Why title="Por qué subir pasos y no pintar encima">
+Una superficie iluminada es **la misma superficie**, con más luz. Sus detalles no desaparecen: se ven mejor. Si pintas un color de luz encima, borras la piedra y la sustituyes por una mancha. El ojo ya no ve «piedra con luz», ve «un círculo naranja».
+</Why>
+
+### La rampa de la cueva: de frío oscuro a cálido claro
+
+Toda la piedra de `torch-1` sale de **una sola rampa de 6 colores**. Estos son sus datos reales (valor de 0 a 100 %):
+
+| Paso | Color | Valor | Tono |
+| --- | --- | --- | --- |
+| 0 | `#0e0c14` | 5 % | Azul violáceo |
+| 1 | `#1a1622` | 9 % | Violeta |
+| 2 | `#2a2230` | 15 % | Violeta |
+| 3 | `#463238` | 22 % | Malva apagado |
+| 4 | `#6e4a3a` | 32 % | Marrón rojizo |
+| 5 | `#a8703e` | 49 % | Ocre anaranjado |
+
+El valor sube siempre. Y el tono **gira**: de los violetas fríos de la oscuridad al ocre cálido junto al fuego. Es el hue shifting de [P3-02](/forja-art/pixel/p3-02/), y la regla de temperatura de [F03-01](/forja-art/fundamentos/f03-01/) y [F05-01](/forja-art/fundamentos/f05-01/): luz cálida, sombra fría.
+
+<Why title="Por qué la rampa gira al naranja">
+La luz del fuego es cálida. Lo que toca se tiñe de su color. Lo que no toca se queda en el frío de la cueva. Si la rampa solo aclarara (violeta oscuro, violeta medio, violeta claro), la piedra parecería iluminada por una linterna blanca, no por una antorcha.
+</Why>
+
+### Cómo está hecha la piedra
+
+Fuera de la luz, la piedra usa solo los **tres pasos más oscuros**:
+
+- **Paso 1**: la piedra base. Es casi todo el lienzo.
+- **Paso 2**: vetas más claras, en líneas diagonales 2:1 que bajan hacia la derecha.
+- **Paso 0**: juntas horizontales cada 8 filas, cortadas a tramos, y motas sueltas.
+
+Esa textura es lo que la luz tiene que respetar.
+
+### Tres anillos, no un degradado
+
+La luz de `torch-1` tiene **tres anillos**. Cada uno sube la piedra un número fijo de pasos:
+
+| Zona | Pasos que sube | Junta (0) | Piedra (1) | Veta (2) |
+| --- | --- | --- | --- | --- |
+| Fuera de la luz | 0 | 0 | 1 | 2 |
+| Anillo exterior | +1 | 1 | 2 | 3 |
+| Anillo medio | +2 | 2 | 3 | 4 |
+| Anillo interior, junto a la llama | +3 | 3 | 4 | 5 |
+
+Lee la tabla por columnas: **la junta siempre está un paso por debajo de la piedra y la veta, uno por encima**, en cualquier anillo. Eso es lo que mantiene la textura.
+
+<Sprite name="torch-1" scale={6} view="gray" caption="torch-1 en grises: tres escalones de valor alrededor de la llama, y dentro de cada uno, las juntas y las vetas" />
+
+Los anillos de `torch-1` tienen estas medidas (el centro está en la llama):
+
+- **Interior**: hasta el 40 % del radio. Unos 14 × 12 píxeles.
+- **Medio**: hasta el 70 %. Unos 24 × 21.
+- **Exterior**: hasta el 100 %. Unos 34 × 30.
+
+Son **elipses un poco más anchas que altas**, no círculos perfectos. Y el anillo interior es un disco de 6 píxeles de radio vertical; los otros dos son bandas de unos 4 o 5 píxeles. Ninguno es igual al anterior.
+
+<Why title="Por qué pocos anillos y no un degradado">
+Es la misma idea que las rampas cortas y los clusters: **pocos colores, en grupos limpios**. Un degradado de decenas de colores no se lee mejor a 1×: se lee **borroso**, dispara la paleta y ya no casa con el resto del juego. Tres anillos dicen lo mismo («más luz cerca, menos lejos») con los colores que ya tienes.
+</Why>
+
+<Tip>
+Es la regla de la sombra de contacto de [P7-05](/forja-art/pixel/p7-05/), al revés. Allí la sombra **bajaba un paso** cada verde de la hierba. Aquí la luz **sube pasos** cada color de la piedra.
+</Tip>
+
+### Contraste y foco: la llama es lo más claro
+
+Mira los valores de la antorcha:
+
+| Parte | Color | Valor |
+| --- | --- | --- |
+| Corazón de la llama (1 px) | `#fff3c4` | 95 % |
+| Llama amarilla | `#ffe58a` | 90 % |
+| Llama naranja | `#ff8f3a` | 67 % |
+| Lo más claro de la piedra (paso 5) | `#a8703e` | 49 % |
+| Palo de madera | `#6b3d2e` | 29 % |
+
+Entre la llama y la piedra más iluminada hay un salto de casi 20 puntos. Y la piedra de fuera se queda entre el 5 y el 15 %. La fuente de luz es **lo más claro de la escena, con diferencia**, igual que el impacto en la noche de P8-02.
+
+<Why title="Por qué la oscuridad de fuera es la mitad del efecto">
+La luz solo se ve **contra la oscuridad**. Una antorcha en una cueva ya clara no tiene adónde subir: los anillos no se distinguen y el foco se pierde. Antes de encender la luz, la escena tiene que estar oscura.
+</Why>
+
+### El parpadeo: tres frames bastan
+
+| Frame | Radio de la luz | Llama |
+| --- | --- | --- |
+| `torch-1` | 15 px | 11 píxeles, recta |
+| `torch-2` | 14 px (−1) | 10 píxeles, la punta inclinada a la derecha |
+| `torch-3` | 16 px (+1) | 12 píxeles, más alta, con la punta hacia la izquierda |
+
+Al cambiar el radio, los **tres anillos** se abren o se cierran a la vez, 1 píxel. Y en cada frame cambia el sitio del píxel casi blanco: en `torch-1` está más arriba que en los otros dos.
+
+<Why title="Por qué tan poco movimiento">
+Un fuego real tiembla, no salta. Un píxel de radio basta para que la luz respire. Si el radio cambiara 4 o 5 píxeles, la cueva entera palpitaría como una alarma. Y el orden irregular con duraciones distintas (120, 100, 140 ms) evita que el parpadeo parezca un metrónomo.
+</Why>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Lienzo, capas y rampa">
+1. <Keys k="Ctrl+N" />: **64×40**. Activa *View → Grid*. Guarda con <Keys k="Ctrl+S" /> como `antorcha.aseprite`.
+2. Crea tres capas. De abajo arriba: `piedra`, `guias` y `antorcha`.
+3. Pon la rampa en el **panel de paleta**, en orden, del paso 0 al paso 5. Copia los seis colores de la tabla del concepto o haz los tuyos: el valor sube siempre y el tono gira de frío a cálido.
+4. Añade aparte los colores de la antorcha: tres de llama (naranja, amarillo, casi blanco) y uno o dos para el palo.
+
+<Why>
+La rampa ordenada es tu herramienta de iluminar: «subir un paso» será coger el color de la casilla de al lado. Si la paleta está desordenada, cada paso te costará buscarlo.
+</Why>
+</Step>
+
+<Step n={2} title="Primero, la cueva a oscuras">
+En la capa `piedra`:
+
+1. Rellena todo con el **paso 1** usando el cubo (<Keys k="G" />).
+2. Con el lápiz (<Keys k="B" />), dibuja vetas con el **paso 2**: líneas diagonales sueltas, con pendientes limpias (2:1, por ejemplo).
+3. Con el **paso 0**, dibuja juntas horizontales cortadas a tramos y algunas motas.
+4. Duplica la capa `piedra`, llama a la copia `piedra-oscura` y ocúltala con su icono del ojo. Será tu original para los frames del parpadeo.
+
+<Warn>
+Usa **solo los pasos 0, 1 y 2**. Si la piedra de partida ya tiene tonos medios, la luz no tendrá adónde subir y no habrá contraste.
+</Warn>
+</Step>
+
+<Step n={3} title="Marca los anillos con elipses guía">
+1. En la capa `guias`, elige un color chillón que no uses en la escena (un verde fosforito).
+2. Decide dónde irá la llama: a un lado, no en el centro.
+3. Con la herramienta **Elipse**, dibuja tres contornos centrados en la llama, un poco más anchos que altos: unos **34 × 30**, **24 × 21** y **14 × 12** píxeles.
+
+<Why>
+La guía te deja ver los anillos antes de tocar la piedra. Puedes moverlos, cambiarlos de tamaño o borrarlos sin estropear nada. Por eso va en su capa.
+</Why>
+
+<Tip>
+Que los anillos **no sean del mismo grosor**: un disco interior pequeño y bandas más finas alrededor. Tres anillos iguales parecen una diana.
+</Tip>
+</Step>
+
+<Step n={4} title="El anillo exterior: todo sube un paso">
+1. Selecciona la capa `piedra`.
+2. Con la **selección elíptica** (está junto a la selección rectangular, <Keys k="M" />), selecciona la elipse grande, siguiendo la guía.
+3. Dentro de la selección, cambia cada color por **el siguiente de la rampa**, en este orden:
+   - el paso 2 por el paso 3;
+   - después, el paso 1 por el paso 2;
+   - y por último, el paso 0 por el paso 1.
+
+Para cambiar un color en la selección tienes dos caminos: *Edit → Replace Color*, o el cubo (<Keys k="G" />) con la casilla *Contiguous* desactivada en la barra de contexto. Usa el cuentagotas (<Keys k="I" />) para coger el color que vas a sustituir.
+
+<Warn title="El orden importa: de claro a oscuro">
+Si empiezas por abajo (el 0 por el 1), después, al cambiar el 1 por el 2, **también subirás las juntas** que acabas de cambiar. Subirían dos pasos y la textura se perdería. Empieza siempre por el color más claro.
+</Warn>
+</Step>
+
+<Step n={5} title="Los anillos medio e interior">
+1. Selecciona la elipse **media** y repite: cada color sube un paso, empezando por el más claro (el 3 por el 4, el 2 por el 3, el 1 por el 2).
+2. Selecciona la elipse **pequeña** y repite otra vez (el 4 por el 5, el 3 por el 4, el 2 por el 3).
+3. Oculta la capa `guias` y mira el resultado.
+
+<Why>
+Cada pasada sube **todo lo que hay dentro** un paso. Las elipses están una dentro de otra, así que el centro recibe tres pasadas, el anillo medio dos y el exterior una. Es exactamente la tabla del concepto, sin tener que pintar ningún píxel a mano.
+</Why>
+
+<Tip>
+Comprueba la textura: dentro de cada anillo, las juntas tienen que seguir siendo más oscuras que la piedra y las vetas, más claras. Si en algún sitio ves una mancha de un solo color, has subido algo dos veces.
+</Tip>
+</Step>
+
+<Step n={6} title="La antorcha, al final">
+En la capa `antorcha`:
+
+1. Un palo de madera vertical de 1 píxel de ancho y unos 5 de alto, con algún píxel de un color muy oscuro como sujeción a la pared.
+2. Encima, la llama: unos **3 píxeles de ancho y 5 de alto**. Naranja en el borde, amarillo dentro y **un solo píxel casi blanco** en el corazón.
+3. Exporta una copia a 1× y súbela al Inspector. En la vista **Grises**, el píxel casi blanco tiene que ser lo más claro de todo, con diferencia.
+
+<Inspector upload title="Tu cueva: en grises, la llama arriba del todo y la piedra en tres escalones" />
+
+<Why>
+La llama va al final porque es lo que más contrasta. Si la pintas antes, tenderás a ajustar la luz de la piedra a la llama y a subirla de más. Primero la escena, después el foco.
+</Why>
+</Step>
+
+<Step n={7} title="El parpadeo: tres frames">
+1. En la línea de tiempo (*Timeline*), crea **dos frames nuevos**. Tendrás tres.
+2. **Frame 2**: en la capa `piedra`, pega de nuevo la piedra oscura (copia la capa `piedra-oscura`) y repite los pasos 4 y 5 con elipses **1 píxel más pequeñas** por cada lado. Dibuja una llama distinta: con la punta inclinada y un píxel menos.
+3. **Frame 3**: lo mismo con elipses **1 píxel más grandes** y una llama más alta.
+4. Con clic derecho sobre cada frame, abre *Frame Properties* y pon las duraciones: **120, 100 y 140 ms**.
+5. Activa el onion skin para comparar los frames: solo deben cambiar la llama y el borde de los anillos.
+6. Reproduce la animación. Si se ve regular, prueba el orden del animador de arriba (1, 2, 3, 1, 3, 2).
+7. Exporta con *File → Export Sprite Sheet*, o con *File → Export → Export As* en GIF para verla.
+
+<Why>
+Rehacer los anillos desde la piedra oscura es más seguro que retocarlos: cada frame se construye con la misma regla y la textura no se ensucia.
+</Why>
+</Step>
+
+<Warn title="Verifica en tu versión">
+La herramienta Elipse, la selección elíptica y *Edit → Replace Color* existen en Aseprite, pero su ubicación en la barra de herramientas, si *Replace Color* actúa solo dentro de la selección y el nombre de la casilla *Contiguous* del cubo pueden cambiar entre versiones. También pueden variar la forma de crear frames nuevos, si un frame nuevo copia el contenido del anterior, el botón del onion skin y las opciones de exportar a GIF. Si no encuentras algo, búscalo por nombre en los menús.
+</Warn>
+</Block>
+
+<Block kind="version">
+Tu cueva, a tu manera. Mantén la escena oscura, la luz en tres anillos que suben la rampa, la textura visible y la llama como lo más claro. Elige un reto:
+
+- **Otra superficie**: en lugar de piedra, un suelo de tablas o un muro de ladrillo. La regla es la misma: cada color sube pasos de **su** rampa, así que necesitarás que la madera o el ladrillo tengan la suya.
+- **Una luz que no es fuego**: un cristal mágico o una seta luminosa, con una rampa que gire al azul o al verde en vez de al naranja. Decide qué temperatura tiene la sombra para que siga habiendo contraste.
+- **Dos luces**: una antorcha grande y una vela pequeña. Donde los anillos se cruzan, suma los pasos (sin pasar del último color de la rampa). Que se vea claramente cuál es la fuente principal.
+
+**Prueba**: mira la cueva a 1×. Si se lee «una pared de piedra con luz», vas bien. Si se lee «un círculo naranja», revisa el error 1.
+</Block>
+
+<Block kind="errores">
+<Mistake title="La luz pintada encima" wrongLabel="torch-overlay" rightLabel="torch-1">
+  <Sprite slot="wrong" name="torch-overlay" scale={5} />
+  <Sprite slot="right" name="torch-1" scale={5} />
+
+`torch-overlay` tiene la misma cueva y la misma antorcha, pero la luz es **un solo naranja plano** (`#c07840`) pintado encima. Dentro de la elipse, la piedra ha desaparecido: ni juntas ni vetas. Y no se nota que la luz sea más fuerte junto a la llama, porque es igual en todas partes. Parece un círculo de papel pegado en la pared. **Corrección**: no pintes un color de luz; sube cada color de la piedra unos pasos de su rampa.
+</Mistake>
+
+<Mistake title="El degradado continuo" wrongLabel="torch-smooth" rightLabel="torch-1">
+  <Sprite slot="wrong" name="torch-smooth" scale={5} />
+  <Sprite slot="right" name="torch-1" scale={5} />
+
+`torch-smooth` reparte la luz en un degradado: **25 colores** frente a los 11 de `torch-1` (6 de piedra y 5 de la antorcha). Visto de cerca, no es suave: son anillos finos de bordes desiguales, uno por color. La textura casi se pierde dentro de la luz, y cada uno de esos colores es uno más en la paleta del juego. **Corrección**: tres anillos con los colores de la rampa que ya tienes.
+</Mistake>
+
+<Warn title="Anillos que parecen una diana">
+Tres círculos perfectos, del mismo grosor, cada uno rellenado con un color plano. El ojo ve una diana, no una luz. **Corrección**: elipses un poco más anchas que altas, un disco interior pequeño y bandas más finas alrededor, y la textura de la piedra visible dentro de cada anillo.
+</Warn>
+
+<Warn title="Una luz sin oscuridad alrededor">
+Si la cueva de partida ya está en tonos medios, los anillos suben a colores casi iguales que la piedra de fuera. No hay contraste: la antorcha no ilumina nada. **Corrección**: la piedra de fuera tiene que estar en los pasos más oscuros de la rampa (en `torch-1`, entre el 5 y el 15 % de valor). Si tu escena es clara, no es un sitio para una antorcha: oscurécela primero, como la noche de P8-02.
+</Warn>
+
+<Warn title="Una llama que no es lo más claro">
+Si la piedra junto a la llama llega al mismo valor que el fuego, la fuente se funde con lo que ilumina y el foco desaparece. **Corrección**: en grises, la llama arriba del todo con un salto claro. En `torch-1`, la piedra más clara está en el 49 % y la llama, entre el 67 y el 95 %.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+Revisa tu cueva **a 1×, en grises y en movimiento**.
+
+<Checklist items={[
+  "La cueva de partida usa solo los pasos más oscuros de la rampa",
+  "La rampa sube siempre de valor y gira de frío (en la sombra) a cálido (en la luz)",
+  "La luz son tres anillos, no un degradado ni un color pintado encima",
+  "Cada color sube su propia rampa: dentro de la luz se ven las juntas y la textura",
+  "Los anillos son elipses de grosores distintos, no una diana",
+  "La llama es lo más claro de la escena, con un salto claro en grises",
+  "Tengo tres frames de parpadeo: radio ±1 px y una llama distinta en cada uno",
+  "Las duraciones son distintas y el parpadeo no parece un metrónomo",
+  "He exportado la animación (spritesheet o GIF) a escala entera",
+]} />
+
+<Quiz q="Una junta oscura de la piedra cae dentro del anillo interior. ¿De qué color queda?" options={["Del mismo naranja que el resto del anillo", "Del color de luz más claro de la paleta", "Tres pasos más arriba en su rampa: sigue un paso por debajo de la piedra que la rodea"]} answer={2}>
+La luz sube cada píxel los mismos pasos de su rampa. La junta (paso 0) pasa al 3 y la piedra (paso 1), al 4: la diferencia entre las dos se conserva y la textura se sigue viendo.
+</Quiz>
+
+<Quiz q="¿Por qué tres anillos y no un degradado continuo?" options={["Porque se leen igual de bien a 1× con pocos colores, en grupos limpios, y no disparan la paleta", "Porque Aseprite no puede hacer degradados", "Porque los degradados solo funcionan en la luz del sol"]} answer={0}>
+`torch-smooth` necesita 25 colores y no se ve más suave: se ve más sucio. Tres anillos dicen «más luz cerca» con los colores que ya tiene la rampa.
+</Quiz>
+
+<Quiz q="Al recolorear un anillo, ¿en qué orden cambias los colores?" options={["Del más oscuro al más claro", "Del más claro al más oscuro, para no subir dos veces el mismo píxel", "Da igual el orden"]} answer={1}>
+Si cambias el 0 por el 1 y después el 1 por el 2, las juntas que acabas de subir vuelven a subir. Empezando por el más claro, cada píxel sube solo un paso por pasada.
+</Quiz>
+
+<Quiz q="¿Cuánto cambia el radio de la luz entre los frames del parpadeo?" options={["Entre 4 y 5 píxeles, para que se note", "Nada: solo cambia la llama", "Un píxel arriba o abajo"]} answer={2}>
+Un fuego tiembla, no salta. En `torch-1`, `torch-2` y `torch-3` el radio pasa de 15 a 14 y a 16 píxeles, y la llama cambia de forma.
+</Quiz>
+</Block>

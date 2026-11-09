@@ -1,0 +1,256 @@
+---
+id: v2-04
+discipline: voxel
+level: 2
+order: 4
+title: "Ruinas: romper una forma con intención"
+summary: "Construye entero y rompe después: una grieta con dirección, lo que pierde apoyo cae, los cascotes al pie y el tiempo encima. Una ruina que aún dice qué fue."
+duration: 40
+status: borrador
+prerequisites: [v2-02, v2-01]
+fundamentals: [f10, f02]
+objectives:
+  - "Construir la forma entera antes de romperla y guardar la versión intacta"
+  - "Romper siguiendo la física: una grieta, lo que pierde apoyo cae y los cascotes quedan al pie"
+  - "Concentrar la rotura en pocas zonas grandes, con un borde irregular pero con dirección"
+  - "Mantener la silueta reconocible: lo que queda en pie sigue diciendo qué era"
+  - "Contar el tiempo después: musgo arriba y abajo, hiedra, hierba entre las losas"
+tools: [magicavoxel]
+piece:
+  name: "Una construcción tuya (pórtico, arco, muro o torre) en versión intacta y en ruinas"
+  canvas: "16x11x14"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [ruina]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Hoy rompes algo. Pero no a martillazos: **con intención**. Vas a forjar **una ruina**: una construcción tuya que primero levantas entera y después rompes como la rompería el tiempo.
+
+<VoxViewer model="ruina" stage={2} title="El pórtico: intacto, roto y abandonado" />
+
+Gíralo y recorre las tres etapas del visor:
+
+1. **Intacto:** un pórtico sobre un suelo de losas. Dos pilares (basa, fuste y capitel) y un dintel que los une.
+2. **Roto:** una grieta en diagonal parte el pilar derecho. El dintel, sin apoyo, se ha partido y está en el suelo.
+3. **Abandonado:** hierba entre las losas, musgo encima del dintel y abajo, una hiedra que baja por el pilar izquierdo.
+
+Fíjate en una cosa: aunque falta casi la mitad del pórtico, **sigues sabiendo qué era**.
+
+Tu pieza final: **tu propia construcción** (un pórtico, un arco, un muro o una torre) en **dos archivos**, intacta y en ruinas, con un render de cada una.
+</Block>
+
+<Block kind="concepto">
+### 1. Primero entero, después roto
+
+<VoxViewer model="ruina" stage={0} title="Intacto: así era antes de romperse" />
+
+El pórtico intacto, en cifras (cuenta hecha sobre el modelo, 16×11 de planta y 14 de alto):
+
+- **Suelo:** 16×11 losas en damero de dos grises.
+- **Pilares:** una **basa** de 5×5 y 1 capa, un **fuste** de 3×3 y 9 capas, y un **capitel** de 5×5. Basa y capitel en el gris más oscuro.
+- **Hiladas:** en el fuste, una capa más oscura cada tres. Se leen las juntas entre sillares.
+- **Dintel:** 13×5 y 2 capas, más claro arriba. Apoya en los dos capiteles.
+
+<Why title="¿Por qué construir entero si lo vas a romper?">
+Porque **una ruina es la falta de algo**. Si no sabes qué había, no sabes qué falta, y lo que borras sale al azar. Construir entero te obliga a decidir la forma; romper después te obliga a decidir **qué le pasó**. Es el blockout de [V2-01](/forja-art/voxel/v2-01/): primero la forma completa, después lo demás.
+</Why>
+
+### 2. La rotura sigue la física
+
+<VoxViewer model="ruina" stage={1} title="Roto: grieta, caída y cascotes al pie" />
+
+Mueve el deslizador **Capas** y sube el pilar derecho capa a capa. Esto es lo que pasó, en tres tiempos:
+
+1. **La grieta.** Corta el fuste en diagonal. Por fuera quedan 7–8 hiladas; hacia el hueco del pórtico, solo 4–6. El capitel derecho ha desaparecido; la basa sigue entera.
+2. **Lo que pierde apoyo, cae.** Sin capitel, el dintel no tiene dónde apoyarse. Se parte y solo queda la mitad que descansa en el pilar izquierdo: 7 de sus 13 columnas, con 2 que sobresalen en voladizo.
+3. **Los trozos están al pie.** En el suelo, junto al pilar roto: un trozo de dintel tumbado de 4×3×2 con una piedra encima, un bloque de 2×2×2 por el lado de fuera, una losa de 2×2 al otro lado y dos piedras sueltas. **Ningún cascote junto al pilar sano.**
+
+<Why>
+El ojo conoce la gravedad aunque no piense en ella. Si un trozo de dintel flota sin apoyo, o si los cascotes están lejos de donde se cayeron, algo chirría. En el visor no hay un solo vóxel suelto en el aire: todo toca algo que toca el suelo. Por eso la ruina se cree.
+</Why>
+
+<Tip>
+En el suelo hay 39 vóxels de cascotes, y faltan 125 arriba. No tienen que cuadrar: con los trozos justos para decir **dónde cayó**, basta. Llenar el suelo de piedras lo convierte en ruido.
+</Tip>
+
+### 3. Pocas zonas grandes, no mordiscos por todas partes
+
+La rotura está **concentrada**: una grieta grande en un pilar y un dintel partido. El pilar izquierdo solo tiene **6 desconchones** de un vóxel en las caras del fuste. Es la regla de las masas de F02 aplicada a lo que quitas: **una rotura grande, una mediana, unos pocos golpes pequeños**.
+
+<Why>
+Diez agujeros iguales repartidos por toda la forma no cuentan nada: parecen un queso. Una sola rotura grande cuenta **un suceso**: algo golpeó aquí, cedió esto, cayó aquello. El ojo necesita también zonas **intactas** para entender lo roto, igual que el desgaste de [V3-03](/forja-art/voxel/v3-03/) necesita el centro limpio de las caras.
+</Why>
+
+### 4. Borde irregular, pero con dirección
+
+Mira desde arriba el muñón del pilar derecho. Las alturas no son una rampa perfecta: hay columnas que acaban en la capa 5, otras en la 7, en la 6, en la 9… Pero **todas van en el mismo sentido**: bajan hacia el hueco del pórtico. El borde del dintel partido, igual: de sus 10 vóxels de canto quedan 6, mellados.
+
+- **Recto:** parece cortado con regla. Lo leerías como «diseñado así», no como roto.
+- **Al azar:** parece mordido. No hay grieta, solo ruido.
+- **Irregular con dirección:** una línea que manda y pequeños dientes a lo largo de ella. Así es una rotura.
+
+### 5. Lo que queda en pie sigue diciendo qué era
+
+Pon el visor en **Roto** y aléjate con la rueda. El pilar izquierdo entero, con su capitel y medio dintel, basta para leer **«pórtico»**. Esa es la silueta de [F02-01](/forja-art/fundamentos/f02-01/): si quitas la parte que define la forma, ya no es una ruina de algo, es un montón de piedras.
+
+<Warn title="Regla práctica">
+Elige **una pieza que no tocas** (aquí, el pilar izquierdo con su capitel) y rompe alrededor de ella. Ella sostiene la lectura.
+</Warn>
+
+### 6. El tiempo después y la historia
+
+Vuelve al primer visor, etapa **Abandonado**. La rotura ya pasó; ahora pasan los años:
+
+- **Hierba entre las losas:** 54 de las 176 losas se vuelven verde oscuro, repartidas, no en bloque.
+- **Musgo arriba:** casi la mitad de la cara de arriba del dintel. Ahí se queda el agua de la lluvia.
+- **Musgo abajo:** en las basas y en los cascotes, en las dos primeras capas. Ahí sube la humedad del suelo.
+- **Hiedra:** 11 vóxels en dos verdes que bajan en zigzag por la cara de fuera del fuste izquierdo, de la capa 10 a la 2, con una ramita.
+- **Matas:** tres vóxels sueltos de hierba en el suelo.
+
+<Why title="Una ruina cuenta dos historias">
+La **rotura** cuenta qué pasó: un pilar cedió y arrastró el dintel. La **vegetación** cuenta cuánto hace: si hay hiedra de nueve capas, han pasado años. Juntas responden lo que pregunta el storytelling de [F10-01](/forja-art/fundamentos/f10-01/): ¿qué pasó aquí y cuándo? La lógica de la humedad es la misma que la del musgo del cofre de V3-03: nace abajo y donde se acumula el agua.
+</Why>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Construye entero y guarda la versión intacta">
+1. Crea un modelo nuevo y escribe en los campos de **tamaño** 16, 11 y 14.
+2. Modo **Attach**, pincel **Box**: el suelo de losas en la capa de abajo y, encima, dos pilares (basa, fuste, capitel) y el dintel. Si prefieres un arco, un muro o una torre, constrúyelo entero, con su remate.
+3. Con **Paint** y el pincel **Box**, pinta una capa más oscura cada tres en los fustes: las hiladas.
+4. Guarda como `ruina_intacta.vox`. Después guarda **una copia con otro nombre**, `ruina_rota.vox`, y trabaja solo en la copia.
+
+<Why>
+Romper es destructivo. Sin la versión intacta no puedes comparar, ni volver atrás si te pasas. Y la comparación es la mitad de la pieza.
+</Why>
+</Step>
+
+<Step n={2} title="Decide qué pasó antes de borrar">
+1. Gira la cámara con el botón derecho y mira tu construcción entera.
+2. Elige **una** zona que se rompe (un pilar, una esquina de la torre, un tramo del muro) y **una** pieza que no tocas.
+3. Decide la dirección de la grieta: desde dónde hasta dónde baja.
+4. Decide qué pierde apoyo al romperse. Eso es lo que caerá.
+
+<Tip>
+Dilo en una frase: «el pilar derecho cedió por arriba y arrastró medio dintel». Si no puedes decirlo, aún no sabes qué borrar.
+</Tip>
+</Step>
+
+<Step n={3} title="La grieta: Erase con Box, en escalones">
+1. Modo **Erase**, pincel **Box**.
+2. Empieza por el lado donde la grieta es **más baja**. Borra un bloque que llegue hasta esa altura.
+3. Al lado, borra otro bloque que deje **una o dos capas más**. Sigue así hasta el otro extremo: cada bloque deja el muñón un poco más alto.
+4. Gira la cámara: el muñón debe dibujar una diagonal.
+
+<Warn>
+Un solo **Box** que borre todo el pilar de golpe deja un corte horizontal y recto: parece serrado. La diagonal sale de varios bloques escalonados.
+</Warn>
+</Step>
+
+<Step n={4} title="Lo que pierde apoyo, cae">
+1. Mira qué se apoyaba en lo que has borrado (aquí, el dintel sobre el capitel derecho).
+2. Con **Erase** y **Box**, quita esa parte desde el punto donde ya no tiene apoyo. Deja como mucho 1 o 2 vóxels de voladizo más allá del último apoyo.
+3. Gira el modelo y comprueba que **nada flota**: cada vóxel toca a otro que, al final, llega al suelo.
+</Step>
+
+<Step n={5} title="Mella el borde con Voxel">
+1. Modo **Erase**, pincel **Voxel**: un vóxel por clic.
+2. Recorre el borde de la grieta y el canto partido del dintel. Quita vóxels sueltos aquí y allá, uno o dos seguidos como mucho.
+3. **No cambies la dirección**: los dientes van a lo largo de la línea, no la desvían.
+4. En la pieza que se queda en pie, quita como mucho 5 o 6 vóxels de arista o de cara: golpes pequeños.
+
+Si te pasas, deshaz con <Keys k="Ctrl+Z" />.
+</Step>
+
+<Step n={6} title="Los cascotes, al pie de donde cayeron">
+1. Modo **Attach**. Al pie del pilar roto, levanta un **trozo grande tumbado**: un bloque del grosor del dintel pero acostado en el suelo, con el pincel **Box**.
+2. Alrededor, dos o tres bloques medianos (2×2) y dos o tres piedras de 1 vóxel con el pincel **Voxel**.
+3. Si tu versión te deja seleccionar un trozo, copiarlo y pegarlo, puedes copiar parte del dintel antes de borrarlo y pegarlo en el suelo. Si no, vuélvelo a construir: es igual de rápido.
+4. Pinta los cascotes con los grises de la piedra: el más oscuro en la capa que toca el suelo.
+5. Guarda `ruina_rota.vox`.
+
+<Tip>
+Todos los cascotes, en el lado de lo que se rompió. Junto a la pieza sana, nada.
+</Tip>
+</Step>
+
+<Step n={7} title="El tiempo después: musgo, hiedra y hierba">
+1. Guarda una copia como `ruina_abandonada.vox` y trabaja en ella.
+2. Elige en la **paleta** de la izquierda tres verdes: oscuro, medio y claro.
+3. Modo **Paint**, pincel **Voxel**. Con el **oscuro**, unas cuantas losas sueltas (hierba entre ellas) y la parte baja de basas y cascotes.
+4. Con el **medio**, parte de la cara de **arriba** del dintel: donde se queda el agua.
+5. Modo **Attach**: una hiedra de 1 vóxel de grosor pegada a la cara de un pilar, bajando en zigzag, alternando medio y claro. Y dos o tres matas de 1 vóxel en el suelo.
+6. Pulsa **Render**, coloca la cámara y guarda la imagen. Abre `ruina_intacta.vox` y renderiza con la **misma cámara, la misma luz y la misma resolución**.
+</Step>
+
+<Warn title="Verifica en tu versión">
+Los nombres de los modos **Attach**, **Erase** y **Paint**, de los pinceles **Box** y **Voxel** y los campos de tamaño pueden variar entre versiones de MagicaVoxel. El pincel **Box** en modo **Erase** puede borrar con una profundidad distinta según la cara sobre la que arrastres: pruébalo en un pilar de prueba. Comprueba también si tu versión permite **seleccionar, copiar y pegar** un trozo de modelo, y cómo; si no, construye los cascotes a mano. Mira que <Keys k="Ctrl+Z" /> deshace en la tuya. En el modo **Render**, el botón para guardar la imagen y los ajustes de cámara y luz cambian de sitio: búscalos por su función.
+</Warn>
+</Block>
+
+<Block kind="version">
+Ahora, **tu** ruina. Misma receta: entero primero, una rotura grande con dirección, lo que pierde apoyo cae, cascotes al pie, una pieza intacta que sostiene la lectura y el tiempo encima. Elige un reto:
+
+- **El arco caído:** un arco escalonado como los de [V2-02](/forja-art/voxel/v2-02/). La clave del arco se suelta, media rosca cae y la otra mitad se queda en voladizo sobre su pilar.
+- **La torre descabezada:** una torre como la de V2-02 con el tejado y la última planta derrumbados hacia un lado. Los cascotes, todos al pie de ese lado.
+- **El muro con brecha:** un tramo de muro largo con **una** brecha en forma de V (más ancha arriba que abajo) y los sillares caídos delante. El resto del muro, entero.
+
+Antes de darla por buena, aléjate con la rueda y pregúntate: ¿se sabe en un segundo **qué era** y **qué le pasó**?
+</Block>
+
+<Block kind="errores">
+<Mistake title="Agujeros al azar por toda la forma" wrongLabel="El queso" rightLabel="Una rotura concentrada">
+  <p slot="wrong">Huecos de 1 o 2 vóxels repartidos por igual en los dos pilares y en todo el dintel. Ninguno es más grande que otro. Parece un queso, no una ruina.</p>
+  <p slot="right">Una grieta grande en un pilar, el dintel partido y 6 golpes pequeños en el pilar sano, como en la etapa «Roto».</p>
+
+Una rotura cuenta un suceso; muchos agujeros iguales no cuentan ninguno. **Corrección:** rellena con **Attach** la mayoría de los huecos y quédate con una zona grande y unos pocos golpes.
+</Mistake>
+
+<Mistake title="Bordes de rotura rectos" wrongLabel="Cortado con regla" rightLabel="Irregular con dirección">
+  <p slot="wrong">El pilar termina en un plano horizontal perfecto y el dintel se corta en vertical, limpio. Parece que lo han serrado o que se construyó así.</p>
+  <p slot="right">El muñón baja en diagonal hacia el hueco, con columnas de alturas distintas pero en el mismo sentido, y el canto del dintel mellado.</p>
+
+**Corrección:** escalona la grieta con varios bloques de **Erase** y **Box**, y luego mella el borde con **Voxel**, uno o dos vóxels cada vez, sin cambiar la dirección.
+</Mistake>
+
+<Mistake title="Cascotes que no salen de ningún sitio, o ningún cascote" wrongLabel="Piedras sin origen" rightLabel="Los trozos al pie">
+  <p slot="wrong">Media columna desaparecida y el suelo limpio. O al revés: piedras junto al pilar sano y bajo el dintel que sigue entero, de donde no ha caído nada.</p>
+  <p slot="right">Un trozo de dintel tumbado y unas piedras justo al pie del pilar roto; junto al pilar sano, nada.</p>
+
+Cada cascote responde a un hueco de arriba. **Corrección:** antes de poner una piedra, señala de dónde cayó. Si no hay hueco encima, bórrala; si hay un hueco grande sin nada debajo, pon un trozo grande en el suelo.
+</Mistake>
+
+<Mistake title="Tanta rotura que no se reconoce qué era" wrongLabel="Un montón de piedras" rightLabel="La silueta sigue ahí">
+  <p slot="wrong">Los dos pilares partidos a media altura y el dintel entero en el suelo. Desde lejos, dos tocones y un bloque: podría ser cualquier cosa.</p>
+  <p slot="right">Un pilar entero con su capitel y medio dintel en lo alto: aunque falta casi la mitad, se lee «pórtico».</p>
+
+**Corrección:** vuelve a `ruina_intacta.vox` y decide la pieza que no se toca. Rompe alrededor de ella, nunca a través.
+</Mistake>
+</Block>
+
+<Block kind="calidad">
+<Checklist items={[
+  "He guardado la versión intacta y la rota (y la abandonada) en archivos distintos",
+  "La rotura está en pocas zonas grandes, no repartida por toda la forma",
+  "El borde de la grieta es irregular pero va en una dirección clara",
+  "Lo que perdió el apoyo ha caído y nada flota en el aire",
+  "Los cascotes están al pie de donde cayeron, y solo ahí",
+  "Hay una pieza intacta y la silueta se reconoce desde lejos",
+  "El musgo está arriba, donde se queda el agua, y abajo, donde sube la humedad",
+  "Tengo dos renders con la misma cámara y la misma luz en mi portfolio",
+]} />
+
+<Quiz q="Rompes el pilar derecho de tu pórtico. ¿Dónde pones los cascotes?" options={["Al pie del pilar roto, que es de donde han caído", "Repartidos por todo el suelo para que se vea más ruinoso", "Ninguno: mejor el suelo limpio"]} answer={0}>
+Cada cascote responde a un hueco de arriba. Al pie del pilar roto cuentan dónde cayó la piedra; repartidos por todo el suelo no cuentan nada, y sin ellos parece que la piedra se ha evaporado.
+</Quiz>
+
+<Quiz q="Has borrado la parte de arriba de un pilar con un solo Box y ha quedado un corte horizontal perfecto. ¿Qué haces?" options={["Nada: un corte limpio se lee mejor", "Quito vóxels al azar por todo el pilar para disimularlo", "Lo escalono en diagonal con varios bloques y mello el borde vóxel a vóxel"]} answer={2}>
+Un corte recto parece serrado. La rotura es irregular pero con dirección: los bloques escalonados dan la diagonal y los vóxels sueltos que quitas a lo largo del borde, los dientes.
+</Quiz>
+
+<Quiz q="¿Por qué el pórtico roto se sigue leyendo como un pórtico?" options={["Porque los cascotes del suelo tienen la forma del dintel", "Porque el pilar izquierdo, con su capitel y medio dintel, sigue entero", "Porque la hiedra marca dónde estaban las piezas"]} answer={1}>
+Lo que queda en pie mantiene la silueta. Si rompes alrededor de una pieza intacta, el ojo completa el resto; si lo rompes todo, solo ve un montón de piedras.
+</Quiz>
+</Block>
