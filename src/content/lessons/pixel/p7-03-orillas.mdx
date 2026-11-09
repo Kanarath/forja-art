@@ -1,0 +1,312 @@
+---
+id: p7-03
+discipline: pixel
+level: 7
+order: 3
+title: "Transiciones: la orilla entre hierba y agua"
+summary: "Une la hierba y el agua con tiles de transición (borde, esquina y esquina interior): una banda de arena, una línea de espuma y una punta de tierra redondeada, probadas en un mapa de 5×3 tiles."
+duration: 45
+status: borrador
+objectives:
+  - "Entender por qué dos tiles sin costuras, juntos, siguen delatando la rejilla"
+  - "Conocer los tiles de transición: borde, esquina y esquina interior, y el juego completo de 13"
+  - "Separar dos terrenos con una banda de arena y un acento de espuma"
+  - "Decidir qué terreno «manda» y redondear la punta de tierra con la esquina interior"
+  - "Probar las transiciones montando un mapa, no tile a tile"
+prerequisites: [p7-01, p7-02]
+fundamentals: [f01]
+tools: [aseprite]
+piece:
+  name: "Juego de transición hierba-agua (borde, esquina y esquina interior) probado en un mapa de 5×3 tiles"
+  canvas: "80x48"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [orilla]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Ya tienes un prado sin costuras (P7-01) y un agua que se mece (P7-02). Ahora vas a forjar **la orilla** que los une: tres tiles de transición de 16×16 y un **mapa de 5×3 tiles** donde se prueban.
+
+Así queda el mapa **sin** transiciones:
+
+<Sprite name="map-shore-hard" scale={5} caption="map-shore-hard: el tile de hierba toca directamente el de agua. La costa es una escalera de líneas rectas que sigue la rejilla" />
+
+Y así, con los tiles de transición:
+
+<Sprite name="map-shore" scale={5} caption="map-shore: el mismo mapa, la misma hierba y la misma agua. Ahora hay arena, espuma y una punta de tierra redondeada" />
+
+<Tip>
+Los dos mapas usan exactamente la misma máscara: hierba en toda la fila de arriba, hierba en las dos primeras casillas de la segunda fila y en la primera de la tercera. Solo cambian **los tiles de agua que tocan la hierba**.
+</Tip>
+</Block>
+
+<Block kind="concepto">
+### Sin costuras no es lo mismo que sin rejilla
+
+`tile-grass` y `tile-water-1` no tienen costuras: cada uno encaja consigo mismo. Pero cuando se tocan, el borde entre los dos es el **borde del tile**: una línea recta de 16 píxeles, luego un escalón de 90°, luego otra recta.
+
+<Sprite name="map-shore-hard" scale={5} caption="Sigue la costa con el dedo: horizontal, vertical, horizontal, vertical. Cada tramo mide 16 píxeles o un múltiplo exacto" />
+
+<Why>
+Es lo mismo que la costura de P7-01, pero a escala de mapa. El ojo detecta las rectas largas y los ángulos rectos al instante, porque una orilla de verdad no tiene ninguno. En cuanto ve uno, adivina la rejilla de 16×16 que hay debajo, y el mundo deja de parecer un lugar para parecer un tablero.
+</Why>
+
+### Los tiles de transición
+
+La solución es dibujar unos tiles **especiales** que contienen los dos terrenos a la vez. Según dónde esté la hierba, hay tres tipos básicos. Los nombres se refieren al **agua**, que es donde se dibujan:
+
+<Sprite name="tile-shore-edge" scale={8} caption="Borde (tile-shore-edge): hierba arriba. La orilla recorre todo el lado superior" />
+<Sprite name="tile-shore-corner" scale={8} caption="Esquina (tile-shore-corner): hierba arriba y a la izquierda. La orilla dobla en ángulo recto" />
+<Sprite name="tile-shore-inner" scale={8} caption="Esquina interior (tile-shore-inner): hierba solo en la diagonal de arriba a la izquierda. Un cuarto de círculo de arena" />
+
+- **Borde:** el agua tiene hierba en **un** lado.
+- **Esquina:** hierba en **dos lados contiguos**. Es el rincón donde el agua se mete en la tierra.
+- **Esquina interior:** los lados son agua, pero en la **diagonal** hay hierba. Es la punta de tierra vista desde el agua.
+
+Cada uno existe en cuatro orientaciones (hierba arriba, abajo, a la izquierda, a la derecha, o en cada una de las cuatro diagonales). Con el tile de agua normal (el centro), el juego completo tiene **13 tiles**:
+
+- 1 centro;
+- 4 bordes;
+- 4 esquinas;
+- 4 esquinas interiores.
+
+<Why>
+No hace falta dibujar 13 tiles desde cero: los 12 de transición salen de **3 dibujos** volteados o rotados. Como un kit modular de Blender: modelas una pieza de esquina y la instancias girada. Pero cuidado con lo que va dentro: lo verás en la guiada.
+</Why>
+
+### Qué manda: la transición vive en un solo terreno
+
+Mira dónde está la arena: **siempre dentro de los tiles de agua**. Los tiles de hierba del mapa con orilla son idénticos a los del mapa sin ella.
+
+Eso es una decisión, y conviene tomarla al principio: uno de los dos terrenos «manda» y lleva la transición dentro.
+
+- **Aquí manda el agua.** La hierba se queda como en P7-01, con sus variantes intactas; solo el agua necesita versiones con orilla.
+- Además, tiene sentido físico: la playa y la espuma están **en el agua**, donde rompe la ola.
+
+<Warn>
+Si dibujas media orilla en el tile de hierba y otra media en el de agua, cada transición necesita **dos** tiles que encajen entre sí, y el juego se duplica. Elige un terreno y sé coherente en todo el mapa.
+</Warn>
+
+### Arena, arena mojada y espuma
+
+En cada tile de agua que toca la hierba, la orilla son **4 píxeles** desde el lado de la hierba:
+
+1. **2 píxeles de arena clara** (`#e8d49a`): un terreno nuevo, ni hierba ni agua, que los separa.
+2. **1 píxel de arena oscura** (`#c9b07a`): la arena mojada. Su valor queda **entre** la arena seca y el agua: es el paso intermedio.
+3. **1 píxel de espuma** (`#d8f0ff`, la misma espuma de las crestas de P7-02): el acento que marca dónde empieza el agua.
+
+Después viene el agua normal, con sus crestas y franjas.
+
+<Sprite name="map-shore" scale={5} view="gray" caption="En grises: la orilla es una línea clara y fina que sigue la costa. La hierba y el agua tienen valores parecidos; la banda es lo que las separa" />
+
+<Why>
+Es el principio de **valor** (F01). En grises, la hierba y el agua se parecen bastante: sin la banda, la frontera solo se lee por el tono. La arena y la espuma ponen un **salto de valor** justo en la costa, y el ojo lee la forma del litoral de un vistazo. La banda es estrecha a propósito: 4 píxeles bastan para dibujar la línea sin robarle el protagonismo a lo que vaya encima.
+</Why>
+
+### La punta de tierra, redondeada
+
+Fíjate en la casilla de hierba de la segunda fila, segunda columna: su esquina de abajo a la derecha es una **punta** de tierra que entra en el agua. A su alrededor hay tres tiles de agua:
+
+- a la derecha, una **esquina** (hierba arriba y a la izquierda);
+- debajo, otra **esquina**;
+- en la diagonal, la **esquina interior**, que cierra la banda con un cuarto de círculo.
+
+<Sprite name="tile-shore-inner" scale={10} caption="La esquina interior: fila 0 «2 arena, 1 mojada, 1 espuma», fila 1 «1 arena, 2 mojada, 1 espuma», fila 2 «2 mojada, 1 espuma», fila 3 «2 espuma». La banda gira en diagonal" />
+
+Las bandas de las dos esquinas llegan al borde del tile y la esquina interior las recoge: la arena da la vuelta a la punta **sin ángulo recto**. En cambio, en los rincones donde el agua se mete en la tierra (las esquinas), la orilla dobla en **ángulo recto**.
+
+<Why>
+Una punta de tierra que entra en el agua se erosiona y se redondea. Un ángulo de 90° hacia fuera es lo que más grita «rejilla». Hacia dentro, el ángulo recto se nota menos porque queda rodeado de hierba y arena; si quieres, también puedes suavizarlo en tu versión.
+</Why>
+
+### Los bordes son el contrato
+
+Un tile de transición tiene que encajar con todo lo que puede tener al lado:
+
+- el **borde** y la **esquina** comparten el mismo perfil en su lado derecho (2 arena, 1 mojada, 1 espuma, agua), así que la esquina se continúa con bordes;
+- la fila de abajo de la esquina es igual que la fila de arriba de la esquina interior (`arena, arena, mojada, espuma, agua…`), así que encajan en vertical;
+- y donde no hay orilla, los tres tiles tienen las mismas columnas y filas que `tile-water-1`, así que encajan con el agua normal.
+
+<Inspector sprite="map-shore" title="Inspecciona el mapa: busca dónde se unen los tiles de transición" />
+
+<Tip>
+Activa la rejilla del inspector. En cada línea de la rejilla que cruza la orilla, mira que la arena, la arena mojada y la espuma continúen sin salto de un tile al siguiente.
+</Tip>
+
+### Prueba en un mapa, no tile a tile
+
+Un tile de transición solo no dice nada: un borde suelto es un rectángulo de agua con una franja amarilla. Como en P7-01, la verdad está en el conjunto. Por eso la pieza es un mapa: una máscara pequeña que obliga a usar los tres tipos.
+
+<Tip>
+En Godot, elegir qué tile de transición va en cada casilla lo automatiza el **terrain** (autotile) del TileSet: tú pintas «hierba» o «agua» y el motor coloca bordes y esquinas. Lo verás en el nivel 9. Para que funcione, el juego de tiles tiene que estar completo y encajar bien: eso es lo que forjas hoy.
+</Tip>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Parte del agua, con la orilla en otra capa">
+1. Abre tu `agua.aseprite` de P7-02 y guarda una copia como `orilla-borde.aseprite`. Trabajarás en el **frame 1**.
+2. Crea una **capa nueva** encima del agua y llámala «orilla». Todo lo que dibujes hoy irá en esa capa; el agua de abajo no se toca.
+3. Añade dos colores a la paleta: arena clara y arena mojada. Sirven los de `map-shore`: `#e8d49a` y `#c9b07a`. La espuma ya la tienes: es la de las crestas.
+4. Activa *View → Grid*.
+
+<Why>
+Con la orilla en su propia capa, puedes voltearla o rotarla sin mover el agua, y sirve igual para los tres frames de la animación. El agua sigue siendo la de P7-02: la orilla solo se pinta encima.
+</Why>
+</Step>
+
+<Step n={2} title="El borde: hierba arriba">
+Con el lápiz (<Keys k="B" />), en la capa «orilla», pinta las **4 primeras filas** de lado a lado:
+
+1. filas 0 y 1: arena clara;
+2. fila 2: arena mojada;
+3. fila 3: espuma.
+
+Activa *View → Tiled Mode* **solo en horizontal** y aleja el zoom con la rueda del ratón: la orilla debe ser una línea continua de copia en copia.
+
+<Warn>
+Mira las crestas del agua que quedan junto a la banda. Si una queda **medio tapada**, asomará un trozo cortado; y al animarse, en algún frame saldrá de debajo de la arena. Tápala entera o déjala a 1 píxel o más de la espuma, en los tres frames.
+</Warn>
+
+Guarda con <Keys k="Ctrl+S" />.
+</Step>
+
+<Step n={3} title="La esquina: hierba arriba y a la izquierda">
+Guarda una copia como `orilla-esquina.aseprite`. En la capa «orilla», añade la misma banda en las **4 primeras columnas**, de arriba abajo: columnas 0 y 1 arena clara, columna 2 arena mojada, columna 3 espuma.
+
+En la esquina de arriba a la izquierda las dos bandas se cruzan en **ángulo recto**, como en `tile-shore-corner`: la arena clara ocupa el cuadrado de 2×2, la mojada dobla en L y la espuma también.
+
+<Tip>
+Compara los bordes con el tile anterior: el lado derecho de la esquina tiene que ser **idéntico** al lado derecho del borde. Así la esquina se continúa con bordes hacia la derecha.
+</Tip>
+</Step>
+
+<Step n={4} title="La esquina interior: la punta redondeada">
+Guarda otra copia del **agua sin orilla** como `orilla-interior.aseprite`. En la capa «orilla», dibuja solo el cuarto de círculo de la esquina de arriba a la izquierda, fila a fila, como en `tile-shore-inner`:
+
+1. fila 0: 2 arena, 1 mojada, 1 espuma;
+2. fila 1: 1 arena, 2 mojada, 1 espuma;
+3. fila 2: 2 mojada, 1 espuma;
+4. fila 3: 2 espuma.
+
+<Why>
+Las filas 0 y 1 terminan igual que la banda vertical de la esquina, y la columna 0 empieza igual que la banda horizontal. La esquina interior es el empalme que recoge las dos bandas y las une en diagonal. Si cuentas píxeles, la arena es una curva con tramos que decrecen con orden (2, 1, 0): la regla de las curvas limpias de P2-01.
+</Why>
+</Step>
+
+<Step n={5} title="Las otras orientaciones (opcional para la pieza)">
+El mapa de la pieza solo necesita estos tres tiles en esta orientación. Si quieres el juego completo de 13, saca los otros nueve de estos tres **volteando o rotando solo la capa «orilla»**, con las órdenes de voltear y rotar del menú *Edit*. Guarda cada uno como un archivo aparte.
+
+<Warn>
+**No rotes el tile entero.** Si rotas 90° también la capa de agua, las crestas de P7-02 se vuelven **verticales** y ese tile se moverá en otra dirección que el resto del lago. Voltear en horizontal es seguro para el agua; rotar, no.
+</Warn>
+</Step>
+
+<Step n={6} title="Monta el mapa de 5×3">
+1. <Keys k="Ctrl+N" />: **80×48** (5×3 tiles de 16). Comprueba que la rejilla mide 16×16 y activa el ajuste a la rejilla (*Snap to Grid*, en el menú *View*).
+2. Coloca los tiles con esta máscara (H hierba, A agua):
+
+   - fila 1: H H H H H
+   - fila 2: H H A A A
+   - fila 3: H A A A A
+
+3. Copia cada tile (<Keys k="Ctrl+C" />) y pégalo (<Keys k="Ctrl+V" />) en su casilla. En las casillas de agua: la que tiene hierba arriba y a la izquierda lleva la **esquina** (hay dos); las que solo tienen hierba arriba, el **borde**; la de la diagonal de la punta, la **esquina interior**; el resto, agua normal.
+
+<Tip>
+Copia la imagen entera, no solo la capa «orilla». Lo más seguro: guarda una copia de cada tile con las dos capas unidas en una y copia de ahí.
+</Tip>
+
+Guarda como `orilla-mapa.aseprite`.
+</Step>
+
+<Step n={7} title="Revisa la costa y exporta">
+Aleja el zoom hasta ver el mapa pequeño, casi a 1×.
+
+1. ¿Ves alguna recta de 16 píxeles **sin arena**? Falta un tile de transición.
+2. ¿La banda tiene un salto o un escalón en alguna línea de la rejilla? Esos dos tiles no comparten el mismo perfil.
+3. ¿La punta de tierra es redondeada? Si sale en ángulo recto, la esquina interior está mal puesta o falta.
+
+Exporta el mapa y los tres tiles con *File → Export → Export As*: al 100 % y con **Resize** al 500 % para el portfolio.
+</Step>
+
+<Warn title="Verifica en tu versión">
+Los nombres y la posición pueden variar según la versión de Aseprite: la creación de capas (menú *Layer*), las órdenes de voltear y rotar del menú *Edit*, el submenú de *Tiled Mode* (solo horizontal o los dos ejes), la configuración de la rejilla y *Snap to Grid*, y cómo pega una imagen de varias capas. Si no encuentras algo, búscalo por nombre en los menús.
+</Warn>
+</Block>
+
+<Block kind="version">
+Ahora a tu manera. Mantén la transición dentro de un solo terreno, el perfil idéntico en los lados que se tocan y la prueba en un mapa. Elige uno:
+
+- **El juego completo:** saca los 13 tiles y monta un **lago** de 7×5 tiles: agua rodeada de hierba por los cuatro lados, con alguna punta de tierra que entre. Necesitarás todas las orientaciones.
+- **Otra pareja de terrenos:** hierba y camino de tierra, o tierra y lava. Decide primero qué terreno manda y por qué. Para la lava, la banda puede ser roca oscura y el acento, un brillo naranja.
+- **Orilla más suave:** redondea también los rincones de la esquina (donde el agua entra en la tierra) o prueba una playa de 3 píxeles de arena. Compara los dos mapas en grises: ¿cuál lee mejor la forma de la costa?
+</Block>
+
+<Block kind="errores">
+<Mistake title="Juntar dos terrenos sin transición" wrongLabel="Costa de rejilla" rightLabel="Costa con orilla">
+  <Sprite slot="wrong" name="map-shore-hard" scale={4} />
+  <Sprite slot="right" name="map-shore" scale={4} />
+
+Los dos tiles no tienen costuras, pero su frontera es el borde del tile: rectas de 16 píxeles y escalones de 90°. **Arréglalo:** dibuja tiles de transición en el terreno que manda, con una banda que separe los dos terrenos y una punta de tierra redondeada.
+</Mistake>
+
+<Mistake title="Rotar el tile entero, agua incluida" wrongLabel="Crestas verticales" rightLabel="Solo gira la orilla">
+  <p slot="wrong">Para sacar el borde con hierba a la derecha, rotas 90° el tile completo. La orilla queda bien, pero las crestas del agua pasan a ser verticales: ese tile se mueve en otra dirección que el resto del lago y destaca en el mapa.</p>
+  <p slot="right">La orilla está en su propia capa. Rotas o volteas solo esa capa y el agua de debajo sigue siendo la misma de todos los tiles, con las crestas en horizontal.</p>
+
+**Arréglalo:** separa siempre la transición del terreno base, y transforma solo la transición.
+</Mistake>
+
+<Mistake title="Dar el tile por bueno sin montarlo" wrongLabel="Solo: una franja amarilla" rightLabel="En el mapa: una costa">
+  <Sprite slot="wrong" name="tile-shore-edge" scale={8} />
+  <Sprite slot="right" name="map-shore" scale={4} />
+
+Un borde suelto no dice si su perfil casa con la esquina, si la punta se redondea o si falta un tile. **Arréglalo:** prueba siempre en un mapa que use todos los tipos a la vez, como el de 5×3. Si cambias un tile, vuelve a montarlo.
+</Mistake>
+
+<Warn title="La punta en ángulo recto">
+Si en la diagonal de la punta pones agua normal en lugar de la esquina interior, la arena de las dos esquinas llega al borde y se corta: queda un hueco de agua en la punta y un ángulo de 90° hacia fuera. Es lo primero que delata la rejilla. La esquina interior no es un adorno: cierra la banda.
+</Warn>
+
+<Warn title="Una banda que grita">
+La arena y la espuma son lo más claro del mapa. Con 4 píxeles dibujan la costa; con 8 o más, o con una espuma muy ancha, la orilla se convierte en lo más llamativo de la pantalla y compite con el héroe. Estrecha la banda o baja el valor de la arena.
+</Warn>
+
+<Warn title="La transición repartida entre los dos terrenos">
+Si una parte de la orilla está en el tile de hierba y otra en el de agua, ningún tile de hierba es ya «hierba normal» y cada transición pide dos piezas que encajen. Decide qué terreno manda y dibuja ahí toda la transición.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+Sube tu **mapa de 5×3 a 1×** (80×48) y revísalo con la rejilla y la vista de grises: la costa tiene que leerse como una línea clara continua, sin escalones en las líneas de la rejilla.
+
+<Inspector upload title="Revisa tu mapa con orilla" />
+
+<Checklist items={[
+  "Tengo tres tiles de transición de 16×16: borde, esquina y esquina interior",
+  "La transición está dibujada entera dentro de un solo terreno (aquí, el agua)",
+  "La banda tiene arena, un tono intermedio y un acento de espuma, y es estrecha",
+  "Los lados que se tocan tienen el mismo perfil: la banda no salta en ninguna línea de la rejilla",
+  "Donde no hay orilla, mis tiles encajan con el agua normal sin costura",
+  "La punta de tierra sale redondeada gracias a la esquina interior",
+  "Ninguna cresta del agua queda medio tapada por la arena",
+  "Monté y revisé el mapa de 5×3, y exporté mapa y tiles al 100 % y ampliados",
+]} />
+
+<Quiz q="Tu tile de hierba y tu tile de agua no tienen costuras, pero juntos se ve la rejilla. ¿Por qué?" options={["Porque los dos tiles usan colores distintos", "Porque la frontera entre ellos es el borde del tile: rectas y ángulos rectos", "Porque falta animar la hierba"]} answer={1}>
+Cada tile encaja consigo mismo, pero el cambio de terreno cae justo en la línea de la rejilla. Las rectas largas y los ángulos de 90° delatan los 16×16. Los tiles de transición sacan la frontera de esa línea.
+</Quiz>
+
+<Quiz q="Un tile de agua tiene agua arriba, abajo y a los lados, pero hierba en la diagonal de arriba a la izquierda. ¿Qué tile le toca?" options={["Agua normal", "Borde", "Esquina interior"]} answer={2}>
+Es la punta de tierra vista desde el agua. Sin la esquina interior, las bandas de las esquinas vecinas se cortan y la punta queda en ángulo recto.
+</Quiz>
+
+<Quiz q="¿Cuántos dibujos necesitas, como mínimo, para un juego completo de 13 tiles de borde y esquinas?" options={["13: uno por tile", "4: el centro, un borde, una esquina y una esquina interior", "2: hierba y agua"]} answer={1}>
+El centro es el agua normal, y los 12 de transición salen de 3 dibujos volteados o rotados. Solo la capa de la orilla: el agua no se rota.
+</Quiz>
+
+<Quiz q="¿Por qué en esta lección la transición se dibuja dentro de los tiles de agua?" options={["Para que la hierba y sus variantes queden intactas y la orilla viva en un solo terreno", "Porque Aseprite no deja dibujar sobre la hierba", "Porque el agua siempre manda sobre cualquier terreno"]} answer={0}>
+Es una decisión de diseño: un terreno manda y lleva toda la transición. Aquí además tiene sentido, porque la arena y la espuma están donde rompe el agua. Con otra pareja de terrenos puede mandar el otro.
+</Quiz>
+</Block>

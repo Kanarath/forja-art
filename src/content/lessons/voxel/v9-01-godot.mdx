@@ -1,0 +1,268 @@
+---
+id: v9-01
+discipline: voxel
+level: 9
+order: 1
+title: "Voxel en el juego: de MagicaVoxel a Godot"
+summary: "Exporta tu diorama a .obj, impórtalo en Godot 4 con la paleta nítida y a la escala correcta, y rehaz la luz con un sol, un entorno y una cámara ortográfica de diorama."
+duration: 45
+status: borrador
+prerequisites: [v8-01]
+fundamentals: [f05]
+objectives:
+  - "Exportar un modelo de MagicaVoxel a .obj y saber qué tres archivos viajan juntos"
+  - "Importar el .obj en Godot 4 y mostrarlo con un MeshInstance3D"
+  - "Poner la textura de paleta en filtro Nearest para que los colores no se mezclen"
+  - "Comprobar la escala frente a un cubo de 1 m y corregirla con una escala uniforme"
+  - "Rehacer en Godot lo que no viaja del render: luz, cámara ortográfica y la farola emisiva"
+tools: [magicavoxel, godot]
+piece:
+  name: "Tu diorama en una escena 3D de Godot, nítido e iluminado, junto a su render de V8-01"
+  canvas: "22x22x17"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [voxel-en-juego]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Hasta ahora tu diorama vivía en MagicaVoxel. Hoy **entra en un motor de juego**.
+
+Vas a forjar **una escena 3D de Godot** con tu diorama dentro:
+
+- el modelo **nítido**, con cada vóxel de su color, sin bordes borrosos;
+- a una **escala** razonable, comprobada frente a un cubo de 1 m;
+- iluminado por un **sol** (DirectionalLight3D) y un **entorno**;
+- visto desde una **cámara ortográfica** en tres cuartos, con aspecto de maqueta;
+- y la **farola encendida** con un material emisivo hecho en Godot.
+
+Al final pones **una captura de Godot junto al render de V8-01**. No serán iguales, y está bien: una es una imagen de portfolio y la otra, un asset que ya funciona en un juego.
+
+<VoxViewer model="diorama" stage={2} title="El modelo de prueba: el diorama de V7-01 (descárgalo si no tienes el tuyo)" />
+
+<Tip title="¿No tienes diorama propio?">
+Descarga el `.vox` desde el botón del visor, ábrelo en MagicaVoxel y sigue la lección con él. Cualquier prop tuyo (el barril, el farol, el yunque) también vale: el proceso es el mismo.
+</Tip>
+</Block>
+
+<Block kind="concepto">
+Vienes de Blender: exportar una malla e importarla en un motor ya lo conoces. Lo nuevo aquí son **tres detalles del voxel** y una idea: **la malla viaja, la luz no**.
+
+### 1. Un .obj de MagicaVoxel son tres archivos
+
+Al exportar a **obj**, MagicaVoxel no crea un archivo, sino tres:
+
+- **`.obj`**: la malla (las caras de los vóxels).
+- **`.mtl`**: la descripción del material, que apunta a la textura.
+- **`.png`**: la **paleta**, una imagen pequeña con una tira de colores.
+
+Cada cara de la malla no lleva su color dentro. Lleva unas **coordenadas UV** que apuntan a **un píxel de la paleta**. Si falta el `.png`, la malla llega gris o blanca.
+
+<Why title="Por qué una paleta y no colores sueltos">
+Una sola textura diminuta para todo el modelo: un material, poca memoria y muy rápido de dibujar. Cambia un píxel de la paleta y cambian todas las caras de ese color. Es la misma idea que la paleta indexada del pixel art.
+</Why>
+
+### 2. La paleta es pixel art: filtro Nearest
+
+Esa textura es una tira de píxeles de colores. Si el motor la **suaviza** (filtro lineal), mezcla cada píxel con sus vecinos y los colores se manchan: bordes que tiran a otro color, tonos que se ensucian al alejarte.
+
+<Sprite name="gem" scale={8} caption="Nearest: cada píxel es su color. Así debe leerse la paleta." />
+
+<Sprite name="gem" view="smooth" scale={8} caption="Filtro suavizado: los colores se mezclan con los vecinos. El mismo error en la paleta del voxel." />
+
+<Why>
+Es **el mismo error** que escalar un sprite con suavizado. En 2D lo arreglabas con el filtro **Nearest** de Godot. En 3D se arregla igual, pero en el **material**: en un StandardMaterial3D, la sección **Sampling** tiene el filtro de textura. Pon **Nearest**.
+</Why>
+
+### 3. La escala: compara con un cubo de 1 m
+
+En Godot, una unidad es **un metro**. MagicaVoxel no sabe de metros: según la versión y las opciones de exportación, un vóxel puede llegar midiendo un metro, un centímetro o lo que sea.
+
+No adivines: **mide**. Pon un cubo de 1 m al lado y compara. En tu diorama, la puerta mide 4 vóxels y es la altura de una persona. Si una persona mide unos 2 m, un vóxel debería rondar **medio metro**. Con eso decides la escala.
+
+<Why title="La pieza de referencia, otra vez">
+En V7-01 todo se medía con la puerta. Aquí también: la puerta te dice cuánto debe medir el diorama en el mundo del juego. Escala **uniforme** (igual en X, Y y Z): si estiras un eje, los vóxels dejan de ser cubos.
+</Why>
+
+### 4. Lo que NO viaja: materiales y luz del render
+
+El `.obj` lleva **forma y color**. Nada más. Se quedan en MagicaVoxel:
+
+- los materiales de render: **Emit** (la llama), **Glass** (cristales), **Metal**;
+- el sol, el cielo, las sombras, el bloom y el fondo del render de V8-01.
+
+En Godot la escena llega **a oscuras** o con una luz de previsualización del editor. La luz la rehaces tú, con las mismas decisiones de F05 y V8-01:
+
+- **DirectionalLight3D** es el sol: una dirección, bajo y de lado. Activa sus sombras.
+- **Un entorno** (WorldEnvironment) da el cielo o la luz ambiente que rellena las sombras, y el color de fondo.
+- **Camera3D** en proyección **ortográfica**: sin fuga, como la isométrica del render. Look de diorama.
+- **La farola**: un StandardMaterial3D con **emisión**. Brilla, pero no ilumina lo de alrededor; para eso, una luz puntual a su lado.
+
+<Why title="Luz en dos mundos (F05)">
+El principio no cambia de programa: una fuente principal con dirección, un relleno suave y un acento. Cambian los botones. Si sabes **por qué** pusiste el sol bajo en el render, sabrás ponerlo en Godot.
+</Why>
+
+<ToolNote tool="blender">
+Es como exportar a .obj desde Blender: los materiales de Cycles no viajan y la luz tampoco. La diferencia es que aquí toda la información de color está en **una sola textura de paleta**.
+</ToolNote>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Exporta a .obj desde MagicaVoxel">
+1. Abre `diorama_render.vox` (o `diorama_v1.vox`, o el `.vox` descargado del visor).
+2. Abre el panel **Export** y elige **obj**.
+3. Guarda en una carpeta nueva, por ejemplo `diorama_export/`, con un nombre sin espacios ni tildes: `diorama.obj`.
+4. Abre la carpeta y comprueba que hay **tres archivos**: `.obj`, `.mtl` y `.png`.
+
+<Warn>
+Los tres van **siempre juntos** y en la **misma carpeta**. El `.mtl` busca el `.png` por su nombre: si los separas o renombras uno solo, el enlace se rompe.
+</Warn>
+
+<Tip>
+Si tu escena tiene varios modelos en el modo **World**, mira si tu versión exporta todos juntos o solo el seleccionado. Para empezar, el diorama entero en una pieza es lo más sencillo.
+</Tip>
+</Step>
+
+<Step n={2} title="Crea el proyecto y la escena 3D en Godot">
+1. Crea un proyecto nuevo en Godot 4 (te recomendamos la **4.3 o superior**).
+2. Crea una escena nueva con un nodo raíz **3D** (Node3D) y guárdala como `diorama.tscn` con <Keys k="Ctrl+S" />.
+3. Arrastra la carpeta `diorama_export/` entera (los tres archivos) al panel **FileSystem** de Godot. Godot importa el `.obj` como malla.
+4. Añade un nodo hijo **MeshInstance3D**.
+5. En el Inspector, en su propiedad **Mesh**, carga (o arrastra) `diorama.obj`.
+
+<Why>
+MeshInstance3D es el nodo que **dibuja una malla**. El `.obj` importado es solo el recurso de malla; sin un nodo que la use, no aparece en la escena.
+</Why>
+</Step>
+
+<Step n={3} title="Paleta nítida: material con filtro Nearest">
+1. Acércate al modelo en el visor 3D del editor. ¿Tiene color? ¿Los bordes entre colores están limpios?
+2. Si sale gris o blanco, el `.mtl` no se ha aplicado. En el MeshInstance3D, crea un **StandardMaterial3D** nuevo en una ranura de material.
+3. En ese material, en **Albedo**, pon como textura el `.png` de la paleta.
+4. En la sección **Sampling** del material, cambia el filtro de textura a **Nearest**.
+5. Compara antes y después, de cerca y de lejos: con Nearest cada cara es **un solo color**.
+
+<Why>
+El filtro vive en el material porque es él quien lee la textura. Aunque el `.mtl` se aplique solo, revisa el filtro: es el que decide si la paleta se mezcla.
+</Why>
+
+<Tip>
+Guarda el material como recurso y reutilízalo en todos los modelos que compartan esa paleta. Un material para todo tu kit.
+</Tip>
+</Step>
+
+<Step n={4} title="Escala: el cubo de 1 m">
+1. Añade otro **MeshInstance3D** y dale una malla de caja (BoxMesh) de 1 × 1 × 1. Es tu metro patrón.
+2. Ponlo junto a la puerta del diorama.
+3. Compara: la puerta (4 vóxels, una persona) debería medir algo así como **2 cubos**.
+4. Si no, selecciona el MeshInstance3D del diorama y cambia su **Scale**, **el mismo número en X, Y y Z**, hasta que la puerta mida eso.
+5. Si el modelo aparece **tumbado**, gíralo 90° en X. Después, borra el cubo o escóndelo.
+
+<Why>
+Un diorama de 22 vóxels a medio metro por vóxel mide unos 11 m de lado: una casa con su jardín. Es una escala que tiene sentido si luego pones un personaje.
+</Why>
+</Step>
+
+<Step n={5} title="El sol y el entorno">
+1. Añade un **DirectionalLight3D**. Gíralo para que la luz entre **baja y de lado**, como el sol de tu render de V8-01.
+2. En sus propiedades, activa las **sombras**.
+3. Añade un **WorldEnvironment** y crea en él un **Environment** nuevo. Elige un fondo liso y apagado (como el de V8-01) y una luz ambiente suave, algo fría.
+4. Mira el tejado escalonado: ¿cada escalón deja su línea de sombra?
+
+<Warn>
+El editor de Godot 4 puede mostrar un **sol y un entorno de previsualización** cuando la escena no tiene los suyos. Solo se ven en el editor: al ejecutar, desaparecen. Por eso añades tus propios nodos de luz y entorno.
+</Warn>
+</Step>
+
+<Step n={6} title="Cámara ortográfica de diorama">
+1. Añade un **Camera3D**.
+2. Cambia su proyección a **ortográfica**. Su tamaño decide cuánto se ve: ajústalo hasta dejar **margen** alrededor del diorama.
+3. Colócala en **tres cuartos**: girada unos 45° alrededor del diorama y mirando desde arriba en diagonal. Tienen que verse dos caras, el tejado y el corte de la base.
+4. Usa la vista previa de la cámara del editor para ver lo que ella ve.
+
+<Tip>
+Con la cámara ortográfica, acercarla o alejarla no cambia el tamaño del diorama en pantalla: lo cambia su **tamaño**. Si el modelo se corta por delante o por detrás, revisa los planos de recorte cercano y lejano de la cámara.
+</Tip>
+</Step>
+
+<Step n={7} title="La farola encendida, hecha en Godot">
+1. Abre el `.png` de la paleta en Aseprite y guárdalo como copia: `paleta_emision.png`.
+2. En la copia, pinta de **negro** todos los píxeles excepto el del **color de la llama**. Mismo tamaño, sin escalar.
+3. En tu StandardMaterial3D, activa la **emisión** y pon `paleta_emision.png` como textura de emisión. Solo la llama brillará.
+4. Para que la llama **ilumine** la farola y el camino, añade un **OmniLight3D** pequeño y cálido justo en la llama.
+5. Si quieres un halo como el bloom, busca el **glow** en el Environment, con moderación.
+6. Ejecuta la escena actual, haz una **captura** y guárdala como `diorama_godot.png`.
+
+<Why>
+La emisión solo hace que una superficie se vea encendida; no lanza luz a su alrededor. En el render de MagicaVoxel el Emit hacía las dos cosas. En Godot las separas: emisión para el brillo, OmniLight3D para la luz.
+</Why>
+</Step>
+
+<Warn title="Verifica en tu versión">
+En MagicaVoxel, comprueba el botón **obj** del panel **Export** y si exporta todos los modelos del modo World o solo el seleccionado. En Godot, comprueba: si el `.mtl` se aplica solo al importar el `.obj`; las opciones de importación del `.obj` (algunas versiones permiten escalarlo al importar); el **tamaño** con el que llega un vóxel y si llega tumbado; dónde está la ranura de material del MeshInstance3D; el nombre exacto de la opción de filtro en **Sampling**; las propiedades de sombra del DirectionalLight3D; el tamaño y los planos de recorte de la Camera3D; los fondos, la luz ambiente y el glow del Environment; la emisión del StandardMaterial3D; los botones del sol y el entorno de previsualización; y el botón para ejecutar la escena actual. Aquí los nombramos **por su función**. Recomendamos Godot 4.3 o superior.
+</Warn>
+</Block>
+
+<Block kind="version">
+El mismo flujo, otra intención. Elige un reto:
+
+- **Un prop suelto, listo para el juego:** exporta solo el farol de V3-02 o un prop de tu kit del herrero. Impórtalo con el **mismo material** y la **misma escala** que el diorama y colócalo dentro. Si encaja sin retocarlo, tu kit es coherente.
+- **De noche:** baja mucho la energía del DirectionalLight3D, oscurece y enfría el entorno, y deja que el OmniLight3D de la farola cuente la escena. Compáralo con el reto «Noche» de V8-01.
+- **Isométrica de juego:** cámara ortográfica girada 45° en horizontal y mirando en diagonal desde arriba, fondo liso. Como la vista de un juego de estrategia o de granja.
+
+Cambia **solo** la luz y el entorno; la cámara, la misma. Así se compara de verdad.
+</Block>
+
+<Block kind="errores">
+<Mistake title="Textura borrosa: la paleta con filtro suavizado" wrongLabel="Filtro suavizado" rightLabel="Filtro Nearest">
+  <Sprite slot="wrong" name="gem" view="smooth" scale={8} />
+  <Sprite slot="right" name="gem" scale={8} />
+
+Con un filtro suavizado, Godot mezcla cada píxel de la paleta con sus vecinos: bordes que cambian de color y tonos sucios, sobre todo de lejos. Es el suavizado del pixel art, ahora en 3D. **Corrección:** en el StandardMaterial3D, sección **Sampling**, filtro **Nearest**.
+</Mistake>
+
+<Mistake title="Modelo gigante o diminuto" wrongLabel="Sin medir" rightLabel="Medido con el cubo">
+  <p slot="wrong">El diorama llega midiendo cientos de metros, o cabe en la palma de la mano. La cámara no lo encuentra y las sombras salen raras.</p>
+  <p slot="right">Un cubo de 1 m junto a la puerta: la puerta mide unos 2 cubos. Escala uniforme en el MeshInstance3D y listo.</p>
+
+No adivines la escala: **mídela** con un cubo de 1 m. Y escala igual en los tres ejes, o los vóxels dejan de ser cubos.
+</Mistake>
+
+<Warn title="Error típico: olvidar el .png o el .mtl">
+Copias solo el `.obj` al proyecto y el modelo llega gris o blanco. **Corrección:** los tres archivos juntos, en la misma carpeta y sin renombrar uno solo. Si aun así no hay color, crea el StandardMaterial3D y pon la paleta como textura de Albedo a mano.
+</Warn>
+
+<Warn title="Error típico: esperar que se vea igual que el render">
+Sin sombras, sin la farola encendida, sin cielo: «Godot lo ha estropeado». No: el render de MagicaVoxel era luz calculada para una imagen; Emit, Glass, Metal y el sol no viajan. **Corrección:** rehaz la luz en Godot (sol, entorno, emisión, luz puntual) con las mismas decisiones de V8-01. Se parecerá en intención, no en cada píxel.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+<Checklist items={[
+  "He exportado a obj y tengo juntos el .obj, el .mtl y el .png de la paleta",
+  "El diorama se ve en Godot dentro de un MeshInstance3D, con sus colores",
+  "El material usa filtro Nearest: cada cara es un solo color, de cerca y de lejos",
+  "He comprobado la escala con un cubo de 1 m y la he corregido con una escala uniforme",
+  "Hay un DirectionalLight3D bajo y de lado, con sombras, y un entorno con fondo apagado",
+  "La Camera3D es ortográfica, en tres cuartos y con margen alrededor del diorama",
+  "La farola brilla con un material emisivo hecho en Godot",
+  "He guardado diorama.tscn y una captura junto al render de V8-01 en mi portfolio",
+]} />
+
+<Quiz q="Al exportar a obj desde MagicaVoxel, ¿qué archivos tienes que llevar a Godot?" options={["Solo el .obj", "El .obj, el .mtl y el .png de la paleta, juntos", "El .vox y el .obj"]} answer={1}>
+El `.obj` tiene la forma, el `.mtl` describe el material y el `.png` tiene los colores. Sin la paleta, el modelo llega sin color.
+</Quiz>
+
+<Quiz q="Tu diorama en Godot tiene bordes donde los colores se mezclan. ¿Qué cambias?" options={["Subo la resolución de la paleta en Aseprite", "Pongo el filtro de textura del material en Nearest", "Añado más luces"]} answer={1}>
+La paleta se está suavizando: cada píxel se mezcla con sus vecinos. Con Nearest, cada cara lee un único color.
+</Quiz>
+
+<Quiz q="La llama de la farola estaba en Emit en MagicaVoxel. En Godot no brilla. ¿Por qué?" options={["Porque el .obj no lleva los materiales del render", "Porque falta el .mtl", "Porque la cámara es ortográfica"]} answer={0}>
+El `.obj` solo lleva forma y color. Emit, Glass y Metal se rehacen en Godot: aquí, emisión en el StandardMaterial3D y una luz puntual para iluminar.
+</Quiz>
+
+<Quiz q="¿Qué nodo hace de sol en tu escena de Godot?" options={["OmniLight3D", "DirectionalLight3D", "WorldEnvironment"]} answer={1}>
+DirectionalLight3D ilumina toda la escena desde una dirección, como el sol. OmniLight3D es una luz puntual (la farola) y WorldEnvironment da el entorno y el fondo.
+</Quiz>
+</Block>

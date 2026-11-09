@@ -1,0 +1,298 @@
+---
+id: p8-01
+discipline: pixel
+level: 8
+order: 1
+title: "Ilustración: una escena con todo lo aprendido"
+summary: "La pieza de portfolio de la ruta Pixel: sin técnicas nuevas, aprendes a ordenarlas. Miniatura en valores, mapa de tiles, personajes y props, un foco, paleta común, limpieza y prueba a 1× y en grises."
+duration: 45
+status: borrador
+prerequisites: [p7-03, p6-04]
+fundamentals: [f07]
+objectives:
+  - "Planificar una escena con una miniatura en tres valores antes de dibujar"
+  - "Montar la escena por capas en orden: mapa, props, personajes y efecto"
+  - "Concentrar en un solo sitio el valor más claro y el contraste más alto"
+  - "Revisar la paleta común de la escena y unificar colores casi iguales"
+  - "Limpiar y comprobar la escena a 1× y en grises, repasando cada parte con la lección que la enseñó"
+tools: [aseprite]
+piece:
+  name: "Una escena propia de entre 80×48 y 128×96 con tiles, al menos un personaje, un prop y un efecto, un foco claro y exportada a escala entera"
+  canvas: "80x48"
+xp: { concept: 10, guided: 20, piece: 70 }
+achievements: [escena-final]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Has llegado al final de la ruta Pixel. Hoy no aprendes nada nuevo. Hoy **juntas** lo que ya sabes en una sola imagen: tu pieza de portfolio.
+
+Vas a forjar **una escena de entre 80×48 y 128×96** con:
+
+- un **mapa de tiles** (con transiciones si mezclas terrenos);
+- al menos **un personaje**;
+- al menos **un prop**;
+- al menos **un efecto**;
+- y **un foco claro**, comprobado a 1× y en grises.
+
+<Sprite name="scene-final" scale={5} caption="scene-final (80×48): hierba y agua con orilla, el héroe, el impacto, el slime, el cofre con una seta detrás y una roca abajo a la izquierda" />
+
+Cada cosa de esta escena viene de una lección: el héroe de P5-01, el impacto de P6-04, la roca de P2-02, la hierba de P7-01, la orilla de P7-03. Ninguna es nueva. Lo nuevo es **el orden**.
+</Block>
+
+<Block kind="concepto">
+### Una ilustración es un orden, no una suma
+
+Si pegas todos tus sprites en un lienzo, tienes un catálogo. Para tener una ilustración, cada parte tiene que estar **al servicio de una sola cosa**: el foco.
+
+Por eso el proceso va **de lo grande a lo pequeño**, y siempre en el mismo orden:
+
+1. **Miniatura en valores**: bloques con 3 grises. Decides dónde va lo claro, lo medio y lo oscuro.
+2. **Mapa de tiles**: el suelo, el escenario.
+3. **Props y personajes colocados**: quién está y dónde.
+4. **Foco**: el valor más claro y el contraste más alto, en un solo sitio.
+5. **Paleta común revisada**: que todo parezca del mismo mundo.
+6. **Limpieza**: huérfanos y contornos.
+7. **Comprobación a 1× y en grises**.
+
+<Why title="Por qué en este orden">
+Cada paso es más caro de cambiar que el anterior. Mover un bloque gris en la miniatura cuesta un segundo. Mover un personaje ya limpio, con su contorno y su sombra, cuesta media hora. Si limpias píxeles antes de saber dónde va el foco, limpiarás cosas que luego borrarás.
+</Why>
+
+### Disección de scene-final
+
+Mira cómo está montada, capa a capa.
+
+**El mapa.** Es `map-shore`: 5×3 tiles de 16×16. Hierba en toda la fila de arriba y en la columna izquierda; agua abajo a la derecha. Casi la mitad del lienzo es agua tranquila: un hueco donde el ojo descansa.
+
+<Sprite name="map-shore" scale={5} caption="map-shore: solo el escenario. La orilla tiene 2 píxeles de arena clara, 1 de arena oscura y 1 de espuma" />
+
+**Los personajes y los props.** El héroe a la izquierda (de x = 8 a x = 21). El slime más a la derecha y más arriba, sobre la hierba del fondo. Entre los dos, el impacto. El cofre al fondo a la derecha, con una seta que asoma detrás. Una roca abajo a la izquierda, sola sobre su trozo de hierba.
+
+Fíjate en el **aire**: entre el héroe y el impacto hay 4 píxeles de hierba; entre el impacto y el slime, 3. Nada se toca por el borde, salvo la seta, que queda claramente **tapada** por el cofre: se lee «detrás», no «pegada».
+
+**El foco.** El impacto es el estallido `vfx-hit-2`: una estrella de 14×14. Tiene el **único blanco puro** de la escena (12 píxeles en su centro), rodeado de amarillo. Es la mancha clara más grande del lienzo.
+
+**La línea de lectura.** Héroe, impacto y slime están en una franja a la misma altura, en la mitad de arriba. El ojo entra por el héroe, choca con el blanco y sigue hasta el slime. La historia cabe en una frase: «el héroe golpea al slime».
+
+### La prueba de grises
+
+<Sprite name="scene-final" scale={5} view="gray" caption="scene-final en grises: la estrella es la mancha más clara; la orilla, una banda clara en L" />
+
+En grises pasan dos cosas:
+
+- La estrella sigue siendo **lo más claro**. Es tu foco.
+- La orilla también es clara: la arena y la espuma forman una **banda en L**. Es lo segundo que ves.
+
+¿Es un problema la orilla? Aquí no, por suerte bien buscada: la esquina interior de la L (donde el agua entra en la tierra) cae **justo debajo del impacto**. La punta inferior de la estrella pisa la arena de esa esquina. La banda clara no compite: **conduce** hacia el foco. Si la orilla doblase en la otra punta del mapa, tendrías dos focos.
+
+<Why title="Por qué el valor más claro y el contraste más alto, juntos">
+Como viste en F01 y F07, el ojo va primero a la mayor diferencia de valor. Si lo más claro está en un sitio y el contraste más fuerte en otro, el ojo duda entre los dos. En `scene-final` el blanco está en la estrella, y los contornos casi negros del héroe y del slime (lo más oscuro de la escena junto a pieles y verdes claros) están **a los dos lados** de ella. Lo claro y lo contrastado se juntan en la misma franja.
+</Why>
+
+<Tip>
+La estrella no tiene contorno oscuro: su borde es naranja sobre hierba media. Por eso funciona encima de la hierba y no encima de la arena, que es casi igual de clara. Si tu efecto no lleva contorno, ponlo sobre un fondo de valor medio u oscuro.
+</Tip>
+
+### La paleta común
+
+`scene-final` usa **33 colores**. Ninguno es nuevo: son los de cada sprite. Y ya comparten muchos:
+
+- el héroe, el slime, el cofre y la roca usan **el mismo contorno** casi negro;
+- los dos marrones del pelo del héroe son los mismos que la madera del cofre;
+- el gris más oscuro de la roca es el del pantalón del héroe.
+
+Hay una excepción: la seta trae **su propio contorno**, un granate oscuro casi igual al del resto pero no idéntico. A 1× no se nota; en una revisión de paleta, lo unificarías.
+
+<Why title="Por qué revisar la paleta al final">
+Cada sprite se diseñó solo, con su rampa. Juntos, dos colores «casi iguales» no aportan nada y ensucian: el ojo nota que algo no encaja aunque no sepa qué. Compartir contornos y rampas es lo que hace que una escena parezca **un mundo** y no un collage. Es lo que viste en P4-02 con un set de iconos, ahora a escala de escena.
+</Why>
+
+### La lista de control: cada punto, con su lección
+
+Esta es la herramienta de hoy. Cada punto ya lo sabes hacer; aquí solo los ordenas.
+
+| Paso | Qué compruebas | Lección |
+| --- | --- | --- |
+| Miniatura | Tres valores; lo claro donde irá el foco | [F01 · Valor](/forja-art/fundamentos/f01-01/) |
+| Composición | Una frase, foco descentrado o centrado con razón, marco en los bordes, sin tangencias | [F07 · Composición](/forja-art/fundamentos/f07-01/) |
+| Mapa | Tiles sin costuras ni retícula | [P7-01 · Tiles](/forja-art/pixel/p7-01/) |
+| Transiciones | Orillas sin escalón de rejilla | [P7-03 · Transiciones](/forja-art/pixel/p7-03/) |
+| Personajes | Proporción chibi, cara que se lee | [P5-01 · Chibi](/forja-art/pixel/p5-01/) |
+| Siluetas | Cada personaje y prop se lee en negro | [P1-02 · Siluetas](/forja-art/pixel/p1-02/) |
+| Luz | Una sola dirección de luz en todo | [P3-01 · Luz](/forja-art/pixel/p3-01/) |
+| Efecto | El más claro; en su capa | [P6-04 · VFX](/forja-art/pixel/p6-04/) |
+| Limpieza | Sin huérfanos ni ruido | [P2-02 · Clusters](/forja-art/pixel/p2-02/) |
+| Contornos | Mismo tipo de contorno en todo | [P2-03 · Contornos](/forja-art/pixel/p2-03/) |
+
+<Tip>
+Si un punto falla, no lo arregles aquí de memoria: vuelve a su lección, mira el error típico y vuelve. Para eso está la tabla.
+</Tip>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="La frase y la miniatura en tres valores">
+1. Escribe tu escena en **una frase**: «el héroe golpea al slime», «una bruja cruza el puente», «un cofre olvidado en la orilla». El sujeto de la frase es tu foco.
+2. <Keys k="Ctrl+N" />: lienzo del tamaño final (por ejemplo, 80×48 o 96×64). Guarda con <Keys k="Ctrl+S" /> como `escena.aseprite`.
+3. En una capa llamada `miniatura`, pinta **bloques** con solo **tres grises**: oscuro, medio y claro. Nada de detalle. Un rectángulo para el suelo, otro para el agua o el cielo, una mancha por personaje.
+4. El **gris claro** va donde irá el foco y en casi ningún sitio más.
+
+<Why>
+Es la prueba de grises de F01, pero hecha **antes** de dibujar. Si la miniatura no se lee con tres grises, ningún detalle la salvará después. Y es barata: si no funciona, la repites en un minuto.
+</Why>
+
+<Tip>
+Haz dos o tres miniaturas distintas y quédate con la mejor. Cambia de sitio el foco, el horizonte o la orilla. Es el momento de dudar; después, no.
+</Tip>
+</Step>
+
+<Step n={2} title="El mapa de tiles">
+1. Baja la opacidad de la capa `miniatura` o déjala arriba para consultarla, y crea debajo una capa `mapa`.
+2. Pega tus tiles de 16×16 (de P7-01 y P7-03) siguiendo los bloques de la miniatura. Usa la rejilla (*View → Grid*) para que cada tile caiga en su sitio.
+3. Donde se tocan dos terrenos, usa tus tiles de **transición**: borde, esquina y esquina interior.
+
+<Why>
+El mapa es el escenario: va primero porque todo lo demás se apoya en él. Y debe ser **tranquilo**. En `map-shore` la hierba y el agua tienen poco contraste interno; lo único claro es la orilla. Si tu suelo tiene flores claras por todas partes, competirá con el foco.
+</Why>
+
+<Warn>
+Mira dónde dobla la orilla. Una banda clara de arena y espuma atrae la vista casi como el foco. Haz que su esquina apunte al protagonista, como en `scene-final`, o llévala lejos de él.
+</Warn>
+</Step>
+
+<Step n={3} title="Props y personajes en su sitio">
+1. Crea una capa `props` encima de `mapa` y otra `personajes` encima de `props`.
+2. Abre cada sprite tuyo, selecciónalo con <Keys k="M" />, cópialo con *Edit → Copy* y pégalo en su capa con *Edit → Paste*. Colócalo encima de su mancha de la miniatura.
+3. Personajes cerca del foco; props pequeños y repetibles (rocas, setas, matas) hacia los bordes, como marco.
+4. Deja **aire** entre las figuras: 3 o 4 píxeles bastan a esta escala. Si dos objetos se solapan, que el de delante tape al de detrás con claridad, como el cofre a la seta.
+
+<Why>
+Capas separadas significan decisiones reversibles. Si mañana el slime está mejor dos píxeles a la izquierda, lo mueves sin rehacer la hierba.
+</Why>
+</Step>
+
+<Step n={4} title="El efecto y el foco">
+1. Crea una capa `vfx`, **arriba del todo**. Pega tu impacto de P6-04 (el frame más claro, el estallido) o cualquier otro efecto tuyo.
+2. Comprueba que el foco cumple las dos condiciones **en el mismo sitio**:
+   - el **valor más claro** de la escena;
+   - el **contraste más alto**: lo claro junto a lo oscuro (los contornos de los personajes, un fondo oscuro).
+3. Si algo de otra zona es igual de claro (una flor, un brillo, la espuma), **oscurécelo** un escalón con el cuentagotas (<Keys k="I" />) y el lápiz (<Keys k="B" />).
+
+<Why>
+El foco no se crea solo aclarando el protagonista: también se crea **apagando el resto**. Es la lección de F07. Bajar un brillo que compite suele funcionar mejor que subir otro más.
+</Why>
+</Step>
+
+<Step n={5} title="La paleta común">
+1. Oculta la capa `miniatura`.
+2. Mira los colores de tu escena. Con el cuentagotas, ve sprite por sprite y busca **parejas casi iguales**: dos contornos oscuros, dos verdes, dos marrones.
+3. Cuando encuentres una pareja, elige uno de los dos y repinta el otro con el cubo (<Keys k="G" />) o con el lápiz. Desactiva la opción *Contiguous* del cubo si quieres cambiar todos los píxeles de ese color de la capa a la vez.
+4. Revisa la luz: que todos los sprites estén iluminados **desde el mismo lado** (P3-01).
+
+<Tip>
+Empieza por los contornos. Un solo color de contorno para todos los personajes y props es el cambio más barato y el que más unifica.
+</Tip>
+</Step>
+
+<Step n={6} title="Limpieza: huérfanos y contornos">
+1. Exporta una copia a 1× (*File → Export → Export As*, sin Resize) y súbela aquí:
+
+<Inspector upload title="Revisa tu escena" />
+
+2. Activa la marca de **huérfanos y sueltos**. En el mapa y los personajes, cada píxel marcado es una decisión: o se une a un cluster, o desaparece (P2-02). Las chispas de un efecto pueden ser píxeles sueltos a propósito; que sean pocas.
+3. Revisa los **contornos** donde un sprite toca a otro o al suelo: sin dobles líneas, sin escalones irregulares (P2-01 y P2-03).
+
+<Warn>
+El Inspector admite imágenes pequeñas de pixel art (hasta 256×256). Sube siempre la exportación a 1×, no la ampliada.
+</Warn>
+</Step>
+
+<Step n={7} title="Comprobación final y exportación">
+1. En el Inspector, mira la vista **a 1×**: ¿se entiende la frase de un vistazo?
+2. Mira la vista **Grises**: ¿lo primero que ves es el foco? Si no, vuelve al paso 4.
+3. Mira la vista **Silueta**: ¿se reconoce cada personaje? Si no, vuelve a P1-02.
+4. Exporta la pieza final con *File → Export → Export As* y **Resize** a una escala **entera** (400 %, 500 %…), como PNG.
+
+<Why>
+La escala entera hace que cada píxel ocupe el mismo número de píxeles de pantalla. Con una escala decimal, unos píxeles salen más anchos que otros y la pieza parece borrosa o torcida. En un portfolio eso se nota a la primera.
+</Why>
+</Step>
+
+<Warn title="Verifica en tu versión">
+La opción *Contiguous* del cubo de pintura, los menús *Edit → Copy* y *Edit → Paste*, el control de opacidad de la capa y las opciones de *Export As* pueden cambiar de nombre o de sitio entre versiones de Aseprite. Si no encuentras algo, búscalo por nombre en los menús.
+</Warn>
+</Block>
+
+<Block kind="version">
+Tu escena, a tu manera. Cumple los requisitos (tiles, un personaje, un prop, un efecto, un foco) y elige un reto:
+
+- **Otra historia, mismo kit**: monta otra escena con tus mismos sprites, pero con otra frase. Por ejemplo, «el slime acecha al héroe dormido»: el foco ya no es un golpe, así que el efecto tiene que ser otro (unas «z», un brillo).
+- **Más grande**: una escena de 128×96 con dos zonas de terreno y transiciones. Más espacio no significa más objetos: significa más aire alrededor del foco.
+- **Animada**: haz que el agua fluya con tu bucle de P7-02 o que el efecto recorra sus frames de P6-04. La escena quieta tiene que funcionar igual en cualquier frame.
+
+**Prueba de portfolio.** Enseña la escena a alguien un segundo, a 1×. Pídele que te diga qué pasa. Si dice tu frase, está terminada.
+</Block>
+
+<Block kind="errores">
+<Mistake title="Todo repartido: ningún foco" wrongLabel="scene-flat" rightLabel="scene-focus">
+  <Sprite slot="wrong" name="scene-flat" scale={5} />
+  <Sprite slot="right" name="scene-focus" scale={5} />
+
+Es el error de F07, y en una escena grande se multiplica: cuantos más sprites tienes, más tentador es ponerlos todos. En `scene-flat` seis objetos distintos piden atención por igual. En `scene-focus` hay una historia (héroe frente a slime) y el resto es marco en las esquinas, sobre una hierba más oscura. **Corrección**: vuelve a la frase. Lo que no sale en ella, al borde o fuera.
+</Mistake>
+
+<Mistake title="Un mapa que delata la rejilla" wrongLabel="map-shore-hard" rightLabel="map-shore">
+  <Sprite slot="wrong" name="map-shore-hard" scale={4} />
+  <Sprite slot="right" name="map-shore" scale={4} />
+
+Sin transiciones, la hierba toca el agua en una línea recta y escalonada que dibuja los cuadrados de 16×16. El ojo ve tiles, no un lago. **Corrección**: tiles de borde, esquina y esquina interior (P7-03), con arena y espuma por distancia a la tierra.
+</Mistake>
+
+<Mistake title="Dos focos: el claro y el contrastado en sitios distintos" wrongLabel="scene-flat en grises" rightLabel="scene-final en grises">
+  <Sprite slot="wrong" name="scene-flat" view="gray" scale={5} />
+  <Sprite slot="right" name="scene-final" view="gray" scale={5} />
+
+En `scene-flat` las manchas claras están repartidas por todo el fondo y cada objeto tiene su contorno oscuro: hay contraste en todas partes y en ninguna. En `scene-final` la mancha más clara (la estrella) está entre los dos contornos más importantes (héroe y slime), y la banda clara de la orilla dobla justo debajo. **Corrección**: busca en grises tu mancha más clara y tu borde más contrastado. Si no están juntos, apaga uno o mueve el otro.
+</Mistake>
+
+<Warn title="Pulir antes de componer">
+El error más caro: dejar perfecto un personaje (contorno, clusters, brillo) y descubrir después que la escena pide moverlo, girarlo o quitarlo. Respeta el orden: miniatura, mapa, colocación y foco **antes** de limpiar ningún píxel.
+</Warn>
+
+<Warn title="Exportar a escala decimal">
+Un 250 % o un 350 % hace que unos píxeles salgan más anchos que otros. Exporta siempre al 200 %, 300 %, 400 %… y comprueba el resultado ampliado en un visor.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+Revisa tu escena **a 1×**, en grises y en silueta, con la tabla del concepto a mano.
+
+<Checklist items={[
+  "Puedo decir lo que pasa en mi escena en una frase",
+  "Mide entre 80×48 y 128×96 y tiene tiles, al menos un personaje, un prop y un efecto",
+  "Hice una miniatura en tres valores antes de dibujar",
+  "El mapa no deja ver la rejilla y las transiciones no tienen escalones",
+  "Hay aire entre las figuras y ningún objeto toca a otro justo por el borde",
+  "El valor más claro y el contraste más alto están en el mismo sitio: el foco",
+  "Lo que competía con el foco lo he apagado",
+  "Todos los sprites comparten contorno y la misma dirección de luz",
+  "He unificado los colores casi iguales de la paleta",
+  "No quedan huérfanos ni ruido, salvo los que he decidido dejar",
+  "En grises, lo primero que veo es mi foco; en silueta, cada personaje se reconoce",
+  "La he exportado a escala entera",
+]} />
+
+<Quiz q="¿Por qué se empieza por una miniatura en tres grises?" options={["Porque Aseprite no deja pintar color al principio", "Porque decidir dónde va lo claro y lo oscuro es lo más barato de cambiar y lo que más importa para el foco", "Para ahorrar colores en la paleta"]} answer={1}>
+El valor decide dónde mira el ojo (F01). En la miniatura, cambiarlo cuesta segundos; con la escena limpia, horas.
+</Quiz>
+
+<Quiz q="En scene-final, ¿qué hace que el impacto sea el foco?" options={["Que está en el centro exacto del lienzo", "Que es el sprite con más colores", "Que tiene el único blanco puro, la mancha clara más grande, y está entre los contornos del héroe y del slime"]} answer={2}>
+El foco junta el valor más claro y el contraste más alto en un mismo sitio. Además, la orilla clara dobla justo debajo y conduce hacia él.
+</Quiz>
+
+<Quiz q="Dos sprites de tu escena usan dos contornos casi negros ligeramente distintos. ¿Qué haces?" options={["Nada: a 1× no se nota", "Unifico los dos en un solo color de contorno", "Añado un tercer contorno intermedio"]} answer={1}>
+Compartir contornos y rampas es lo que hace que la escena parezca un mundo. Es el cambio más barato de la revisión de paleta.
+</Quiz>
+</Block>

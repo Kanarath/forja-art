@@ -606,6 +606,120 @@ add("ball-metal", "Esfera de metal: contraste muy alto, saltos bruscos entre ton
 add("ball-glass", "Esfera de cristal: el centro deja ver el fondo oscuro, un brillo duro arriba y la luz que lo atraviesa se acumula ABAJO, en el lado contrario a la fuente.", ["material"],
   { o: MAT_O, "1": "#2a5a7a", "2": "#5aa8d8", "3": "#b8e8ff", w: "#ffffff" }, sphere(({ spec, nx, ny, nz }) => (spec > 0.9 ? "w" : nz < 0.6 && nx > -0.3 && ny > 0.3 ? "3" : nz < 0.5 ? "2" : "1")));
 
+// ---------- de una rejilla de colores (hex) a sprite: reconstruye la paleta con letras
+function hexGridToSprite(px) {
+  const keys = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  const pal = {}, byHex = {};
+  const rows = px.map((r) => r.map((hex) => {
+    if (hex === null) return ".";
+    if (!byHex[hex]) { byHex[hex] = keys[Object.keys(pal).length]; pal[byHex[hex]] = hex; }
+    return byHex[hex];
+  }).join(""));
+  return { pal, rows };
+}
+const stamp = (px, name, x0, y0) => {
+  const s = spriteByName(name);
+  s.rows.forEach((r, y) => [...r].forEach((k, x) => { if (k !== "." && px[y0 + y]?.[x0 + x] !== undefined) px[y0 + y][x0 + x] = s.palette[k]; }));
+};
+
+// ---------- orillas: hierba y agua en rejilla de tiles de 16×16
+// La máscara dice qué tile es hierba (G) y cuál agua (W). En los tiles de agua que tocan hierba,
+// cada píxel mira su distancia a la hierba: muy cerca → arena; algo más lejos → espuma; si no, agua.
+// La distancia euclídea redondea sola las esquinas: así salen los tiles de borde, esquina y esquina interior.
+const SHORE = { sand: "#e8d49a", sandD: "#c9b07a", foam: "#d8f0ff" };
+function shoreMap(mask, { transitions = true } = {}) {
+  const th = mask.length, tw = mask[0].length;
+  const grassT = grassTile(), waterT = waterTile(0);
+  const isG = (tx, ty) => mask[ty]?.[tx] === "G";
+  const grassRects = [];
+  mask.forEach((r, ty) => [...r].forEach((c, tx) => { if (c === "G") grassRects.push([tx * 16, ty * 16]); }));
+  return Array.from({ length: th * 16 }, (_, y) => Array.from({ length: tw * 16 }, (_, x) => {
+    const tx = Math.floor(x / 16), ty = Math.floor(y / 16);
+    if (isG(tx, ty)) return GRASS[grassT.rows[y % 16][x % 16]];
+    const water = WATER[waterT[y % 16][x % 16]];
+    if (!transitions) return water;
+    let d = Infinity;
+    for (const [rx, ry] of grassRects) {
+      const dx = Math.max(rx - (x + 0.5), 0, x + 0.5 - (rx + 16)), dy = Math.max(ry - (y + 0.5), 0, y + 0.5 - (ry + 16));
+      d = Math.min(d, Math.hypot(dx, dy));
+    }
+    return d <= 2 ? SHORE.sand : d <= 3 ? SHORE.sandD : d <= 4 ? SHORE.foam : water;
+  }));
+}
+const SHORE_MASK = ["GGGGG", "GGWWW", "GWWWW"];
+{
+  const hard = hexGridToSprite(shoreMap(SHORE_MASK, { transitions: false }));
+  add("map-shore-hard", "Mapa de 80×48 (5×3 tiles) con hierba y agua sin transiciones: el tile de hierba toca directamente el de agua. El borde es una línea recta y escalonada que delata la rejilla.", ["tile", "mapa", "error"], hard.pal, hard.rows);
+  const soft = shoreMap(SHORE_MASK);
+  const m = hexGridToSprite(soft);
+  add("map-shore", "El mismo mapa con tiles de transición: en el agua que toca la hierba hay 2 píxeles de arena clara, 1 de arena oscura y 1 de espuma. Las esquinas exteriores salen redondeadas.", ["tile", "mapa"], m.pal, m.rows);
+  // los tres tiles de transición, recortados del mapa
+  const cut = (tx, ty) => hexGridToSprite(soft.slice(ty * 16, ty * 16 + 16).map((r) => r.slice(tx * 16, tx * 16 + 16)));
+  const edge = cut(3, 1), corner = cut(2, 1), inner = cut(2, 2);
+  add("tile-shore-edge", "Tile de borde (16×16): agua con la hierba ARRIBA. La arena y la espuma recorren todo el borde superior; los otros tres bordes son agua normal.", ["tile", "transición"], edge.pal, edge.rows);
+  add("tile-shore-corner", "Tile de esquina (16×16): agua con hierba arriba Y a la izquierda. La orilla dobla la esquina en ángulo recto: aquí la tierra entra en el agua.", ["tile", "transición"], corner.pal, corner.rows);
+  add("tile-shore-inner", "Tile de esquina interior (16×16): agua con hierba solo en la DIAGONAL de arriba a la izquierda. Solo hay un cuarto de círculo de arena en esa esquina: es la punta de tierra vista desde el agua.", ["tile", "transición"], inner.pal, inner.rows);
+}
+
+// ---------- storytelling: el mismo reparto de personajes, sin historia y con historia
+const CHEST_PAL = spriteByName("chest").palette;
+add("chest-open", "El cofre abierto (12×12): la tapa echada hacia atrás enseña su cara interior oscura y el oro asoma por encima del borde. La cerradura queda en el frente.", ["prop", "historia"], CHEST_PAL, [
+  ".oooooooooo.",
+  "oWWWWWWWWWWo",
+  "oWWWWWWWWWWo",
+  "ooyyyoyyyyoo",
+  "oyyyyyyyYyyo",
+  "oYyyYyyyyyYo",
+  "oooooooooooo",
+  "olllllllllwo",
+  "owwwoyyowwWo",
+  "owwwoYYowwWo",
+  "oWWWWWWWWWWo",
+  "oooooooooooo",
+]);
+add("slime-puddle", "Un slime derrotado (12×4): un charco aplanado, sin ojos ni brillo. Sin texto, cuenta que aquí hubo una pelea.", ["criatura", "historia"],
+  { o: "#1b1030", g: "#4ade80", G: "#1f8a4c" }, [
+  "...oooooo...",
+  ".oogggggGoo.",
+  "oGGGGGGGGGGo",
+  ".oooooooooo.",
+]);
+{
+  const sw = spriteByName("sword");
+  const H = sw.rows.length, W = sw.rows[0].length;
+  // girada 90° en sentido horario: la punta mira a la derecha, como tirada en el suelo
+  const rows = Array.from({ length: W }, (_, y) => Array.from({ length: H }, (_, x) => sw.rows[H - 1 - x][y]).join(""));
+  add("sword-ground", "La espada del curso girada 90° (15×7): tumbada en el suelo, con la punta a la derecha. Un objeto en una posición que no es la suya ya cuenta algo.", ["arma", "historia"], sw.palette, rows);
+}
+function storyScene(placements, ground = GRASS) {
+  const t = grassTile();
+  const px = Array.from({ length: 40 }, (_, y) => Array.from({ length: 64 }, (_, x) => ground[t.rows[y % 16][x % 16]]));
+  for (const [n, x, y] of placements) stamp(px, n, x, y);
+  return hexGridToSprite(px);
+}
+{
+  const DARK = { g: "#24563a", d: "#1a4030", l: "#3a7a50" };
+  const none = storyScene([["slime", 6, 20], ["hero-chibi", 24, 10], ["chest", 48, 22]], DARK);
+  add("scene-story-none", "Escena de 64×40 sin historia: slime, héroe y cofre en fila, a la misma distancia y mirando al frente. Es un catálogo de personajes: no ha pasado nada.", ["escena", "historia", "error"], none.pal, none.rows);
+  const story = storyScene([["slime-puddle", 4, 30], ["sword-ground", 18, 28], ["hero-chibi", 32, 10], ["chest-open", 50, 20]], DARK);
+  add("scene-story", "Los mismos personajes contando algo: un charco de slime y la espada tirada a la izquierda (la pelea, ya pasada) y el héroe junto al cofre ya abierto. Se lee de izquierda a derecha: lucha, victoria, tesoro.", ["escena", "historia"], story.pal, story.rows);
+}
+
+// ---------- escena final (P8-01): mapa con orillas, personajes, efecto y props, todo con las reglas del curso
+{
+  const px = shoreMap(SHORE_MASK);
+  for (const [n, x, y] of [["rock-clean", 3, 37], ["mushroom8", 68, 5], ["hero-chibi", 6, 6], ["vfx-hit-2", 25, 4], ["slime", 43, 6], ["chest", 58, 4]]) stamp(px, n, x, y);
+  const s = hexGridToSprite(px);
+  add("scene-final", "Escena de 80×48 con todo lo del curso: tiles de hierba y agua con orilla, el héroe frente al slime, el impacto entre los dos, un cofre al fondo y una roca y una seta en los bordes. El foco está en el impacto: el píxel más claro de la escena.", ["escena", "ilustración"], s.pal, s.rows);
+}
+
+// ---------- spritesheet del ciclo de caminar (para importarlo en Godot): 4 frames de 16×24 en fila
+{
+  const frames = ["hero-chibi", "hero-walk-a", "hero-chibi", "hero-walk-b"].map((n) => spriteByName(n).rows);
+  add("hero-walk-sheet", "Spritesheet de 64×24: los 4 frames del ciclo de caminar en una fila (base, paso A, base, paso B), cada uno de 16×24. Es el formato que espera un motor: una imagen, una rejilla.", ["personaje", "animación", "spritesheet"], HERO,
+    Array.from({ length: 24 }, (_, y) => frames.map((f) => f[y]).join("")));
+}
+
 // ---------- escribir y validar
 let bad = 0;
 for (const s of out) {

@@ -1,0 +1,27 @@
+{
+  "name": "sword-ground",
+  "description": "La espada del curso girada 90° (15×7): tumbada en el suelo, con la punta a la derecha. Un objeto en una posición que no es la suya ya cuenta algo.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "arma",
+    "historia"
+  ],
+  "palette": {
+    "o": "#1b1030",
+    "s": "#eef3f8",
+    "m": "#8fa3b8",
+    "y": "#f2b33d",
+    "Y": "#a8661c",
+    "b": "#6b3d2e"
+  },
+  "rows": [
+    "...ooo.........",
+    "...oyoooooooo..",
+    ".oooyossssssso.",
+    "oybbyosssssssso",
+    ".oooyommmmmmmo.",
+    "...oYoooooooo..",
+    "...ooo........."
+  ]
+}

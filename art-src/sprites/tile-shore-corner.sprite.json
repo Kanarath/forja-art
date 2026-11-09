@@ -1,0 +1,36 @@
+{
+  "name": "tile-shore-corner",
+  "description": "Tile de esquina (16×16): agua con hierba arriba Y a la izquierda. La orilla dobla la esquina en ángulo recto: aquí la tierra entra en el agua.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "tile",
+    "transición"
+  ],
+  "palette": {
+    "a": "#e8d49a",
+    "b": "#c9b07a",
+    "c": "#d8f0ff",
+    "d": "#2a6fc9",
+    "e": "#6fb8ff",
+    "f": "#1f4f9a"
+  },
+  "rows": [
+    "aaaaaaaaaaaaaaaa",
+    "aaaaaaaaaaaaaaaa",
+    "aabbbbbbbbbbbbbb",
+    "aabccccccccccccc",
+    "aabcddeeeddddddd",
+    "aabcdddddddddddd",
+    "aabcfddddcdddddd",
+    "aabcddddeeeddddd",
+    "aabcdddddddddddd",
+    "aabcddddddddcddd",
+    "aabcdddddddeeedd",
+    "aabcdffffddddddd",
+    "aabccddddddddddd",
+    "aabceedddffffddd",
+    "aabcdddddddddddd",
+    "aabcdddddddddddd"
+  ]
+}

@@ -1,0 +1,286 @@
+---
+id: f10-01
+discipline: fundamentos
+level: 10
+order: 1
+title: "Storytelling visual: contar sin texto"
+summary: "Una imagen puede contar qué ha pasado. Usa objetos fuera de su sitio, estados alterados y el orden de lectura para que se entienda en 3 segundos, en pixel y en voxel."
+duration: 40
+status: borrador
+prerequisites: [f07-01]
+fundamentals: [f10]
+objectives:
+  - "Elegir qué momento cuenta tu imagen: antes, durante o después"
+  - "Usar objetos fuera de su sitio y estados alterados como pistas"
+  - "Ordenar la escena de izquierda a derecha como una línea temporal"
+  - "Contar más con menos elementos, bien relacionados entre sí"
+  - "Comprobar la historia con la prueba de los 3 segundos"
+tools: [aseprite, magicavoxel]
+piece:
+  name: "Una escena de 64×40 (o un diorama voxel) que cuente «qué ha pasado» con 3–5 elementos, comprobada con la prueba de los 3 segundos"
+  canvas: "64x40"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [historia]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+En [Composición (F07-01)](/forja-art/fundamentos/f07-01/) aprendiste a decidir **dónde mira el ojo**. Hoy das el paso siguiente: que, al mirar, el ojo **entienda qué ha pasado**. Sin bocadillos, sin títulos, sin texto.
+
+Mira estas dos escenas. Tienen el mismo fondo, el mismo héroe y el mismo cofre.
+
+<Sprite name="scene-story-none" scale={5} caption="Un slime, un héroe y un cofre. ¿Qué ha pasado? Nada: es un catálogo" />
+<Sprite name="scene-story" scale={5} caption="Un charco de slime, una espada en el suelo y el héroe junto al cofre abierto. Ha habido una pelea, y ha ganado" />
+
+Tu pieza, a elegir:
+
+- una **escena de 64×40** en Aseprite;
+- o un **diorama** en MagicaVoxel.
+
+En las dos, el requisito es el mismo: contar un **«qué ha pasado»** con **3 a 5 elementos**, y pasar la **prueba de los 3 segundos** con otra persona.
+</Block>
+
+<Block kind="concepto">
+### Una imagen es un instante
+
+Un cómic tiene viñetas; una animación, frames. Una imagen fija solo tiene **un instante**. Pero ese instante puede **apuntar** hacia atrás o hacia delante:
+
+- **Antes** (qué va a pasar): dos personajes frente a frente, con aire entre ellos. Es `scene-focus` de F07: el héroe y el slime se miran y aún no ha pasado nada. La historia está en la **tensión**.
+- **Durante** (qué pasa): el golpe, el salto, el impacto. Es lo más fácil de leer, pero lo más difícil de dibujar bien.
+- **Después** (qué ha pasado): la pelea ya terminó y solo quedan **las huellas**. Es `scene-story`.
+
+<Why title="Por qué el «después» es tan potente">
+Cuando el espectador ve las huellas, **reconstruye él mismo** lo que pasó. Esa pequeña deducción es lo que hace que una imagen se recuerde. No le das la historia: le das las pistas y él la monta.
+</Why>
+
+### Las pistas: estados alterados
+
+Un objeto en su **estado normal** no cuenta nada: es un objeto. Un objeto **cambiado** cuenta que algo lo cambió. Compara cada pareja.
+
+<Sprite name="chest" scale={8} caption="chest (12×9): cerrado. La cerradura dorada cruza la tapa y el cuerpo" />
+<Sprite name="chest-open" scale={8} caption="chest-open (12×12): la tapa echada hacia atrás enseña su cara interior oscura, y el oro asoma por encima del borde" />
+
+El cofre cerrado dice «aquí hay un cofre». El abierto dice **«alguien lo ha abierto»**. Fíjate en cómo lo cuenta: la tapa ya no es la banda clara de arriba, sino un rectángulo **oscuro** (es el interior); y en medio aparecen tres filas de **oro**, el color más llamativo del sprite.
+
+<Sprite name="slime" scale={8} caption="slime (10×8): con ojos y un brillo arriba a la izquierda. Está vivo" />
+<Sprite name="slime-puddle" scale={8} caption="slime-puddle (12×4): el mismo verde, aplanado, sin ojos y sin brillo" />
+
+El charco es **más ancho y mucho más bajo** que el slime: 12×4 frente a 10×8. Y le faltan justo las dos cosas que lo hacían parecer vivo: **los ojos y el brillo**. Sigue siendo verde y con el mismo contorno, así que se reconoce como «lo que antes era un slime».
+
+<Sprite name="sword" scale={6} caption="sword (7×15): de pie, como un icono" />
+<Sprite name="sword-ground" scale={6} caption="sword-ground (15×7): la misma espada girada 90°, tumbada, con la punta a la derecha" />
+
+La espada tumbada no tiene ni un píxel nuevo: es **la misma espada girada**. Pero una espada no se deja en el suelo. Si está ahí, **se ha caído o alguien la ha soltado**. Es la pista más barata que existe: un objeto **fuera de su sitio**.
+
+<Tip>
+Tres preguntas para inventar pistas: ¿qué está **roto, abierto o derramado**? ¿Qué está **en el suelo** cuando debería estar en una mano o en una pared? ¿Qué ha **desaparecido** (ojos, brillo, una llama apagada)?
+</Tip>
+
+### El orden de lectura es una línea temporal
+
+Leemos de **izquierda a derecha**. Con las imágenes, el ojo tiende a hacer lo mismo: lo de la izquierda se lee **primero** y lo de la derecha, **después**. Úsalo como un reloj.
+
+En `scene-story`, de izquierda a derecha:
+
+1. **El charco de slime** (más o menos de x = 4 a x = 15, abajo): el enemigo derrotado.
+2. **La espada en el suelo** (de x = 18 a x = 32, a la altura de los pies del héroe): la lucha, ya terminada.
+3. **El héroe** (de x = 34 a x = 47).
+4. **El cofre abierto** (de x = 50 a x = 61): la recompensa.
+
+Lucha, victoria, tesoro. El pasado a la izquierda; el resultado, a la derecha.
+
+<Why title="Por qué la espada está tumbada hacia la derecha">
+La hoja es de las zonas más claras de la escena, así que atrae al ojo justo después del charco. Y la punta mira hacia la derecha, hacia el héroe: funciona como **una flecha** que te lleva del pasado (el charco) al presente (el héroe y el cofre). Es el mismo recurso que el camino del diorama en [V7-01](/forja-art/voxel/v7-01/).
+</Why>
+
+<Warn title="Una convención, no una ley">
+El orden izquierda-derecha es una costumbre de quien lee en español. Si pones el cofre abierto a la izquierda y el charco a la derecha, la escena se puede leer al revés: «abrió el cofre y luego apareció un slime». No es un error en sí, pero cuenta **otra** historia.
+</Warn>
+
+### Menos elementos, más relación
+
+`scene-story-none` tiene **tres** elementos; `scene-story`, **cuatro**. La diferencia no está en cuántos hay, sino en que en la segunda **se relacionan**:
+
+- En `scene-story-none` el slime, el héroe y el cofre están **en fila**, cada uno en su hueco de hierba, de frente y en su estado normal. Podrías cambiar el orden y nada cambiaría. Es una ficha de personajes.
+- En `scene-story` cada elemento **explica a otro**: el charco explica la espada, la espada explica por qué el héroe tiene las manos vacías y el cofre abierto explica por qué ha valido la pena. Y están **cerca** unos de otros: la punta de la espada casi toca los pies del héroe, y el héroe está pegado al cofre.
+
+Ojo: el héroe es **el mismo sprite** en las dos escenas, mirando al frente. No ha hecho falta redibujarlo. **Lo que cuenta la historia es lo que le rodea.**
+
+<Why title="Por qué no conviene añadir más">
+Cada elemento nuevo es una pregunta más para el espectador. Con tres o cinco elementos bien elegidos, todos apuntan a la misma historia. Con diez, cada uno sugiere la suya y ninguna gana. Es la misma regla de F07 («¿esto ayuda a contar lo que pasa?»), llevada al extremo.
+</Why>
+
+### La prueba de los 3 segundos
+
+Enseña tu imagen a alguien **durante unos 3 segundos**, quítala y pregúntale: **«¿qué ha pasado aquí?»**. Sin pistas, sin explicar nada.
+
+- Si te cuenta tu historia con sus palabras («ha matado al bicho y ha abierto el cofre»), funciona.
+- Si te describe objetos sueltos («hay un slime, un chico y un cofre»), es un catálogo: faltan pistas o relación.
+- Si te cuenta **otra** historia, mira qué elemento la ha despistado.
+
+<Tip>
+No hace falta que lo adivine todo. Que el héroe soltara la espada para abrir el cofre es un detalle; lo importante es el **qué**: hubo pelea y ganó.
+</Tip>
+
+### En voxel: el diorama también cuenta
+
+En [V7-01](/forja-art/voxel/v7-01/) añadiste «detalles que cuentan quién vive ahí». Es storytelling: compara las dos etapas del diorama.
+
+<VoxViewer model="diorama" stage={1} title="Escena: una casa, un árbol, un camino. Un lugar" />
+<VoxViewer model="diorama" stage={2} title="Detalle: leña, farola, flores. Alguien vive aquí" />
+
+En la etapa **Escena** hay un lugar, pero no ha pasado nada. En **Detalle**, la leña junto a la casa dice que **alguien ha cortado leña** (y que habrá fuego dentro); la farola junto al camino, que alguien vuelve de noche; las flores, que alguien cuida esto. Son pistas de un **«después»**: no ves a nadie, pero sabes que ha estado.
+
+Las herramientas son las mismas que en pixel: un objeto fuera de su sitio (una herramienta tirada en el camino), un estado alterado (una puerta abierta, una llama apagada) y la posición en el encuadre de la cámara.
+
+<Warn title="El visor no simula los materiales">
+En el visor, la llama de la farola es solo un vóxel amarillo. Su brillo (material Emit) lo verás en el modo **Render** de MagicaVoxel.
+</Warn>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Escribe la historia en pasado">
+Antes de abrir nada, escribe en **una frase y en pasado** qué ha pasado: «el héroe venció al slime y abrió el cofre», «alguien huyó de la casa con prisa», «el herrero se quedó dormido junto al yunque».
+
+Después, haz dos listas:
+
+- **qué se ve** (3 a 5 elementos como máximo);
+- **en qué estado** está cada uno: normal o alterado (abierto, roto, tumbado, derramado, apagado).
+
+<Why>
+El pasado te obliga a pensar en **huellas**, no en acciones. «El héroe pelea» te pide dibujar un golpe; «el héroe peleó» te pide dejar un charco y una espada en el suelo, que es mucho más fácil a 64×40.
+</Why>
+</Step>
+
+<Step n={2} title="Lienzo y fondo tranquilo (Aseprite)">
+1. <Keys k="Ctrl+N" />: lienzo de **64×40**.
+2. Activa *View → Grid* y amplía con la rueda.
+3. Rellena el fondo con <Keys k="G" /> en un color oscuro o medio y poco saturado, como en F07.
+
+<Tip>
+El fondo es escenario. Si tiene matas claras o mucho contraste, las pistas pequeñas (un charco de 4 píxeles de alto) se pierden.
+</Tip>
+</Step>
+
+<Step n={3} title="Crea los estados alterados">
+Parte de sprites que ya tengas y cámbialos. No hace falta dibujar desde cero:
+
+1. **Girar**: abre el sprite (por ejemplo, tu espada), selecciónalo con <Keys k="M" /> y gíralo 90° con *Edit → Rotate*. Así nace `sword-ground`.
+2. **Quitar lo que daba vida**: a una criatura bórrale con <Keys k="E" /> los ojos y el brillo, y aplánala: más ancha, más baja. Así nace `slime-puddle`.
+3. **Abrir o romper**: a un cofre, una puerta o una botella cámbiale la parte de arriba. En `chest-open`, la tapa pasa a ser un rectángulo oscuro (el interior) y aparece una franja de oro.
+
+<Warn>
+Mantén **los mismos colores y el mismo contorno** que el original. Si el charco no comparte el verde del slime, el espectador no sabrá que era un slime.
+</Warn>
+</Step>
+
+<Step n={4} title="Colócalo todo como una línea temporal">
+1. Copia cada pieza con *Edit → Copy* y pégala en la escena con *Edit → Paste*, como en F07.
+2. Coloca **el pasado a la izquierda** (lo que quedó de la pelea) y **el resultado a la derecha** (el tesoro, la puerta abierta, la consecuencia).
+3. Acerca los elementos entre sí: que casi se toquen, no que cada uno tenga su hueco de hierba. Ojo con las tangencias de F07: o los separa un poco de aire, o se solapan con claridad.
+4. Los objetos tirados van **en el suelo**: a la altura de los pies de tus personajes, no flotando a media altura.
+
+<Why>
+Si separas los elementos por igual, el ojo los lee como una lista. Si los agrupas y los ordenas, los lee como una secuencia: primero esto, luego aquello.
+</Why>
+</Step>
+
+<Step n={5} title="Quita lo que no cuente nada">
+Vuelve a tu frase. Para cada elemento, pregúntate: «¿qué parte de la historia cuenta?». Si no cuenta ninguna, bórralo o llévalo a una esquina como marco (F07).
+
+Cuenta los elementos que quedan: entre **3 y 5**.
+</Step>
+
+<Step n={6} title="La prueba de los 3 segundos">
+1. Guarda con <Keys k="Ctrl+S" /> y exporta con *File → Export → Export As*, con *Resize* a ×4 o ×5 para enseñarla en pantalla.
+2. Enséñala a alguien unos **3 segundos**, quítala y pregúntale: **«¿qué ha pasado aquí?»**.
+3. Apunta su respuesta **tal cual**, sin corregirle ni explicar nada.
+4. Si describe objetos sueltos o cuenta otra historia, cambia **una sola cosa** (añade una pista, quita un elemento, acerca dos piezas) y repite con otra persona.
+
+Si quieres revisar los píxeles de las pistas pequeñas, exporta también a 1× y súbela al Inspector:
+
+<Inspector upload title="Tu escena con historia" />
+</Step>
+
+<Step n={7} title="La versión voxel (MagicaVoxel)">
+Si eliges el diorama, o como práctica extra:
+
+1. Abre tu `diorama_v1.vox` de V7-01 y guárdalo con otro nombre: `diorama_historia.vox`.
+2. Escribe tu frase en pasado («alguien salió corriendo», «hubo una tormenta»).
+3. Añade **2 o 3 pistas** con el modo **Attach** y el pincel **Voxel**: una herramienta **tumbada** en el camino, leña **desparramada** en lugar de apilada. Para abrir la puerta, borra su hoja con **Erase**.
+4. Usa **Paint** para los estados: una llama apagada (pinta de gris el vóxel de la llama), un charco junto a algo volcado.
+5. Coloca la cámara (botón derecho para girar, rueda para el zoom, botón central para desplazar) de forma que el pasado quede a la izquierda del encuadre y el resultado a la derecha.
+6. Pulsa *Render*, guarda la imagen y hazle la prueba de los 3 segundos.
+
+<Warn title="Verifica en tu versión">
+En Aseprite, la ruta *Edit → Rotate* (y sus opciones de 90°) y los menús *Edit → Copy* y *Edit → Paste* pueden variar entre versiones. En MagicaVoxel, los nombres de **Attach**, **Erase**, **Paint**, del pincel **Voxel** y del botón para guardar el render también pueden cambiar: búscalos por su función.
+</Warn>
+</Step>
+</Block>
+
+<Block kind="version">
+Ahora, a tu manera. Misma receta: una frase, 3 a 5 elementos, pistas y orden de lectura. Elige un reto:
+
+- **El antes**: cuenta lo que **va a pasar**. El héroe, con la espada en la mano, a punto de abrir un cofre… y un slime asomando detrás, a la derecha. La historia está en lo que el héroe no ve.
+- **La trampa**: el cofre abierto, pero **vacío**, y el héroe tumbado al lado. Mismos elementos, otro final. ¿Lo entiende alguien en 3 segundos?
+- **La casa vacía (voxel)**: tu diorama sin ningún personaje, con pistas de que alguien se fue **con prisa**: la puerta abierta, la leña por el suelo, la farola encendida.
+
+**Prueba doble.** Haz la prueba de los 3 segundos con **dos** personas distintas. Si las dos cuentan la misma historia, la imagen funciona sola.
+</Block>
+
+<Block kind="errores">
+<Mistake title="El catálogo: todos en fila y nada ha pasado" wrongLabel="scene-story-none" rightLabel="scene-story">
+  <Sprite slot="wrong" name="scene-story-none" scale={5} />
+  <Sprite slot="right" name="scene-story" scale={5} />
+
+En `scene-story-none` el slime, el héroe y el cofre están en fila, cada uno en su hueco, de frente y en su estado normal: el slime con sus ojos, el cofre cerrado. Es una presentación de personajes. **Corrección**: decide qué ha pasado, altera el estado de los objetos (charco, cofre abierto), añade una pista fuera de su sitio (la espada en el suelo) y agrupa los elementos en orden de izquierda a derecha.
+</Mistake>
+
+<Mistake title="Una pista que no es pista" wrongLabel="sword: en su sitio" rightLabel="sword-ground: fuera de su sitio">
+  <Sprite slot="wrong" name="sword" scale={6} />
+  <Sprite slot="right" name="sword-ground" scale={6} />
+
+Una espada de pie, como un icono, solo dice «hay una espada». La misma espada tumbada dice «alguien la ha soltado». **Corrección**: antes de dibujar un objeto nuevo, pregúntate si puedes contar lo mismo **cambiando el estado o la posición** de uno que ya tienes.
+</Mistake>
+
+<Mistake title="Un enemigo derrotado que sigue vivo" wrongLabel="slime: ojos y brillo" rightLabel="slime-puddle: ni ojos ni brillo">
+  <Sprite slot="wrong" name="slime" scale={8} />
+  <Sprite slot="right" name="slime-puddle" scale={8} />
+
+Si el slime «derrotado» conserva los ojos y el brillo, el espectador lo ve vivo, por muy quieto que esté. **Corrección**: quita lo que lo hacía parecer vivo y cambia su forma (más ancho, más bajo), pero conserva sus colores para que se reconozca.
+</Mistake>
+
+<Warn title="Error típico: demasiadas pistas">
+Huesos, tres espadas, un escudo roto, un mapa y una calavera. Cada pista sugiere su propia historia y ninguna gana. **Corrección**: quédate con las 2 o 3 pistas que mejor cuentan tu frase y borra el resto. Si pasas de 5 elementos, sobra algo.
+</Warn>
+
+<Warn title="Error típico: el orden al revés">
+El cofre abierto a la izquierda y el charco a la derecha: el ojo lee primero el tesoro y luego la pelea, y la historia se vuelve confusa. **Corrección**: el pasado a la izquierda, el resultado a la derecha. Si de verdad quieres contar otro orden, que sea a propósito.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+<Checklist items={[
+  "Puedo decir qué ha pasado en mi escena en una frase en pasado",
+  "Mi escena mide 64×40 (o es un diorama voxel con un render)",
+  "Hay entre 3 y 5 elementos, y cada uno cuenta una parte de la historia",
+  "Al menos un objeto está en un estado alterado (abierto, roto, derrotado, apagado)",
+  "Al menos un objeto está fuera de su sitio (en el suelo, volcado, tirado)",
+  "Los elementos están agrupados y se leen en orden de izquierda a derecha",
+  "He hecho la prueba de los 3 segundos con alguien y ha contado mi historia",
+]} />
+
+<Quiz q="¿Qué diferencia de verdad a scene-story de scene-story-none?" options={["Que tiene muchos más elementos", "Que sus elementos están alterados, agrupados y ordenados, y se explican unos a otros", "Que el héroe está redibujado mirando al cofre"]} answer={1}>
+Solo hay un elemento más (la espada). El héroe es el mismo sprite, mirando al frente. Lo que cambia es el estado de los objetos (charco, cofre abierto), la espada fuera de su sitio y el orden de izquierda a derecha.
+</Quiz>
+
+<Quiz q="¿Por qué funciona tan bien la espada tumbada como pista?" options={["Porque es más grande que la espada de pie", "Porque una espada no se deja en el suelo: si está ahí, algo ha pasado", "Porque tiene más colores"]} answer={1}>
+Es la misma espada, girada 90°, sin un píxel nuevo. Un objeto fuera de su sitio obliga al espectador a preguntarse por qué, y esa pregunta es la historia.
+</Quiz>
+
+<Quiz q="En la prueba de los 3 segundos te dicen: «hay un slime, un chico y un cofre». ¿Qué significa?" options={["Que la escena funciona: lo han visto todo", "Que es un catálogo: faltan pistas o relación entre los elementos", "Que hay que dejarles mirar más tiempo"]} answer={1}>
+Si describen objetos sueltos en vez de una historia, los elementos no se relacionan. Añade una pista, altera un estado o agrupa las piezas, y repite la prueba con otra persona.
+</Quiz>
+</Block>

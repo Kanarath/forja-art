@@ -1,0 +1,32 @@
+{
+  "name": "chest-open",
+  "description": "El cofre abierto (12×12): la tapa echada hacia atrás enseña su cara interior oscura y el oro asoma por encima del borde. La cerradura queda en el frente.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "prop",
+    "historia"
+  ],
+  "palette": {
+    "o": "#1b1030",
+    "l": "#d08a50",
+    "w": "#a0603a",
+    "W": "#6b3d2e",
+    "y": "#f2b33d",
+    "Y": "#a8661c"
+  },
+  "rows": [
+    ".oooooooooo.",
+    "oWWWWWWWWWWo",
+    "oWWWWWWWWWWo",
+    "ooyyyoyyyyoo",
+    "oyyyyyyyYyyo",
+    "oYyyYyyyyyYo",
+    "oooooooooooo",
+    "olllllllllwo",
+    "owwwoyyowwWo",
+    "owwwoYYowwWo",
+    "oWWWWWWWWWWo",
+    "oooooooooooo"
+  ]
+}

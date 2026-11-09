@@ -114,6 +114,16 @@
   - modelo «diorama» (base con estratos, casa y árbol del kit, detalles).
 - **Componentes:** `<Animator sprites={[…]}>` acepta frames con paletas distintas si no se contradicen (los VFX usan menos colores según el frame).
 
+**Contenido · séptimo bloque: 5 lecciones más (48 en total).**
+- **Pixel:** P7-03 Transiciones (la orilla), P8-01 Ilustración (escena con todo lo aprendido), P9-01 Pixel art en Godot.
+- **Voxel:** V9-01 De MagicaVoxel a Godot.
+- **Fundamentos:** F10-01 Storytelling visual. Con ella, los diez fundamentos (F01–F10) tienen lección.
+- **Arte nuevo:**
+  - mapa de orilla de 80×48, con y sin transición, y sus tiles de borde, esquina y esquina interior (calculados por distancia a la hierba);
+  - cofre abierto, slime derrotado y espada en el suelo, más dos escenas: sin historia y con historia;
+  - escena final de 80×48 con orilla, personajes, impacto y props;
+  - spritesheet de 64×24 del ciclo de caminar, para importarlo en Godot.
+
 **Lecciones aprendidas durante la fase 1:**
 - **`BASE_URL` sin barra final.** Astro 7 da `BASE_URL` sin barra final, así que hay que usar siempre `src/lib/url.ts`. El validador detecta enlaces sin la base.
 - **Colecciones nuevas en local.** El servidor de desarrollo no ve colecciones de contenido nuevas: hay que reiniciarlo (`npx astro dev --force`).

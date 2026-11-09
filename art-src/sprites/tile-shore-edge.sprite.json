@@ -1,0 +1,36 @@
+{
+  "name": "tile-shore-edge",
+  "description": "Tile de borde (16×16): agua con la hierba ARRIBA. La arena y la espuma recorren todo el borde superior; los otros tres bordes son agua normal.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "tile",
+    "transición"
+  ],
+  "palette": {
+    "a": "#e8d49a",
+    "b": "#c9b07a",
+    "c": "#d8f0ff",
+    "d": "#2a6fc9",
+    "e": "#6fb8ff",
+    "f": "#1f4f9a"
+  },
+  "rows": [
+    "aaaaaaaaaaaaaaaa",
+    "aaaaaaaaaaaaaaaa",
+    "bbbbbbbbbbbbbbbb",
+    "cccccccccccccccc",
+    "ddddddeeeddddddd",
+    "dddddddddddddddd",
+    "dffffddddcdddddd",
+    "ddddddddeeeddddd",
+    "dddddddddddddddd",
+    "ddddddddddddcddd",
+    "dddddddddddeeedd",
+    "dddddffffddddddd",
+    "ddddcddddddddddd",
+    "dddeeedddffffddd",
+    "dddddddddddddddd",
+    "dddddddddddddddd"
+  ]
+}

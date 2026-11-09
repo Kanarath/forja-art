@@ -50,5 +50,10 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   { id: "diorama", name: "Diorama", description: "Un trozo de mundo voxel sobre una base, con escala común y detalles que cuentan algo (V7-01).", color: "#6b4430" },
   { id: "render-final", name: "Render final", description: "Un render de portfolio con cámara, luz y acabado elegidos con intención (V8-01).", color: "#fff3c4" },
   { id: "cuatro-superficies", name: "Cuatro superficies", description: "La misma forma en mate, brillante, metal y cristal, en pixel y en voxel (F06).", color: "#a9b4c4" },
+  { id: "orilla", name: "Orilla", description: "Un juego de tiles de transición entre dos terrenos sin borde de rejilla (P7-03).", color: "#e8d49a" },
+  { id: "historia", name: "Contar sin texto", description: "Una escena que cuenta qué ha pasado solo con la puesta en escena (F10).", color: "#f2b33d" },
+  { id: "escena-final", name: "Escena de portfolio", description: "Una ilustración que reúne tiles, personajes, efecto y foco (P8-01).", color: "#ffffff" },
+  { id: "en-el-juego", name: "En el juego", description: "Tu sprite animado y nítido dentro de Godot (P9-01).", color: "#478cbf" },
+  { id: "voxel-en-juego", name: "Voxel en el juego", description: "Tu modelo voxel exportado e iluminado en una escena 3D de Godot (V9-01).", color: "#6fb8ff" },
   { id: "forma-primero", name: "Forma antes que detalle", description: "Un modelo voxel con su blockout guardado como primera versión (V2-01).", color: "#38e1ff" },
 ];

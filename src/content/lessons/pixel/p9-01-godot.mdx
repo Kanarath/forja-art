@@ -1,0 +1,256 @@
+---
+id: p9-01
+discipline: pixel
+level: 9
+order: 1
+title: "Del sprite al juego: pixel art en Godot"
+summary: "Lleva tu ciclo de caminar a Godot 4 sin perder un píxel: filtro Nearest, resolución base pequeña, escalado entero y el spritesheet como rejilla."
+duration: 45
+status: borrador
+objectives:
+  - "Configurar un proyecto de Godot 4 para pixel art: filtro Nearest, resolución base pequeña y escalado entero"
+  - "Cortar un spritesheet en rejilla con Sprite2D (hframes) y con AnimatedSprite2D (SpriteFrames)"
+  - "Traducir las duraciones por frame de Aseprite a la velocidad (FPS) de una animación de Godot"
+  - "Reconocer y corregir un sprite borroso, un escalado no entero y una rejilla mal contada"
+prerequisites: [p6-02]
+fundamentals: []
+tools: [aseprite, godot]
+piece:
+  name: "Tu héroe caminando en bucle en una escena de Godot, nítido y a escala entera, con una captura"
+  canvas: "64x24"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [en-el-juego]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Hasta ahora tu héroe vivía en Aseprite. Hoy lo metes **en un juego**. Vas a forjar una escena de Godot con tu ciclo de caminar de P6-02 en bucle, **nítido** y a **escala entera**, y una captura de la ventana del juego para tu portfolio.
+
+Esto es lo que llevas: una sola imagen con los 4 frames en fila. Es tu spritesheet.
+
+<Sprite name="hero-walk-sheet" scale={6} caption="Spritesheet de 64×24: base, paso A, base, paso B. Cuatro casillas de 16×24" />
+
+Y esto es lo que tiene que hacer en Godot, exactamente igual que en Aseprite:
+
+<Animator sprites={["hero-chibi", "hero-walk-a", "hero-chibi", "hero-walk-b"]} durations={[180, 180, 180, 180]} />
+
+Si no tienes tu propio spritesheet a mano, descarga el del curso y úsalo para practicar: [hero-walk-sheet.png](/forja-art/assets/sprites/hero-walk-sheet.png) (64×24, a 1×).
+</Block>
+
+<Block kind="concepto">
+Un motor de juego no es un editor de pixel art. Por defecto piensa en imágenes grandes y en pantallas de cualquier tamaño. Para que tus píxeles lleguen intactos hay que decirle **tres cosas**.
+
+**1. No suavices: filtro Nearest.**
+
+Ya lo viste en P0-01 y en P1-01: al ampliar, un programa normal inventa colores intermedios entre píxel y píxel. Godot puede hacer lo mismo con tus texturas.
+
+<Mistake title="El mismo spritesheet, ampliado de dos formas" wrongLabel="Filtro lineal (suavizado)" rightLabel="Filtro Nearest">
+  <Sprite slot="wrong" name="hero-walk-sheet" scale={6} view="smooth" caption="Suavizado: el contorno se deshace y los ojos son manchas" />
+  <Sprite slot="right" name="hero-walk-sheet" scale={6} caption="Nearest: cada píxel es un bloque cuadrado" />
+
+*Nearest* (vecino más cercano) copia cada píxel tal cual, igual que el Resize de Aseprite. Es el único filtro que respeta pixel art.
+</Mistake>
+
+**2. Dibuja pequeño: resolución base.**
+
+El juego tiene un tamaño «de verdad», pequeño, en píxeles de sprite. Por ejemplo **320×180**. Tu héroe de 24 de alto ocupa ahí casi un séptimo de la altura, como en un juego clásico. Luego Godot amplía **toda la imagen** hasta la ventana.
+
+<Why title="Por qué una resolución base pequeña">
+Si el proyecto midiera 1920×1080 y ampliaras cada sprite por separado, cada uno podría acabar a una escala distinta, o un objeto girado o en una posición decimal mezclaría píxeles grandes con píxeles finos. Con una resolución base pequeña, **todo** el juego vive en la misma rejilla de píxeles y se amplía junto. Es el lienzo de Aseprite, pero para la escena entera.
+</Why>
+
+**3. Amplía por números enteros: escalado entero.**
+
+La regla de P0-01 vale igual aquí. 320×180 a ×4 da 1280×720: cada píxel es un cuadrado de 4×4. Pero si la ventana mide 1366×768, ×4,27 no es un número entero: unos píxeles saldrían de 4 y otros de 5, y el héroe temblaría al caminar.
+
+Con el **escalado entero**, Godot usa la mayor escala entera que cabe (×4) y deja bandas en los bordes. Mejor un marco negro que píxeles desiguales.
+
+**4. El spritesheet es una rejilla.**
+
+Godot no sabe dónde empieza y acaba cada frame. Se lo dices tú: **cuántas columnas y cuántas filas** tiene la imagen. Tu sheet mide 64×24 y tiene 4 frames en una fila: **4 columnas, 1 fila**. Godot divide 64 entre 4 y corta casillas de 16×24.
+
+<Why title="Por qué exportaste a 1×">
+En P6-02 exportaste el spritesheet a 1×, sin Resize. Aquí está la razón: el motor amplía; tú no. Si metes un PNG ya ampliado ×8, la resolución base deja de cuadrar y el héroe sale gigante o, si lo encoges, desigual.
+</Why>
+
+**5. FPS frente a milisegundos.**
+
+En Aseprite, **cada frame** tiene su duración. En Godot, una animación de `AnimatedSprite2D` tiene **una velocidad para toda la animación**, en frames por segundo (FPS). Para pasar de una a otra:
+
+- FPS = 1000 ÷ milisegundos por frame.
+- Tu ciclo a 180 ms → 1000 ÷ 180 ≈ **5,5 FPS**. Redondeando, 6 FPS dan unos 167 ms por frame.
+
+Compáralo con el animador de la pieza (180 ms, como en Aseprite). Este es lo que verás en Godot a 6 FPS:
+
+<Animator sprites={["hero-chibi", "hero-walk-a", "hero-chibi", "hero-walk-b"]} durations={[167, 167, 167, 167]} />
+
+Casi no se nota: es el mismo ritmo de paso tranquilo. Como en tu ciclo **todos los frames duran lo mismo**, la traducción es directa.
+
+<Warn title="Si tus frames tenían duraciones distintas">
+El brillo de la gema de P4-03 tenía un frame de 500 ms y tres de 90 ms. Con una sola velocidad no puedes hacer eso tal cual. La forma más sencilla: elige la velocidad del frame corto (1000 ÷ 90 ≈ 11 FPS) y **repite** el frame largo hasta sumar su tiempo (500 ÷ 90 ≈ 5–6 copias). Pierdes algo de precisión, pero el ritmo se conserva.
+</Warn>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Consigue Godot y crea el proyecto">
+1. Descarga **Godot 4** desde su web oficial (godotengine.org). Es gratuito y de código abierto. Usa la versión **4.3 o superior**.
+2. En el gestor de proyectos, crea un proyecto nuevo, por ejemplo `forja-heroe`. Para un juego 2D sencillo vale cualquiera de los renderizadores que te ofrezca.
+3. Copia tu spritesheet de P6-02 (el PNG a 1×) dentro de la carpeta del proyecto. Aparecerá en el panel **FileSystem**.
+
+<Tip>
+Sin sheet propio, usa el del curso: [hero-walk-sheet.png](/forja-art/assets/sprites/hero-walk-sheet.png). Cuando tengas el tuyo, solo cambias la imagen.
+</Tip>
+</Step>
+
+<Step n={2} title="Filtro Nearest para todo el proyecto">
+1. Abre *Project → Project Settings*.
+2. Ve a *Rendering → Textures → Canvas Textures*.
+3. Cambia **Default Texture Filter** a **Nearest**.
+
+<Why>
+Así todos los sprites 2D del proyecto se amplían vecino a vecino sin tocarlos uno a uno. Si alguna vez solo quieres cambiar un nodo, cada CanvasItem (Sprite2D, AnimatedSprite2D…) tiene su propia propiedad `texture_filter`.
+</Why>
+</Step>
+
+<Step n={3} title="Resolución base y escalado entero">
+En *Project Settings*, sección *Display → Window*:
+
+1. Pon el tamaño del viewport (ancho y alto de la ventana del proyecto) a **320 × 180**.
+2. En **Stretch**, pon **Mode** en `canvas_items` (o `viewport`) y **Scale Mode** en `integer`.
+
+<Tip>
+Si no ves alguna de estas opciones, activa el interruptor **Advanced Settings** de *Project Settings*.
+</Tip>
+
+<Why title="canvas_items o viewport">
+Las dos amplían tu juego de 320×180 hasta la ventana. Con `viewport`, la escena se dibuja a 320×180 y se amplía la imagen final: todo queda en la rejilla de píxeles, como un juego retro. Con `canvas_items`, se amplía al dibujar, lo que deja más libertad (por ejemplo, texto más fino). Para empezar vale cualquiera; con `integer`, los píxeles salen iguales.
+</Why>
+</Step>
+
+<Step n={4} title="Opción A: Sprite2D con rejilla (hframes)">
+Esta opción sirve para **comprobar la rejilla** antes de animar.
+
+1. Crea una escena nueva con un nodo raíz **Node2D** y guárdala (por ejemplo `heroe.tscn`).
+2. Añade un hijo **Sprite2D** y arrastra tu PNG a su propiedad **Texture**. Verás los 4 héroes en fila.
+3. En la sección **Animation** del Sprite2D, pon **Hframes** = **4** y **Vframes** = **1**.
+4. Ahora solo se ve un héroe. Cambia la propiedad **Frame** de 0 a 3: deben aparecer base, paso A, base y paso B, **cada uno entero y en el mismo sitio**.
+
+<Why>
+`hframes` y `vframes` dividen la imagen en columnas y filas iguales. 64 ÷ 4 = 16 y 24 ÷ 1 = 24: casillas de 16×24, tu lienzo exacto. Si un frame sale cortado o con un trozo del vecino, has contado mal la rejilla.
+</Why>
+</Step>
+
+<Step n={5} title="Opción B: AnimatedSprite2D con SpriteFrames">
+Esta es la opción para **animar**.
+
+1. En la misma escena, añade un nodo **AnimatedSprite2D** (puedes borrar el Sprite2D de prueba).
+2. En su propiedad **Sprite Frames**, crea un **SpriteFrames** nuevo y haz clic en él: se abre el panel **SpriteFrames**.
+3. Renombra la animación `default` como `abajo`, igual que tu etiqueta de Aseprite.
+4. Usa el botón de **añadir frames desde un spritesheet**. Elige tu PNG, indica la rejilla (**4 en horizontal y 1 en vertical**) y selecciona las 4 casillas en orden.
+5. Pon la velocidad de la animación a **6 FPS** y deja activada la casilla de **bucle**.
+6. Reproduce la animación desde el panel: el héroe camina.
+
+<Why>
+Cada animación del SpriteFrames es un tramo de frames con nombre: lo mismo que una etiqueta de Aseprite. Cuando hagas `arriba` y `lado`, serán animaciones nuevas en el mismo SpriteFrames.
+</Why>
+
+<Tip>
+Para que arranque sola al ejecutar el juego, busca en el AnimatedSprite2D la opción de reproducir al iniciar (*autoplay*) y elige `abajo`.
+</Tip>
+</Step>
+
+<Step n={6} title="Colócalo y ejecuta">
+1. Coloca el AnimatedSprite2D dentro del área de 320×180 del editor 2D, en una posición de **números enteros**, por ejemplo (160, 90).
+2. Deja su **Scale** en (1, 1). No lo amplíes: la ventana ya se amplía entera.
+3. Marca la escena como principal y ejecuta el proyecto con el botón de reproducir del editor.
+4. Cambia el tamaño de la ventana del juego: el héroe debe saltar de escala en escala (×3, ×4…), siempre nítido, con bandas en los bordes si no cabe justo.
+
+<Warn>
+No escales el sprite a 1,5 ni lo pongas en x = 160,5. Un sprite a escala decimal o en media posición vuelve a mezclar píxeles, aunque el filtro sea Nearest.
+</Warn>
+</Step>
+
+<Step n={7} title="Captura la pieza">
+1. Con el juego en marcha y la ventana a una escala entera (por ejemplo 1280×720, que es ×4), haz una captura de la ventana con la herramienta de recortes de Windows.
+2. Guárdala en PNG, nunca en JPG: el JPG emborrona los bordes.
+3. Ábrela con zoom y comprueba que cada píxel del héroe es un cuadrado del mismo tamaño.
+
+<Tip>
+Graba también un vídeo corto del bucle si quieres enseñar el movimiento. La captura es la prueba de nitidez; el bucle, la prueba de ritmo.
+</Tip>
+</Step>
+
+<Warn title="Verifica en tu versión">
+Existen en Godot 4: *Default Texture Filter* en *Rendering → Textures → Canvas Textures*, *Stretch Mode* y *Scale Mode* `integer` (desde Godot 4.2), `hframes`/`vframes` en Sprite2D y el panel SpriteFrames con velocidad en FPS y bucle. Pueden cambiar de nombre o de sitio según la versión: el campo exacto del tamaño del viewport, el texto del botón para añadir frames desde un spritesheet, la opción de *autoplay*, cómo se marca la escena principal, la posición del botón de ejecutar y la velocidad que trae por defecto una animación nueva. Algunas versiones permiten además ajustar la duración relativa de cada frame dentro de una animación; si la tuya lo tiene, te ahorra repetir frames. Si no encuentras algo, usa el buscador de *Project Settings* o busca por nombre en el Inspector.
+</Warn>
+</Block>
+
+<Block kind="version">
+La pieza es tu héroe caminando hacia abajo. Ahora hazlo tuyo. Elige uno o más retos:
+
+- **Más direcciones:** si hiciste `arriba` o `lado` en P6-02, expórtalos y añádelos como animaciones nuevas en el mismo SpriteFrames, con la misma velocidad.
+- **Idle y caminar juntos:** añade el idle de P6-01 como animación `idle`. Si sus frames tenían duraciones distintas (por ejemplo, un parpadeo corto), adapta: velocidad del frame más corto y repite los largos.
+- **Un suelo:** pon detrás un Sprite2D con tu escena final de P8-01 o tu tile de hierba de P7-01, a escala 1 y en posiciones enteras. Comprueba en la captura que el héroe y el fondo tienen **el mismo tamaño de píxel**. Cuando el suelo sea un mapa de tiles de verdad, acabará en un TileSet y un TileMapLayer.
+
+<Tip>
+Prueba otra resolución base, por ejemplo 480×270. El héroe se verá más pequeño en pantalla: la resolución base decide **cuánto mundo** ve el jugador. Elige una y mantenla en todo el juego.
+</Tip>
+</Block>
+
+<Block kind="errores">
+<Mistake title="Sprite borroso" wrongLabel="Filtro lineal" rightLabel="Filtro Nearest">
+  <Sprite slot="wrong" name="hero-walk-sheet" scale={5} view="smooth" />
+  <Sprite slot="right" name="hero-walk-sheet" scale={5} />
+
+Es el error de P1-01, ahora dentro del motor. Ve a *Project Settings → Rendering → Textures → Canvas Textures* y pon **Default Texture Filter** en **Nearest**. Si solo un nodo sale borroso, mira su propiedad `texture_filter`: puede tener un valor propio distinto del del proyecto.
+</Mistake>
+
+<Mistake title="Escalado no entero: píxeles de distinto tamaño" wrongLabel="Ventana a ×4,27" rightLabel="Ventana a ×4 con bandas">
+  <p slot="wrong">La ventana amplía a una escala decimal. En la captura, unas columnas del héroe miden 4 píxeles de pantalla y otras 5. Al caminar, el contorno «baila» y los ojos cambian de grosor.</p>
+  <p slot="right">Con Scale Mode en integer, todo se amplía ×4 exacto. Cada píxel es un cuadrado de 4×4 y sobra un margen en el borde.</p>
+
+Compruébalo con zoom sobre la captura: cuenta los píxeles de pantalla de dos píxeles del héroe. Si no coinciden, revisa *Stretch → Scale Mode* y que el Scale del nodo sea (1, 1).
+</Mistake>
+
+<Mistake title="Rejilla mal contada: frames cortados" wrongLabel="Hframes = 3" rightLabel="Hframes = 4">
+  <p slot="wrong">64 ÷ 3 no da un número entero: cada casilla mide unos 21 píxeles. El primer frame enseña un héroe y un trozo del siguiente, y en cada vuelta la imagen se desplaza.</p>
+  <p slot="right">4 columnas y 1 fila: casillas de 16×24, tu lienzo. Cada frame muestra un héroe completo en el mismo sitio.</p>
+
+Antes de poner la rejilla, mira tu PNG: ancho de la imagen ÷ ancho del frame = columnas; alto ÷ alto del frame = filas. Si exportaste desde Aseprite con márgenes o separación entre frames (*padding*), las casillas ya no encajan: vuelve a exportar sin ellos.
+</Mistake>
+
+<Warn title="Un ciclo demasiado rápido o lento">
+Si dejas la velocidad que trae la animación en vez de calcularla, el héroe puede correr como un loco o arrastrar los pies. Calcula siempre: FPS = 1000 ÷ milisegundos. Para 180 ms, entre 5 y 6 FPS.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+Antes de dar la pieza por buena, comprueba que el spritesheet que metes en Godot está a 1× y que su rejilla cuadra. Súbelo aquí:
+
+<Inspector upload title="Comprueba tu spritesheet a 1×" />
+
+<Checklist items={[
+  "Mi spritesheet está a 1× y su ancho es 4 veces el ancho de un frame",
+  "Default Texture Filter está en Nearest",
+  "La resolución base es pequeña (por ejemplo 320×180) y Scale Mode está en integer",
+  "En Sprite2D, con Hframes 4 y Vframes 1, cada frame muestra un héroe completo",
+  "La animación del SpriteFrames tiene los 4 frames en orden, en bucle y a unos 6 FPS",
+  "El nodo tiene Scale (1, 1) y está en una posición entera",
+  "En la captura, todos los píxeles del héroe son cuadrados del mismo tamaño",
+  "La captura está en PNG, no en JPG",
+]} />
+
+<Quiz q="Tu héroe se ve borroso en Godot aunque el PNG es nítido. ¿Qué cambias primero?" options={["Exporto el PNG a ×8 desde Aseprite", "Pongo el filtro de textura en Nearest", "Subo la resolución base a 1920×1080"]} answer={1}>
+El borrón es el suavizado del filtro lineal, el mismo de P1-01. Nearest copia cada píxel tal cual. Ampliar el PNG o subir la resolución base no lo arregla y rompe la escala.
+</Quiz>
+
+<Quiz q="Tus frames duran 180 ms en Aseprite. ¿Qué velocidad pones a la animación en Godot?" options={["180 FPS", "Unos 5,5 FPS (5 o 6)", "60 FPS, como el juego"]} answer={1}>
+FPS = 1000 ÷ 180 ≈ 5,5. Godot usa una velocidad por animación; como todos tus frames duran lo mismo, la traducción es directa.
+</Quiz>
+
+<Quiz q="Tu sheet mide 64×24 con 4 frames en fila. Pones Hframes = 2. ¿Qué ves?" options={["Cada frame muestra dos héroes, porque cada casilla mide 32 px", "La animación va el doble de rápido", "Nada cambia: Godot detecta la rejilla solo"]} answer={0}>
+64 ÷ 2 = 32: cada casilla abarca dos frames. La rejilla la dices tú: columnas = ancho de la imagen ÷ ancho de un frame.
+</Quiz>
+</Block>

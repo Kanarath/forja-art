@@ -298,7 +298,7 @@ export const MODELS = {
     stages: [
       { label: "Base", note: "Un bloque de 22×22×4: piedra abajo, dos capas de tierra y la hierba arriba. El corte lateral, a la vista, ya dice «trozo de mundo».", voxels: dioramaBase },
       { label: "Escena", note: "La casa modular y un árbol de 8³ (el mismo de V1) sobre la base, un camino hasta la puerta y un estanque hundido un vóxel. Escala común: todo se mide con la casa.", voxels: dioramaScene },
-      { label: "Detalle", note: "Una farola (llama en Emit), flores, una piedra, leña junto a la puerta, hierba en dos tonos y el reflejo del cielo en el agua. Ningún detalle es nuevo: todos dicen que aquí vive alguien.", voxels: dioramaDetail },
+      { label: "Detalle", note: "Una farola (llama en Emit), flores, una piedra, leña junto a la casa, hierba en dos tonos y el reflejo del cielo en el agua. Ningún detalle es nuevo: todos dicen que aquí vive alguien.", voxels: dioramaDetail },
     ],
   },
   "chibi-pose": {

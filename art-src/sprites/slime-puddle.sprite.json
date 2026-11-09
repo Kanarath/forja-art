@@ -1,0 +1,21 @@
+{
+  "name": "slime-puddle",
+  "description": "Un slime derrotado (12×4): un charco aplanado, sin ojos ni brillo. Sin texto, cuenta que aquí hubo una pelea.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "criatura",
+    "historia"
+  ],
+  "palette": {
+    "o": "#1b1030",
+    "g": "#4ade80",
+    "G": "#1f8a4c"
+  },
+  "rows": [
+    "...oooooo...",
+    ".oogggggGoo.",
+    "oGGGGGGGGGGo",
+    ".oooooooooo."
+  ]
+}
