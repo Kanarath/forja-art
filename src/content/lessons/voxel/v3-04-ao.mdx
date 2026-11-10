@@ -1,0 +1,275 @@
+---
+id: v3-04
+discipline: voxel
+level: 3
+order: 4
+title: "Oclusión ambiental pintada: asentar los objetos"
+summary: "Pinta la oclusión ambiental en la paleta: el tono -1 de cada color al pie de las paredes y junto a los muebles, el -2 en los rincones. Poco, sin dirección y solo donde toca."
+duration: 40
+status: borrador
+prerequisites: [v3-01, v3-03]
+fundamentals: [f05]
+objectives:
+  - "Explicar qué es la oclusión ambiental y por qué no tiene dirección"
+  - "Saber por qué se pinta en la paleta aunque el render ya la calcule"
+  - "Crear en la paleta el tono -1 y el -2 de cada color, en el hueco de al lado"
+  - "Pintar el suelo al pie de las paredes y junto a los muebles, y los rincones con un paso más"
+  - "Comparar con el render y quitar la AO que sobra o que contradice la luz"
+tools: [magicavoxel]
+piece:
+  name: "Un modelo tuyo (o la habitación de V7-02) con AO pintado en la paleta, en dos archivos (antes y después) y con un render de cada uno"
+  canvas: "16x16x16"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [ao]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Tus modelos ya tienen rampas (V3-01), materiales (V3-02) y años encima (V3-03). Pero en el editor, en el visor y en un juego, los muebles parecen **posados con pinzas** sobre el suelo. Hoy los **asientas**.
+
+Vas a forjar **un modelo con oclusión ambiental pintada en los colores**. Este es el ejemplo, la habitación que montarás entera en V7-02:
+
+<VoxViewer model="ao" stage={1} title="La habitación con AO pintado" />
+
+Pulsa las etapas **Sin AO** y **AO pintado** y alterna entre las dos. No hay ni un vóxel nuevo ni uno borrado: solo cambia el color de **52 vóxels**, y 32 de ellos son del suelo.
+
+Tu pieza final:
+
+- tu modelo (o esta habitación, que puedes descargar desde el visor en la etapa **Sin AO**) en **dos archivos**, `ao_antes.vox` y `ao_pintado.vox`;
+- **un render de cada uno** con la misma cámara y la misma luz.
+</Block>
+
+<Block kind="concepto">
+### 1. Donde dos superficies se juntan, llega menos luz
+
+La luz del **cielo** no viene de un punto: viene de toda la cúpula de arriba. Un trozo de suelo en mitad de la sala la recibe entera. Un trozo de suelo pegado a una pared recibe **la mitad**: la pared le tapa medio cielo. En un rincón, entre dos paredes, todavía menos.
+
+Eso es la **oclusión ambiental** (AO, *ambient occlusion*): el oscurecimiento suave donde las superficies se juntan. El pie de una pared, un rincón, el suelo bajo el borde de una cama, la junta entre dos tablas.
+
+<VoxViewer model="ao" stage={0} title="Sin AO: el suelo es igual de claro junto a la pared que en el centro" />
+
+Mira la etapa **Sin AO** de cerca. El suelo junto a la pared izquierda tiene exactamente los mismos dos marrones (`#a0603a` y `#8a5030`) que en mitad de la sala. La cama, la alfombra y las paredes se tocan con el suelo, pero **nada en el suelo lo dice**.
+
+<Why title="¿Por qué se ven «flotando»?">
+Es lo mismo que la sombra de contacto de [P7-05](/forja-art/pixel/p7-05/). El ojo decide si algo está apoyado mirando **el suelo que lo rodea**. Si el suelo no cambia junto a la base, el objeto puede estar tocándolo o a un centímetro: no hay forma de saberlo.
+</Why>
+
+<Sprite name="props-grounded" scale={8} caption="props-grounded (P7-05): la misma idea en pixel art. La hierba bajo cada prop baja un paso de su rampa" />
+
+### 2. La AO no tiene dirección
+
+Esta es la diferencia con una sombra:
+
+- **Sombra proyectada:** la hace **una luz concreta**. Cae al lado contrario del sol y cambia si el sol se mueve.
+- **Oclusión ambiental:** la hace **la geometría**. Va **alrededor** de cada contacto, por igual a los dos lados, y no cambia aunque gires el sol.
+
+En un día nublado no hay sombras proyectadas, pero los rincones siguen oscuros. Eso es AO.
+
+<Why>
+Por eso se puede pintar en el color sin miedo: como no depende del sol, no se rompe cuando cambias la luz del render. Una sombra proyectada pintada en el color, en cambio, se queda mal en cuanto mueves el sol. Esa la deja el render.
+</Why>
+
+### 3. Si el render ya la calcula, ¿por qué pintarla?
+
+El modo **Render** de MagicaVoxel calcula la luz del cielo, y con ella la oclusión, sola (lo viste en [V8-01](/forja-art/voxel/v8-01/) y en F05-01). Pero tu modelo vive en muchos sitios **sin render**:
+
+- el **visor del editor** mientras trabajas;
+- el **visor de esta web**, que solo muestra colores con una luz fija;
+- un **juego** con luz simple o colores planos;
+- una **exportación a .obj**: viajan la malla y la textura de la paleta, no la luz del render.
+
+En todos esos sitios, la AO del render **desaparece**. La que está pintada en el color **viaja con el modelo**. Es la misma idea que el «claro arriba, oscuro abajo» de la roca de [V3-01](/forja-art/voxel/v3-01/), ahora aplicada a los contactos.
+
+### 4. Cuánto oscurecer: un paso, y dos en los rincones
+
+La etapa **AO pintado** se ha hecho con una regla sencilla, la misma que vas a aplicar tú a ojo:
+
+- Cada cara de **arriba** que se ve (el suelo, el colchón, los libros) mira los **8 huecos** que la rodean justo **por encima**.
+- **Junto a una pared recta** o al borde de un mueble, 3 de esos huecos están ocupados: **un paso más oscuro**.
+- **En un rincón**, entre pared y mueble o entre dos muebles, hay 5 o más: **dos pasos**.
+- Un **paso** es multiplicar el color por **0,82**: queda un 18 % más oscuro, con el mismo tono y la misma saturación.
+
+Así quedan los colores del suelo:
+
+- tabla clara: `#a0603a` → paso -1 `#834f30` → paso -2 `#6c4127`;
+- tabla oscura: `#8a5030` → `#714227` → `#5d3620`.
+
+<Tip title="Un paso = bajar el brillo, nada más">
+Multiplicar los tres canales RGB por 0,82 es lo mismo que bajar el **brillo (V)** del color un 18 % en HSV **sin tocar el tono (H) ni la saturación (S)**. Así lo harás en el editor de color de la paleta.
+</Tip>
+
+### 5. Dónde cae, vóxel a vóxel
+
+Cuenta hecha sobre el modelo, entre la etapa **Sin AO** y la **AO pintado**:
+
+- **El pie de las paredes (suelo):** la columna de suelo pegada a la pared izquierda y la fila pegada a la del fondo, un paso.
+- **Junto a la alfombra y la cama (suelo):** el suelo que rodea el borde de la alfombra y el que toca los lados de la cama, un paso.
+- **Los rincones (suelo), dos pasos:** solo 4 vóxels. Entre la pared izquierda y la esquina de la cama, entre la cama y la pared del fondo, y entre la cama y la alfombra.
+- **Encima de los muebles:** el colchón y la almohada junto a la pared y al cabecero, el canto de arriba del cabecero, el estante y los tres libros contra la pared. Cada uno con **su propio** tono -1, no con un gris.
+- **Sin tocar:** el centro de la sala, la mesa y la silla por arriba, las paredes y la ventana.
+
+En total, 32 de los 114 vóxels de suelo que se ven: menos de un tercio. El resto se queda como estaba.
+
+<Why title="¿Y bajo la mesa?">
+El suelo bajo la mesa **no** se oscurece. La mesa es alta y solo toca el suelo con cuatro patas finas: la luz entra de sobra por los lados. La AO va donde la superficie que tapa está **pegada**, no donde hay algo a tres vóxels de altura. Si en tu modelo un mueble es bajo y macizo (un arcón, un sofá), entonces sí.
+</Why>
+
+<Warn title="Un vóxel, un color, seis caras">
+En vóxels no puedes oscurecer **una cara**: el color es del vóxel entero. Por eso el modelo pinta caras de **arriba** (el suelo solo enseña la de arriba). Si oscureces un vóxel de una pared, se oscurecen **todas** sus caras visibles. La habitación ya resuelve el pie de la pared con otra cosa: el **rodapié**, la fila de abajo, es un tono más oscuro (`#a8967e` frente a `#c9b8a0`).
+</Warn>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Guarda el antes y mira dónde oscurece el render">
+1. Abre tu modelo (o descarga la habitación desde el visor de arriba, en la etapa **Sin AO**). Si es un prop suelto, ponle debajo una losa de suelo: sin suelo no hay contacto que pintar.
+2. Guárdalo como `ao_antes.vox` y guarda una copia como `ao_pintado.vox`. Trabaja solo en la copia.
+3. Pulsa **Render** arriba y mira el modelo con la luz por defecto. Fíjate en **dónde** se oscurece el suelo solo: al pie de las paredes, en los rincones, junto a los muebles.
+4. Guarda esa imagen como `ao_antes.png` y apunta la cámara y la luz: el render del final tendrá **las mismas**.
+
+<Why>
+El render te enseña dónde está la AO de verdad. Ahora la vas a copiar en el color, con menos matices, para que se vea también fuera del render.
+</Why>
+</Step>
+
+<Step n={2} title="Crea el tono -1 de cada color, en el hueco de al lado">
+1. Haz la lista de los colores que tocan un contacto: las dos tablas del suelo, el colchón, la almohada, el cabecero, el estante, los libros… En tu modelo, los que sean.
+2. En la **paleta** de la izquierda, selecciona el primero y fíjate en su hueco de al lado. Si está ocupado, mueve el grupo a una fila libre: cada color y su -1 tienen que quedar **juntos**.
+3. En el hueco de al lado, pon **el mismo color con el brillo (V) un 18 % más bajo**, sin tocar el tono ni la saturación. Sirven los ejemplos del concepto: `#a0603a` → `#834f30`.
+4. Repite con cada color de la lista.
+
+<Tip>
+Un color y su -1 juntos en la paleta: así cambias de uno a otro sin buscar y, si mañana retocas la base, sabes qué hueco tienes que retocar con ella.
+</Tip>
+
+<Warn>
+**No** hagas un solo «gris de sombra» para todo. Cada material tiene su -1: el suelo de madera se oscurece a madera, el colchón a un crema más bajo.
+</Warn>
+</Step>
+
+<Step n={3} title="Crea el -2 solo de los colores que caen en un rincón">
+1. Busca en tu modelo los **rincones**: donde se juntan dos paredes, o una pared y un mueble, o dos muebles casi pegados.
+2. Solo para los colores que aparecen en esos rincones (casi siempre los del suelo), crea un **segundo paso** en el hueco siguiente: otra vez un 18 % menos de brillo sobre el -1. `#834f30` → `#6c4127`.
+3. Te quedan grupos de tres: base, -1 y -2.
+
+<Why>
+En la habitación solo **4 vóxels** llevan el -2. Es el acento de la AO, no su relleno. Si te sale un -2 por todas partes, son rincones que no lo son.
+</Why>
+</Step>
+
+<Step n={4} title="Pinta el pie de las paredes">
+1. Modo **Paint**, pincel **Voxel**: pinta un solo vóxel por clic sin añadir ni quitar.
+2. Selecciona el -1 de una tabla del suelo.
+3. Gira la cámara con el botón derecho y recorre el suelo **pegado a cada pared**: una sola fila de vóxels, la que toca la pared. Cuando cambie el color de la tabla, cambia al -1 de esa otra tabla.
+4. Si una pared llega hasta el borde del suelo, mira el último vóxel: ahí la pared ya no lo rodea por los dos lados, y puede quedarse en su color.
+
+<Tip>
+Una fila, no dos. En el ejemplo, la AO del pie de las paredes mide **un vóxel de ancho**. A la escala de una puerta de 4 vóxels, eso ya es un palmo de sombra.
+</Tip>
+</Step>
+
+<Step n={5} title="Asienta los muebles y lo que está contra la pared">
+1. Con el -1 de cada color, pinta el suelo que **toca** el borde de cada mueble bajo: los lados de la cama, el contorno de la alfombra.
+2. Sube a los muebles: pinta la cara de arriba de lo que queda **contra la pared o contra algo más alto**: el colchón junto a la pared y a la almohada, la almohada junto al cabecero, los libros y el estante pegados a la pared.
+3. Deja sin tocar el suelo bajo los muebles altos y con patas (la mesa) y la cara de arriba de lo que está al aire (la mesa, el asiento de la silla).
+4. Gira el modelo. La AO tiene que **rodear** cada contacto por igual, no estar solo en un lado.
+</Step>
+
+<Step n={6} title="Los rincones, con el -2">
+1. Selecciona el -2 del color del suelo.
+2. Pinta **solo** los vóxels de suelo encajados entre dos cosas: pared y pared, pared y mueble, mueble y mueble.
+3. Cuenta: deberían ser muy pocos. En la habitación, 4.
+4. Mira el modelo de lejos (rueda del ratón). Si ves manchas oscuras sueltas en vez de rincones, quita el -2 de las que sobren y deja el -1.
+
+Si te pasas en cualquier paso, deshaz con <Keys k="Ctrl+Z" />.
+</Step>
+
+<Step n={7} title="Compara: editor, render y vuelta atrás">
+1. Guarda `ao_pintado.vox`.
+2. Alterna en el editor entre `ao_antes.vox` y `ao_pintado.vox`: en el pintado, los muebles tienen que **posarse** aunque el editor no haga render.
+3. Pulsa **Render** con **la misma cámara y la misma luz** del paso 1 y guarda `ao_pintado.png`.
+4. Pon `ao_antes.png` y `ao_pintado.png` juntos. La AO pintada se **suma** a la del render: si los rincones quedan casi negros, quita el -2 o baja los pasos.
+5. Comprueba que nada de lo pintado va en contra de la luz del render: si el sol ilumina de lleno una zona que pintaste oscura, sobra.
+
+<Why>
+El render es tu referencia, el editor es tu prueba. Bien pintada, la AO se nota en el editor y apenas cambia el render: solo lo asienta un poco más.
+</Why>
+</Step>
+
+<Warn title="Verifica en tu versión">
+Los nombres del modo **Paint** y del pincel **Voxel**, cómo se edita el color de un hueco de la **paleta** (si el editor de color tiene sliders HSV, RGB o un campo para el código hexadecimal) y cómo se mueve un grupo de colores a otra fila pueden variar entre versiones de MagicaVoxel. Comprueba también que <Keys k="Ctrl+Z" /> deshace en la tuya. En el modo **Render**, la luz del cielo, el sol y el botón para guardar la imagen cambian de nombre y de sitio: búscalos por su función. Y ojo: cambiar el color de un hueco de la paleta cambia **todos** los vóxels que lo usan; crea los tonos nuevos en huecos vacíos.
+</Warn>
+</Block>
+
+<Block kind="version">
+Ahora, **tu** modelo. Misma receta: el -1 de cada color en el hueco de al lado, una fila al pie de las paredes y junto a los muebles, el -2 solo en los rincones y comparación con el render. Elige un reto:
+
+- **El cofre viejo en su sitio:** pon tu prop de V3-03 sobre una losa de suelo, contra una pared. Pinta la AO del suelo alrededor de su base y en el rincón entre el cofre y la pared. El musgo y el barro de abajo ya oscurecen: decide si la AO va encima o si ya está.
+- **La mazmorra:** en tu sala de V7-03 (o en una sala de piedra de 10×10 con dos paredes), pinta las losas al pie de los muros, alrededor del pilar y junto al cofre. Ojo con las losas de dos tonos: cada una con su -1.
+- **El diorama:** en tu diorama de V7-01, pinta la hierba al pie de la casa, junto al tronco del árbol y alrededor de la farola. La hierba tiene su rampa: la AO es su -1, no un marrón.
+
+Antes de darla por buena, alterna antes y después en el editor y pregúntate: ¿los objetos **pesan**? ¿Y se nota dónde está pintada la AO, o solo que la sala está mejor?
+</Block>
+
+<Block kind="errores">
+<Mistake title="AO exagerada" wrongLabel="Exagerado: pasos de ×0,55 y en todo" rightLabel="AO pintado: un paso, y dos en los rincones">
+  <VoxViewer slot="wrong" model="ao" stage={2} title="Exagerado" />
+  <VoxViewer slot="right" model="ao" stage={1} title="AO pintado" />
+
+En la etapa **Exagerado** se usa el mismo cálculo, pero cada paso deja el color al 55 % (en vez de al 82 %), basta un hueco ocupado para oscurecer y se aplica a todos los vóxels, también a las paredes. Cambian 511 de los 632 vóxels. Las paredes pasan de `#c9b8a0` a marrones de `#6f6558` y casi negros de `#3d3830`, y se oscurece el doble de suelo. La habitación no parece asentada: parece **sucia**, o a oscuras. **Arréglalo:** un paso suave (×0,82), dos solo en los rincones, y solo en las zonas tapadas. Si al ver el modelo de lejos lo primero que notas es la AO, te has pasado.
+</Mistake>
+
+<Mistake title="AO en caras al aire libre" wrongLabel="Oscuro donde nada tapa" rightLabel="Oscuro solo junto al contacto">
+  <p slot="wrong">El tablero de la mesa, el asiento de la silla y el centro del suelo, oscurecidos «para dar volumen». Ninguno tiene nada pegado encima o al lado que le tape el cielo.</p>
+  <p slot="right">La mesa y la silla por arriba y el centro de la sala, en su color; el -1 solo junto a las paredes, la cama y la alfombra.</p>
+
+La AO no es sombreado de volumen: es luz que **falta porque algo la tapa**. Antes de pintar un vóxel, señala qué lo tapa. Si no puedes, se queda en su color. Para el volumen de cada objeto ya tienes la rampa de V3-01.
+</Mistake>
+
+<Mistake title="Un solo gris oscuro para todos los materiales" wrongLabel="Un gris en todo" rightLabel="El -1 de cada color">
+  <p slot="wrong">El mismo gris oscuro en el suelo de madera, en el colchón y en los libros. En la madera parece una mancha de ceniza, en el colchón una quemadura, y los libros pierden su color.</p>
+  <p slot="right">Cada color con su -1 al lado en la paleta: madera a una madera más baja, el crema del colchón a un crema más bajo, el rojo de los libros y de la alfombra a un rojo más bajo.</p>
+
+En la etapa **AO pintado**: `#a0603a` → `#834f30` en la madera, `#e8dcc0` → `#beb49d` en el colchón y `#c2413b` → `#9f3530` en el libro rojo y en el borde de la alfombra.
+
+La sombra de un material es **el mismo material con menos luz**, como la hierba de P7-05. Un gris encima no oscurece la madera: la **tapa** con otra cosa. Mantén el tono y la saturación y baja solo el brillo.
+</Mistake>
+
+<Warn title="Error típico: AO que contradice la luz del render">
+Pintas la AO solo en un lado de cada objeto, como si fuera una sombra («el sol viene de la derecha, oscurezco la izquierda»). En el render pones el sol al otro lado, o lo cambias, y tu sombra pintada queda iluminada de lleno: dos luces que se pelean. **Corrección:** la AO rodea el contacto por igual en todos los lados. Las sombras con dirección, déjalas al render. Y si una zona pintada sale muy iluminada en el render, quítale el paso.
+</Warn>
+
+<Warn title="Error típico: pintar sobre el color base de la paleta">
+Cambias el color del hueco de la madera para «oscurecerla» y se oscurece **toda** la madera del modelo. **Corrección:** los tonos -1 y -2 van en huecos nuevos; con Paint cambias vóxel a vóxel a qué hueco apunta cada uno.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+<Checklist items={[
+  "Tengo ao_antes.vox y ao_pintado.vox, y un render de cada uno con la misma cámara y la misma luz",
+  "Cada color que toca un contacto tiene su -1 en el hueco de al lado, con el mismo tono y menos brillo",
+  "No he usado un gris común para todos los materiales",
+  "El suelo al pie de las paredes y junto a los muebles bajos está un paso más oscuro, en una sola fila",
+  "El -2 solo está en los rincones y son muy pocos vóxels",
+  "El centro de la sala y las caras al aire libre siguen en su color",
+  "La AO rodea cada contacto por igual: no tiene dirección",
+  "En el editor los objetos se asientan, y en el render los rincones no quedan negros",
+]} />
+
+<Quiz q="¿Por qué pintas la AO en los colores si el render de MagicaVoxel ya la calcula?" options={["Porque el render de MagicaVoxel no calcula oclusión", "Porque así el render tarda menos", "Porque fuera del render (editor, visor, juego, .obj) esa AO desaparece y la pintada viaja con el modelo"]} answer={2}>
+El render la calcula, pero el editor, el visor web, un juego con luz simple o una exportación a .obj no. La AO pintada está en el color: va a todas partes con el modelo.
+</Quiz>
+
+<Quiz q="¿Qué diferencia la oclusión ambiental de una sombra proyectada?" options={["La AO no tiene dirección: va alrededor de cada contacto y no cambia si mueves el sol", "La AO siempre es negra", "La AO cae al lado contrario de la luz"]} answer={0}>
+La sombra proyectada la hace una luz concreta y cambia con ella. La AO la hace la geometría: donde algo tapa el cielo, por igual a los lados del contacto.
+</Quiz>
+
+<Quiz q="Necesitas oscurecer el suelo de madera junto a una pared. ¿Qué color usas?" options={["El gris oscuro que usas para toda la sombra del modelo", "El -1 de esa madera: el mismo tono y la misma saturación, con menos brillo", "Un negro, para que se note"]} answer={1}>
+Cada material se oscurece a sí mismo. `#a0603a` pasa a `#834f30`: sigue siendo madera, solo que con menos luz.
+</Quiz>
+
+<Quiz q="Tu habitación con AO parece sucia y casi a oscuras. ¿Qué ha pasado?" options={["Te has pasado: pasos demasiado oscuros, demasiadas zonas o AO en caras al aire libre", "Le falta AO en las paredes", "Le falta un emisivo"]} answer={0}>
+Es la etapa «Exagerado». La AO buena es un paso suave, dos solo en los rincones, y solo donde algo tapa la luz.
+</Quiz>
+</Block>

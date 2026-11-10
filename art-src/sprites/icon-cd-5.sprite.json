@@ -1,0 +1,41 @@
+{
+  "name": "icon-cd-5",
+  "description": "Icono listo: la poción con todos sus colores dentro del marco con bisel y un destello blanco de 3 px en la esquina de arriba a la izquierda.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "ui",
+    "icono",
+    "animación"
+  ],
+  "palette": {
+    "a": "#1b1030",
+    "b": "#c9d1dc",
+    "f": "#5c6676",
+    "l": "#5a3a28",
+    "m": "#2a2d3a",
+    "n": "#8a5a3c",
+    "o": "#cfe8ff",
+    "p": "#e0245e",
+    "q": "#8a1040",
+    "r": "#ffffff"
+  },
+  "rows": [
+    ".aaaaaaaaaaaaaa.",
+    "abbbbbbbbbbbbbba",
+    "abrrmmallammmmfa",
+    "abrmmmannammmmfa",
+    "abmmmaaaaaammmfa",
+    "abmmmmaooammmmfa",
+    "abmmmaorooammmfa",
+    "abmmaroooooammfa",
+    "abmarppppppqamfa",
+    "abmarpppppqqamfa",
+    "abmappppppqqamfa",
+    "abmapppppqqqamfa",
+    "abmmapppqqqammfa",
+    "abmmmaaaaaammmfa",
+    "abfffffffffffffa",
+    ".aaaaaaaaaaaaaa."
+  ]
+}

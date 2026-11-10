@@ -1,0 +1,287 @@
+---
+id: v7-04
+discipline: voxel
+level: 7
+order: 4
+title: "Vehículos: un barco por capas"
+summary: "Forja un barco con capas horizontales que se abren: proa afilada, popa recta, simetría con Mirror, mástil y vela altos y finos, y detalles que cuentan para qué sirve."
+duration: 45
+status: borrador
+prerequisites: [v2-02, v4-03]
+fundamentals: [f02, f10]
+objectives:
+  - "Construir una forma curva por capas horizontales que se abren con orden, como el escalonado de V2-02"
+  - "Dar dirección a un vehículo: proa afilada frente a popa recta"
+  - "Trabajar con simetría (Mirror) y vaciar por dentro un casco cerrado"
+  - "Ordenar las alturas: casco bajo y ancho, mástil y vela altos y finos, para una silueta reconocible"
+  - "Añadir detalles que dan escala y uso: camarote, bolardos, postes, farol y banderín"
+tools: [magicavoxel]
+piece:
+  name: "Tu barco (o carreta, globo, balsa…) en tres etapas: casco, cubierta y mástil, vela y detalle"
+  canvas: "22x9x20"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [barco]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Hoy forjas un **barco de vela** en tres etapas: el casco, la cubierta con el mástil y, al final, la vela y los detalles. Es tu primer vehículo **curvo**: en [V4-03](/forja-art/voxel/v4-03/) el carro era una caja con ruedas. Aquí no hay caja. El casco se construye **por rodajas horizontales**, cada una más ancha que la de debajo.
+
+<VoxViewer model="barco" stage={2} title="Tu pieza: el barco terminado (22×9×20)" />
+
+Pulsa las tres etapas. Fíjate en el orden: primero una forma que flota y dice hacia dónde va; luego lo que la hace usable; al final, lo que la hace reconocible de lejos.
+</Block>
+
+<Block kind="concepto">
+### 1. Una curva es una pila de rodajas
+
+En Blender harías el casco con una curva, un loft o un cubo subdividido y esculpido. En vóxels piensas como un **plano topográfico**: cada capa de altura es una rodaja plana, y la curva sale de **cuánto crece cada rodaja respecto a la anterior**.
+
+<VoxViewer model="barco" stage={0} title="Casco: cuatro capas horizontales, vaciado por dentro" />
+
+Mueve el deslizador **Capas** del visor y cuenta. En la parte central del casco:
+
+- **Capa 1 (quilla):** 3 vóxels de ancho.
+- **Capa 2:** 5.
+- **Capa 3:** 7.
+- **Capa 4:** 7.
+
+Las tres primeras se abren **1 vóxel por lado** en cada capa: es el escalonado 1:1 de [V2-02](/forja-art/voxel/v2-02/), pero al revés, hacia arriba y hacia fuera. La cuarta ya no crece: el costado se hace **vertical** arriba y la borda queda recta. Ese cambio de ritmo (1, 1, 0) es lo que convierte la escalera en **una curva**: el casco se abre deprisa abajo y se endereza arriba.
+
+<Sprite name="circle-clean" scale={8} caption="circle-clean: tramos que cambian con orden. Un corte del casco hace lo mismo, capa a capa" />
+
+<Why title="¿Por qué capas que se abren y no una caja?">
+Porque el ojo reconoce un barco por la **sección en V o en U**: estrecho donde toca el agua, ancho en la cubierta. Una caja flota igual de bien en vóxels, pero se lee como una batea o un cajón. Es F02: la silueta de frente y de lado tiene que decir «casco» antes que cualquier detalle.
+</Why>
+
+### 2. Proa afilada, popa recta: la dirección
+
+Mira el casco **desde arriba**. La capa de cubierta mide 7 de ancho casi todo el largo y, en los últimos vóxels de la proa, se afila así: **7, 5, 3, 1, 1**. Pierde un vóxel por lado en cada paso, otra vez un 1:1, hasta acabar en una punta.
+
+La popa, en cambio, es **recta**: la capa de arriba llega a la popa con sus 7 vóxels enteros y corta en línea. Por debajo, cada capa es más estrecha (7, 5 y 3) y la quilla no llega hasta el final: empieza 2 vóxels más adelante. Visto de lado, el fondo de la popa **sube** un poco.
+
+Además, las capas de abajo empiezan a afilarse antes que las de arriba. Por eso la proa no es una pared vertical: **se lanza hacia delante** al subir.
+
+<Sprite name="shape-triangle" scale={6} caption="shape-triangle: el triángulo apunta. Una proa afilada hace lo mismo: dice hacia dónde va el barco" />
+
+<Why>
+Un objeto simétrico de delante a atrás no tiene dirección: no sabes hacia dónde se mueve. La **asimetría proa/popa** es lenguaje de formas puro: la punta empuja la mirada hacia delante y la popa ancha y recta es la «espalda» estable. Lo mismo vale para una flecha, un cohete o un pez.
+</Why>
+
+### 3. Simetría en Y y casco vaciado
+
+El barco mira hacia X: su largo va de popa a proa. Entonces su simetría está en **Y**, de un costado al otro. Todo el casco, la cubierta, la vela y los postes son iguales a los dos lados. Con **Mirror** activo en ese eje construyes la mitad y la otra sale sola.
+
+El casco del modelo está **vaciado**: en las capas 2 y 3 solo queda la piel, y la capa 4 lo cierra por arriba. Desde fuera no se nota. Lo ves con el deslizador **Capas**: al cortar por la capa 2, el centro está hueco.
+
+<Why title="¿Para qué vaciar algo que no se ve?">
+El archivo pesa menos y el render no cambia. Y, sobre todo, deja sitio: si un día abres una escotilla o una bodega, el hueco ya está ahí. Es como pensar en el grosor de la pared de una pieza en Blender antes de abrirle un agujero.
+</Why>
+
+### 4. Jerarquía de alturas: lo que se ve de lejos
+
+<VoxViewer model="barco" stage={1} title="Cubierta y mástil: el casco es bajo; el mástil, alto" />
+
+El modelo mide **20 vóxels de alto**. El casco con la cubierta ocupa solo **5**: una cuarta parte. El resto es mástil (14 vóxels) y, en la etapa final, la vela y el banderín. Tienes una masa **baja y ancha** (el casco, de 20 de largo) y una línea **alta y fina** (el mástil, de 1×1).
+
+Ese contraste de proporciones es la silueta del barco. Si el mástil fuera de 6, sería una barca. Si el casco fuera tan alto como ancho, una caja con un palo.
+
+**La cubierta** es una capa más encima del casco, con **tablas transversales en dos tonos**: cada tabla cruza el barco de un costado al otro y se alterna con la siguiente. Es el mismo truco que las tejas de V2-02: el ritmo de color dice «tablas» sin tallar nada.
+
+**El mástil no está en el centro.** Va en el vóxel 9 de los 20 del casco, contando desde la popa: deja 8 vóxels detrás (donde va el camarote) y 11 delante (la cubierta libre, más la proa). Con el bauprés, son 8 detrás y 13 delante. No corta el barco en dos mitades iguales.
+
+<Why>
+Una línea vertical justo en el centro divide la silueta en dos mitades idénticas: la composición se queda quieta y ninguna parte manda. Desplazada, crea dos zonas distintas: atrás, el grupo **camarote + mástil**; delante, la cubierta despejada que apunta a la proa.
+</Why>
+
+### 5. La vela: un plano fino y perpendicular
+
+En la etapa final, la vela es una **lámina de 1 vóxel de grosor**, de **9 de ancho y 7 de alto**, en crema con **una franja roja** en la fila del medio. Está pegada a la cara de proa del mástil y colgada de la **verga**: un palo de 9 vóxels que cruza el mástil cerca de la punta.
+
+La vela es **perpendicular** al barco: el casco va a lo largo de X y la vela se extiende en Y y Z. De lado la ves de canto, como una línea. De frente es un rectángulo grande, **más ancho que el casco** (9 frente a 7). Esa es la misma lógica de las alas de [V5-03](/forja-art/voxel/v5-03/): una superficie que en la realidad es fina se queda en un vóxel de grosor y lo que manda es su **contorno**.
+
+<Why>
+La vela es la mancha más grande y más clara del barco, y está en lo alto. Es lo primero que lee el ojo y lo que hace que la silueta diga «barco de vela» incluso en un icono diminuto. Por eso va en crema, lejos del valor de la madera.
+</Why>
+
+### 6. Detalles que dan escala y uso (F10)
+
+Los detalles pequeños responden a una pregunta: **¿quién usa este barco y cómo?**
+
+- **Camarote** en la popa: 4×5×3 de madera media con un **tejado rojo** de una capa. Alguien duerme ahí.
+- **Farol:** un vóxel amarillo sobre el tejado del camarote. De noche se navega.
+- **Bolardos:** dos vóxels oscuros junto al camarote, al borde de la cubierta. Ahí se amarra.
+- **Postes** en la borda: tres por costado. Marcan el borde y dan ritmo al lateral.
+- **Bauprés:** un palo de 3 vóxels que sale por la proa, a la altura de la última capa del casco. Alarga la punta y refuerza la dirección.
+- **Banderín:** dos vóxels rojos en lo alto del mástil, uno de ellos hacia la popa. Es el punto más alto del modelo.
+
+El rojo de la franja de la vela y el del banderín es el mismo color. El tejado usa otro rojo, más oscuro. Tres manchas de rojo repartidas (popa, vela, punta del mástil) **conectan** las partes del barco.
+
+<Tip>
+Si más adelante quieres ver las cuatro caras del barco a la vez, `forja-vox` de [Forge Tools](/forja-art/tools/) lo hace con `render barco_v3.vox -o barco.png --angles 4`. Lo verás a fondo en [V8-02](/forja-art/voxel/v8-02/).
+</Tip>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Prepara el modelo y la paleta">
+1. Crea un modelo nuevo y pon el tamaño a **22×9×20** (X largo, Y ancho, Z alto).
+2. En la **paleta** de la izquierda, en una fila libre, pon estos colores: tres maderas (`#d08a50`, `#a0603a`, `#6b3d2e`), una madera de cubierta (`#c07a44`), el rojo del tejado (`#9c2f2c`), el crema de la vela (`#f4ecdc`), el rojo de la franja y el banderín (`#c2413b`) y el amarillo del farol (`#ffd36e`).
+3. Activa **Mirror** en el eje **Y** (el que va de un costado a otro del barco).
+
+<Why>
+Ocho colores, elegidos antes del primer vóxel. Las tres maderas son las de V4-03: si tu carro y tu barco comparten paleta, parecen del mismo mundo.
+</Why>
+</Step>
+
+<Step n={2} title="Casco: la quilla (capa 1)">
+1. Modo **Attach**, pincel **Box**, madera oscura. Trabaja desde el suelo, centrado en Y.
+2. Dibuja la quilla: una tira de **3 de ancho** desde el vóxel 3 hasta el 16 contando desde la popa, y sigue con **1 de ancho** hasta el vóxel 20.
+3. Deja libres los dos primeros vóxels de la popa: ahí el fondo sube.
+
+Estos son los anchos de **todas** las capas, de popa a proa (el número entre paréntesis es cuántos vóxels seguidos tienen ese ancho):
+
+- **Capa 1 (oscura):** vacío (2), 3 (14), 1 (4).
+- **Capa 2 (media):** 3 (2), 5 (13), 3 (3), 1 (2).
+- **Capa 3 (oscura):** 5 (2), 7 (13), 5 (2), 3 (1), 1 (2).
+- **Capa 4 (clara):** 7 (16), 5 (1), 3 (1), 1 (2).
+
+<Tip>
+Con **Mirror** en Y, si tu ancho es impar (3, 5, 7), el vóxel central cae justo en el eje. Si el espejo te duplica la fila del centro, revisa dónde está el eje en tu versión antes de seguir.
+</Tip>
+</Step>
+
+<Step n={3} title="Casco: las capas que se abren">
+1. Sube una capa y dibuja la **capa 2** en madera media con los anchos de la lista.
+2. Encima, la **capa 3** en madera oscura.
+3. Por último, la **capa 4** en madera clara.
+4. Gira la cámara con el botón derecho y mira el barco **de frente** (desde la proa) y **desde arriba**. De frente debes ver una V escalonada; desde arriba, una punta en la proa y una popa recta.
+5. Mira el perfil de lado: la proa se lanza hacia delante al subir y el fondo de la popa sube.
+
+<Why>
+Las hiladas alternan oscuro, medio, oscuro y claro: se leen como **tablas** del casco sin tallar ni una junta. Y la capa de arriba en claro marca la borda, el borde que más luz recibe.
+</Why>
+
+<Warn>
+Si en algún punto una capa crece 2 por lado y la siguiente 0, el casco hace un escalón brusco y se lee abollado. Repasa la lista: el ritmo es 1, 1, 0.
+</Warn>
+</Step>
+
+<Step n={4} title="Vacía el casco y guarda la v1">
+1. Modo **Erase**, pincel **Box**: en las capas 2 y 3, borra el interior y deja solo la piel de 1 vóxel. No toques la capa 1 ni la 4.
+2. Comprueba con la vista por capas de MagicaVoxel (o comparando con el corte del visor) que el centro está hueco y que no has abierto agujeros hacia fuera.
+3. Guarda como `barco_v1.vox`.
+
+<Tip>
+También puedes construir las capas 2 y 3 directamente como **anillos** (solo el borde) con el pincel **Voxel**. El resultado es el mismo; vaciar después con **Erase** es más rápido si ya las tienes macizas.
+</Tip>
+</Step>
+
+<Step n={5} title="Cubierta, mástil y camarote">
+1. **Cubierta:** modo **Attach**, una capa más encima de la capa 4, con su misma forma, en madera clara.
+2. Modo **Paint**, pincel **Box**, color `#c07a44`: pinta una tabla de cada dos. Cada tabla es una tira de 1 vóxel que cruza el barco de lado a lado.
+3. **Mástil:** modo **Attach**, pincel **Voxel**, madera oscura. Una columna de **14** vóxels sobre la cubierta, en el centro en Y y en el vóxel 9 desde la popa.
+4. **Camarote:** madera media, una caja de 4 de largo, 5 de ancho y 3 de alto en la popa, empezando en el vóxel 2. Encima, una capa en el rojo del tejado.
+5. Guarda como `barco_v2.vox`.
+
+<Why>
+Mira el barco de lado en un solo color antes de seguir. Debes leer ya: casco bajo, palo alto, bulto en la popa. Si no se lee, la vela no lo arreglará.
+</Why>
+</Step>
+
+<Step n={6} title="Vela, verga y detalle">
+1. **Verga:** madera oscura, un palo de **9** de ancho en Y que cruza el mástil en su penúltimo vóxel.
+2. **Vela:** crema, una lámina de **1 vóxel de grosor** pegada a la cara de proa del mástil, de **9 de ancho y 7 de alto**, justo bajo la verga. Pinta en rojo la fila del medio.
+3. **Banderín:** dos vóxels rojos arriba del todo: uno sobre la punta del mástil y otro a su lado, hacia la popa.
+4. **Bauprés:** madera oscura, 3 vóxels en línea a la altura de la capa 4, empezando en la punta de la proa: sobresalen 2.
+5. **Bolardos y postes:** madera oscura, un vóxel sobre el borde de la cubierta. Dos bolardos junto al camarote y tres postes por costado repartidos por la borda (con **Mirror**, pones uno y salen dos).
+6. **Farol:** un vóxel amarillo sobre el tejado del camarote.
+7. Guarda como `barco_v3.vox`.
+
+<Tip>
+La vela es más ancha que el casco: sobresale 1 vóxel por cada lado. Por eso el modelo mide 9 de ancho aunque el casco mida 7.
+</Tip>
+</Step>
+
+<Step n={7} title="Render: luz para el casco y la vela">
+1. Si quieres que el farol brille, ponle a su color amarillo el material **Emit** en el **panel de materiales**, como en V3-02.
+2. Pulsa **Render** y busca una luz de lado y algo baja: marca los escalones del casco y deja ver la vela de frente.
+3. Guarda la imagen.
+
+<Warn>
+El visor web no simula materiales: solo muestra colores. El brillo del farol en Emit se ve en el modo **Render** de MagicaVoxel.
+</Warn>
+</Step>
+
+<Warn title="Verifica en tu versión">
+Los nombres y la posición de los modos (**Attach**/**Erase**/**Paint**), los pinceles (**Box**/**Voxel**), los botones **Mirror** y el eje exacto sobre el que reflejan, el campo de tamaño del modelo, la vista por capas, el **panel de materiales** y los controles de luz del **Render** pueden variar entre versiones de MagicaVoxel.
+</Warn>
+</Block>
+
+<Block kind="version">
+Forja **tu propio vehículo** en tres versiones guardadas (casco o forma base, estructura, detalle) y un render. Elige un reto:
+
+- **Balsa o barcaza:** casi sin curva, solo 2 capas. ¿Cómo le das dirección si el casco es casi plano? Pista: una proa afilada, una pértiga, un toldo en la popa.
+- **Drakkar:** proa **y** popa afiladas. Aquí la asimetría tiene que venir de otro sitio: un mascarón en la proa, la vela, los escudos en la borda.
+- **Globo aerostático:** la curva por capas, pero cerrándose arriba: capas que se abren y luego se estrechan. Abajo, una barquilla pequeña y cuerdas finas de 1 vóxel. Aquí la jerarquía se invierte: lo grande y alto es el globo.
+- **Carreta de feria:** combina V4-03 y hoy: caja con ruedas y un toldo curvo por capas encima.
+
+Antes de pasar de una versión a otra, mira la pieza en un solo color de lado y de frente. Si de lado no sabes hacia dónde va, vuelve a la forma base.
+</Block>
+
+<Block kind="errores">
+<Mistake title="Casco de caja" wrongLabel="Casco en bloque" rightLabel="Capas que se abren">
+  <p slot="wrong">Un bloque de 20×7×4 con la misma anchura en todas las capas. De frente se lee como un cajón con un palo.</p>
+  <p slot="right">Capas de 3, 5, 7 y 7 de ancho: la sección es una V escalonada que se endereza arriba.</p>
+
+Un casco recto es buen **blockout**, pero hay que abrirlo por capas antes de seguir. Corrígelo con **Erase**: en la capa de abajo quita 2 vóxels por lado; en la segunda, 1 por lado. Compáralo con el corte del visor en la etapa **Casco**.
+</Mistake>
+
+<Mistake title="Proa y popa iguales" wrongLabel="Sin dirección" rightLabel="Con dirección">
+  <p slot="wrong">Las dos puntas afiladas igual, o las dos rectas. Desde arriba es un óvalo o un rectángulo: no sabes hacia dónde navega.</p>
+  <p slot="right">Proa afilada en 7, 5, 3, 1, 1; popa recta con la capa de arriba entera. La forma ya apunta.</p>
+
+La dirección es lenguaje de formas: el triángulo empuja, el cuadrado se queda. Si quieres un barco con las dos puntas afiladas (un drakkar), la dirección tendrá que venir de otro sitio: el mascarón, el camarote, la vela.
+</Mistake>
+
+<Warn title="Error típico: la vela gruesa">
+Haces la vela de 2 o 3 vóxels de grosor «para que se vea más». Se convierte en un muro: pesa visualmente igual que el casco y, de lado, tapa el mástil. **Corrección:** una lámina de 1 vóxel. Lo que hace que la vela se lea es su tamaño de frente y su color claro, no su grosor. Es lo mismo que las alas del murciélago.
+</Warn>
+
+<Mistake title="Mástil en el centro exacto" wrongLabel="Partido en dos" rightLabel="Desplazado">
+  <p slot="wrong">El mástil justo en mitad del casco, y el camarote en mitad de la popa y la proa: el barco se lee como dos mitades iguales.</p>
+  <p slot="right">El mástil en el vóxel 9 de 20 desde la popa: el camarote y el mástil forman un grupo detrás y la cubierta libre apunta a la proa.</p>
+
+No hay una posición «correcta» única: muchos barcos reales llevan el palo más adelante. La regla es **no partir la silueta en dos mitades idénticas**. Desplaza el mástil y deja que una zona sea más grande que la otra.
+</Mistake>
+
+<Warn title="Error típico: detallar antes de cerrar la silueta">
+Pones bolardos, farol y postes antes de tener el mástil. Luego subes el mástil de 8 a 14 y la escala de todo cambia. **Corrección:** casco, cubierta y mástil primero; mira la silueta en un color; los detalles al final.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+<Checklist items={[
+  "Mi casco está hecho por capas que se abren con orden, sin escalones bruscos",
+  "Desde arriba se ve una proa afilada y una popa distinta: se sabe hacia dónde va",
+  "El modelo es simétrico de costado a costado (Mirror) y el casco está vaciado por dentro",
+  "En un solo color, de lado, se lee: casco bajo y ancho, mástil alto y fino",
+  "La vela es una lámina de 1 vóxel, perpendicular al barco y del color más claro",
+  "El mástil no parte el barco en dos mitades iguales",
+  "Los detalles cuentan quién usa el barco y cómo (camarote, amarres, luz, banderín)",
+  "He guardado v1, v2, v3 y un render en mi portfolio",
+]} />
+
+<Quiz q="En la parte central del casco, las capas miden 3, 5, 7 y 7 de ancho. ¿Qué consigue que la última no crezca?" options={["Que el barco flote mejor", "Que el casco pese menos", "Que el costado se haga vertical arriba y la escalera se lea como una curva"]} answer={2}>
+Las tres primeras capas se abren 1 vóxel por lado; la cuarta no. Ese cambio de ritmo (1, 1, 0) endereza el costado arriba: es una curva hecha con escalones ordenados, como en V2-02.
+</Quiz>
+
+<Quiz q="Tu barco, visto desde arriba, es un rectángulo con las dos puntas iguales. ¿Qué le falta?" options={["Dirección: una proa afilada distinta de la popa", "Más colores en la cubierta", "Una vela más gruesa"]} answer={0}>
+Sin asimetría entre proa y popa, la forma no apunta a ningún sitio. La proa afilada empuja la mirada hacia delante.
+</Quiz>
+
+<Quiz q="¿Por qué la vela del modelo tiene solo 1 vóxel de grosor?" options={["Porque MagicaVoxel no permite láminas más gruesas", "Porque una vela real es fina: lo que la hace leer es su contorno de frente y su color claro", "Para que el visor cargue más rápido"]} answer={1}>
+Como las alas de V5-03: una superficie fina se queda en un vóxel. Si la engordas, pesa como un muro y compite con el casco.
+</Quiz>
+</Block>

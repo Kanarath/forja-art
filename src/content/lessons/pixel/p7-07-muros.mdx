@@ -1,0 +1,333 @@
+---
+id: p7-07
+discipline: pixel
+level: 7
+order: 7
+title: "Muros en vista 3/4: arriba, delante y sombra"
+summary: "Muros de mazmorra en vista 3/4: cara de arriba siempre, cara de delante solo sobre suelo, remate, ladrillos con juntas alternas y sombra al pie. Monta una sala de 96×80."
+duration: 45
+status: borrador
+objectives:
+  - "Entender qué caras se ven en la vista 3/4: la de arriba de todo y la de delante de lo que mira a la cámara"
+  - "Dibujar un muro con remate, línea de cambio de plano y ladrillos con juntas alternas"
+  - "Poner la sombra al pie del muro como un paso más de la rampa del suelo"
+  - "Decidir qué tile va en cada casilla mirando al vecino de abajo"
+  - "Montar una sala de 6×5 tiles que se lea con altura, también en grises"
+prerequisites: [p7-04, f08-01]
+fundamentals: [f08, f05]
+tools: [aseprite, godot]
+piece:
+  name: "Sala de mazmorra en vista 3/4 (6×5 tiles) montada con tu tileset de muros y suelo"
+  canvas: "96x80"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [muros]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+En P7-04 giraste la cámara de lado. Hoy la inclinas: la vista **3/4** de los RPG, la de casi todos los juegos de mazmorras. Vas a forjar **una sala de 96×80** (6×5 tiles de 16) con muros que tengan **altura**: se ve su parte de arriba, se ve su frente y proyectan una sombra en el suelo.
+
+<Sprite name="map-dungeon" scale={5} caption="map-dungeon (96×80): una sala con un bloque de muro en medio y el héroe en el pasillo de la derecha. Los muros de arriba y el bloque enseñan su frente de ladrillos; los de los lados y los de abajo, solo su parte de arriba" />
+
+Y lo mismo, con los muros dibujados todos igual:
+
+<Sprite name="map-dungeon-flat" scale={5} caption="map-dungeon-flat: la misma sala, todo ladrillo y sin sombra. Hay paredes, pero no hay altura" />
+
+<Tip>
+Tápate la segunda imagen y mira solo la primera. Sabes al instante dónde está el suelo, qué muros tienes delante y cuáles están de lado. En la segunda tienes que adivinarlo. Esa diferencia es lo que vas a aprender a dibujar.
+</Tip>
+</Block>
+
+<Block kind="concepto">
+### Qué se ve en la vista 3/4
+
+En [F08-01](/forja-art/fundamentos/f08-01/) viste la caja en tres vistas. En 3/4 la cámara mira **desde arriba y un poco desde delante**:
+
+<Sprite name="view-34" scale={10} caption="view-34: la tapa arriba y la cara frontal debajo, más baja. Los lados y la parte de atrás no se ven" />
+
+Aplicado a un mapa, la regla es corta:
+
+- **La cara de arriba** de todo se ve siempre.
+- **La cara de delante** solo se ve en lo que mira hacia la cámara, es decir, hacia **abajo en la pantalla**.
+- Los lados y la parte de atrás no se dibujan.
+
+Un muro es una caja alta. Así que tiene **cara de arriba siempre** y **cara de delante solo si delante (debajo, en la pantalla) hay suelo**. Si debajo hay otro muro, ese otro muro la tapa.
+
+<Why>
+Es la **perspectiva** de F08 aplicada a tiles: el ojo lee la altura por las caras que ve. Una cara de delante dice «esto se levanta del suelo»; una cara de arriba sola dice «esto es la parte de arriba de algo macizo». Si todos los muros enseñan lo mismo, la sala se aplana y parece un plano de planta, no un sitio con paredes.
+</Why>
+
+### Tres tiles de muro y suelo
+
+`map-dungeon` está hecho con muy pocas piezas. Estas son tres, recortadas del propio mapa:
+
+<Sprite name="tile-wall-front" scale={12} caption="tile-wall-front: remate de 3 px (una fila clara y dos medias), una línea casi negra y tres hiladas de ladrillos" />
+
+<Sprite name="tile-wall-top" scale={12} caption="tile-wall-top: la cara de arriba, lisa, con unos pocos puntos más oscuros. Arriba, contorno casi negro y 1 px claro: ese lado da al suelo" />
+
+<Sprite name="tile-floor-shadow" scale={12} caption="tile-floor-shadow: losas de 8×8 con juntas oscuras y, arriba, una franja de sombra de 2 px" />
+
+La cuarta pieza es el suelo sin sombra: el mismo `tile-floor-shadow` con las losas también en las dos filas de arriba.
+
+### El remate: la transición entre arriba y delante
+
+Mira las 4 filas de arriba de `tile-wall-front`:
+
+- **fila 0:** gris violáceo claro (`#7d7894`): la arista que mira a la luz;
+- **filas 1 y 2:** gris medio (`#5e5a6e`), el **mismo color** que la cara de arriba de `tile-wall-top`;
+- **fila 3:** contorno casi negro (`#1b1030`): el cambio de plano.
+
+Ese remate es la cara de arriba del muro, vista de canto, asomando sobre el frente. Por eso comparte color con los muros que solo enseñan su parte de arriba: el ojo los une y entiende que todo es el mismo muro.
+
+<Why>
+Donde dos planos se encuentran, el dibujo tiene que **marcar el cambio**. La fila clara es la arista que recibe la luz desde arriba; la línea oscura es el pliegue donde la cara de arriba se acaba y empieza la de delante. Sin esas dos filas, el remate y los ladrillos serían una sola superficie.
+</Why>
+
+### Ladrillos con juntas alternas
+
+Debajo del remate, el frente tiene **tres hiladas de 4 px**: 3 filas de ladrillo (`#8a8698`) y 1 de junta (`#3e3a4a`), en las filas 7, 11 y 15. Las juntas verticales:
+
+- primera hilada: columnas 3 y 11;
+- segunda hilada: columnas 7 y 15;
+- tercera hilada: otra vez 3 y 11.
+
+Cada ladrillo mide 7 px más su junta, y cada hilada está **desplazada medio ladrillo** (4 px) respecto a la de arriba. Hay además unas pequeñas diagonales de un gris algo más oscuro (`#6a6678`) dentro de los ladrillos: desgaste, nada más.
+
+<Why>
+Un muro de verdad aguanta porque cada ladrillo **apoya sobre dos** de la hilada de abajo. Las juntas alternas cuentan eso. Si las juntas verticales se alinean, el ojo ve **una rejilla** de cuadros, no un muro. Y como el ladrillo mide 8 con su junta y 8 cabe dos veces en 16, el frente se repite en horizontal sin costura: la misma regla de periodo de [P7-04](/forja-art/pixel/p7-04/).
+</Why>
+
+### Arriba, lisa; delante, el detalle
+
+Compara los valores de las piezas en grises:
+
+<Sprite name="map-dungeon" scale={5} view="gray" caption="En grises: los frentes de ladrillo son lo más claro, las caras de arriba un gris medio y el suelo más oscuro. La sombra al pie, más oscura aún" />
+
+- **Ladrillos:** lo más claro y lo único con dibujo. Es la cara que mira al jugador.
+- **Cara de arriba:** un gris medio, sin dibujo, solo unos pocos puntos oscuros. Separada del suelo por el contorno y el borde claro de 1 px.
+- **Suelo:** más oscuro que las dos caras del muro, con las losas como única textura.
+
+<Why>
+Es jerarquía: el detalle va donde mira el ojo. La parte de arriba de los muros es una masa de relleno; si llevara ladrillos, competiría con los frentes y volverías al mapa plano. El borde claro del lado del suelo hace el trabajo del remate en los muros de lado: marca la arista.
+</Why>
+
+### La sombra al pie
+
+Bajo cada muro con cara de delante, el suelo tiene **2 filas de sombra** (`#2a2636`). Es la sombra de contacto de [P7-05](/forja-art/pixel/p7-05/): el muro tapa la luz justo en su base.
+
+Mira la rampa del suelo: luz de las losas `#5a566a`, losa `#4a4656`, junta `#3a3646` y sombra `#2a2636`. Cada color baja el mismo paso que el anterior. La sombra **no es negro**: es un escalón más de la rampa del suelo.
+
+<Tip>
+En `map-dungeon`, la sombra solo está bajo los muros de arriba y bajo el bloque del centro: los que tienen cara de delante. Al lado de los muros laterales no hay. Es una franja lisa porque en 2 px casi no hay textura que conservar: la primera fila de cada losa ya es junta.
+</Tip>
+
+### Qué tile va dónde: mira al vecino de abajo
+
+La sala sale de una máscara de 6×5 (`W` muro, `F` suelo). Lo que queda fuera del mapa cuenta como muro:
+
+- `WWWWWW`
+- `WFFFFW`
+- `WFWWFW`
+- `WFFFFW`
+- `WWWWWW`
+
+Para cada casilla, mira **la de abajo**:
+
+- **Muro con suelo debajo** → muro de delante (`tile-wall-front`). Son los cuatro de la fila de arriba y los dos del bloque central.
+- **Muro con muro debajo** → muro de arriba (`tile-wall-top`), con el borde claro en el lado o lados que toquen suelo. Los de la izquierda lo llevan a la derecha, los de la derecha a la izquierda, los de abajo arriba, y las cuatro esquinas, en ningún lado.
+- **Suelo con muro encima** → suelo con sombra (`tile-floor-shadow`). Los cuatro bajo la fila de arriba y los dos bajo el bloque.
+- **Suelo con suelo encima** → suelo sin sombra.
+
+<Why>
+Es la misma lógica del autotile de [P7-04](/forja-art/pixel/p7-04/): la pieza depende de los vecinos. Allí la hierba salía donde arriba había aire; aquí el frente sale donde abajo hay suelo, y la sombra donde arriba hay muro. Una regla clara, aplicada casilla a casilla, y el mapa se monta solo.
+</Why>
+
+<Tip title="Haz la prueba">
+Señala en `map-dungeon` la fila de muros de abajo. Debajo tienen el exterior del mapa, que cuenta como muro: por eso enseñan solo su cara de arriba, con el borde claro hacia la sala. Su frente mira fuera de la sala.
+</Tip>
+
+<Inspector sprite="map-dungeon" title="Inspecciona la sala: busca el remate, las juntas alternas y la sombra al pie" />
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Un lienzo para el tileset, con rejilla de 16">
+1. <Keys k="Ctrl+N" />: **64×16**, cuatro tiles en fila. Guárdalo como `mazmorra-tileset.aseprite`.
+2. Abre la configuración de la rejilla (*Grid Settings*, en el menú *View*), ponla en **16×16** y activa *View → Grid*.
+3. Prepara la paleta. Sirven los colores de `map-dungeon`:
+   - suelo: `#5a566a`, `#4a4656`, `#3a3646` y la sombra `#2a2636`;
+   - muro: `#8a8698` (ladrillo), `#6a6678` (desgaste), `#7d7894` (arista clara), `#5e5a6e` (arriba), `#3e3a4a` (juntas y puntos);
+   - contorno: `#1b1030`.
+
+El orden de las casillas: **suelo**, **suelo con sombra**, **muro de delante**, **muro de arriba**.
+
+<Why>
+Las cuatro piezas en un solo lienzo y con la misma paleta: así compruebas a la vez que los grises del muro y del suelo se ordenan bien en valor.
+</Why>
+</Step>
+
+<Step n={2} title="El suelo y su sombra">
+1. En la primera casilla, rellena con `#4a4656` usando el cubo (<Keys k="G" />).
+2. Con el lápiz (<Keys k="B" />), pinta las juntas de las losas en `#3a3646`: columnas 0 y 8, filas 0 y 8. Quedan cuatro losas de 8×8.
+3. Salpica unos pocos puntos sueltos de `#5a566a` dentro de las losas, sin formar líneas.
+4. Selecciona la casilla con <Keys k="M" />, cópiala (<Keys k="Ctrl+C" />) y pégala (<Keys k="Ctrl+V" />) en la segunda. Pinta sus **filas 0 y 1** enteras con la sombra `#2a2636`.
+
+<Tip>
+Activa *View → Tiled Mode* en un lienzo aparte de 16×16 con el suelo para ver la repetición. Las juntas en la columna 0 y la fila 0 hacen que cada losa cierre con la del tile vecino.
+</Tip>
+</Step>
+
+<Step n={3} title="El muro de delante: remate y línea">
+En la tercera casilla (columnas 32 a 47):
+
+1. **Fila 0:** `#7d7894`, de lado a lado.
+2. **Filas 1 y 2:** `#5e5a6e`.
+3. **Fila 3:** el contorno `#1b1030`.
+4. Rellena el resto, filas 4 a 15, con el ladrillo `#8a8698`.
+
+<Why>
+Estas cuatro filas son la transición: la parte de arriba del muro vista de canto, su arista iluminada y el pliegue que la separa del frente. El gris de las filas 1 y 2 es el mismo que usarás en la cara de arriba: así el remate y los muros de lado se leen como un solo muro.
+</Why>
+</Step>
+
+<Step n={4} title="Los ladrillos, con las juntas alternas">
+Sigue en la casilla del muro de delante. Cuenta las columnas desde el borde izquierdo de la casilla (0 a 15):
+
+1. **Juntas horizontales:** filas 7, 11 y 15 en `#3e3a4a`, de lado a lado.
+2. **Primera hilada** (filas 4 a 6): juntas verticales en las columnas 3 y 11.
+3. **Segunda hilada** (filas 8 a 10): en las columnas 7 y 15.
+4. **Tercera hilada** (filas 12 a 14): otra vez en la 3 y la 11.
+5. Si quieres desgaste, unos pocos píxeles de `#6a6678` dentro de los ladrillos, nunca pegados a una junta formando línea.
+
+<Warn>
+Comprueba que ninguna junta vertical de una hilada cae en la misma columna que la de la hilada de al lado. Si dos hiladas seguidas tienen la junta en la 3, has hecho una rejilla.
+</Warn>
+
+<Tip>
+Pega una copia de esta casilla a su derecha, en un lienzo de prueba: la junta de la columna 15 de la segunda hilada se encuentra con un ladrillo entero en la columna 0 del siguiente. El dibujo se repite cada 8 px y encaja en 16.
+</Tip>
+</Step>
+
+<Step n={5} title="El muro de arriba, con su borde">
+En la cuarta casilla (columnas 48 a 63):
+
+1. Rellena con `#5e5a6e` (<Keys k="G" />).
+2. Salpica unos 15 puntos sueltos de `#3e3a4a`, repartidos. Nada de ladrillos.
+3. **Fila 0:** el contorno `#1b1030`. **Fila 1:** el claro `#7d7894`. Este es el muro de arriba con el suelo **encima** (en la pantalla), como los de la fila de abajo de la sala.
+4. Haz dos copias más en otro lienzo o fuera del tileset: una con el contorno en la **columna 15** y el claro en la **14** (suelo a la derecha) y otra con el contorno en la **columna 0** y el claro en la **1** (suelo a la izquierda). Y una cuarta sin borde, para las esquinas.
+
+<Why>
+El borde va **solo** en los lados que dan al suelo. Hacia otro muro no hay arista que ver: la cara de arriba sigue sin corte. Es la misma pieza con el borde en otro sitio, igual que los bordes del tileset de 3×3 de P7-04.
+</Why>
+
+Guarda con <Keys k="Ctrl+S" />.
+</Step>
+
+<Step n={6} title="Monta tu sala de 96×80">
+1. <Keys k="Ctrl+N" />: **96×80**. Rejilla a 16×16 y ajuste a la rejilla (*Snap to Grid*, en el menú *View*). Guárdalo como `mazmorra-sala.aseprite`.
+2. Usa la máscara de `map-dungeon` o la tuya, con la condición de que tenga al menos un bloque de muro suelto dentro de la sala.
+3. Casilla a casilla, mira **la de abajo** y elige la pieza:
+   - muro con suelo debajo → muro de delante;
+   - muro con muro debajo → muro de arriba, con el borde hacia el suelo;
+   - suelo con muro encima → suelo con sombra;
+   - suelo con suelo encima → suelo.
+4. Copia cada pieza del tileset con <Keys k="M" /> y <Keys k="Ctrl+C" />, y pégala en su casilla con <Keys k="Ctrl+V" />.
+
+<Tip>
+Empieza por la fila de arriba y baja. Cada fila depende de la de debajo, así que tenla a la vista: si dudas, pinta primero la máscara con dos colores planos en una capa de abajo y oculta esa capa al terminar.
+</Tip>
+</Step>
+
+<Step n={7} title="Revisa, pon al héroe y exporta">
+1. Pega el héroe chibi de P5-01 en un pasillo, de pie sobre el suelo.
+2. Aleja el zoom con la rueda del ratón hasta ver la sala casi a 1×. ¿Se ve qué muros tienes delante y cuáles de lado?
+3. Mira las esquinas donde un muro de lado se encuentra con uno de delante: en `map-dungeon`, el contorno y el borde claro del muro de lado arrancan en la fila justo debajo de la última junta del frente, sin hueco. Comprueba que en tu sala pasa lo mismo.
+4. Exporta con *File → Export → Export As*: una copia al 100 % y otra con **Resize** al 500 % para el portfolio. Exporta también el tileset al 100 %.
+</Step>
+
+<Warn title="Verifica en tu versión">
+Los nombres y la posición pueden variar según la versión de Aseprite: la configuración de la rejilla (*Grid Settings*), *Snap to Grid*, el submenú de *Tiled Mode* y cómo se crea y se oculta una capa (menú *Layer*). Si no encuentras algo, búscalo por nombre en los menús.
+</Warn>
+
+<ToolNote tool="godot">
+
+En Godot 4, este tileset se carga en un **TileSet** con tiles de 16×16 y se pinta en un **TileMapLayer**. Con los **terrains** del TileSet el motor puede elegir la pieza según los vecinos (autotile), la misma regla que has aplicado a mano. No lo configures todavía: es el trabajo del nivel 9. Recomendado: Godot 4.3 o superior. **Verifica en tu versión** los nombres de los paneles y de los modos de terrain.
+
+</ToolNote>
+</Block>
+
+<Block kind="version">
+Ahora a tu manera. Mantén la regla del vecino de abajo, el remate, las juntas alternas y la sombra al pie. Elige uno:
+
+- **Otra planta:** un pasillo en L, dos bloques sueltos o un pilar de un solo tile en medio de la sala. Antes de pintar, escribe la máscara y marca qué casillas llevan frente y cuáles sombra.
+- **Otro material:** una cueva de roca (remate irregular, piedras en lugar de ladrillos) o una casa de madera (tablas verticales). Conserva el orden de valor: el frente lo más claro, la cara de arriba un gris medio, el suelo más oscuro y la sombra un paso por debajo.
+- **Muros de dos tiles de alto:** un frente de 32 px en dos piezas, el remate y una hilada arriba y los ladrillos que siguen abajo. Comprueba que las juntas alternas continúan sin saltos de una pieza a la otra.
+</Block>
+
+<Block kind="errores">
+<Mistake title="Muros planos" wrongLabel="Todo ladrillo, sin sombra" rightLabel="Arriba, delante y sombra">
+  <Sprite slot="wrong" name="map-dungeon-flat" scale={4} />
+  <Sprite slot="right" name="map-dungeon" scale={4} />
+
+Si todos los muros llevan la misma textura de ladrillo, no se distingue la parte de arriba del frente: la sala parece un laberinto visto en planta. **Arréglalo:** frente con remate solo donde hay suelo debajo, cara de arriba lisa en los demás y sombra al pie de cada frente.
+</Mistake>
+
+<Mistake title="Cara de delante en muros que no dan al suelo" wrongLabel="Ladrillos en los muros de lado" rightLabel="Solo la cara de arriba">
+  <p slot="wrong">Los muros de la izquierda y de la derecha llevan remate y ladrillos, como los de arriba. Cada uno parece un muro bajo apilado sobre el siguiente: se ven frentes que deberían estar tapados por el muro de debajo.</p>
+  <p slot="right">Los muros con otro muro debajo enseñan solo su cara de arriba, lisa, con el borde claro hacia el suelo. Los frentes quedan para los que de verdad miran a la cámara.</p>
+
+**Arréglalo:** para cada muro, mira la casilla de abajo. Si es muro, pon el tile de arriba.
+</Mistake>
+
+<Mistake title="Sin sombra al pie" wrongLabel="El muro posado encima" rightLabel="El muro sale del suelo">
+  <p slot="wrong">Las losas llegan intactas hasta la última junta de los ladrillos. El muro parece un recorte pegado sobre el suelo, como los props de P7-05 sin su sombra.</p>
+  <p slot="right">Dos filas de sombra, un paso más oscuras que las juntas del suelo, justo bajo cada frente. El muro se apoya y tapa la luz en su base.</p>
+
+**Arréglalo:** en el tile de suelo con un muro encima, pinta las filas 0 y 1 con el siguiente color de la rampa del suelo. Nada de negro.
+</Mistake>
+
+<Mistake title="Juntas alineadas" wrongLabel="Una rejilla" rightLabel="Ladrillos trabados">
+  <p slot="wrong">Todas las hiladas tienen las juntas verticales en las mismas columnas. Las líneas oscuras cruzan el muro de arriba abajo y el frente se lee como una cuadrícula de baldosas.</p>
+  <p slot="right">Cada hilada se desplaza medio ladrillo, como en `tile-wall-front`: columnas 3 y 11, luego 7 y 15, luego 3 y 11. Cada ladrillo apoya sobre dos.</p>
+
+**Arréglalo:** mueve las juntas de una hilada de cada dos 4 px. Si el ladrillo mide 8 con su junta, el desplazamiento es la mitad.
+</Mistake>
+
+<Warn title="Un frente sin remate">
+Si los ladrillos empiezan en la fila 0 del tile, el frente no tiene arriba: el muro parece una pared de papel sin grosor y no casa con la cara de arriba de los muros vecinos. El remate (arista clara, gris de la cara de arriba y línea oscura) es lo que une las dos caras.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+Sube tu sala **a 1×** (96×80) y mírala también en grises: el frente lo más claro, la cara de arriba en medio, el suelo más oscuro y la sombra un escalón por debajo.
+
+<Inspector upload title="Revisa tu sala de mazmorra" />
+
+<Checklist items={[
+  "Mi tileset tiene suelo, suelo con sombra, muro de delante y muro de arriba, con la misma paleta",
+  "Solo los muros con suelo debajo tienen cara de delante; los demás enseñan solo la cara de arriba",
+  "El frente tiene remate: arista clara, el gris de la cara de arriba y una línea oscura",
+  "Las juntas verticales se alternan medio ladrillo en cada hilada",
+  "La cara de arriba es lisa y lleva el borde claro solo en los lados que dan al suelo",
+  "Hay 2 px de sombra bajo cada frente, un paso más oscura que el suelo, sin negro",
+  "En grises se lee qué es frente, qué es la parte de arriba y qué es suelo",
+  "Exporté la sala y el tileset al 100 % y la sala ampliada, y guardé los .aseprite",
+]} />
+
+<Quiz q="Un muro tiene otro muro justo en la casilla de abajo. ¿Qué tile lleva?" options={["El muro de delante, con remate y ladrillos", "El muro de arriba: liso, con el borde claro en los lados que den al suelo", "El suelo con sombra"]} answer={1}>
+Su cara de delante está tapada por el muro de debajo. Solo se ve su parte de arriba.
+</Quiz>
+
+<Quiz q="¿Por qué se desplazan las juntas medio ladrillo en cada hilada?" options={["Para usar menos colores", "Para que no se note el borde del tile", "Porque alineadas forman una rejilla y el muro deja de leerse como ladrillos trabados"]} answer={2}>
+Cada ladrillo apoya sobre dos de la hilada de abajo. Con las juntas alineadas, el ojo ve cuadros, no un muro.
+</Quiz>
+
+<Quiz q="¿Cómo es la sombra al pie de un muro con frente?" options={["Una franja de 2 px pegada al muro, un paso más oscura en la rampa del suelo", "Una franja negra de 4 px, separada del muro", "Una franja a cada lado del muro, nunca debajo"]} answer={0}>
+Es la sombra de contacto de P7-05: pegada a la base y del mismo material con menos luz.
+</Quiz>
+
+<Quiz q="¿Qué cuenta el remate de 3 px más la línea oscura sobre los ladrillos?" options={["Que el muro está roto por arriba", "La transición: la cara de arriba vista de canto y el pliegue donde empieza la de delante", "Que el muro es más bajo que los de los lados"]} answer={1}>
+La fila clara es la arista que recibe la luz; las dos medias son la cara de arriba, del mismo gris que los muros de lado; la línea oscura marca el cambio de plano.
+</Quiz>
+</Block>

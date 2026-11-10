@@ -1,0 +1,34 @@
+{
+  "name": "door-small",
+  "description": "Error de escala: la misma puerta a 8×14, que al lado del héroe le llega a los ojos. Así dibujada, nadie podría pasar por ella.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "prop",
+    "escala",
+    "error"
+  ],
+  "palette": {
+    "o": "#1b1030",
+    "f": "#6b3d2e",
+    "w": "#a0603a",
+    "W": "#8a5030",
+    "k": "#f2c14e"
+  },
+  "rows": [
+    "..oooo..",
+    ".offffo.",
+    "offWwffo",
+    "ofwWwwfo",
+    "ofwWwwfo",
+    "ofwWwwfo",
+    "ofwWwwfo",
+    "ofwWwwfo",
+    "ofwWkwfo",
+    "ofwWwwfo",
+    "ofwWwwfo",
+    "ofwWwwfo",
+    "ofwWwwfo",
+    "oooooooo"
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "name": "icon-cd-bad",
+  "description": "Error: el enfriamiento hecho solo oscureciendo todo el icono (marco incluido) al 60 %. No dice cuánto falta, y oscurecido casi igual que el bloqueado: el jugador no sabe si espera o si no puede.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "ui",
+    "icono",
+    "error"
+  ],
+  "palette": {
+    "a": "#100a1d",
+    "b": "#797d84",
+    "c": "#191b23",
+    "d": "#362318",
+    "e": "#373d47",
+    "f": "#533624",
+    "g": "#7c8b99",
+    "h": "#999999",
+    "i": "#861638",
+    "j": "#530a26"
+  },
+  "rows": [
+    ".aaaaaaaaaaaaaa.",
+    "abbbbbbbbbbbbbba",
+    "abccccaddaccccea",
+    "abccccaffaccccea",
+    "abcccaaaaaacccea",
+    "abccccaggaccccea",
+    "abcccaghggacccea",
+    "abccahgggggaccea",
+    "abcahiiiiiijacea",
+    "abcahiiiiijjacea",
+    "abcaiiiiiijjacea",
+    "abcaiiiiijjjacea",
+    "abccaiiijjjaccea",
+    "abcccaaaaaacccea",
+    "abeeeeeeeeeeeeea",
+    ".aaaaaaaaaaaaaa."
+  ]
+}

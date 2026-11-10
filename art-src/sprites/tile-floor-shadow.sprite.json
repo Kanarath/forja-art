@@ -1,0 +1,34 @@
+{
+  "name": "tile-floor-shadow",
+  "description": "Tile de suelo justo debajo de un muro (16×16): losas de 8×8 con juntas oscuras y una franja de sombra de 2 px arriba, donde el muro tapa la luz.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "tile",
+    "mazmorra"
+  ],
+  "palette": {
+    "a": "#2a2636",
+    "b": "#3a3646",
+    "c": "#4a4656",
+    "d": "#5a566a"
+  },
+  "rows": [
+    "aaaaaaaaaaaaaaaa",
+    "aaaaaaaaaaaaaaaa",
+    "bccccdccbccccccc",
+    "bcdcccccbccccdcc",
+    "bcccccccbcdccccc",
+    "bccccccdbccccccc",
+    "bcccdcccbccccccd",
+    "bdccccccbcccdccc",
+    "bbbbbbbbbbbbbbbb",
+    "bcccccdcbccccccc",
+    "bccdccccbcccccdc",
+    "bcccccccbccdcccc",
+    "bcccccccbccccccc",
+    "bccccdccbccccccc",
+    "bcdcccccbccccdcc",
+    "bcccccccbcdccccc"
+  ]
+}

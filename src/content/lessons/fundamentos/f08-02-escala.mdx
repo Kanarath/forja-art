@@ -1,0 +1,280 @@
+---
+id: f08-02
+discipline: fundamentos
+level: 8
+order: 2
+title: "Escala: que todo mida lo que debe"
+summary: "Elige una unidad, tu personaje, y mide todo con ella: la puerta algo más alta, el cofre y los enemigos en relación, el jefe grande a propósito. En pixel y en voxel."
+duration: 40
+status: borrador
+prerequisites: [f08-01, f09-01]
+fundamentals: [f08, f07]
+objectives:
+  - "Usar el personaje como unidad de medida y la puerta como segunda regla"
+  - "Montar una tabla de escala con suelo y guías y guardarla como documento del proyecto"
+  - "Exagerar objetos en un estilo chibi sin romper el orden de tamaños entre ellos"
+  - "Distinguir las dos escalas voxel del curso (chibi de 15 y maqueta de 4) y no mezclarlas"
+  - "Corregir una escala que falla redibujando, nunca escalando el sprite"
+tools: [aseprite, magicavoxel]
+piece:
+  name: "La tabla de escala de tu proyecto: personaje, puerta y 4 objetos, en pixel o en voxel"
+  canvas: "92x32"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [escala]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+En [F08-01](/forja-art/fundamentos/f08-01/) elegiste **desde dónde mira la cámara**. Hoy decides **cuánto mide cada cosa**.
+
+Tu pieza es un documento de trabajo: la **tabla de escala** de tu proyecto. Tu personaje, una puerta y cuatro objetos, todos sobre la misma línea de suelo.
+
+<Sprite name="scale-good" scale={6} caption="scale-good (92×32): puerta, héroe, cofre, slime, seta y roca, todos apoyados en la misma línea de suelo" />
+
+Cada objeto, por separado, ya lo conoces del curso. Lo nuevo es **la relación**: la puerta es algo más alta que el héroe, el cofre le llega a las manos y el slime, la seta y la roca miden lo mismo entre sí.
+
+Cuando dibujes algo nuevo para tu juego, lo pondrás en esta fila antes de darlo por bueno.
+</Block>
+
+<Block kind="concepto">
+### Una unidad: el personaje
+
+La escala no es «grande» o «pequeño». Es **cuánto mide algo comparado con otra cosa**. Y la otra cosa, en un juego, casi siempre es **el personaje**: es lo que el jugador mira todo el rato.
+
+<Sprite name="hero-chibi" scale={8} caption="hero-chibi: lienzo de 16×24, pero solo 21 filas dibujadas (las 3 de arriba están vacías)" />
+
+Fíjate en el detalle: el lienzo mide 24, pero el héroe mide **21**. **Mide lo dibujado, no el lienzo.** Si comparas lienzos, te equivocas en 3 píxeles antes de empezar.
+
+<Tip>
+Vienes de Blender: es la figura humana de 1,80 m que metes en la escena para saber si una mesa es una mesa o una maqueta. Aquí la figura es tu sprite, y la unidad son sus 21 filas.
+</Tip>
+
+### La segunda regla: la puerta
+
+<Sprite name="door" scale={8} caption="door (12×28): arco de medio punto, marco oscuro, tablas verticales y un pomo dorado" />
+
+Todo el mundo sabe cuánto mide una puerta respecto a una persona: **algo más**. Por eso la puerta es la segunda regla del juego. El jugador la lee sin pensar, y si falla, nota que algo va mal aunque no sepa qué.
+
+En `scale-good`, la puerta mide **28** filas y el héroe **21**: la puerta le saca 7, un tercio de su altura. Cabe de pie, con aire por encima.
+
+<Why title="Por qué la puerta y no otra cosa">
+Una seta o una roca pueden tener cualquier tamaño en la naturaleza. Una puerta, no: está hecha **para una persona**. Por eso es la mejor referencia después del propio personaje. Si tu juego no tiene puertas, busca algo igual de fijo: un escalón, una silla, una valla.
+</Why>
+
+### La tabla de `scale-good`, en números
+
+Todo se apoya en la misma línea: la fila de suelo verde claro, con dos filas más oscuras debajo. Cada objeto tiene su última fila dibujada justo encima.
+
+- **Puerta**: 28. Algo más alta que el héroe.
+- **Héroe**: 21. La unidad.
+- **Cofre**: 9. Su tapa llega a la altura de las **manos** del héroe, justo por encima del cinturón: puede abrirlo sin agacharse.
+- **Slime, seta y roca**: 8 cada uno. Le llegan a las manos. Un enemigo común y dos props del mismo tamaño: nada compite con el héroe.
+
+Ahora puedes medir cosas que no están en la fila. Una **mesa** se mide con el cuerpo: llega **por la cintura**. En `hero-chibi` el cinturón está 7 filas por encima de los pies. Pero cuidado con lo que viene ahora.
+
+### Estilizar sin perder la relación
+
+En un cuerpo realista, el cofre llega a la rodilla y la mesa a la cintura. En un **chibi** la cabeza se queda con 11 de las 21 filas (lo viste en [F09-01](/forja-art/fundamentos/f09-01/)), así que la cintura y la rodilla bajan mucho: las piernas, con botas y contorno, son las 5 filas de abajo. Un cofre «por la rodilla» mediría 2 o 3 píxeles. Ilegible.
+
+Por eso en `scale-good` el cofre mide 9: **está exagerado**, como la cabeza. Es la misma decisión de legibilidad. Y pasa también en la anchura: la cabeza del héroe mide 14 píxeles de ancho con el contorno, y la puerta, 12. En un chibi se perdona, porque lo que el ojo compara es la **altura**.
+
+<Why title="Exagera, pero conserva el orden">
+Estilizar cambia los números, no el orden. En `scale-good`, puerta mayor que héroe, héroe mayor que cofre, cofre mayor o igual que slime, seta y roca. Ese orden es lo que el jugador lee. Si exageras el cofre, exagera también la mesa: un cofre más alto que la mesa de al lado ya no es estilo, es un error. Con un cofre de 9, una mesa de unos 10–11 queda bien.
+</Why>
+
+### El jefe: grande a propósito
+
+<Sprite name="slime" scale={6} caption="slime (10×8): el enemigo común, a la altura de las manos del héroe" />
+<Sprite name="slime-king" scale={6} caption="slime-king (30×24): el jefe de P5-06. Su corona y su cuerpo ocupan 22 filas: tan alto como el héroe y casi el doble de ancho" />
+
+Los enemigos comunes miden **parecido entre sí**: el jugador tiene que leerlos como «uno más». El jefe rompe esa regla **a propósito**, y por eso funciona: es la excepción de la tabla, y se nota. Es lo que hiciste en [P5-06](/forja-art/pixel/p5-06/): el mismo slime, redibujado a 3× para que domine la escena.
+
+<Why title="Escala y composición">
+El tamaño es una de las formas más fuertes de decir «mira aquí» ([F07-01](/forja-art/fundamentos/f07-01/)). Si todo lo grande es importante, el ojo va donde tú quieres. Si cualquier cosa puede ser grande, la escala deja de significar nada.
+</Why>
+
+### En voxel: dos escalas en el curso
+
+En voxel también eliges una unidad. Y en el curso ya has usado **dos muy distintas**.
+
+<VoxViewer model="casa-modular" stage={0} title="Escala de maqueta: la puerta de la casa mide 4 vóxels" />
+
+- **Escala de maqueta** ([V6-01](/forja-art/voxel/v6-01/)): la pared mide 8 de alto y la puerta, 2×4. Una persona en ese mundo mide unos **4 vóxels**, como la puerta. No tiene cara ni dedos: es una columna que te dice cuánto mide todo. La casa entera, con su tejado, mide 13.
+- **Escala de personaje** ([V5-01](/forja-art/voxel/v5-01/)): el `chibi` mide **15 vóxels** (8 de cabeza, 5 de cuerpo y 2 de piernas). Caben ojos, pelo y cinturón.
+
+Pon el chibi junto a esa casa: mide **casi cuatro veces la puerta** y supera el tejado. Las dos escalas son correctas. Juntas, no.
+
+Cuándo usar cada una:
+
+- **Maqueta**: dioramas, pueblos, mapas, todo lo que se ve de lejos y donde el protagonista es el lugar.
+- **Personaje**: el héroe, sus enemigos y los props que toca de cerca, con una cámara próxima.
+
+<Why title="Por qué no puedes «convertir» una en otra">
+Si escalas la casa ×4, cada vóxel se convierte en un bloque de 4×4×4: la casa mide lo que debe, pero tiene el mismo detalle que antes con bloques gordos al lado del chibi fino. Es el mismo problema del `slime-x3` de P5-06. Para meter el chibi en una casa, la casa se **rehace** a su escala: con la misma proporción que en el pixel (28 para 21), su puerta mediría unos 20 vóxels.
+</Why>
+
+<Tip>
+En la escala de maqueta el margen de la puerta no llega a un vóxel. Si quieres que se note que la persona cabe con aire, haz la persona de 3 y deja la puerta en 4.
+</Tip>
+
+### La tabla como documento
+
+La tabla de escala no es un ejercicio de un día. Es un **archivo del proyecto**, como la paleta de [F04-02](/forja-art/fundamentos/f04-02/). Guárdala con los números escritos al lado:
+
+- la unidad (tu personaje, en filas o en vóxels dibujados);
+- la puerta;
+- el enemigo común, el cofre, la mesa y lo que uses a menudo;
+- el jefe, marcado como excepción.
+
+Cada vez que dibujes un objeto nuevo, ponlo en la fila. Si no encaja, se corrige antes de seguir.
+</Block>
+
+<Block kind="guiada">
+### Parte 1 · Aseprite
+
+<Step n={1} title="Lienzo y línea de suelo">
+1. <Keys k="Ctrl+N" />: **92×32**, fondo transparente. Activa *View → Grid* y amplía con la rueda.
+2. Con la selección rectangular (<Keys k="M" />), selecciona de lado a lado la **tercera fila empezando por abajo** y rellénala con un verde claro con el cubo (<Keys k="G" />).
+3. Selecciona las **dos filas de abajo** y rellénalas con un verde más oscuro.
+
+<Why>
+La línea de suelo es la regla cero. Todo lo que pongas en la fila se apoya en ella: su última fila dibujada queda justo encima. Si algo flota un píxel, la comparación ya miente.
+</Why>
+</Step>
+
+<Step n={2} title="El personaje primero: la unidad">
+1. Abre tu personaje (o `hero-chibi`, de [F09-01](/forja-art/fundamentos/f09-01/)). Selecciona solo la parte dibujada con <Keys k="M" />, cópiala con *Edit → Copy* y pégala en la fila con *Edit → Paste*.
+2. Colócalo con los pies justo encima de la línea de suelo, a unos 16 píxeles del borde izquierdo: deja sitio para la puerta.
+3. Cuenta sus filas dibujadas con la rejilla y **apúntalas**. En `hero-chibi` son 21.
+
+<Warn>
+Cuenta lo dibujado, no el lienzo. Si tu personaje tiene filas vacías arriba, no cuentan.
+</Warn>
+</Step>
+
+<Step n={3} title="Una capa de guías horizontales">
+1. Crea una capa nueva en el panel de capas y llámala `guias`.
+2. En esa capa, con <Keys k="M" /> y <Keys k="G" />, traza líneas de **1 fila** en un color chillón que no uses en el juego (un magenta, por ejemplo), de lado a lado:
+   - la **cabeza** del personaje (su fila más alta);
+   - su **cinturón** o cintura;
+   - la **altura de la puerta**: unos 4/3 del personaje. Para 21, a 28 filas del suelo.
+3. Baja la opacidad de la capa si te molesta.
+
+<Why>
+Con las guías ya no comparas «a ojo»: cada objeto nuevo choca contra una línea. Es la misma idea que los bordes de la rejilla en F08-01: medir, no intuir.
+</Why>
+</Step>
+
+<Step n={4} title="Puerta y cuatro objetos, en la misma fila">
+1. En una capa de dibujo, la **puerta**: de la línea de suelo a la guía de la puerta. Arco, marco, tablas: lo que pida tu juego.
+2. Después **cuatro objetos** de tu proyecto, de izquierda a derecha y apoyados en el suelo: por ejemplo un cofre, una mesa, un enemigo común y un prop.
+3. Si un objeto ya existe a otro tamaño, **redibújalo** a la medida de la fila. No lo escales con *Sprite → Sprite Size* para que cuadre.
+4. Oculta la capa `guias` con el ojo del panel de capas, guarda (<Keys k="Ctrl+S" />) y exporta a 1× con *File → Export → Export As*.
+
+<Inspector upload title="Tu tabla de escala" />
+
+<Tip>
+Mírala a 1× en el Inspector. Si un objeto «salta» antes que el personaje, o es más grande de lo que importa, o tiene más contraste del que debe.
+</Tip>
+</Step>
+
+### Parte 2 · MagicaVoxel
+
+<Step n={5} title="Una columna de referencia junto al modelo">
+1. Abre tu modelo (o descarga la casa del visor de arriba).
+2. Elige la escala: **4** para un mundo de maqueta, **15** para el chibi de V5-01, o la altura de tu personaje.
+3. En una esquina libre, modo *Attach* y pincel *Box*: levanta una **columna de 1×1** con esa altura, en un color chillón de la paleta que no uses en el modelo.
+4. Modo *Paint*: marca en otro color el vóxel de la **cintura** y añade una segunda columna con la **altura de la puerta**.
+
+<Why>
+La columna es tu `hero-chibi` en 3D. Junto a ella, una mesa de 6 en un mundo de personas de 4 canta enseguida. Sin ella, giras la cámara y todo «parece bien».
+</Why>
+
+<Tip>
+Si en la rejilla del modelo no hay sitio libre, pon la columna como un modelo aparte en el modo World, junto al tuyo y sobre el mismo suelo.
+</Tip>
+</Step>
+
+<Step n={6} title="Mide, renderiza y guarda">
+1. Construye o revisa cada objeto **contra la columna**: puerta, mesa, cofre, un enemigo común.
+2. Cambia la cámara a **ortográfica** y ponla de lado, como en F08-01: así las alturas se comparan sin escorzo.
+3. Pulsa *Render* y guarda la imagen con la columna a la vista: es tu tabla de escala en voxel.
+4. Para el modelo final, borra la columna en modo *Erase* (o deja la versión con columna guardada aparte).
+
+<Warn title="Verifica en tu versión">
+En Aseprite, el nombre del menú para crear capas y el modo de ocultarlas pueden variar; búscalos en el panel de capas. En MagicaVoxel, los controles de proyección de la cámara, la forma de añadir un modelo en el modo World y el botón para guardar el render cambian entre versiones: búscalos por su función.
+</Warn>
+</Step>
+</Block>
+
+<Block kind="version">
+Hazla tuya. Elige un reto:
+
+- **La tabla de tu juego**: tu personaje, una puerta y los cuatro objetos que más vayan a salir. Escribe los números junto a cada uno y guarda el PNG con tu paleta.
+- **Bestiario a escala**: tu héroe, tres enemigos comunes de tamaño parecido (pueden variar un poco, nunca el doble) y un jefe grande a propósito. Marca el jefe como «excepción».
+- **Las dos escalas en voxel**: la misma puerta y la misma mesa a escala de maqueta (persona de 4) y a escala de chibi (persona de 15). Renderízalas por separado con la misma cámara ortográfica.
+
+**Prueba de la puerta.** Enseña tu tabla a alguien sin decirle nada y pregúntale: «¿Cabe el personaje por la puerta?». Si duda, la escala no está clara.
+</Block>
+
+<Block kind="errores">
+<Mistake title="La puerta, más baja que el personaje" wrongLabel="door-small: 8×14" rightLabel="door: 12×28">
+  <Sprite slot="wrong" name="door-small" scale={6} />
+  <Sprite slot="right" name="door" scale={6} />
+
+Las dos puertas están bien dibujadas: arco, marco, tablas y pomo. Pero en `scale-bad` la pequeña le llega al héroe a los ojos. Nadie pasa por ahí, y el jugador no sabe si la puerta es de juguete o el héroe es un gigante. **Corrección**: la puerta mide algo más que el personaje (en `scale-good`, 28 para 21) y se dibuja a esa altura desde el principio.
+</Mistake>
+
+<Mistake title="Grande solo porque tenía más detalle" wrongLabel="mushroom16 en una escena de seta 8" rightLabel="mushroom8: la medida de la tabla">
+  <Sprite slot="wrong" name="mushroom16" scale={6} />
+  <Sprite slot="right" name="mushroom8" scale={6} />
+
+Dibujaste la seta a 16×16 porque así caben la sombra, las motas y el volumen ([P1-01](/forja-art/pixel/p1-01/)). Al ponerla en la fila, mide 15 filas dibujadas frente a las 9 del cofre: parece un árbol. El tamaño en pantalla no lo decide cuánto detalle quieres meter, lo decide la tabla. **Corrección**: dibuja la seta a la medida de la fila (8 en `scale-good`) y elige qué detalle cabe. Si de verdad necesitas una seta gigante, que sea una decisión de la historia, no del lienzo.
+</Mistake>
+
+<Mistake title="Una fila sin escala común" wrongLabel="scale-bad" rightLabel="scale-good">
+  <Sprite slot="wrong" name="scale-bad" scale={4} />
+  <Sprite slot="right" name="scale-good" scale={4} />
+
+En `scale-bad` cada objeto está bien hecho, pero juntos no tienen sentido: la puerta es más baja que el héroe, la seta casi dobla el cofre y en el lugar del slime común está el jefe, tan alto como el héroe. Un jefe grande es correcto **cuando es el jefe**; puesto como enemigo común, el jugador ya no sabe qué es peligroso. **Corrección**: la fila de `scale-good`, con un solo patrón, y el jefe guardado para su sala.
+</Mistake>
+
+<Warn title="Error: escalar el sprite para que cuadre">
+La puerta te ha salido pequeña y la amplías ×2 con *Sprite → Sprite Size*. Ahora mide lo que debe, pero su contorno es de 2 píxeles y sus tablas, bloques de 2×2, junto a un héroe hecho con píxeles de 1. Son los **mixels** de [P5-06](/forja-art/pixel/p5-06/): parece pegada de otro juego. **Corrección**: usa la versión escalada como guía en una capa baja, si te ayuda, y **redibuja** a la nueva altura con píxeles de 1. En voxel es igual: no escales un modelo ×4, rehazlo a la escala de la escena.
+</Warn>
+
+<Warn title="Error: dos escalas en la misma escena">
+Pones tu chibi de 15 vóxels delante de la casa de V6-01, con su puerta de 4. El chibi supera el tejado. O al revés: una figura de 4 vóxels junto a una mesa y un cofre hechos para el chibi. Las dos escalas son válidas, pero cada escena usa **una**. **Corrección**: decide la escala de la escena antes de modelar. Si el chibi tiene que entrar en la casa, la casa se rehace con una puerta de unos 20 vóxels; si la escena es una maqueta, el personaje mide 3–4.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+<Checklist items={[
+  "Mi tabla tiene una línea de suelo y todo se apoya en ella, sin flotar",
+  "He medido mi personaje por lo dibujado, no por el lienzo, y he apuntado el número",
+  "La puerta es algo más alta que el personaje",
+  "Hay al menos cuatro objetos y su orden de tamaños tiene sentido (el cofre no supera a la mesa, los enemigos comunes miden parecido)",
+  "Si he exagerado algo para el estilo chibi, he exagerado también lo que va con ello",
+  "Nada está escalado para cuadrar: todo está dibujado con píxeles de 1 (o con vóxels de la misma rejilla)",
+  "En voxel, he usado una columna de referencia y una sola escala por escena",
+  "He guardado la tabla con sus números como documento del proyecto",
+]} />
+
+<Quiz q="Tu personaje mide 21 filas dibujadas. ¿Qué altura le das a la puerta?" options={["Unas 14: así no tapa el fondo", "21 exactas, la misma que el personaje", "Unas 28: algo más alta que él"]} answer={2}>
+Una puerta está hecha para una persona, así que mide algo más. En `scale-good`, 28 para un héroe de 21. Con 21 exactas, el personaje roza el marco; con 14, no cabe.
+</Quiz>
+
+<Quiz q="Tu seta de 16×16 queda casi el doble de alta que el cofre de la fila. ¿Qué haces?" options={["La redibujas a la medida de la tabla y eliges qué detalle cabe", "Escalas el cofre ×2 para que estén a la par", "La dejas: el detalle compensa el tamaño"]} answer={0}>
+El tamaño lo decide la tabla, no el detalle. Escalar el cofre crea mixels y rompe la escala de todo lo demás.
+</Quiz>
+
+<Quiz q="¿Qué enemigo puede ser mucho más grande que el héroe?" options={["Ninguno: todos tienen que medir lo mismo", "El jefe, a propósito y redibujado a su tamaño", "Cualquiera que tenga mucho detalle"]} answer={1}>
+Los comunes miden parecido para leerse como «uno más». El jefe es la excepción y por eso funciona, siempre que se redibuje y no se escale.
+</Quiz>
+
+<Quiz q="Quieres meter tu chibi voxel de 15 en la casa de V6-01, con su puerta de 4. ¿Qué es lo correcto?" options={["Ponerlo tal cual: el jugador lo entenderá", "Escalar la casa ×4 para que encaje", "Elegir una escala para la escena: un personaje de 3–4 para esa casa, o una casa rehecha con una puerta de unos 20"]} answer={2}>
+Cada escena usa una escala. Escalar la casa la llena de bloques de 4×4×4 junto al chibi fino; rehacerla a su escala, no.
+</Quiz>
+</Block>

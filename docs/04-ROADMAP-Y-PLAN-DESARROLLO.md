@@ -185,6 +185,12 @@
 - **Voxel:** V5-04 Animales (una oveja de cuatro patas), V8-02 Hojas isométricas con forja-vox.
 - **Arte nuevo:** casco y peto como capas sobre el héroe (y su versión en oro), HUD bien y mal colocado sobre la escena, la escena reducida a dos paletas de 8 colores, y el modelo «oveja».
 
+**Contenido · decimoquinto bloque: 5 lecciones más (88 en total).**
+- **Pixel:** P4-07 Iconos con estado (listo, enfriamiento, bloqueado), P7-07 Muros en vista 3/4.
+- **Fundamentos:** F08-02 Escala (que todo mida lo que debe).
+- **Voxel:** V3-04 AO pintado (oclusión ambiental en la paleta), V7-04 Barco.
+- **Arte nuevo:** sala de mazmorra 3/4 con sus tiles (y la versión plana como error), icono con enfriamiento en 5 frames, bloqueado y su error, puerta de referencia y fila de escala buena y mala, modelos «barco» y «ao».
+
 **Fase 6 · Forge Tools (iniciada el 2026-11-10).** Tres scripts de Aseprite, la CLI `forja-vox` y la página Forge Tools con descargas y demos. Ver `forge-tools/README.md`.
 
 **Lecciones aprendidas durante la fase 1:**

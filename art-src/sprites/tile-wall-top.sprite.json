@@ -1,0 +1,34 @@
+{
+  "name": "tile-wall-top",
+  "description": "Tile de muro visto desde arriba (16×16): la cara de arriba, lisa y de un gris medio, con contorno y un borde claro de 1 px por el lado de arriba, que da al suelo.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "tile",
+    "mazmorra"
+  ],
+  "palette": {
+    "a": "#1b1030",
+    "b": "#7d7894",
+    "c": "#5e5a6e",
+    "d": "#3e3a4a"
+  },
+  "rows": [
+    "aaaaaaaaaaaaaaaa",
+    "bbbbbbbbbbbbbbbb",
+    "cdccccccccccccdc",
+    "ccccccccdccccccc",
+    "ccdccccccccccccd",
+    "cccccccccdcccccc",
+    "cccdcccccccccccc",
+    "ccccccccccdccccc",
+    "ccccdccccccccccc",
+    "cccccccccccdcccc",
+    "cccccdcccccccccc",
+    "ccccccccccccdccc",
+    "ccccccdccccccccc",
+    "dccccccccccccdcc",
+    "cccccccdcccccccc",
+    "cdccccccccccccdc"
+  ]
+}

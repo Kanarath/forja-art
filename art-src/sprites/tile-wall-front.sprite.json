@@ -1,0 +1,36 @@
+{
+  "name": "tile-wall-front",
+  "description": "Tile de muro con cara de delante (16×16): arriba, el remate de 3 px (una fila clara y dos medias), una línea oscura y debajo los ladrillos en hiladas de 4 px con las juntas alternas.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "tile",
+    "mazmorra"
+  ],
+  "palette": {
+    "a": "#7d7894",
+    "b": "#5e5a6e",
+    "c": "#1b1030",
+    "d": "#8a8698",
+    "e": "#3e3a4a",
+    "f": "#6a6678"
+  },
+  "rows": [
+    "aaaaaaaaaaaaaaaa",
+    "bbbbbbbbbbbbbbbb",
+    "bbbbbbbbbbbbbbbb",
+    "cccccccccccccccc",
+    "dddeddddddfedddd",
+    "ddfedddddfdedddd",
+    "dfdeddddfddedddf",
+    "eeeeeeeeeeeeeeee",
+    "ddddddfedddddfde",
+    "dddddfdeddddfdde",
+    "ddddfddedddfddde",
+    "eeeeeeeeeeeeeeee",
+    "ddfedddddfdedddd",
+    "dfdeddddfddedddf",
+    "fddedddfdddeddfd",
+    "eeeeeeeeeeeeeeee"
+  ]
+}

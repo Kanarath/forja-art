@@ -1,0 +1,41 @@
+{
+  "name": "icon-locked",
+  "description": "Icono bloqueado: el mismo icono en grises y más oscuro, con un candado dorado de 7×8 abajo a la derecha. Se reconoce qué habilidad es, pero se ve que todavía no se puede usar.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "ui",
+    "icono"
+  ],
+  "palette": {
+    "a": "#0e0e0e",
+    "b": "#929292",
+    "c": "#202020",
+    "d": "#2c2c2c",
+    "e": "#474747",
+    "f": "#454545",
+    "g": "#a0a0a0",
+    "h": "#b2b2b2",
+    "i": "#1b1030",
+    "j": "#383838",
+    "k": "#f2c14e"
+  },
+  "rows": [
+    ".aaaaaaaaaaaaaa.",
+    "abbbbbbbbbbbbbba",
+    "abccccaddaccccea",
+    "abccccaffaccccea",
+    "abcccaaaaaacccea",
+    "abccccaggaccccea",
+    "abcccaghggacccea",
+    "abccahgggiiiccea",
+    "abcahjjjijjcicea",
+    "abcahjjjijccicea",
+    "abcajjjiiiiiiiea",
+    "abcajjjikkkkkiea",
+    "abccajjikkikkiea",
+    "abcccaaikkkkkiea",
+    "abeeeeeiiiiiiiea",
+    ".aaaaaaaaaaaaaa."
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "name": "icon-cd-1",
+  "description": "Icono en enfriamiento, recién usado: todo el interior oscurecido al 35 %. El marco no cambia.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "ui",
+    "icono",
+    "animación"
+  ],
+  "palette": {
+    "a": "#1b1030",
+    "b": "#c9d1dc",
+    "c": "#0f1014",
+    "d": "#090611",
+    "e": "#1f140e",
+    "f": "#5c6676",
+    "g": "#301f15",
+    "h": "#485159",
+    "i": "#595959",
+    "j": "#4e0d21",
+    "k": "#300616"
+  },
+  "rows": [
+    ".aaaaaaaaaaaaaa.",
+    "abbbbbbbbbbbbbba",
+    "abccccdeedccccfa",
+    "abccccdggdccccfa",
+    "abcccddddddcccfa",
+    "abccccdhhdccccfa",
+    "abcccdhihhdcccfa",
+    "abccdihhhhhdccfa",
+    "abcdijjjjjjkdcfa",
+    "abcdijjjjjkkdcfa",
+    "abcdjjjjjjkkdcfa",
+    "abcdjjjjjkkkdcfa",
+    "abccdjjjkkkdccfa",
+    "abcccddddddcccfa",
+    "abfffffffffffffa",
+    ".aaaaaaaaaaaaaa."
+  ]
+}

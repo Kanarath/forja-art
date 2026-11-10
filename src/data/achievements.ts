@@ -90,5 +90,10 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   { id: "paleta-8", name: "Ocho colores", description: "Una escena resuelta con una paleta limitada de 8 colores que conserva oscuros y claros (F04-02).", color: "#2a6fc9" },
   { id: "oveja", name: "Cuadrúpedo", description: "Un animal voxel de cuatro patas: blockout, volumen y detalle de cara (V5-04).", color: "#f4ecdc" },
   { id: "hoja-iso", name: "Hoja isométrica", description: "Una hoja de sprites isométrica hecha desde tus .vox con forja-vox (V8-02).", color: "#38e1ff" },
+  { id: "muros", name: "Muros con altura", description: "Un tileset de mazmorra en vista 3/4 con cara de arriba, cara de delante y sombra al pie (P7-07).", color: "#8a8698" },
+  { id: "iconos-estado", name: "Iconos con estado", description: "Un icono de habilidad con sus estados: listo, en enfriamiento y bloqueado (P4-07).", color: "#c9d1dc" },
+  { id: "escala", name: "A escala", description: "Una escena en la que todo se mide con el mismo patrón: el personaje y una puerta (F08-02).", color: "#a0603a" },
+  { id: "barco", name: "Barco", description: "Un barco voxel: casco curvo por capas, cubierta, mástil y vela (V7-04).", color: "#f4ecdc" },
+  { id: "ao", name: "Oclusión pintada", description: "Un modelo voxel con oclusión ambiental pintada en la paleta, sin pasarse (V3-04).", color: "#6b4430" },
   { id: "forma-primero", name: "Forma antes que detalle", description: "Un modelo voxel con su blockout guardado como primera versión (V2-01).", color: "#38e1ff" },
 ];

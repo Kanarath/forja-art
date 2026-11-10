@@ -1,0 +1,47 @@
+{
+  "name": "icon-cd-3",
+  "description": "Enfriamiento al 50 %: la mitad derecha ya está clara.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "ui",
+    "icono",
+    "animación"
+  ],
+  "palette": {
+    "a": "#1b1030",
+    "b": "#c9d1dc",
+    "c": "#0f1014",
+    "d": "#090611",
+    "e": "#1f140e",
+    "f": "#5c6676",
+    "g": "#301f15",
+    "h": "#485159",
+    "i": "#595959",
+    "j": "#4e0d21",
+    "l": "#5a3a28",
+    "m": "#2a2d3a",
+    "n": "#8a5a3c",
+    "o": "#cfe8ff",
+    "p": "#e0245e",
+    "q": "#8a1040"
+  },
+  "rows": [
+    ".aaaaaaaaaaaaaa.",
+    "abbbbbbbbbbbbbba",
+    "abccccdelammmmfa",
+    "abccccdgnammmmfa",
+    "abcccdddaaammmfa",
+    "abccccdhoammmmfa",
+    "abcccdhiooammmfa",
+    "abccdihhoooammfa",
+    "abcdijjjpppqamfa",
+    "abcdijjjppqqamfa",
+    "abcdjjjjppqqamfa",
+    "abcdjjjjpqqqamfa",
+    "abccdjjjqqqammfa",
+    "abcccdddaaammmfa",
+    "abfffffffffffffa",
+    ".aaaaaaaaaaaaaa."
+  ]
+}

@@ -1385,6 +1385,128 @@ const deutan = (hex) => {
   add("pal8-bad-swatch", "Las 8 muestras de la mala paleta: verde, azul, rojo, violeta, ocre, turquesa, marrón y gris, todos de valor medio. En grises son casi la misma mancha.", ["paleta", "error"], palObj(BAD8), swatch(BAD8));
 }
 
+
+// ---------- utilidad: varios frames con UNA paleta fija (las mismas letras en todos), para animarlos juntos
+function fixedFrames(frames) {
+  const keys = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  const all = [...new Set(frames.flat(2).filter(Boolean))];
+  if (all.length > keys.length) throw new Error("fixedFrames: demasiados colores");
+  const pal = Object.fromEntries(all.map((h, i) => [keys[i], h])), inv = Object.fromEntries(all.map((h, i) => [h, keys[i]]));
+  return frames.map((px) => { const rows = px.map((r) => r.map((h) => (h ? inv[h] : ".")).join("")); return { rows, pal: usedOnly(pal, rows) }; });
+}
+const toHexGrid = (name) => { const s = spriteByName(name); return s.rows.map((r) => [...r].map((k) => (k === "." ? null : s.palette[k]))); };
+const shadeHex = (h, f) => "#" + [16, 8, 0].map((k) => Math.round(((parseInt(h.slice(1), 16) >> k) & 255) * f).toString(16).padStart(2, "0")).join("");
+
+// ---------- muros en vista 3/4: cada muro enseña su cara de ARRIBA y, si delante hay suelo, su cara de DELANTE
+const DUNP = { cap: "#5e5a6e", capL: "#7d7894", capD: "#3e3a4a", brick: "#8a8698", brickD: "#6a6678", mortar: "#3e3a4a", floor: "#4a4656", floorD: "#3a3646", floorL: "#5a566a", shadow: "#2a2636", o: "#1b1030" };
+function dungeonMap(mask, { flat = false } = {}) {
+  const th = mask.length, tw = mask[0].length;
+  const wall = (tx, ty) => (mask[ty]?.[tx] ?? "W") === "W";
+  return Array.from({ length: th * 16 }, (_, y) => Array.from({ length: tw * 16 }, (_, x) => {
+    const tx = Math.floor(x / 16), ty = Math.floor(y / 16), lx = x % 16, ly = y % 16;
+    const brick = () => { const row = Math.floor(ly / 4), off = row % 2 ? 4 : 0; return ly % 4 === 3 || (lx + off) % 8 === 7 ? DUNP.mortar : (lx + ly) % 7 === 0 ? DUNP.brickD : DUNP.brick; };
+    if (wall(tx, ty)) {
+      if (flat) return brick(); // error: todo el muro con la misma textura de ladrillo
+      if (!wall(tx, ty + 1)) {
+        // cara de delante: un remate de 3 px (la parte de arriba del muro, vista de canto), una línea de contorno y los ladrillos
+        if (ly < 3) return ly === 0 ? DUNP.capL : DUNP.cap;
+        if (ly === 3) return DUNP.o;
+        return brick();
+      }
+      // cara de arriba: oscura y lisa, con un borde claro donde da al suelo por los lados o por arriba
+      if ((!wall(tx - 1, ty) && lx === 0) || (!wall(tx + 1, ty) && lx === 15) || (!wall(tx, ty - 1) && ly === 0)) return DUNP.o;
+      if ((!wall(tx - 1, ty) && lx === 1) || (!wall(tx + 1, ty) && lx === 14) || (!wall(tx, ty - 1) && ly === 1)) return DUNP.capL;
+      return (lx * 3 + ly * 5) % 13 === 0 ? DUNP.capD : DUNP.cap;
+    }
+    // suelo: losas de 8×8; justo debajo de un muro, una franja de sombra de 2 px (el muro tapa la luz)
+    if (!flat && wall(tx, ty - 1) && ly < 2) return DUNP.shadow;
+    if (lx % 8 === 0 || ly % 8 === 0) return DUNP.floorD;
+    return (lx + ly * 3) % 11 === 0 ? DUNP.floorL : DUNP.floor;
+  }));
+}
+{
+  const MASK = ["WWWWWW", "WFFFFW", "WFWWFW", "WFFFFW", "WWWWWW"];
+  const good = dungeonMap(MASK), bad = dungeonMap(MASK, { flat: true });
+  stamp(good, "hero-chibi", 64, 36); stamp(bad, "hero-chibi", 64, 36);
+  const g = hexGridToSprite(good), b = hexGridToSprite(bad);
+  add("map-dungeon", "Sala de mazmorra en vista 3/4 (96×80, 6×5 tiles). Los muros con suelo delante enseñan su cara de delante: un remate claro de 3 px, una línea oscura y ladrillos. Los demás muros enseñan solo la cara de arriba: lisa, de un gris medio y con un borde claro donde dan al suelo. Debajo de cada muro con frente, una franja de sombra de 2 px en el suelo. El bloque del centro enseña su frente, con el remate encima.", ["tile", "mazmorra", "mapa"], g.pal, g.rows);
+  add("map-dungeon-flat", "Error: la misma sala con todos los muros iguales, ladrillo por todas partes y sin sombra en el suelo. No se sabe qué es la parte de arriba de un muro ni qué es su frente: parece un laberinto visto desde arriba sin altura.", ["tile", "mazmorra", "mapa", "error"], b.pal, b.rows);
+  const cut = (px, tx, ty) => hexGridToSprite(px.slice(ty * 16, ty * 16 + 16).map((r) => r.slice(tx * 16, tx * 16 + 16)));
+  const front = cut(good, 2, 0), top = cut(good, 3, 4), floor = cut(good, 3, 1);
+  add("tile-wall-front", "Tile de muro con cara de delante (16×16): arriba, el remate de 3 px (una fila clara y dos medias), una línea oscura y debajo los ladrillos en hiladas de 4 px con las juntas alternas.", ["tile", "mazmorra"], front.pal, front.rows);
+  add("tile-wall-top", "Tile de muro visto desde arriba (16×16): la cara de arriba, lisa y de un gris medio, con contorno y un borde claro de 1 px por el lado de arriba, que da al suelo.", ["tile", "mazmorra"], top.pal, top.rows);
+  add("tile-floor-shadow", "Tile de suelo justo debajo de un muro (16×16): losas de 8×8 con juntas oscuras y una franja de sombra de 2 px arriba, donde el muro tapa la luz.", ["tile", "mazmorra"], floor.pal, floor.rows);
+}
+
+// ---------- iconos de habilidad con estado: listo, en enfriamiento (barrido) y bloqueado (16×16)
+{
+  const FR = { o: "#1b1030", L: "#c9d1dc", M: "#8f9bab", D: "#5c6676", bg: "#2a2d3a" };
+  const base = () => {
+    const px = Array.from({ length: 16 }, (_, y) => Array.from({ length: 16 }, (_, x) => {
+      if (x === 0 || y === 0 || x === 15 || y === 15) return (x === 0 || x === 15) && (y === 0 || y === 15) ? null : FR.o;
+      if (x === 1 || y === 1) return FR.L; // bisel: claro arriba-izquierda
+      if (x === 14 || y === 14) return FR.D;
+      return FR.bg;
+    }));
+    toHexGrid("potion").forEach((r, y) => r.forEach((h, x) => { if (h) px[2 + y][3 + x] = h; }));
+    return px;
+  };
+  // enfriamiento: un barrido como un reloj desde arriba, en el sentido de las agujas; lo que falta por recargar, oscuro
+  const sweep = (frac) => base().map((r, y) => r.map((h, x) => {
+    if (!h || x < 2 || y < 2 || x > 13 || y > 13) return h;
+    const a = (Math.atan2(x + 0.5 - 8, -(y + 0.5 - 8)) / (2 * Math.PI) + 1) % 1; // 0 arriba, crece hacia la derecha
+    return a >= 1 - frac ? shadeHex(h, 0.35) : h;
+  }));
+  const ready = base();
+  for (const [x, y] of [[2, 2], [3, 2], [2, 3]]) ready[y][x] = "#ffffff"; // destello en la esquina: «ya puedes usarla»
+  const frames = [sweep(1), sweep(0.75), sweep(0.5), sweep(0.25), ready];
+  const D = [
+    "Icono en enfriamiento, recién usado: todo el interior oscurecido al 35 %. El marco no cambia.",
+    "Enfriamiento al 25 %: la parte clara empieza arriba y gira como la aguja de un reloj; tres cuartos siguen oscuros.",
+    "Enfriamiento al 50 %: la mitad derecha ya está clara.",
+    "Enfriamiento al 75 %: solo queda oscuro el cuarto de arriba a la izquierda.",
+    "Icono listo: la poción con todos sus colores dentro del marco con bisel y un destello blanco de 3 px en la esquina de arriba a la izquierda.",
+  ];
+  fixedFrames(frames).forEach((f, i) => add(`icon-cd-${i + 1}`, D[i], ["ui", "icono", "animación"], f.pal, f.rows));
+  // bloqueado: en grises y con un candado
+  const gray = (h) => { const n = parseInt(h.slice(1), 16), l = Math.round((0.2126 * (n >> 16) + 0.7152 * ((n >> 8) & 255) + 0.0722 * (n & 255)) * 0.7); return "#" + [l, l, l].map((v) => v.toString(16).padStart(2, "0")).join(""); };
+  const locked = base().map((r) => r.map((h) => (h ? gray(h) : h)));
+  const LOCK = ["..ooo..", ".o...o.", ".o...o.", "ooooooo", "oyyyyyo", "oyyoyyo", "oyyyyyo", "ooooooo"];
+  LOCK.forEach((r, y) => [...r].forEach((c, x) => { if (c === "o") locked[7 + y][8 + x - 1] = "#1b1030"; else if (c === "y") locked[7 + y][8 + x - 1] = "#f2c14e"; }));
+  const lk = hexGridToSprite(locked);
+  add("icon-locked", "Icono bloqueado: el mismo icono en grises y más oscuro, con un candado dorado de 7×8 abajo a la derecha. Se reconoce qué habilidad es, pero se ve que todavía no se puede usar.", ["ui", "icono"], lk.pal, lk.rows);
+  const dim = hexGridToSprite(base().map((r) => r.map((h) => (h ? shadeHex(h, 0.6) : h))));
+  add("icon-cd-bad", "Error: el enfriamiento hecho solo oscureciendo todo el icono (marco incluido) al 60 %. No dice cuánto falta, y oscurecido casi igual que el bloqueado: el jugador no sabe si espera o si no puede.", ["ui", "icono", "error"], dim.pal, dim.rows);
+}
+
+// ---------- escala: los objetos del curso a la escala del héroe (una puerta como referencia) y una escena sin escala
+function doorSprite(w, h) {
+  const P = { o: "#1b1030", f: "#6b3d2e", w: "#a0603a", W: "#8a5030", k: "#f2c14e" };
+  const rows = Array.from({ length: h }, (_, y) => Array.from({ length: w }, (_, x) => {
+    const r = w / 2, inArch = y >= r || Math.hypot(x + 0.5 - w / 2, y + 0.5 - r) <= r; // arco de medio punto arriba
+    if (!inArch) return ".";
+    const edge = x === 0 || x === w - 1 || y === h - 1 || (y < r && Math.hypot(x + 0.5 - w / 2, y + 0.5 - r) > r - 1);
+    if (edge) return "o";
+    const frame = x === 1 || x === w - 2 || (y < r && Math.hypot(x + 0.5 - w / 2, y + 0.5 - r) > r - 2);
+    if (frame) return "f";
+    if (x === w - 4 && y === Math.round(h * 0.55)) return "k"; // pomo
+    return x % 3 === 0 ? "W" : "w"; // tablas verticales
+  }).join(""));
+  return { pal: usedOnly(P, rows), rows };
+}
+{
+  const d = doorSprite(12, 28), ds = doorSprite(8, 14);
+  add("door", "Puerta de 12×28 con arco de medio punto, marco oscuro, tablas verticales y un pomo dorado. Mide 28 px, 7 más que lo dibujado del héroe (21, en un lienzo de 24): por ella cabe una persona.", ["prop", "escala"], d.pal, d.rows);
+  add("door-small", "Error de escala: la misma puerta a 8×14, que al lado del héroe le llega a los ojos. Así dibujada, nadie podría pasar por ella.", ["prop", "escala", "error"], ds.pal, ds.rows);
+  const ground = (W, H) => Array.from({ length: H }, (_, y) => Array.from({ length: W }, () => (y >= H - 3 ? (y === H - 3 ? "#3fa45b" : "#2c7a48") : null)));
+  // cada sprite se apoya en el suelo por su última fila DIBUJADA (no por el borde del lienzo)
+  const lineup = (items, W) => { const px = ground(W, 32); for (const [n, x] of items) { const s = spriteByName(n); let last = s.rows.length - 1; while (last > 0 && !/[^.]/.test(s.rows[last])) last--; stamp(px, n, x, 29 - (last + 1)); } return hexGridToSprite(px); };
+  const good = lineup([["door", 2], ["hero-chibi", 16], ["chest", 34], ["slime", 48], ["mushroom8", 61], ["rock-clean", 71]], 92);
+  const bad = lineup([["door-small", 2], ["hero-chibi", 12], ["chest", 30], ["mushroom16", 44], ["slime-king", 60]], 92);
+  add("scale-good", "Fila de 92×32 con todo a la misma escala sobre el suelo: puerta (28), héroe (21 dibujados), cofre (9, con la tapa a la altura de las manos: algo exagerado, al estilo chibi), slime (8), seta (8) y roca (8). La puerta y el héroe dan la medida y todo lo demás se lee en relación con ellos.", ["escala", "escena"], good.pal, good.rows);
+  add("scale-bad", "Error: la misma fila sin escala común. La puerta (14) es más baja que el héroe, la seta de 16 es casi el doble de alta que el cofre y el slime normal se ha cambiado por el jefe de 30×24. Cada objeto está bien dibujado, pero juntos no tienen sentido.", ["escala", "escena", "error"], bad.pal, bad.rows);
+}
+
 // ---------- escribir y validar
 let bad = 0;
 for (const s of out) {

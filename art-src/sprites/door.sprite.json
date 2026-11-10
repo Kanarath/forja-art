@@ -1,0 +1,47 @@
+{
+  "name": "door",
+  "description": "Puerta de 12×28 con arco de medio punto, marco oscuro, tablas verticales y un pomo dorado. Mide 28 px, 7 más que lo dibujado del héroe (21, en un lienzo de 24): por ella cabe una persona.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "prop",
+    "escala"
+  ],
+  "palette": {
+    "o": "#1b1030",
+    "f": "#6b3d2e",
+    "w": "#a0603a",
+    "W": "#8a5030",
+    "k": "#f2c14e"
+  },
+  "rows": [
+    "....oooo....",
+    "..ooffffoo..",
+    ".offwwWwffo.",
+    ".ofWwwWwwfo.",
+    "ofwWwwWwwWfo",
+    "ofwWwwWwwWfo",
+    "ofwWwwWwwWfo",
+    "ofwWwwWwwWfo",
+    "ofwWwwWwwWfo",
+    "ofwWwwWwwWfo",
+    "ofwWwwWwwWfo",
+    "ofwWwwWwwWfo",
+    "ofwWwwWwwWfo",
+    "ofwWwwWwwWfo",
+    "ofwWwwWwwWfo",
+    "ofwWwwWwkWfo",
+    "ofwWwwWwwWfo",
+    "ofwWwwWwwWfo",
+    "ofwWwwWwwWfo",
+    "ofwWwwWwwWfo",
+    "ofwWwwWwwWfo",
+    "ofwWwwWwwWfo",
+    "ofwWwwWwwWfo",
+    "ofwWwwWwwWfo",
+    "ofwWwwWwwWfo",
+    "ofwWwwWwwWfo",
+    "ofwWwwWwwWfo",
+    "oooooooooooo"
+  ]
+}

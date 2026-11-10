@@ -664,7 +664,77 @@ const sheepFinal = [
   ...box(-2, 2, 7, -2, 3, 8, SHEEP.wool), // cola: una bola de lana detrás
 ];
 
+// ---------- BARCO: un casco curvo hecho por capas, cubierta y mástil, vela y detalle
+// Cada capa del casco es una «rodaja» horizontal: más estrecha abajo y afilada en la proa (x alto)
+const HULL_L = 20;
+const hullHalf = (x, z) => {
+  const widthByZ = [1, 2, 3, 3.5][z]; // la quilla es estrecha; el casco se abre hacia arriba
+  const bow = x > HULL_L - 6 ? (HULL_L - 1 - x) / 5 : 1; // proa: se afila en los últimos 6 vóxels
+  const stern = x < 2 ? 0.85 : 1; // popa: un poco más recta
+  return widthByZ * Math.max(0, bow) * stern;
+};
+const boatHull = [];
+for (let x = 0; x < HULL_L; x++) for (let z = 0; z <= 3; z++) {
+  const h = hullHalf(x, z);
+  for (let y = -4; y <= 4; y++) if (Math.abs(y) <= h + 0.25 && (z > 0 || x > 1)) boatHull.push({ x, y, z, c: z === 3 ? WOOD.light : z % 2 ? WOOD.mid : WOOD.dark }); // tablas por hiladas
+}
+const hullShell = hollowOut(boatHull);
+const deckZ = 4;
+const boatDeck = [
+  ...hullShell,
+  ...boatHull.filter((v) => v.z === 3).map((v) => ({ ...v, z: deckZ, c: (v.x % 2 ? WOOD.light : "#c07a44") })), // cubierta de tablas transversales
+  ...box(8, 0, deckZ + 1, 8, 0, deckZ + 14, WOOD.dark), // mástil de 14
+  ...box(1, -2, deckZ + 1, 4, 2, deckZ + 3, WOOD.mid), ...box(1, -2, deckZ + 4, 4, 2, deckZ + 4, ROOF.dark), // camarote en la popa con tejado
+];
+const SAIL = "#f4ecdc", SAIL_S = "#c2413b";
+const boatFinal = [
+  ...boatDeck,
+  // vela cuadrada, perpendicular al barco, colgada de una verga; una franja roja en medio
+  ...box(8, -4, deckZ + 13, 8, 4, deckZ + 13, WOOD.dark),
+  ...box(9, -4, deckZ + 6, 9, 4, deckZ + 12, null).map((v) => ({ ...v, c: v.z === deckZ + 9 ? SAIL_S : SAIL })),
+  { x: 8, y: 0, z: deckZ + 15, c: SAIL_S }, { x: 7, y: 0, z: deckZ + 15, c: SAIL_S }, // banderín
+  ...[[3, 3], [3, -3]].flatMap(([x, y]) => [{ x, y, z: deckZ + 1, c: WOOD.dark }]), // bolardos
+  ...box(HULL_L - 1, 0, 3, HULL_L + 1, 0, 3, WOOD.dark), // bauprés: el palo que sale de la proa
+  { x: 2, y: 0, z: deckZ + 5, c: "#ffd36e" }, // farol en el tejado del camarote
+  ...[-3, 3].flatMap((y) => [6, 11, 14].map((x) => ({ x, y, z: deckZ + 1, c: WOOD.dark }))), // postes en la borda
+];
+
+// ---------- AO PINTADO: la habitación de V7-02 con oclusión ambiental pintada en los colores
+// Solo las caras de ARRIBA visibles (suelo, tableros, asientos): cada una cuenta cuántos de los 8 huecos que la rodean
+// justo por encima están ocupados. Junto a una pared recta salen 3; en un rincón, 5. Ahí la luz llega peor: un paso más oscuro
+// (×0,82) a partir de 3 y dos pasos a partir de 5. Así el suelo se oscurece al pie de las paredes y junto a los muebles.
+function bakeAO(voxels, { step = 0.82, t1 = 3, t2 = 5, onlyTops = true } = {}) {
+  const occ = new Set(voxels.map((v) => `${v.x},${v.y},${v.z}`));
+  return voxels.map((v) => {
+    if (onlyTops && occ.has(`${v.x},${v.y},${v.z + 1}`)) return v; // tapado por arriba: esa cara no se ve
+    let k = 0;
+    for (let a = -1; a <= 1; a++) for (let b = -1; b <= 1; b++) if ((a || b) && occ.has(`${v.x + a},${v.y + b},${v.z + 1}`)) k++;
+    const steps = k >= t2 ? 2 : k >= t1 ? 1 : 0;
+    if (!steps) return v;
+    const n = parseInt(v.c.slice(1), 16), f = step ** steps;
+    return { ...v, c: "#" + [16, 8, 0].map((sh) => Math.round(((n >> sh) & 255) * f).toString(16).padStart(2, "0")).join("") };
+  });
+}
+const aoRoom = bakeAO(roomDetail);
+const aoTooMuch = bakeAO(roomDetail, { step: 0.55, t1: 1, t2: 3, onlyTops: false });
+
 export const MODELS = {
+  barco: {
+    description: "Barco: casco curvo por capas, cubierta y mástil, vela y detalle",
+    stages: [
+      { label: "Casco", note: "Cuatro capas horizontales: la quilla estrecha abajo y cada capa más ancha, con la proa afilada en los últimos 6 vóxels y la popa más recta. Las tablas se leen por hiladas (cuatro hiladas en tres tonos). Vaciado por dentro: se ve con el corte por capas.", voxels: hullShell },
+      { label: "Cubierta y mástil", note: "La cubierta con tablas transversales en dos tonos, un mástil de 14 vóxels algo desplazado hacia la popa (no parte el barco por la mitad) y un camarote en la popa con tejado rojo.", voxels: boatDeck },
+      { label: "Vela y detalle", note: "Una vela cuadrada de 9×7 colgada de la verga, perpendicular al barco, con una franja roja; un banderín arriba, el bauprés en la proa, bolardos, seis postes en la borda y un farol en el camarote.", voxels: boatFinal },
+    ],
+  },
+  ao: {
+    description: "AO pintado: la habitación de V7-02 con oclusión ambiental en los colores",
+    stages: [
+      { label: "Sin AO", note: "La habitación terminada de V7-02, con colores planos: el suelo junto a las paredes y bajo los muebles es igual de claro que en medio de la sala.", voxels: roomDetail },
+      { label: "AO pintado", note: "Cada cara de arriba visible mira los 8 huecos que la rodean por encima: junto a una pared o un mueble (3 o más ocupados) se oscurece un paso (×0,82); en un rincón (5 o más), dos. Se oscurecen el pie de las paredes, los lados de la cama y el contorno de la alfombra, y llevan dos pasos los rincones entre pared y cama y entre cama y alfombra: los objetos se asientan.", voxels: aoRoom },
+      { label: "Exagerado", note: "Error: el mismo cálculo con pasos de ×0,55, umbrales más bajos y aplicado a todos los vóxels, también a las paredes. Casi todo se oscurece, los rincones son manchas negras y la habitación parece sucia, no iluminada.", voxels: aoTooMuch },
+    ],
+  },
   oveja: {
     description: "Oveja: un cuadrúpedo en tres pasos",
     stages: [

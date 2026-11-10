@@ -1,0 +1,253 @@
+---
+id: p4-07
+discipline: pixel
+level: 4
+order: 7
+title: "Iconos con estado: listo, recargando y bloqueado"
+summary: "Un icono de habilidad dice su estado sin texto: listo con color y destello, recargando con un barrido que mide lo que falta y bloqueado en grises con candado. El marco no cambia."
+duration: 40
+status: borrador
+objectives:
+  - "Distinguir los tres estados de un icono por valor, saturación y forma, sin texto"
+  - "Animar un barrido de enfriamiento en 4–8 frames que diga cuánto falta"
+  - "Mantener el mismo marco en todos los estados y en todos los iconos"
+  - "Hacer el estado bloqueado con una copia en grises y un símbolo"
+  - "Usar el destello solo en el momento en que la habilidad vuelve a estar lista"
+prerequisites: [p4-02, p4-04]
+fundamentals: [f01, f03]
+tools: [aseprite]
+piece:
+  name: "Un icono de habilidad de 16×16 con sus tres estados y el barrido animado"
+  canvas: "16x16"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [iconos-estado]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Vas a forjar **un icono de habilidad de 16×16 con tres estados**: listo, recargando y bloqueado. Y el **barrido** del enfriamiento animado en 4 a 8 frames.
+
+Míralo funcionar antes de nada. Es la poción de P4-02 dentro de un marco:
+
+<Animator sprites={["icon-cd-1", "icon-cd-2", "icon-cd-3", "icon-cd-4", "icon-cd-5"]} durations={[400, 400, 400, 400, 800]} />
+
+<Sprite name="icon-cd-5" scale={10} caption="Listo: todos los colores y un destello blanco de 3 píxeles en la esquina de arriba a la izquierda" />
+<Sprite name="icon-cd-3" scale={10} caption="Recargando, a mitad: la mitad derecha ya ha vuelto; la izquierda sigue oscura" />
+<Sprite name="icon-locked" scale={10} caption="Bloqueado: el mismo icono en grises, más apagado, con un candado dorado abajo a la derecha" />
+
+El jugador no lee nada. Mira la barra de habilidades de reojo, en mitad de un combate, y sabe qué puede usar, qué le falta y cuánto.
+</Block>
+
+<Block kind="concepto">
+**Un icono, tres preguntas.** Cada estado responde a una cosa distinta:
+
+- **Listo:** «¿la puedo usar ya?». Sí: colores completos.
+- **Recargando:** «¿cuánto me falta?». Una parte oscura que se va comiendo, como un reloj.
+- **Bloqueado:** «¿la tengo?». No: sin color y con un símbolo.
+
+Abrí los sprites píxel a píxel. Esto es lo que hace cada estado:
+
+| Estado | Valor | Saturación | Forma que lo dice |
+| --- | --- | --- | --- |
+| Listo | completo | completa | destello de 3 px en la esquina |
+| Recargando | lo que falta, al 35 % | se conserva el tono | el barrido por cuartos |
+| Bloqueado | todo al 70 % | cero: grises | candado dorado de 7×8 |
+
+<Why>
+El ojo lee primero el **valor** (F01): lo claro parece activo, lo oscuro parece apagado. Por eso el enfriamiento oscurece lo que falta. Pero el valor solo no basta para el bloqueado: un icono oscuro podría estar esperando. Ahí entra la **saturación**: sin color, el icono está «muerto», no «cargando». Y cada estado lleva además una **forma** (el barrido, el candado, el destello). Es la regla de F03-02: [nunca dependas solo del color](/forja-art/fundamentos/f03-02/). Un jugador daltónico o una pantalla mala siguen viendo la forma.
+</Why>
+
+**El marco: la regla fija.**
+
+Es la misma idea que el marco de la barra de vida (P4-04): el marco es la referencia, lo de dentro es la medida.
+
+- Contorno de 1 píxel casi negro, con el píxel de cada esquina transparente.
+- Bisel con la luz del juego: fila de arriba y columna izquierda gris claro; fila de abajo y columna derecha gris oscuro.
+- Dentro, un hueco de 12×12 con un fondo azul pizarra.
+
+La poción de 10×12 entra en ese hueco justo, de arriba abajo.
+
+<Sprite name="potion" scale={8} caption="La poción de siempre (10×12). En el icono va dentro del hueco de 12×12, con una columna de fondo a cada lado" />
+
+En el enfriamiento, **el marco no cambia ni un píxel**: el barrido solo toca el hueco de 12×12. En el bloqueado, el sprite pasa el icono entero a grises, marco incluido: misma forma, mismo bisel, más apagado. Es una opción válida. Lo que no cambia nunca es la **forma** del marco. Y si todos los iconos de tu barra comparten marco (P4-02), se leen como un set.
+
+**El barrido: un reloj en pocos frames.**
+
+Míralo en los frames de arriba:
+
+1. **Recién usada:** todo el hueco oscurecido. Los colores se multiplican por 0,35: el rojo sigue siendo rojo, pero casi negro.
+2. **Un cuarto:** el cuadrante de arriba a la derecha vuelve a su color.
+3. **La mitad:** también el de abajo a la derecha.
+4. **Tres cuartos:** solo queda oscuro el cuadrante de arriba a la izquierda.
+5. **Lista:** todo en color y aparece el destello.
+
+Gira **como la aguja del reloj, empezando arriba**. Es la convención de muchísimos juegos: no tienes que explicarla.
+
+<Why>
+¿Por qué cuartos? El centro del lienzo de 16×16 cae entre píxeles. Un corte horizontal y uno vertical por ese centro parten el hueco en cuatro cuadrados de 6×6 con bordes rectos y limpios. Con 8 frames, los cortes en diagonal son **líneas 1:1**, también limpias. Con más frames aparecen ángulos intermedios y, en 12 píxeles, se vuelven escalones irregulares (jaggies). Si el juego necesita un barrido suave, lo hará el motor por código; tu trabajo es que los frames dibujados se lean bien.
+</Why>
+
+**El destello: un aviso, no un adorno.**
+
+Son 3 píxeles blancos en forma de L, pegados al bisel claro de arriba a la izquierda: el lado de la luz. Dicen «ya está». Por eso solo tienen sentido **en el momento** en que la habilidad vuelve. Si se quedaran para siempre, todos los iconos listos brillarían a la vez y ninguno destacaría.
+
+**Valor en grises: la prueba.**
+
+<Sprite name="icon-cd-5" scale={8} view="gray" caption="Listo en grises: el rojo y el cristal destacan sobre el fondo" />
+<Sprite name="icon-cd-1" scale={8} view="gray" caption="Recién usado en grises: el hueco casi negro, el marco igual de claro que en el listo" />
+<Sprite name="icon-locked" scale={8} view="gray" caption="Bloqueado en grises: grises medios, y el candado es lo más claro del interior" />
+
+El candado dorado es el **único color saturado** del icono bloqueado. En color, el ojo va a él primero. En grises, sigue siendo lo más claro. Funciona de las dos maneras.
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="El marco en su propia capa">
+<Keys k="Ctrl+N" />: 16×16, fondo transparente. Activa *View → Grid*. Llama a la capa `marco`.
+
+Con el lápiz (<Keys k="B" />, *Pixel-perfect* activado) dibuja de fuera adentro:
+
+1. contorno casi negro de 1 píxel, con el píxel de cada esquina transparente (<Keys k="E" />);
+2. bisel: claro arriba e izquierda, oscuro abajo y derecha;
+3. el fondo del hueco de 12×12 con el cubo (<Keys k="G" />), en un tono oscuro y algo frío.
+
+Bloquea la capa con el candado del panel de capas: a partir de aquí no se toca.
+
+<Why>
+Separar el marco es la forma más sencilla de garantizar que no cambia entre estados. Si está en la misma capa que el icono, tarde o temprano lo oscureces sin querer.
+</Why>
+</Step>
+
+<Step n={2} title="El icono en otra capa">
+Crea una capa nueva encima (*Layer → New Layer*) y llámala `icono`. Dibuja tu habilidad dentro del hueco de 12×12, con la misma luz que el bisel: arriba a la izquierda. Puedes usar un icono de tu set de P4-02.
+
+<Tip>
+Deja al menos una columna de fondo a cada lado, como la poción. Si el icono toca el bisel, se funde con el marco y pierde la silueta.
+</Tip>
+</Step>
+
+<Step n={3} title="Cinco frames y sus duraciones">
+Abre la línea de tiempo (*Timeline*). Añade frames desde el menú *Frame* hasta tener **5**. Cada frame nuevo copia el actual, así que tendrás cinco iconos idénticos.
+
+Clic derecho sobre el número de cada frame, *Frame Properties*: **400 ms** los cuatro primeros y **800 ms** el quinto. Es solo para verlo en bucle: en el juego, el tiempo de recarga lo pone el código.
+</Step>
+
+<Step n={4} title="La capa de oscurecido y el barrido">
+Crea una capa `oscurecido` encima de `icono`. En el frame 1, pinta de negro **todo el hueco de 12×12**, sin tocar el marco. Abre las propiedades de la capa y baja su opacidad a **65 %**: el negro al 65 % deja pasar el 35 % del color de debajo, como en el ejemplo.
+
+Ahora, frame a frame, borra lo que ya se ha recargado. Marca cada cuadrante de 6×6 con la selección rectangular (<Keys k="M" />) y bórralo con la goma (<Keys k="E" />) dentro de la selección:
+
+- **frame 2:** borra el cuadrante de arriba a la derecha;
+- **frame 3:** también el de abajo a la derecha;
+- **frame 4:** también el de abajo a la izquierda;
+- **frame 5:** borra todo el oscurecido.
+
+<Tip title="Con 8 frames">
+Si quieres octavos, añade un frame entre cada par y corta cada cuadrante por su diagonal. La diagonal sale del centro con una línea 1:1: un píxel por paso, sin escalones.
+</Tip>
+
+<Warn>
+Comprueba en cada frame que el borrado no se ha salido del hueco y que el marco se ve igual. Activa y desactiva el ojo de la capa `oscurecido` para comparar.
+</Warn>
+</Step>
+
+<Step n={5} title="El destello, solo en el frame 5">
+Crea una capa `destello`. Ve al frame 5 y pinta **3 píxeles blancos en L** en la esquina de arriba a la izquierda del hueco, junto al bisel claro. Comprueba que los frames 1 a 4 de esa capa están vacíos.
+
+Reproduce la animación. El destello tiene que aparecer como un «¡ya!», no como parte del icono.
+</Step>
+
+<Step n={6} title="El estado bloqueado: una copia en grises">
+Guarda con <Keys k="Ctrl+S" />. Luego *File → Save As* con otro nombre, por ejemplo `icono-bloqueado`. En la copia:
+
+1. Borra los frames 2 a 5 y oculta o borra las capas `oscurecido` y `destello`.
+2. *Sprite → Color Mode → Grayscale*: todo pasa a grises.
+3. Vuelve a *Sprite → Color Mode → RGB* para poder pintar en color.
+4. Para apagarlo un poco más, una capa negra encima al **30 %** de opacidad (el ejemplo baja los grises al 70 %).
+5. Capa nueva `candado`: dibuja un candado de unos 7×8 en la esquina de abajo a la derecha, con contorno y relleno dorado.
+
+<Why>
+En grises sigue reconociéndose qué habilidad es (la silueta se conserva), pero el único color es el candado. El jugador sabe qué tendrá y que todavía no la tiene.
+</Why>
+
+<Tip>
+En `icon-locked` el candado baja hasta pisar la fila del bisel de abajo. Si prefieres el marco intacto, hazlo de 7×7 y déjalo dentro del hueco.
+</Tip>
+</Step>
+
+<Step n={7} title="Exporta">
+Del archivo animado, exporta los 5 frames en fila con *File → Export Sprite Sheet*. Exporta también el bloqueado con *File → Export → Export As*, PNG, una copia al 100 % y otra con **Resize** 800 %.
+</Step>
+
+<Warn title="Verifica en tu versión">
+Los nombres y la posición pueden variar según la versión de Aseprite: el panel *Timeline*, la opción de frame nuevo del menú *Frame*, *Frame Properties* (clic derecho sobre el frame), *Layer → New Layer*, el candado y el ojo del panel de capas, la opacidad en las propiedades de la capa, si la goma respeta la selección activa, *File → Save As*, *Sprite → Color Mode → Grayscale* y la vuelta a *RGB*, y las opciones de *Export Sprite Sheet*. Si una ruta no está donde dice, búscala por su función.
+</Warn>
+</Block>
+
+<Block kind="version">
+Aplica los tres estados a tu manera. Elige uno:
+
+- **Octavos:** el barrido en 8 frames, con los cortes diagonales 1:1. Compáralo con el de 4 en la línea de tiempo: ¿se lee mejor o solo cuesta más?
+- **Tres habilidades, un marco:** tres iconos distintos (fuego, escudo, poción) con el mismo marco y los tres estados. Ponlos en fila: en cada estado deben parecer del mismo juego.
+- **Otro barrido:** en vez del reloj, un oscurecido que baja de arriba abajo, fila a fila, como un vaso que se llena. Mismo marco, mismas reglas. ¿Cuál dice mejor «cuánto falta»?
+</Block>
+
+<Block kind="errores">
+<Mistake title="Oscurecerlo todo" wrongLabel="Todo al 60 %: ¿cuánto falta?" rightLabel="Barrido: falta la mitad">
+  <Sprite slot="wrong" name="icon-cd-bad" scale={8} />
+  <Sprite slot="right" name="icon-cd-3" scale={8} />
+
+Oscurecer el icono entero dice «ahora no», pero no dice **cuánto falta**. El jugador no sabe si esperar un segundo o diez. El barrido es una medida: cada cuadrante que vuelve es un cuarto del tiempo.
+</Mistake>
+
+<Mistake title="Oscurecido y bloqueado se confunden" wrongLabel="Oscurecido al 60 %, en grises" rightLabel="Bloqueado, en grises">
+  <Sprite slot="wrong" name="icon-cd-bad" scale={8} view="gray" />
+  <Sprite slot="right" name="icon-locked" scale={8} view="gray" />
+
+En grises, el icono oscurecido entero y el bloqueado quedan en grises medios muy parecidos. Sin el candado, el jugador no sabría si espera o si no puede. Por eso cada estado necesita su forma: el barrido para la espera, el símbolo para el bloqueo.
+</Mistake>
+
+<Mistake title="Un marco que cambia entre estados" wrongLabel="Marco oscurecido con el icono" rightLabel="Marco intacto, solo cambia el hueco">
+  <Sprite slot="wrong" name="icon-cd-bad" scale={8} />
+  <Sprite slot="right" name="icon-cd-1" scale={8} />
+
+Los dos son «recién usada». A la izquierda, el bisel y el contorno también se han oscurecido: el icono parece otro objeto, y en una barra de habilidades rompe la fila. A la derecha, el marco es idéntico al del icono listo. Marco en su capa, bloqueada, y nunca lo toques al animar.
+</Mistake>
+
+<Warn title="Bloqueado con una X roja encima">
+Una X roja sobre el icono con todos sus colores no funciona. El icono sigue saturado y dice «úsame»; la X tapa la silueta; y el rojo sobre un rojo o un verde puede perderse para un jugador daltónico (F03-02). Quita el color al icono y pon el símbolo en una esquina, sin tapar la forma.
+</Warn>
+
+<Warn title="Un destello que no se apaga">
+Si el destello forma parte del icono listo para siempre, todos los iconos disponibles brillan a la vez y ninguno avisa de nada. El destello marca el **momento** en que vuelve la habilidad: un frame corto (o unos pocos), y luego el icono listo en reposo, sin él.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+Sube a 1× tu icono listo, uno de los frames del barrido y el bloqueado. Revísalos en grises.
+
+<Inspector upload title="Revisa los tres estados de tu icono" />
+
+<Checklist items={[
+  "El marco es idéntico, píxel a píxel, en el icono listo y en los frames del barrido",
+  "El barrido gira desde arriba en el sentido de las agujas del reloj",
+  "Cada frame del barrido tiene bordes limpios: cuartos rectos u octavos en 1:1",
+  "Recién usado, el icono sigue reconociéndose aunque esté muy oscuro",
+  "El bloqueado no tiene más color que el símbolo",
+  "En grises distingo los tres estados sin dudar",
+  "El destello solo aparece en el frame en que la habilidad vuelve",
+]} />
+
+<Quiz q="¿Qué le dice al jugador el barrido del enfriamiento que no le dice oscurecer todo el icono?" options={["Cuánto tiempo le falta", "Qué habilidad es", "Que la habilidad está bloqueada"]} answer={0}>
+Oscurecer todo solo dice «ahora no». El barrido es una medida: la parte que ha vuelto es el tiempo que ya ha pasado.
+</Quiz>
+
+<Quiz q="¿Qué separa mejor el estado bloqueado del enfriamiento?" options={["Un marco distinto", "Un icono más pequeño", "La falta de saturación y un símbolo"]} answer={2}>
+El bloqueado está en grises y lleva un candado. El enfriamiento conserva el tono y tiene el barrido. El marco es el mismo en todos.
+</Quiz>
+
+<Quiz q="Animas el barrido en 4 frames dentro de un hueco de 12×12. ¿Por qué quedan limpios los cortes?" options={["Porque el motor los suaviza", "Porque son cuartos de 6×6 con bordes rectos", "Porque el negro al 65 % oculta los escalones"]} answer={1}>
+El centro del lienzo cae entre píxeles: un corte horizontal y uno vertical dan cuatro cuadrados de 6×6. Con 8 frames, las diagonales son 1:1, también limpias.
+</Quiz>
+</Block>
