@@ -1,0 +1,44 @@
+{
+  "name": "grass-wind-4",
+  "description": "Frame 4: cierra el bucle de 4 frames (recta, derecha, recta, izquierda). Cada mata va un frame por detrás de la de su izquierda, así que nunca hace lo mismo que su vecina.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "tile",
+    "animación"
+  ],
+  "palette": {
+    "a": "#318047",
+    "b": "#a8ec9a",
+    "c": "#57a363",
+    "d": "#6fd17f",
+    "e": "#225f38",
+    "f": "#3fa45b"
+  },
+  "rows": [
+    "................................................................",
+    "................................................................",
+    "................................................................",
+    "................................................................",
+    "................................................................",
+    "................................................................",
+    "................................................................",
+    "................................................................",
+    "aaaaaaaaaaaaaaaaaaabaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "aaaaaacaaaaaaaaaabadabcaaaaaaaaaaaaaaacaaaaaaaaabaaaaacaaaaaaaaa",
+    "aaabaeaeaaaaaaaaaddaadaeaaaaaaaaaaaaaeaeaaaaaabadabaaeaeaaaaaaaa",
+    "abadabaaaaaaaaaadafadaaaaaaaaaaabaaaaaaaaaaaaaddaadaaaaaaaaaaaaa",
+    "adaaddaaaaaacaaafafafaaaaaaacabadabaaaaaaaaacdafadaaaaaaaaabcaaa",
+    "aadafadaaaaeaeaaaaaaaaaaaaaeaedaaddaaaaaaaaeafafafaaaaaaabadabaa",
+    "cafafafaaaaaaaaacaaaaaaaabaaaaadcfadaaaaaaaaaaaacaaaaaaaadaaddaa",
+    "aecaaaaaaaaaaaaeaecaaaabadabaaafafcfaaaaaaaaaaaeaecaaabaaadafade",
+    "aeaeaaaaaaabaaaaaeaeaaadadadaaaaaeaeaaaaaaaaaaaaaeaebadabafafafa",
+    "aaaaaaaaabcdabaaaaaaaaadafcdaaaaaaaaaaaabacaaaaaaaaadadadacaaaaa",
+    "aaaaaaaaadadadaaaaaaaaafafafaaaaaaaaaabadebeaaaaaaaadafadeaeaaaa",
+    "aaacaaaaadafadaaaaacaaaaaaaaaaaaaaacaadadadaaaaaaaacfafafaaaaaaa",
+    "aaeaeaaaafafafaaaaeaeaaaaaaaaaaaaaeaeadafadaaaaaaaeaeaaaaaaaaaaa",
+    "aaaaaaaacaaaaaaaaaaaaaaacaaaaaaaaaaaaafafafaaaaaaaaaaaaacaaaaaaa",
+    "aaaaaaaeaeaaaacaaaaaaaaeaeaaaacaaaaaaaaeaeaaaacaaaaaaaaeaeaaaaca",
+    "aaaaaaaaaaaaaeaeaaaaaaaaaaaaaeaeaaaaaaaaaaaaaeaeaaaaaaaaaaaaaeae"
+  ]
+}

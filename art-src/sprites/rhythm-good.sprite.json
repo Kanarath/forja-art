@@ -1,0 +1,53 @@
+{
+  "name": "rhythm-good",
+  "description": "Ritmo: siete pinos en dos grupos de grande-mediano-pequeño, separados por un hueco más ancho, y un mediano al final. Se repite un patrón (el ojo lo reconoce) con variación dentro (no aburre).",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "ritmo",
+    "composición"
+  ],
+  "palette": {
+    "a": "#1b1030",
+    "b": "#2a8a5c",
+    "c": "#3fbf7f",
+    "d": "#1f6b4a",
+    "e": "#6b3d2e",
+    "f": "#3fa45b",
+    "g": "#2c7a48"
+  },
+  "rows": [
+    "................................................................................................",
+    "................................................................................................",
+    "................................................................................................",
+    "........aba..........................................aba........................................",
+    "........aba..........................................aba........................................",
+    "........aba..........................................aba........................................",
+    "........aba..........................................aba........................................",
+    ".......acbba........................................acbba.......................................",
+    ".......acbba........................................acbba.......................................",
+    ".......acbba........................................acbba.......................................",
+    ".......acbba........................................acbba.......................................",
+    ".......acbba........a...............................acbba........a......................a.......",
+    "......accbbda......aba.............................accbbda......aba....................aba......",
+    "......accbbda......aba.............................accbbda......aba....................aba......",
+    "......accbbda......aba.............................accbbda......aba....................aba......",
+    ".....acccbbdda.....aba............................acccbbdda.....aba....................aba......",
+    ".....acccbbdda.....aba............................acccbbdda.....aba....................aba......",
+    "....accccbbddda...acbba......a...................accccbbddda...acbba......a...........acbba.....",
+    "....aacccbbddaa...acbba......a...................aacccbbddaa...acbba......a...........acbba.....",
+    "......accbbda.....acbba......a.....................accbbda.....acbba......a...........acbba.....",
+    ".....acccbbdda...accbbda....aba...................acccbbdda...accbbda....aba.........accbbda....",
+    "....accccbbddda..accbbda....aba..................accccbbddda..accbbda....aba.........accbbda....",
+    "....accccbbddda...acbba.....aba..................accccbbddda...acbba.....aba..........acbba.....",
+    "...acccccbbdddda.accbbda...acbba................acccccbbdddda.accbbda...acbba........accbbda....",
+    "...acccccbbddddaacccbbdda...aba.................acccccbbddddaacccbbdda...aba........acccbbdda...",
+    "..accccccbbdddddacccbbdda..acbba...............accccccbbdddddacccbbdda..acbba.......acccbbdda...",
+    ".acccccccbbddddaccccbbdddaaccbbda.............acccccccbbddddaccccbbdddaaccbbda.....accccbbddda..",
+    ".........e..........e........e........................e..........e........e.............e.......",
+    ".........e..........e........e........................e..........e........e.............e.......",
+    "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg",
+    "gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg"
+  ]
+}

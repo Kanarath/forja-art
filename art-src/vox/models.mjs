@@ -862,7 +862,78 @@ const millCross = [...millBody, ...hub, ...bladeArm(straightArm),
 ];
 const millDiag = [...millCross.filter((v) => v.y !== -2 || (v.z < 4 && v.x === 5)), ...hub, ...bladeArm(diagArm)];
 
+// ---------- CARAS VOXEL: el chibi con expresiones hechas con 2–6 vóxels (la cara mira hacia -Y; ojos en y=1)
+const EYE = "#1b1030", MOUTH = "#a8484f", BLUSH = "#f29b9b";
+const chibiNoEyes = chibiDetail.filter((v) => v.y !== 1);
+const faceHappy = [
+  ...chibiNoEyes,
+  ...[[3, 9], [4, 10], [5, 9], [6, 9], [7, 10], [8, 9]].map(([x, z]) => ({ x, y: 1, z, c: EYE })), // ojos cerrados en arco: ^ ^
+  { x: 5, y: 1, z: 7, c: MOUTH }, { x: 6, y: 1, z: 7, c: MOUTH }, // boca
+  { x: 3, y: 2, z: 8, c: BLUSH }, { x: 8, y: 2, z: 8, c: BLUSH }, // mejillas pintadas en la cara (no sobresalen)
+];
+const faceAngry = [
+  ...chibiDetail,
+  { x: 3, y: 1, z: 12, c: EYE }, { x: 4, y: 1, z: 11, c: EYE }, { x: 8, y: 1, z: 12, c: EYE }, { x: 7, y: 1, z: 11, c: EYE }, // cejas: altas por fuera, bajas por dentro
+  { x: 5, y: 1, z: 7, c: EYE }, { x: 6, y: 1, z: 7, c: EYE }, // boca recta y oscura
+];
+const faceTooMuch = [
+  ...chibiNoEyes,
+  ...[[3, 9], [4, 9], [3, 10], [4, 10], [7, 9], [8, 9], [7, 10], [8, 10]].map(([x, z]) => ({ x, y: 1, z, c: (x === 4 || x === 7) && z === 10 ? "#3b6fd1" : x === 4 || x === 7 ? "#26489a" : "#ffffff" })), // ojos de 2×2 con blanco e iris
+  ...[[3, 11], [4, 11], [7, 11], [8, 11]].map(([x, z]) => ({ x, y: 1, z, c: "#6b3d2e" })), // cejas
+  { x: 5, y: 0, z: 8, c: "#c98f6b" }, { x: 6, y: 0, z: 8, c: "#c98f6b" }, { x: 5, y: 1, z: 8, c: "#e0a880" }, { x: 6, y: 1, z: 8, c: "#e0a880" }, // nariz que sobresale 2
+  ...[4, 5, 6, 7].map((x) => ({ x, y: 1, z: 7, c: x === 4 || x === 7 ? "#8a3a40" : "#c2414b" })), // labios de 4
+  ...[[3, 8], [8, 8], [3, 7], [8, 7]].map(([x, z]) => ({ x, y: 2, z, c: z === 8 ? "#e8b090" : "#d89878" })), // sombreado de mejillas en dos tonos
+];
+
+// ---------- CUEVA: masa de roca → vaciar la cámara y la entrada → cristales, estalactitas y luz
+const CAVE = { a: "#7d8698", b: "#6a7284", c: "#565d6e", in: "#3e4352", floor: "#5c5248", floorD: "#4a4238" };
+const caveTop = (x, y) => 10 + (rnoise(x, y, 7) % 4) - (x < 2 || x > 19 || y > 13 ? 2 : 0);
+const caveMass = [];
+for (let x = 0; x <= 21; x++) for (let y = 0; y <= 15; y++) {
+  if ((x === 0 || x === 21) && rnoise(x, y, 3) < 35) continue; // bordes de los lados irregulares (la pared del fondo, entera: tapa la cámara)
+  const t = caveTop(x, y);
+  for (let z = 0; z <= t; z++) caveMass.push({ x, y, z, c: z === 0 ? CAVE.c : (z + Math.floor(rnoise(x, y, 1) / 50)) % 4 === 0 ? CAVE.b : CAVE.a }); // estratos
+}
+const carved = (x, y, z) => z >= 1 && (((x - 11) / 8) ** 2 + ((y - 9) / 4.8) ** 2 + ((z - 1) / 6.5) ** 2 < 1 || (y <= 7 && ((x - 9) / 4.5) ** 2 + ((z - 1) / 6) ** 2 < 1)); // cámara y entrada en arco
+const isCarved = (v) => carved(v.x, v.y, v.z);
+const caveHollow = (() => {
+  const keep = caveMass.filter((v) => !isCarved(v));
+  return keep.filter((v) => v.x <= 14).map((v) => { // en corte: se quita la parte derecha (x > 14) para ver dentro
+    const touches = [[1, 0, 0], [-1, 0, 0], [0, 1, 0], [0, -1, 0], [0, 0, 1], [0, 0, -1]].some(([a, b, c]) => carved(v.x + a, v.y + b, v.z + c));
+    if (v.z === 0 && carved(v.x, v.y, 1)) return { ...v, c: (v.x + v.y) % 3 ? CAVE.floor : CAVE.floorD }; // suelo de tierra dentro
+    return touches ? { ...v, c: CAVE.in } : v; // las paredes de dentro, más oscuras: les llega menos luz
+  });
+})();
+const CRY = { c1: "#7df9ff", c2: "#38b6ff", p1: "#c08aff", p2: "#8a4fd8" };
+const crystal = (x, y, h, lean, [hi, lo]) => Array.from({ length: h }, (_, k) => ({ x: x + (k >= 2 ? lean : 0), y, z: 1 + k, c: k === h - 1 ? hi : lo }));
+const ceilingZ = (x, y) => { let z = 1; while (carved(x, y, z + 1)) z++; return z + 1; };
+const caveFinal = [
+  ...caveHollow,
+  ...crystal(5, 11, 4, 1, [CRY.c1, CRY.c2]), ...crystal(6, 12, 2, 0, [CRY.c1, CRY.c2]), ...crystal(4, 10, 3, 0, [CRY.c1, CRY.c2]), // grupo de cristales azules
+  ...crystal(13, 13, 3, 0, [CRY.p1, CRY.p2]), ...crystal(12, 12, 2, 0, [CRY.p1, CRY.p2]), // grupo morado, más pequeño
+  ...[[9, 10, 2], [13, 9, 3], [11, 12, 1], [12, 6, 2]].flatMap(([x, y, n]) => Array.from({ length: n }, (_, k) => ({ x, y, z: ceilingZ(x, y) - 1 - k, c: k === n - 1 ? CAVE.c : CAVE.b }))), // estalactitas
+  ...[[8, 4], [13, 4]].flatMap(([x, y]) => [{ x, y, z: 1, c: "#e8dcc0" }, { x, y, z: 2, c: "#7dffb0" }]), // setas que brillan junto a la entrada
+  ...[[12, 9], [13, 9], [14, 9], [13, 10]].map(([x, y]) => ({ x, y, z: 0, c: "#2a6fc9" })), // charco bajo la estalactita más larga (gotea)
+];
+
 export const MODELS = {
+  caras: {
+    description: "Caras voxel: el chibi con expresiones de pocos vóxels",
+    stages: [
+      { label: "Neutral", note: "El chibi de V5-01 tal cual: dos ojos de 1×2 que sobresalen 1 vóxel de la cara. Es la referencia: todo lo demás cambia solo unos pocos vóxels.", voxels: chibiDetail },
+      { label: "Alegre", note: "Los ojos pasan a ser dos arcos de 3 vóxels (como ^ ^), una boca de 2 vóxels rosa oscuro y dos mejillas pintadas en la cara, sin sobresalir. Diez vóxels cambiados.", voxels: faceHappy },
+      { label: "Enfado", note: "Los mismos ojos de la neutral con dos cejas de 2 vóxels, altas por fuera y bajas por dentro, y la boca recta y oscura. Seis vóxels añadidos.", voxels: faceAngry },
+      { label: "Demasiado", note: "Error: la cara «realista» en un chibi: ojos de 2×2 con blanco e iris, cejas, una nariz que sobresale 2, labios de 4 en dos tonos y mejillas sombreadas. Con más vóxels no se lee mejor: la cara se vuelve rara y pierde el estilo.", voxels: faceTooMuch },
+    ],
+  },
+  cueva: {
+    description: "Cueva: vaciar una masa de roca y llenarla de luz",
+    stages: [
+      { label: "Masa", note: "Un bloque de roca de 22×16 y de 9 a 14 de alto, con la parte de arriba irregular, los bordes mordidos y estratos de piedra en dos tonos. Es la materia de la que se saca la cueva.", voxels: caveMass },
+      { label: "Vaciado", note: "Se vacía una cámara redondeada dentro y una entrada en arco por delante, y se deja en corte (sin la parte derecha) para poder ver dentro, como la habitación de V7-02. El suelo de dentro pasa a tierra en dos tonos y las paredes que tocan el hueco se oscurecen: dentro llega menos luz.", voxels: caveHollow },
+      { label: "Cristales y luz", note: "Dos grupos de cristales que crecen del suelo, uno azul junto a la pared del fondo a la izquierda y otro morado más pequeño al fondo, junto al corte (para el material Emit), cuatro estalactitas que cuelgan del techo, un charco bajo la más larga y dos setas que brillan junto a la entrada: la luz guía hacia dentro.", voxels: caveFinal },
+    ],
+  },
   fuente: {
     description: "Fuente: piedra, agua con material Glass y lo que se ve a través",
     stages: [

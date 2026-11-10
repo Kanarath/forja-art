@@ -1,0 +1,45 @@
+{
+  "name": "pine-l",
+  "description": "Pino de 17×26 para las filas de ritmo: copa en capas, luz a la izquierda, contorno y un tronco de 2 px.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "prop",
+    "ritmo"
+  ],
+  "palette": {
+    "o": "#1b1030",
+    "d": "#1f6b4a",
+    "m": "#2a8a5c",
+    "l": "#3fbf7f",
+    "t": "#6b3d2e"
+  },
+  "rows": [
+    ".......omo.......",
+    ".......omo.......",
+    ".......omo.......",
+    ".......omo.......",
+    "......olmmo......",
+    "......olmmo......",
+    "......olmmo......",
+    "......olmmo......",
+    "......olmmo......",
+    ".....ollmmdo.....",
+    ".....ollmmdo.....",
+    ".....ollmmdo.....",
+    "....olllmmddo....",
+    "....olllmmddo....",
+    "...ollllmmdddo...",
+    "...oolllmmddoo...",
+    ".....ollmmdo.....",
+    "....olllmmddo....",
+    "...ollllmmdddo...",
+    "...ollllmmdddo...",
+    "..olllllmmddddo..",
+    "..olllllmmddddo..",
+    ".ollllllmmdddddo.",
+    "olllllllmmddddddo",
+    "........t........",
+    "........t........"
+  ]
+}

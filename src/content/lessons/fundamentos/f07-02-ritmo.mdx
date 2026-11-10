@@ -1,0 +1,297 @@
+---
+id: f07-02
+discipline: fundamentos
+level: 7
+order: 2
+title: "Ritmo y repetición: ni monótono ni caótico"
+summary: "Repetir da unidad; repetir igual aburre y variar sin orden confunde. Crea ritmo con un patrón que se reconoce y varía: tamaños, intervalos, grupos de tres y huecos."
+duration: 40
+status: borrador
+prerequisites: [f07-01, f02-01]
+fundamentals: [f07, f02]
+objectives:
+  - "Distinguir repetición monótona, variación caótica y ritmo en una fila de elementos"
+  - "Construir un patrón con tres tamaños, intervalos que varían y grupos de tres"
+  - "Dejar huecos para que el ojo descanse y cerrar la fila con intención"
+  - "Escribir el patrón antes de dibujar y comprobarlo en silueta"
+  - "Repartir props voxel en grupos con ritmo en vez de en rejilla"
+tools: [aseprite, magicavoxel]
+piece:
+  name: "Una fila de 96×32 con ritmo (pixel) o una parcela voxel con props en grupos, con su patrón escrito"
+  canvas: "96x32"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [ritmo]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+En [F07-01](/forja-art/fundamentos/f07-01/) decidiste **dónde mira el ojo**. Hoy decides **cómo se mueve** por la escena cuando hay muchas cosas parecidas: árboles, rocas, columnas, tiles.
+
+Tu pieza, a elegir:
+
+- una **fila de 96×32** en Aseprite: un bosque, una valla, una muralla o rocas, con **ritmo**;
+- o una **parcela voxel** con tus props repartidos en grupos.
+
+En las dos, escribes el **patrón** antes de dibujar.
+
+<Sprite name="rhythm-good" scale={5} caption="rhythm-good (96×32): dos grupos de grande-mediano-pequeño, un hueco ancho entre ellos y un mediano al final" />
+
+Siete pinos. El ojo reconoce el patrón enseguida y aun así no se aburre. Hoy aprendes por qué.
+</Block>
+
+<Block kind="concepto">
+### Las piezas: un pino, tres tamaños
+
+<Sprite name="pine-s" scale={8} caption="pine-s: 7×12" />
+<Sprite name="pine-m" scale={8} caption="pine-m: 11×18" />
+<Sprite name="pine-l" scale={8} caption="pine-l: 17×26" />
+
+Los tres son **el mismo pino**: copa de tres pisos que se abren hacia abajo, luz a la izquierda, sombra a la derecha, contorno oscuro y un tronco de 1 px de ancho y 2 de alto. Solo cambia el tamaño. Y cambia **mucho**: cada uno mide más o menos vez y media el anterior (12, 18 y 26 filas).
+
+<Why title="Por qué tres tamaños tan distintos">
+Si el mediano midiera 16 y el grande 18, el ojo los leería como el mismo pino. La diferencia tiene que **verse a 1×**. Es lo que viste en [F02-01](/forja-art/fundamentos/f02-01/): una silueta tiene que leerse sin pensar. Tres tamaños claros son tres siluetas distintas.
+</Why>
+
+### Repetir da unidad
+
+Cuando algo se repite, el ojo lo agrupa: «esto es un bosque», «esto es una muralla». La repetición dice que las piezas **son de la misma familia**. Sin ella, una escena es un catálogo.
+
+Pero hay dos formas de estropearla.
+
+### Error 1: repetir igual (monotonía)
+
+<Sprite name="rhythm-mono" scale={5} caption="rhythm-mono: ocho pinos medianos, un tronco cada 12 px" />
+
+Ocho veces `pine-m`, a la misma altura y con un tronco **cada 12 px exactos**. Entre copa y copa queda 1 px de aire. El ojo descubre la regla en el segundo pino y ya no tiene nada más que mirar: lo lee como **una valla** o como los dientes de una sierra, no como un bosque.
+
+Es el mismo fallo que la flor de `tile-grass-flower` en [P7-01](/forja-art/pixel/p7-01/): un elemento igual a una distancia fija forma **retícula**.
+
+### Error 2: variar sin orden (caos)
+
+<Sprite name="rhythm-chaos" scale={5} caption="rhythm-chaos: diez pinos de los tres tamaños, sin patrón" />
+
+Aquí hay variación de sobra: diez pinos, tres grandes, dos medianos y cinco pequeños. Pero el orden es **G P P M G P M P G P** y las distancias entre troncos saltan sin lógica: 8, 4, 11, 14, 10, 8, 10, 12 y 9 px. Los dos pequeños de la izquierda se montan sobre el grande y uno sobre el otro; el último queda cortado por el borde derecho.
+
+El ojo busca una regla, no la encuentra y se cansa. No hay un sitio donde descansar ni un grupo que mande.
+
+<Why title="Por qué el ojo necesita un patrón">
+Mirar es predecir. Si el ojo acierta siempre (monotonía), se aburre y deja de mirar. Si no acierta nunca (caos), se cansa y deja de mirar. El ritmo está en medio: **acierta casi siempre** y de vez en cuando le das una sorpresa pequeña.
+</Why>
+
+### El ritmo: un patrón con variación
+
+Vuelve a `rhythm-good` y léelo de izquierda a derecha:
+
+- **Grupo 1**: grande, mediano y pequeño. El mediano se monta 3 columnas sobre el grande y el pequeño toca al mediano: los tres forman **una masa** que baja hacia la derecha.
+- **Hueco**: 13 columnas de hierba sin nada. Es el **descanso**.
+- **Grupo 2**: otra vez grande, mediano y pequeño, con las mismas distancias. El ojo **reconoce** el patrón.
+- **Cierre**: 5 px de hierba y un mediano solo, a 2 px del borde. Remata la fila sin repetir el grupo una tercera vez.
+
+Escrito como una partitura, donde cada · es un hueco:
+
+`G M P · · · G M P · M`
+
+Y las distancias entre troncos: **11, 9**, luego **25**, luego **11, 9**, y al final **14**. Dentro del grupo, intervalos cortos; entre grupos, uno largo. Es un patrón, pero no es una regla fija.
+
+### Los ingredientes del ritmo
+
+1. **Tamaños**: dos o tres, bien distintos. Uno manda (el grande), otro acompaña, otro rellena.
+2. **Intervalos que varían con orden**: cortos dentro del grupo, largos entre grupos. No todos iguales, no todos al azar.
+3. **Grupos de tres** (o impares): un grupo de tres tiene centro y un lado que manda. Uno de dos tiende a leerse como una pareja enfrentada; uno de cuatro, como dos parejas.
+4. **Huecos**: el espacio vacío es parte del patrón, como un silencio en la música. Sin huecos, todo es una pared de pinos.
+5. **Un cierre**: algo que remata la fila y no deja la sensación de «se ha cortado».
+
+<Tip>
+En `rhythm-good` el grupo 2 es una **copia exacta** del grupo 1, para que veas el patrón con claridad. En tu escena, cambia algo la segunda vez: el mediano a la izquierda del grande, un pequeño de más, otra distancia. El ojo sigue reconociendo el grupo.
+</Tip>
+
+<Why title="Ritmo y foco (F07-01)">
+El ritmo no sustituye al punto focal: lo prepara. Un patrón tranquilo hace de fondo, y cuando algo **rompe** el patrón (un pino seco, una casa, el héroe), el ojo va directo ahí. Si el fondo ya es caótico, la ruptura no se nota.
+</Why>
+
+### ¿Repetir igual es siempre un error?
+
+No. Lo **hecho por personas** se repite con regla: una valla, unas almenas, unas columnas, las baldosas de un suelo. Ahí la repetición exacta dice «construido». Lo que se hace es añadir **acentos**: un poste más grueso cada cuatro, una torre en la esquina de la muralla.
+
+Lo **natural** casi nunca se repite igual. Un bosque en fila exacta parece una plantación; unas rocas a la misma distancia, un cementerio.
+
+### En tiles: el mismo problema, a otra escala
+
+Un mapa de tiles es una repetición por definición. Por eso en [P7-01](/forja-art/pixel/p7-01/) el tile base es **tranquilo** (sin nada que destaque) y los detalles van en **variantes** que se salpican poco y sin orden. El tile base es la repetición que da unidad; las variantes, la variación. Si una variante aparece demasiado, o siempre a la misma distancia, vuelve la retícula.
+
+### En voxel: props en una escena
+
+En [V6-04](/forja-art/voxel/v6-04/) repartes un kit de arbustos, piedras y matas sobre una parcela de 24×24. Mira las dos etapas del visor:
+
+<VoxViewer model="vegetacion" stage={1} title="En rejilla: nueve piezas a la misma distancia" />
+
+Nueve piezas en tres filas y tres columnas, a unos 7 u 8 vóxels unas de otras. Fíjate: **las piezas son distintas** (arbustos, piedras, matas), pero el intervalo es fijo. Y el ojo ve el tablero antes que las plantas. **Variar el objeto no basta si el intervalo es siempre el mismo.**
+
+<VoxViewer model="vegetacion" stage={2} title="En grupos: el mismo kit con ritmo" />
+
+Ahora hay ritmo a escala de escena:
+
+- un **grupo principal** de siete piezas: los tres arbustos (grande, mediano y pequeño) pegados, la piedra grande al pie y tres matas;
+- un **grupo secundario** de cuatro en la esquina opuesta: un arbusto mediano, uno pequeño, la piedra pequeña y una mata;
+- solo **tres matas sueltas** y las otras dos esquinas casi vacías.
+
+Es `rhythm-good` en 2D: un grupo grande, un grupo pequeño que lo repite con variación y huecos entre ellos.
+
+<Why title="Por qué funciona igual en pixel y en voxel">
+El ritmo no depende del medio: depende de **tamaños**, **intervalos** y **huecos**. En voxel, además, la cámara gira: un reparto en rejilla se ve como rejilla desde casi cualquier ángulo, pero los grupos siguen leyéndose como grupos.
+</Why>
+</Block>
+
+<Block kind="guiada">
+### Parte 1 · Aseprite
+
+<Step n={1} title="Escribe el patrón antes de dibujar">
+En un papel o en un comentario, escribe tu fila con letras: G grande, M mediano, P pequeño y · para cada hueco. Por ejemplo, `G M P · · · G M P · M`.
+
+Comprueba tres cosas:
+
+- hay **grupos** y hay **huecos**;
+- el patrón se **repite al menos una vez**;
+- la fila tiene un **cierre** (no termina a mitad de un grupo).
+
+<Why>
+Con el patrón escrito, colocar es ejecutar. Sin él, pones pinos donde caben y acabas en `rhythm-mono` (si eres ordenado) o en `rhythm-chaos` (si no lo eres).
+</Why>
+</Step>
+
+<Step n={2} title="Lienzo y suelo">
+1. <Keys k="Ctrl+N" />: lienzo de **96×32**, fondo transparente. Activa *View → Grid* y amplía con la rueda.
+2. Con <Keys k="M" />, selecciona de lado a lado la **tercera fila empezando por abajo** y rellénala (<Keys k="G" />) con un verde claro.
+3. Selecciona las **dos filas de abajo** y rellénalas con un verde más oscuro.
+
+Es el suelo de las filas de la lección: una fila de hierba clara con dos más oscuras debajo. Todos los troncos se apoyan justo encima de la hierba clara.
+
+<Tip>
+Un suelo común es lo que permite comparar alturas: si un pino flota un píxel, su tamaño ya engaña.
+</Tip>
+</Step>
+
+<Step n={3} title="Tres tamaños del mismo elemento">
+1. En un lienzo aparte (o en un hueco del mismo), dibuja tu elemento en **tres tamaños**: un pino, una roca, un poste. Si eres nuevo, copia la estructura de `pine-s`, `pine-m` y `pine-l`.
+2. Mismo contorno, misma luz (izquierda), mismos colores. Solo cambia el tamaño.
+3. Ponlos uno al lado del otro y míralos a 1×.
+
+<Warn>
+Si dos tamaños se diferencian en 1 o 2 píxeles, no son dos tamaños: son el mismo dibujado dos veces. Apunta a algo como vez y media entre uno y el siguiente.
+</Warn>
+
+<Warn title="No voltees para variar">
+Voltear un pino en horizontal parece una forma rápida de variarlo, pero su luz pasa a la derecha y la escena tendría dos soles. Si quieres variedad, cambia el tamaño o redibuja una rama.
+</Warn>
+</Step>
+
+<Step n={4} title="El primer grupo">
+1. Selecciona el pino grande con <Keys k="M" />, cópialo con *Edit → Copy* y pégalo en la fila con *Edit → Paste*. Colócalo con el tronco justo encima de la hierba.
+2. Pega el **mediano** pegado al grande, montándose un poco sobre él o tocándolo.
+3. Pega el **pequeño** al otro lado del mediano.
+4. Revisa los contornos donde se solapan: el pino de delante tapa al de detrás con su contorno completo.
+
+<Why>
+Pegados, los tres se leen como **una masa** con una forma interesante (alta a un lado, baja al otro), no como tres objetos. Es lo mismo que el grupo de arbustos de V6-04.
+</Why>
+</Step>
+
+<Step n={5} title="Repite, deja descansar y cierra">
+1. Deja un **hueco ancho**: al menos tanto como el ancho del pino grande.
+2. Pega el **segundo grupo**. Que sea reconocible como el primero, pero cambia algo pequeño: el orden, una distancia, un pequeño más.
+3. **Cierra** la fila con un elemento suelto o un grupo menor, sin pegarlo al borde.
+4. Guarda (<Keys k="Ctrl+S" />) y exporta a 1× con *File → Export → Export As*.
+5. Súbela al Inspector y mira la vista **Silueta** y la vista a 1×.
+
+<Inspector upload title="Tu fila: silueta y 1×" />
+
+En silueta solo queda el perfil de la fila contra el cielo. Pregúntate:
+
+- ¿Se ven **grupos** y **huecos**, o una sierra regular?
+- ¿Se reconoce el patrón la segunda vez?
+- ¿Hay un sitio donde el ojo descansa?
+
+<Sprite name="rhythm-good" view="silhouette" scale={4} caption="rhythm-good en silueta: dos picos altos con su caída, un valle vacío y un remate" />
+<Sprite name="rhythm-mono" view="silhouette" scale={4} caption="rhythm-mono en silueta: una sierra de ocho dientes iguales" />
+</Step>
+
+### Parte 2 · MagicaVoxel
+
+<Step n={6} title="Props en grupos en el modo World">
+1. Abre tu kit de props (el de V6-04 si ya lo tienes, o tres piezas tuyas en tres tamaños) y un suelo.
+2. Escribe el patrón de la escena: «grupo grande, grupo pequeño en la esquina opuesta, tres sueltos, dos esquinas vacías».
+3. En el modo **World**, coloca primero el **grupo principal**: la pieza grande lejos del centro y las otras **pegadas** a ella.
+4. Duplica piezas para el **grupo secundario**, más pequeño y con otra combinación.
+5. Añade **pocas** piezas sueltas y deja zonas vacías.
+6. Gira la cámara con el **botón derecho**. Desde arriba y desde un lado: ¿ves grupos y huecos, o un tablero?
+
+<Tip>
+La prueba de la rejilla: si puedes trazar con el dedo filas o columnas rectas que pasan por varias piezas, mueve alguna.
+</Tip>
+
+<Warn title="Verifica en tu versión">
+En Aseprite, los menús *Edit → Copy* y *Edit → Paste* pueden variar entre versiones. En MagicaVoxel, cómo se crea, se mueve y se duplica un modelo en el modo **World** cambia entre versiones: búscalo por su función.
+</Warn>
+</Step>
+</Block>
+
+<Block kind="version">
+Hazla tuya. Elige un reto:
+
+- **Bosque con un acento**: tu fila de pinos con ritmo y **una** ruptura que se convierta en foco: un pino seco, una cabaña o el héroe en el hueco. Comprueba que el ojo va ahí.
+- **Lo construido**: una muralla o una valla de 96×32 con repetición regular y **acentos**: un poste más alto cada cierto número, una torre en un extremo. Escribe su patrón.
+- **Parcela con ritmo**: en voxel, una parcela de 24×24 con dos grupos de tamaños distintos, pocas piezas sueltas y dos zonas vacías. Haz un render desde arriba y otro de lado.
+
+**Prueba de la partitura.** Enseña tu fila a alguien y pídele que la «lea» con letras (G, M, P y huecos). Si su partitura se parece a la tuya, el patrón se ve.
+</Block>
+
+<Block kind="errores">
+<Mistake title="Monotonía: el mismo pino a la misma distancia" wrongLabel="rhythm-mono" rightLabel="rhythm-good">
+  <Sprite slot="wrong" name="rhythm-mono" scale={4} />
+  <Sprite slot="right" name="rhythm-good" scale={4} />
+
+Ocho pinos medianos, un tronco cada 12 px, sin un solo hueco. Hay unidad, pero ninguna sorpresa: se lee como una valla. **Corrección**: tres tamaños, grupos con intervalos cortos dentro y largos entre ellos, y al menos un hueco ancho.
+</Mistake>
+
+<Mistake title="Caos: variación sin patrón" wrongLabel="rhythm-chaos" rightLabel="rhythm-good">
+  <Sprite slot="wrong" name="rhythm-chaos" scale={4} />
+  <Sprite slot="right" name="rhythm-good" scale={4} />
+
+Diez pinos de tres tamaños en orden aleatorio, distancias que saltan, pinos que se meten unos en otros sin intención y uno cortado por el borde. Hay variación, pero el ojo no encuentra ninguna regla ni ningún sitio donde descansar. **Corrección**: elige un patrón, escríbelo y repítelo. Menos pinos y un hueco suelen arreglarlo antes que añadir más.
+</Mistake>
+
+<Warn title="Error: variar el objeto pero no el intervalo">
+Como en la etapa «En rejilla» de `vegetacion`: arbustos, piedras y matas distintos, pero todos a la misma distancia. El cambio de pieza no esconde la retícula. **Corrección**: varía primero **dónde** están (grupos y huecos); después, **qué** son.
+</Warn>
+
+<Warn title="Error: el buen grupo repetido diez veces">
+Un grupo de grande-mediano-pequeño funciona. Diez seguidos, a la misma distancia, son monotonía otra vez, solo que a una escala mayor. **Corrección**: repite el grupo dos o tres veces como mucho y cambia algo en cada una, o alterna con huecos y piezas sueltas.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+<Checklist items={[
+  "He escrito el patrón de mi fila (o de mi escena) antes de colocar nada",
+  "Uso dos o tres tamaños que se distinguen a 1×",
+  "Hay grupos, con intervalos cortos dentro y largos entre ellos",
+  "Hay al menos un hueco donde el ojo descansa",
+  "El patrón se repite y se reconoce, pero no es una copia de una regla fija",
+  "La fila tiene un cierre y nada queda cortado por el borde sin querer",
+  "En silueta se ven grupos y huecos, no una sierra regular",
+  "En voxel, no puedo trazar filas o columnas rectas que pasen por varias piezas",
+]} />
+
+<Quiz q="¿Qué le pasa a rhythm-mono?" options={["Tiene demasiada variación", "Repite el mismo pino a la misma distancia: hay unidad pero aburre", "Los pinos no tienen luz"]} answer={1}>
+Ocho pinos iguales, un tronco cada 12 px. El ojo entiende la regla en el segundo pino y deja de mirar. Se lee como una valla.
+</Quiz>
+
+<Quiz q="Pones arbustos, piedras y matas distintos, pero todos a 8 vóxels unos de otros. ¿Hay ritmo?" options={["Sí, porque las piezas son distintas", "No: el intervalo fijo forma una rejilla aunque las piezas cambien", "Solo si los giras"]} answer={1}>
+Es la etapa «En rejilla» de V6-04. Primero se varía dónde están las piezas (grupos y huecos); después, cuáles son.
+</Quiz>
+
+<Quiz q="¿Para qué sirve el hueco ancho en el centro de rhythm-good?" options={["Para descansar la vista y separar los grupos", "Para ahorrar píxeles", "Es un error: debería haber un pino"]} answer={0}>
+El hueco es parte del patrón, como un silencio en música. Sin él, los dos grupos se fundirían en una pared de pinos y el patrón dejaría de leerse.
+</Quiz>
+</Block>

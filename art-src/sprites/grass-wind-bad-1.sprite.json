@@ -1,0 +1,45 @@
+{
+  "name": "grass-wind-bad-1",
+  "description": "Error, frame 1: las mismas nueve matas rectas.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "tile",
+    "animación",
+    "error"
+  ],
+  "palette": {
+    "a": "#318047",
+    "b": "#a8ec9a",
+    "c": "#57a363",
+    "d": "#6fd17f",
+    "e": "#225f38",
+    "f": "#3fa45b"
+  },
+  "rows": [
+    "................................................................",
+    "................................................................",
+    "................................................................",
+    "................................................................",
+    "................................................................",
+    "................................................................",
+    "................................................................",
+    "................................................................",
+    "aaaaaaaaaaaaaaaaaabaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "aaaaaacaaaaaaaaabadabacaaaaaaaaaaaaaaacaaaaaaaabaaaaaacaaaaaaaaa",
+    "aaaabeaeaaaaaaaadadadeaeaaaaaaaaaaaaaeaeaaaaabadabaaaeaeaaaaaaaa",
+    "aabadabaaaaaaaaadafadaaaaaaaaaaaabaaaaaaaaaaadadadaaaaaaaaaaaaaa",
+    "aadadadaaaaacaaafafafaaaaaaacaabadabaaaaaaaacdafadaaaaaaaaaabaaa",
+    "aadafadaaaaeaeaaaaaaaaaaaaaeaeadadadaaaaaaaeafafafaaaaaaaabedeba",
+    "cafafafaaaaaaaaacaaaaaaaabaaaaadcfadaaaaaaaaaaaacaaaaaaaaadadada",
+    "aecaaaaaaaaaaaaeaecaaaabadabaaafafcfaaaaaaaaaaaeaecaaabaaadafade",
+    "aeaeaaaaaaabaaaaaeaeaaadadadaaaaaeaeaaaaaaaaaaaaaeaebadabafafafa",
+    "aaaaaaaaabcdabaaaaaaaaadafcdaaaaaaaaaaaabacaaaaaaaaadadadacaaaaa",
+    "aaaaaaaaadadadaaaaaaaaafafafaaaaaaaaaabadebeaaaaaaaadafadeaeaaaa",
+    "aaacaaaaadafadaaaaacaaaaaaaaaaaaaaacaadadadaaaaaaaacfafafaaaaaaa",
+    "aaeaeaaaafafafaaaaeaeaaaaaaaaaaaaaeaeadafadaaaaaaaeaeaaaaaaaaaaa",
+    "aaaaaaaacaaaaaaaaaaaaaaacaaaaaaaaaaaaafafafaaaaaaaaaaaaacaaaaaaa",
+    "aaaaaaaeaeaaaacaaaaaaaaeaeaaaacaaaaaaaaeaeaaaacaaaaaaaaeaeaaaaca",
+    "aaaaaaaaaaaaaeaeaaaaaaaaaaaaaeaeaaaaaaaaaaaaaeaeaaaaaaaaaaaaaeae"
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "name": "grass-wind-bad-4",
+  "description": "Error, frame 4: todas se desplazan enteras 1 px a la izquierda. Parece que el prado se desliza, no que sople el viento.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "tile",
+    "animación",
+    "error"
+  ],
+  "palette": {
+    "a": "#318047",
+    "b": "#a8ec9a",
+    "c": "#57a363",
+    "d": "#6fd17f",
+    "e": "#225f38",
+    "f": "#3fa45b"
+  },
+  "rows": [
+    "................................................................",
+    "................................................................",
+    "................................................................",
+    "................................................................",
+    "................................................................",
+    "................................................................",
+    "................................................................",
+    "................................................................",
+    "aaaaaaaaaaaaaaaaabaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "aaaaaacaaaaaaaabadabaacaaaaaaaaaaaaaaacaaaaaaabaaaaaaacaaaaaaaaa",
+    "aaabaeaeaaaaaaadadadaeaeaaaaaaaaaaaaaeaeaaaabadabaaaaeaeaaaaaaaa",
+    "abadabaaaaaaaaadafadaaaaaaaaaaaabaaaaaaaaaaadadadaaaaaaaaaaaaaaa",
+    "adadadaaaaaacaafafafaaaaaaaacabadabaaaaaaaaadafadaaaaaaaaaabcaaa",
+    "adafadaaaaaeaeaaaaaaaaaaaaaeaedadadaaaaaaaaefefafaaaaaaaabadabaa",
+    "cfafafaaaaaaaaaacaaaaaaabaaaaadafadaaaaaaaaaaaaacaaaaaaaadadadaa",
+    "aecaaaaaaaaaaaaeaecaaabadabaaafefefaaaaaaaaaaaaeaecaabaaadafadae",
+    "aeaeaaaaaabaaaaaaeaeaadadadaaaaaaeaeaaaaaaaaaaaaaeabadabafafafaa",
+    "aaaaaaaabadabaaaaaaaaadafadaaaaaaaaaaaabaacaaaaaaaadadadaacaaaaa",
+    "aaaaaaaadededaaaaaaaaafafefeaaaaaaaaabadabaeaaaaaaadafadaeaeaaaa",
+    "aaacaaaadafadaaaaaacaaaaaaaaaaaaaaacadadadaaaaaaaaafafafaaaaaaaa",
+    "aaeaeaaafafafaaaaaeaeaaaaaaaaaaaaaeaedafadaaaaaaaaeaeaaaaaaaaaaa",
+    "aaaaaaaacaaaaaaaaaaaaaaacaaaaaaaaaaaafafcfaaaaaaaaaaaaaacaaaaaaa",
+    "aaaaaaaeaeaaaacaaaaaaaaeaeaaaacaaaaaaaaeaeaaaacaaaaaaaaeaeaaaaca",
+    "aaaaaaaaaaaaaeaeaaaaaaaaaaaaaeaeaaaaaaaaaaaaaeaeaaaaaaaaaaaaaeae"
+  ]
+}

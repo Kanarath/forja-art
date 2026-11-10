@@ -1,0 +1,254 @@
+---
+id: p5-09
+discipline: pixel
+level: 5
+order: 9
+title: "Retratos de diálogo: expresiones sin perder el modelo"
+summary: "Un set de expresiones para el diálogo a partir de tu retrato: cambian cejas, párpados y boca; la cara, los ojos y el pelo no se mueven. Capas por zona, un parpadeo y el error de salirse de modelo."
+duration: 40
+status: borrador
+objectives:
+  - "Sacar un set de expresiones de un retrato base sin redibujarlo"
+  - "Distinguir lo que se toca (cejas, párpados, boca) de lo que no: el modelo"
+  - "Trabajar con una capa por zona y un frame por expresión en Aseprite"
+  - "Animar un parpadeo corto e irregular para el retrato que habla"
+  - "Detectar una expresión fuera de modelo y corregirla"
+prerequisites: [p5-05, p5-02]
+fundamentals: [f09]
+tools: [aseprite]
+piece:
+  name: "Cinco retratos de tu héroe sobre el mismo modelo (neutro, alegre, enfadado, sorprendido y parpadeo) y su cuadro de diálogo"
+  canvas: "32x32"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [dialogo]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Vas a forjar **el set de caras de tu héroe para el diálogo**. En [P5-05](/forja-art/pixel/p5-05/) dibujaste su retrato. Ahora ese retrato tiene que alegrarse, enfadarse y sorprenderse mientras habla. Sin dejar de ser él.
+
+<Sprite name="dialog-happy" scale={5} caption="dialog-happy · Cuadro de diálogo de 112×40: el retrato alegre en un marco a la izquierda, el nombre en amarillo arriba y tres líneas de texto (cada «palabra» es una barra de 7 px)" />
+
+La cara acompaña a lo que dice. Estas son las cuatro que vas a sacar del mismo retrato:
+
+<Sprite name="portrait-happy" scale={8} caption="portrait-happy · Alegre: cejas 1 px más arriba, ojos entornados y comisuras hacia arriba" />
+
+<Sprite name="portrait-angry" scale={8} caption="portrait-angry · Enfadado: las cejas se inclinan hacia la nariz y las comisuras caen" />
+
+<Sprite name="portrait-surprise" scale={8} caption="portrait-surprise · Sorprendido: las cejas suben 2 px y la boca es un hueco oscuro" />
+
+<Sprite name="portrait-blink" scale={8} caption="portrait-blink · Parpadeo: ojos cerrados, para intercalarlo mientras habla" />
+
+Fíjate en el pelo, las orejas, el contorno de la cara y la túnica. Son idénticos en las cuatro.
+</Block>
+
+<Block kind="concepto">
+### El modelo: lo que nunca se mueve
+
+En animación se llama **modelo** a lo que hace que un personaje sea él: la forma de la cabeza, dónde están los ojos, el peinado, las proporciones. Cuando un dibujo cambia eso, se dice que está **fuera de modelo**: parece otra persona, o la misma mal dibujada.
+
+En un retrato de diálogo, el reparto es claro:
+
+| Se toca (la expresión) | No se toca (el modelo) |
+| --- | --- |
+| Cejas | Forma de la cara y contorno |
+| Párpados: cuánto ojo se ve | Posición y tamaño de los ojos |
+| Boca | Pelo, orejas, cuello y túnica |
+| | La luz y las sombras |
+
+<Why title="Por qué tan poco (f09)">
+El jugador lee el diálogo de reojo. Si cada cara cambia entera, no sabe si habla el mismo personaje. Si solo cambian cejas, párpados y boca, reconoce a su héroe al instante y **solo** lee la emoción. Es lo que aprendiste en [P5-02](/forja-art/pixel/p5-02/) con la cabeza de 12 píxeles: la expresión vive en tres sitios. A 32×32 sigue viviendo en los mismos tres. Simplemente caben más matices.
+</Why>
+
+### Pruébalo: el modelo quieto
+
+<Animator sprites={["portrait", "portrait-happy", "portrait", "portrait-angry", "portrait", "portrait-surprise"]} durations={[700, 700, 700, 700, 700, 700]} />
+
+El animador alterna el retrato neutro con las tres expresiones. Mira lo que **no** se mueve: nada fuera de la zona de los ojos y la boca parpadea. Ni un píxel del pelo, ni del contorno, ni de la túnica.
+
+### La caja de la expresión
+
+Cuenta las filas y columnas desde 0, arriba a la izquierda, como en P5-05. En el retrato neutro:
+
+- **Cejas:** 3 píxeles del marrón más oscuro del pelo; la izquierda en la fila 11 y la derecha en la 10.
+- **Ojos:** filas 13 a 15. Una línea oscura de párpado arriba (fila 13) y dos filas con el blanco y el iris.
+- **Boca:** fila 20, 4 píxeles rosa oscuro y la comisura derecha en sombra.
+
+Todos los cambios de las cuatro expresiones caen dentro de un rectángulo: **columnas 10 a 21, filas 8 a 21**. Esa es la caja de la expresión. Fuera de ella, el retrato es siempre el mismo.
+
+| Expresión | Píxeles cambiados | Qué cambia |
+| --- | --- | --- |
+| Alegre | 20 | Las cejas suben 1 px (a las filas 10 y 9) y su sitio pasa a piel. La fila de abajo de cada ojo (15) se cubre de piel: queda el párpado y una sola fila de ojo, entornado, como cuando la sonrisa sube las mejillas. La boca gana dos comisuras una fila más arriba. |
+| Enfadado | 8 | Cada ceja sube 1 px por fuera y baja 1 px por dentro, junto a la nariz: queda inclinada hacia abajo y hacia dentro. Los ojos no cambian. La boca gana dos comisuras una fila más abajo. |
+| Sorprendido | 16 | Las cejas suben 2 px (a las filas 9 y 8) y dejan más frente entre ceja y párpado: el ojo, que no cambia, parece más abierto. La boca rosa desaparece y es un hueco oscuro de 2×2. |
+| Parpadeo | 16 | El párpado baja a la fila 14 y ocupa el sitio del ojo; las filas 13 y 15 pasan a piel. Queda una sola línea oscura de 3 px por ojo. |
+
+<Why title="Ocho píxeles bastan">
+El enfado cambia **ocho** píxeles y se lee perfectamente. La expresión no depende de cuánto cambias, sino de **qué** cambias: la inclinación de las cejas y la dirección de las comisuras. Es el mismo truco que una ceja levantada en una persona real: un gesto pequeño en el sitio justo.
+</Why>
+
+<Tip title="Los ojos no se mueven, los párpados sí">
+Fíjate en que ningún ojo cambia de sitio ni de anchura. Lo que cambia es lo que lo rodea: las cejas suben, bajan o se inclinan, y los párpados deciden **cuánto ojo se ve**: tapado por abajo (alegre) o cerrado (parpadeo). Pintar piel encima del ojo es dibujar un párpado.
+</Tip>
+
+### El error principal: salirse de modelo
+
+<Sprite name="portrait-offmodel" scale={10} caption="portrait-offmodel (ERROR) · Para hacerla «más alegre», cada ojo se ha movido 1 px hacia fuera (8 px entre ellos en vez de 6) y ha perdido su fila de abajo, y la boca es de 8 px con dientes y llega hasta el contorno de la mandíbula" />
+
+Compáralo con `portrait-happy`. Cada cambio, por separado, parece buena idea: ojos más abiertos, una sonrisa más grande. Pero ha tocado el **modelo**: la distancia entre los ojos, que en P5-05 decidiste para que leyera joven, y el contorno de la barbilla, que ahora rompe la boca a los dos lados. Y solo ha cambiado 29 píxeles, no muchos más que la versión buena. No es cuestión de cantidad: es cuestión de dónde.
+
+### El cuadro de diálogo
+
+<Sprite name="dialog-neutral" scale={5} caption="dialog-neutral · El mismo cuadro con el retrato neutro de P5-05" />
+
+El cuadro es interfaz, como el panel de [P4-04](/forja-art/pixel/p4-04/) y el HUD de [P8-06](/forja-art/pixel/p8-06/): contorno oscuro, un borde más claro de 1 px, el fondo azul oscuro y el retrato en un marco de 1 px. Los píxeles transparentes del retrato dejan ver el fondo del panel.
+
+<Why title="El marco no compite con la cara">
+El fondo del cuadro es un azul oscuro y el borde, un azul apenas más claro: poco contraste entre ellos. Lo que destaca sobre ese fondo es lo que importa: la cara, cálida, el nombre en amarillo, que dice **quién** habla, y el texto claro, que dice **qué** dice. Es la regla del HUD de P8-06: la interfaz ordena el foco, no lo roba. Y como el panel no lleva dibujo en el centro, crece con el 9-slice de P4-04 sin deformarse cuando el texto es más largo.
+</Why>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Prepara el modelo">
+1. Abre tu `retrato.aseprite` de P5-05 y guárdalo con otro nombre (*File → Save As*): `retrato-dialogo.aseprite`. El original no se toca.
+2. Renombra la capa del retrato como `Base` (doble clic sobre su nombre en el panel de capas) y **bloquéala** con el candado del panel de capas.
+3. Activa *View → Grid* y localiza **tu** caja de la expresión: el rectángulo que va de las cejas a la boca, de lado a lado de los ojos. Apunta sus filas y columnas.
+
+<Why>
+Bloquear la base es una decisión, no un detalle: a partir de ahora el modelo **no se puede** tocar por error. Todo lo que pintes irá en capas de encima, y la base sigue intacta debajo.
+</Why>
+</Step>
+
+<Step n={2} title="Una capa por zona">
+Crea tres capas encima de `Base` (*Layer → New Layer*) y llámalas `Cejas`, `Ojos` y `Boca`.
+
+Para cambiar una zona, pintas **encima**, en su capa. Si tienes que quitar algo, como la línea de un párpado, lo tapas con el color de piel que hay debajo (cógelo con el cuentagotas, <Keys k="I" />). La base no se borra nunca.
+
+<Tip>
+Al ocultar una capa con el icono del ojo vuelves a ver la base sin ese cambio. Así comparas en un clic qué aporta cada zona a la expresión.
+</Tip>
+</Step>
+
+<Step n={3} title="La cara alegre">
+En el frame 1, con el lápiz (<Keys k="B" />) y *Pixel-perfect* activado:
+
+1. **Cejas:** sube cada ceja 1 px y pinta de piel la fila donde estaba.
+2. **Ojos:** tapa de piel la fila de abajo de cada ojo. Queda el párpado y una sola fila de ojo: entornado.
+3. **Boca:** añade un píxel del color de la boca a cada lado, una fila **por encima** de la boca. Es una U: una sonrisa.
+4. Mira a 1× con la rueda del ratón. ¿Sonríe sin dejar de ser él?
+
+<Why>
+Cuando sonríes de verdad, las mejillas suben y te tapan el ojo por abajo. Por eso los ojos entornados leen «alegre» incluso sin ver la boca. La boca sola diría «educado»; los ojos dicen «contento».
+</Why>
+</Step>
+
+<Step n={4} title="Un frame por expresión: enfado y sorpresa">
+Añade un frame nuevo en la línea de tiempo (*Timeline*) para cada expresión. Pon una etiqueta (tag) a cada uno con su nombre: `alegre`, `enfado`, `sorpresa`, `parpadeo`. La capa `Base` es la misma en todos; en las capas de zona pintas lo de cada frame.
+
+1. **Enfado:** en `Cejas`, sube 1 px el extremo de fuera de cada ceja y baja 1 px el de dentro, junto a la nariz; tapa con piel los píxeles que dejas. Los ojos no se tocan. En `Boca`, un píxel a cada lado una fila **por debajo**: las comisuras caen.
+2. **Sorpresa:** en `Cejas`, sube cada ceja 2 px y tapa con piel su sitio: el ojo, sin tocarlo, parece más abierto. En `Boca`, tapa la boca con piel y pinta un hueco oscuro de 2×2 en el centro.
+
+<Warn title="Cels enlazados">
+Si al pintar en un frame cambia también otro, sus cels están **enlazados** (linked cels) y comparten el dibujo. Para la capa `Base` es justo lo que quieres. Para las capas de zona, no: deshaz con <Keys k="Ctrl+Z" /> y sepáralos antes de seguir.
+</Warn>
+</Step>
+
+<Step n={5} title="El parpadeo">
+1. En el frame `parpadeo`, en `Ojos`: baja la línea del párpado una fila, sobre el ojo, y tapa con piel la fila donde estaba y la de abajo del ojo. Queda una línea oscura de 3 px por ojo.
+2. Haz un tag `habla` con el frame neutro y el parpadeo. Duraciones (clic derecho sobre el frame, *Frame Properties*): el neutro largo, unos **2500 ms**; el parpadeo corto, unos **120 ms**.
+3. Reprodúcelo con el botón de play de la línea de tiempo. Compáralo con este:
+
+<Animator sprites={["portrait", "portrait-blink", "portrait", "portrait", "portrait-blink"]} durations={[2500, 120, 1600, 1400, 120]} />
+
+<Why>
+Un parpadeo dice «está vivo» mientras el jugador lee. Tiene que ser **corto** (si dura, parece que se duerme) y **no regular**: aquí la espera es de 2,5 s y luego de 3 s. Un parpadeo cada segundo exacto se nota como un metrónomo.
+</Why>
+</Step>
+
+<Step n={6} title="La prueba del modelo">
+1. Activa el onion skin y pasa por los frames. Lo de fuera de tu caja de la expresión tiene que quedar **quieto**. Si algo fuera de ella cambia, estás fuera de modelo.
+2. Comprueba que ninguna capa de zona toca el contorno de la cara ni el pelo.
+3. Pega la cara en un cuadro de diálogo: un lienzo de 112×40 con un panel oscuro (el de P4-04 te sirve) y el retrato a la izquierda. Míralo a 1×.
+
+<Tip>
+Un truco rápido: oculta la capa `Base`. Lo que queda a la vista son tus cambios. Si todo cabe en un rectángulo pequeño alrededor de ojos y boca, vas bien.
+</Tip>
+</Step>
+
+<Step n={7} title="Exporta">
+1. Guarda con <Keys k="Ctrl+S" />.
+2. *File → Export Sprite Sheet*: todos los frames en una fila, a 1×. Es lo que usará el juego.
+3. Exporta además cada expresión como PNG con *File → Export → Export As* y **Resize** al 400 % para enseñarla.
+</Step>
+
+<Warn title="Verifica en tu versión">
+Los nombres y la posición pueden variar según la versión de Aseprite: *File → Save As*, el candado y el icono del ojo del panel de capas, el doble clic para renombrar, *Layer → New Layer*, la opción para añadir un frame nuevo, las etiquetas (tags), *Frame Properties*, el botón de play y el de onion skin, y las opciones de *Export Sprite Sheet*. Comprueba también si los frames nuevos se crean con cels enlazados o independientes y cómo se enlazan o se separan. Si no encuentras algo, búscalo por nombre en los menús.
+</Warn>
+</Block>
+
+<Block kind="version">
+Ahora a tu manera. La regla no cambia: toca solo cejas, párpados y boca, y deja quieto el modelo. Elige uno:
+
+- **Más emociones:** añade **triste** (comisuras hacia abajo y las cejas inclinadas al revés que en el enfado: bajan por fuera) y **pensativo** (una ceja más alta y la boca de lado). Usa las caras de P5-02 como guía.
+- **Que hable:** dibuja una segunda boca entreabierta (un hueco oscuro de 1 fila) y alterna boca cerrada y abierta cada 100–150 ms mientras sale el texto. El parpadeo sigue a su ritmo, aparte.
+- **Otro personaje:** haz el set de un aldeano de [P5-08](/forja-art/pixel/p5-08/). Su modelo es otro (ojos más altos y juntos si es adulto), pero la caja de la expresión funciona igual.
+
+<Tip>
+Antes de dar una expresión por buena, ponla junto a la neutra y tapa con la mano la caja de los ojos y la boca. Si lo que queda no es idéntico, corrígelo.
+</Tip>
+</Block>
+
+<Block kind="errores">
+<Mistake title="Salirse de modelo" wrongLabel="portrait-offmodel: ojos movidos y boca enorme" rightLabel="portrait-happy: cejas, párpados y comisuras">
+  <Sprite slot="wrong" name="portrait-offmodel" scale={7} />
+  <Sprite slot="right" name="portrait-happy" scale={7} />
+
+Las dos quieren ser alegres. La de la izquierda ha movido los ojos 1 px hacia fuera cada uno, les ha quitado una fila y ha pintado una boca de 8 px con dientes que rompe el contorno de la barbilla. Ya no es tu héroe: es un primo. La de la derecha deja los ojos donde estaban: sube las cejas, los entorna, y la sonrisa son dos píxeles en las comisuras. Corrígelo volviendo a la base: borra la expresión y rehazla sin salir de la caja, cambiando cejas, párpados y comisuras, nunca la posición de los ojos ni el contorno.
+</Mistake>
+
+<Mistake title="Una sola cara para todo" wrongLabel="dialog-neutral: la misma cara en cada frase" rightLabel="dialog-happy: la cara acompaña la frase">
+  <Sprite slot="wrong" name="dialog-neutral" scale={4} />
+  <Sprite slot="right" name="dialog-happy" scale={4} />
+
+El retrato neutro no está mal dibujado. El error es usarlo en **todas** las frases: «¡Lo conseguimos!» y «Han quemado la aldea» con la misma cara. El jugador pierde la mitad de lo que cuenta el diálogo. Corrígelo con un set mínimo de 3 o 4 expresiones y elige una para cada frase, como un actor.
+</Mistake>
+
+<Warn title="Redibujar cada expresión desde cero">
+Si copias el retrato y redibujas los ojos y la boca a mano en cada versión, cada copia se desvía un píxel aquí y otro allá. Al alternarlas en el diálogo, la cara **tiembla**. Corrígelo con la base bloqueada y una capa por zona: lo que no está en esas capas no puede cambiar.
+</Warn>
+
+<Warn title="Un parpadeo largo o de metrónomo">
+Un parpadeo de 400 ms parece que el personaje se duerme, y uno cada segundo exacto distrae del texto. Corrígelo con un parpadeo de unos 100–150 ms y esperas largas y distintas entre uno y otro.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+Pon tus frames en fila a 1× y míralos de reojo, como si leyeras el texto.
+
+<Checklist items={[
+  "He partido de mi retrato de P5-05 y la capa base está bloqueada",
+  "Tengo al menos neutro, alegre, enfadado, sorprendido y parpadeo",
+  "Cada expresión cambia solo cejas, párpados y boca",
+  "Los ojos no cambian de sitio ni de tamaño: solo cambia cuánto ojo se ve",
+  "Con onion skin, todo lo de fuera de la caja de la expresión queda quieto",
+  "Ninguna expresión toca el contorno de la cara, el pelo ni la túnica",
+  "Cada emoción se lee a 1× sin ayuda del texto",
+  "El parpadeo es corto (100–150 ms) y no va a ritmo fijo",
+  "He probado el retrato dentro de un cuadro de diálogo a 1×",
+  "He exportado una hoja con todos los frames a 1× y las caras ampliadas con escala entera",
+]} />
+
+<Quiz q="Quieres que tu héroe parezca alegre. ¿Qué cambio lo saca de modelo?" options={["Tapar con piel la fila de abajo de cada ojo", "Separar los ojos 1 px más cada uno", "Subir las comisuras de la boca una fila"]} answer={1}>
+La posición de los ojos es parte del modelo: si cambia, cambia la persona. Tapar el ojo por abajo y subir las comisuras son cambios de expresión.
+</Quiz>
+
+<Quiz q="La cara enfadada del ejemplo cambia solo 8 píxeles. ¿Por qué se lee igual de bien?" options={["Porque cambia lo que dice la emoción: la inclinación de las cejas y las comisuras", "Porque el rojo de la boca es más intenso", "No se lee bien: harían falta más píxeles"]} answer={0}>
+La expresión no depende de cuántos píxeles cambias, sino de cuáles. Unas cejas inclinadas hacia la nariz y unas comisuras caídas bastan.
+</Quiz>
+
+<Quiz q="¿Qué parpadeo funciona mejor mientras el personaje habla?" options={["400 ms cada segundo", "120 ms cada 2 o 3 segundos, con esperas distintas", "Ninguno: el parpadeo distrae del texto"]} answer={1}>
+Corto para que no parezca que se duerme, y con esperas irregulares para que no se note un ritmo mecánico.
+</Quiz>
+</Block>

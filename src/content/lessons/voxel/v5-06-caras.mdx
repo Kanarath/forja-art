@@ -1,0 +1,243 @@
+---
+id: v5-06
+discipline: voxel
+level: 5
+order: 6
+title: "Caras voxel: expresiones con pocos vóxels"
+summary: "En un chibi voxel la cara son pocos vóxels: cambiar de expresión es mover, quitar o añadir de 2 a 10. Cejas y boca dicen más que una cara realista."
+duration: 40
+status: borrador
+prerequisites: [v5-01, p5-02]
+fundamentals: [f09]
+objectives:
+  - "Leer la cara del chibi como una rejilla de 8×5 vóxels y decidir qué sobresale y qué se pinta"
+  - "Cambiar de expresión moviendo, quitando o añadiendo entre 2 y 10 vóxels"
+  - "Usar las cejas y la boca como las piezas que más dicen"
+  - "Guardar cada expresión como versión o como modelo aparte y usarla como frame o en el juego"
+  - "Reconocer que, a esta escala, más detalle no se lee mejor"
+tools: [magicavoxel]
+piece:
+  name: "Tu chibi con tres expresiones (neutral y dos más) guardadas por separado y renderizadas con la misma cámara"
+  canvas: "16x16x16"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [caras]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Tu chibi de [V5-01](/forja-art/voxel/v5-01/) ya posa. Ahora le das **cara**: el mismo personaje, alegre, enfadado o neutral. Y cada expresión cuesta **muy pocos vóxels**.
+
+<VoxViewer model="caras" stage={1} title="Tu pieza: el mismo chibi con otra expresión" />
+
+Recorre las cuatro etapas: **Neutral**, **Alegre**, **Enfado** y **Demasiado**. Gira el modelo de frente. Cuerpo, pelo, brazos y botas no cambian nunca. Solo cambia un puñado de vóxels de la cara.
+
+La última etapa es el **error** de esta lección. La verás al final.
+
+Tu pieza: **tu chibi con tres expresiones** (la neutral y dos más), cada una guardada aparte y renderizadas con la **misma cámara**, listas para usarse como frames o en el juego.
+</Block>
+
+<Block kind="concepto">
+### 1. La cara son 40 vóxels
+
+<VoxViewer model="caras" stage={0} title="Neutral: la referencia. Cambia de etapa y cuenta lo que cambia" />
+
+Mira el chibi de frente. La cabeza va de la capa **7** a la **14**, pero la piel solo se ve en una parte de la cara:
+
+- **Piel:** columnas **2 a 9** (8 de ancho) y capas **7 a 11** (5 de alto). Son **40 vóxels** de cara.
+- **Pelo:** de la capa **12** hacia arriba. La última fila del pelo hace de flequillo.
+- **Ojos:** dos vóxels cada uno (1 de ancho y 2 de alto), en las columnas **4** y **7**, capas **9 y 10**. Sobresalen **1 vóxel** por delante de la cara.
+- **Boca:** no hay. La neutral se lee por lo que **no** tiene.
+
+El modelo entero tiene 752 vóxels. La expresión vive en unos pocos de esos 40.
+
+<Why title="Por qué tan poco sitio">
+Es la proporción chibi de [F09-01](/forja-art/fundamentos/f09-01/): la cabeza es casi la mitad de la altura **para que quepa una cara**. Aun así, la cara es una rejilla de 8×5. Es casi la misma situación que la cabeza de 12×11 píxeles de [P5-02](/forja-art/pixel/p5-02/): no hay músculos ni párpados, hay **tres sitios**: cejas, ojos y boca.
+</Why>
+
+### 2. Cambiar de expresión es mover, quitar o añadir
+
+Pasa de **Neutral** a **Alegre** y luego a **Enfado**, y cuenta:
+
+- **Alegre: 10 vóxels.** De cada ojo se **quita** el vóxel de abajo y se **añaden** dos a los lados, en la capa 9: cada ojo es un arco de 3, como `^ ^`. Debajo, una **boca** de 2 vóxels en rosa oscuro (columnas 5 y 6, capa 7). Y dos **mejillas** rosadas pintadas en la cara (columnas 3 y 8, capa 8). En total: 2 quitados, 6 añadidos y 2 repintados.
+- **Enfado: 6 vóxels.** Los ojos no se tocan. Se **añaden** dos cejas de 2 vóxels y una boca recta de 2 vóxels casi negros (columnas 5 y 6, capa 7).
+
+Las mismas operaciones que en pixel: un vóxel de más, uno de menos o uno en otro sitio cambia la emoción.
+
+<Sprite name="face-alegre" scale={8} caption="P5-02 en pixel: el mismo truco de los ojos en arco ^ ^ para la alegría" />
+
+<Tip>
+En el modelo, los dos arcos de la alegría se tocan en el centro (columnas 5 y 6). Se leen como dos ojos porque los picos, en las columnas 4 y 7, quedan separados. Si tu cara es más ancha, deja un vóxel de hueco entre los dos arcos.
+</Tip>
+
+### 3. Cejas y boca: las piezas que más dicen
+
+Las cejas del enfado son **dos vóxels en diagonal**:
+
+- el de **fuera**, alto (capa 12, delante de la última fila del pelo);
+- el de **dentro**, una capa más bajo (capa 11), justo encima del ojo.
+
+Cejas que bajan hacia el centro: enfado. Es la misma regla que en [P5-02](/forja-art/pixel/p5-02/). Si cambias las capas (dentro alto, fuera bajo), la ceja sube hacia el centro y la cara pasa a estar **triste**. Has **movido** 4 vóxels y has cambiado de emoción.
+
+<Sprite name="face-enfado" scale={8} caption="P5-02 en pixel: cejas que bajan hacia el centro y boca recta" />
+
+La boca hace lo mismo con muy poco. Dos vóxels claros y cálidos con mejillas: alegre. Los mismos dos vóxels, casi negros: tenso, enfadado. La neutral no lleva boca, y por eso se lee tranquila.
+
+<Why title="Por qué cejas y boca pesan más que los ojos">
+El ojo humano lee primero la **dirección de las líneas** de una cara. Unos ojos de 1×2 son un punto: dicen dónde mira el personaje, poco más. Una ceja inclinada o una boca recta son **líneas con dirección**, y la dirección es la emoción. Por eso el enfado del modelo deja los ojos como están y solo añade cejas y boca.
+</Why>
+
+### 4. Sobresalir o pintar
+
+En el modelo hay dos formas de poner un rasgo:
+
+- **Sobresalir:** ojos, cejas y boca están **1 vóxel por delante** de la cara. Hacen sombra en el render, se ven de lado y se leen de lejos.
+- **Pintar:** las mejillas de la alegría **no sobresalen**: son vóxels de la cara pintados de otro color. No cambian la forma de la cabeza.
+
+<Why title="Cuándo cada una">
+Lo que tiene que leerse como una **línea** (ojos, cejas, boca) gana si sobresale: el relieve le da un borde de sombra, como un trazo. Lo que es **color sin forma** (mejillas, un rubor, una mancha) va pintado: si sobresaliera, la cara tendría bultos. Piénsalo como en Blender: un rasgo modelado frente a uno pintado en la textura.
+</Why>
+
+### 5. Cada expresión, guardada aparte
+
+Una expresión que no guardas, la vuelves a hacer. Hay dos formas:
+
+- **Como versión:** un archivo por expresión (`chibi_neutral.vox`, `chibi_alegre.vox`…). Sencillo y seguro.
+- **Como modelo aparte:** en el modo **World**, varias copias del chibi en la misma escena, cada una con su cara. Las ves juntas y comparas.
+
+Las dos tienen la misma regla: **el mismo tamaño de modelo y nada movido fuera de la cara**. Así, cada expresión encaja exactamente encima de la otra.
+
+Después, las usas:
+
+- **Como frames de un sprite**, como en [V5-02](/forja-art/voxel/v5-02/): render de cada expresión con la misma cámara, la misma luz y la misma resolución, y a Aseprite como frames. Un retrato que cambia de cara en un diálogo, o una reacción de dos frames.
+- **En Godot**, como modelos distintos: se exporta cada expresión y el juego cambia de uno a otro. Eso lo harás en [V9-01](/forja-art/voxel/v9-01/).
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Abre tu chibi y guarda la neutral">
+1. Abre tu chibi de V5-01 (el neutro, de pie, no el del saludo).
+2. Comprueba la cara: ojos de 2 vóxels que sobresalen 1, sin boca o con una boca muy discreta.
+3. Guárdalo como `chibi_neutral.vox`. Esta es tu referencia: **no la vuelvas a tocar**.
+
+<Why>
+Todas las expresiones salen de esta. Si cada una parte de la neutral, el cuerpo y el pelo son idénticos en todas, y al cambiar de una a otra solo se mueve la cara.
+</Why>
+</Step>
+
+<Step n={2} title="Prepara la paleta de la cara">
+1. En la **paleta** de la izquierda, junto a la piel, pon como mucho **tres colores nuevos**: el oscuro de ojos y cejas (ya lo tienes), un rosa oscuro para la boca y un rosa claro para las mejillas.
+2. No añadas un blanco para los ojos ni tonos de sombra para la nariz.
+
+<Tip>
+Pocos colores fuerzan pocas decisiones. Si necesitas un cuarto color para que la cara se lea, la cara tiene un problema de forma, no de color.
+</Tip>
+</Step>
+
+<Step n={3} title="La alegre: quita, añade y pinta">
+1. Guarda una copia como `chibi_alegre.vox` y trabaja en ella.
+2. Activa **Mirror X**: la cara es simétrica.
+3. Modo **Erase**, pincel **Voxel**: quita el vóxel de abajo de un ojo. Mirror quita el del otro.
+4. Modo **Attach**, color oscuro: pon un vóxel a cada lado del vóxel que queda, una capa más abajo. El ojo es un arco de 3.
+5. Color de la boca: 2 vóxels en el centro de la última fila de piel. Con un ancho par, pones uno y Mirror pone el otro.
+6. Modo **Paint**, rosa claro: pinta una mejilla en la cara, debajo de la punta de fuera del ojo. **Paint**, no **Attach**: no tiene que sobresalir.
+
+<Warn>
+Si pintas la mejilla con **Attach**, se pone un vóxel por delante y la cara tiene un grano. Gira la cámara de lado para comprobar que solo sobresalen ojos y boca.
+</Warn>
+</Step>
+
+<Step n={4} title="La enfadada: cejas y boca, nada más">
+1. Abre `chibi_neutral.vox` y guárdalo como `chibi_enfado.vox`.
+2. **Mirror X** encendido, modo **Attach**, color oscuro: una ceja de 2 vóxels en diagonal. El de fuera, alto, a la altura de la última fila del pelo; el de dentro, una capa más bajo, encima del ojo.
+3. La boca: 2 vóxels **oscuros** en el centro de la última fila de piel. Recta.
+4. No toques los ojos.
+
+<Why>
+Seis vóxels. Si la cara no se lee enfadada, no añadas más cosas: comprueba la inclinación de la ceja. Una ceja plana no dice nada; una que baja hacia el centro dice enfado.
+</Why>
+</Step>
+
+<Step n={5} title="Compara de frente y de lejos">
+1. Pasa al modo **World** y pon las tres expresiones en fila, a la misma altura.
+2. Gira la cámara hasta verlas **de frente** y aléjate con la rueda del ratón hasta que los chibis sean pequeños, como en el juego.
+3. ¿Se distinguen las tres? Si dos se parecen, exagera: más inclinación en la ceja, la boca de otro color, un vóxel más en el arco.
+
+<Tip>
+Prueba también desde la cámara de tu juego (por ejemplo, desde arriba en diagonal). Desde arriba, el flequillo tapa las cejas altas. Si se pierden, bájalas una capa.
+</Tip>
+</Step>
+
+<Step n={6} title="Renderiza las tres con la misma cámara">
+1. Abre cada expresión, una detrás de otra, **sin tocar la cámara** entre una y otra.
+2. Pulsa **Render**, con la misma luz y la misma resolución, y guarda un PNG de cada una.
+3. Ponles nombres en orden: `cara_1_neutral.png`, `cara_2_alegre.png`, `cara_3_enfado.png`.
+
+<Why>
+Es el flujo de V5-02. Si la cámara o la luz cambian entre renders, al pasar de una expresión a otra tiembla la cabeza entera, no solo la cara. Estos PNG ya sirven como frames en Aseprite o como retratos de diálogo.
+</Why>
+</Step>
+
+<Warn title="Verifica en tu versión">
+Los nombres y la posición de **Mirror X**, **Attach** / **Erase** / **Paint**, el pincel **Voxel**, el modo **World** y los ajustes de **Render** pueden variar entre versiones de MagicaVoxel. Comprueba sobre todo cómo se duplica un modelo en **World** y cómo se guarda la imagen del render. Para Godot, la forma de exportar y cambiar de modelo la verás en V9-01.
+</Warn>
+</Block>
+
+<Block kind="version">
+Ahora, a tu manera. Parte siempre de `chibi_neutral.vox` y elige un reto:
+
+- **Triste:** mueve las cejas del enfado (dentro alto, fuera bajo) y pon una boca oscura. Cuenta los vóxels: tienen que ser menos de 10.
+- **Sorpresa:** ojos de 3 vóxels de alto en vez de 2 y una boca abierta de 2×2. Como en P5-02: los ojos crecen y la boca se abre.
+- **Un parpadeo:** quita el vóxel de arriba de cada ojo. Renderiza neutral y parpadeo con la misma cámara y móntalos en Aseprite como dos frames: uno largo y otro corto.
+
+**Prueba de lectura.** Enseña los renders a alguien sin decirle qué expresión es cada uno. ¿Las nombra bien?
+</Block>
+
+<Block kind="errores">
+<Mistake title="Una cara «realista» en un chibi" wrongLabel="Demasiado: 24 vóxels" rightLabel="Alegre: 10 vóxels">
+  <VoxViewer slot="wrong" model="caras" stage={3} title="Demasiado" />
+  <VoxViewer slot="right" model="caras" stage={1} title="Alegre" />
+
+La etapa **Demasiado** cambia **24 vóxels** respecto a la neutral: ojos de 2×2 con blanco e iris en dos azules, cejas del color del pelo, una nariz de 2 de ancho que sobresale **2** vóxels, labios de 4 en dos tonos y mejillas sombreadas en dos tonos. Más trabajo, y se lee **peor**: las cejas del color del pelo se funden con el flequillo, los ojos tocan las cejas y forman un bloque, y la nariz es lo que más sobresale de la cara. El personaje parece otro y pierde el estilo. **Corrección:** quita hasta quedarte con cejas, ojos y boca, en uno o dos colores oscuros y sin nariz. Si la cara pide más detalle, es que la cabeza es demasiado pequeña: eso se decide en la proporción, no en la cara.
+</Mistake>
+
+<Mistake title="Cada expresión con otro modelo debajo" wrongLabel="Cuerpo retocado en cada archivo" rightLabel="Todo igual salvo la cara">
+  <p slot="wrong">Cada expresión la haces desde la última que tocaste. En una corriges un brazo, en otra mueves el pelo un vóxel. Al pasar de una a otra, el personaje entero salta.</p>
+  <p slot="right">Todas salen de chibi_neutral.vox, con el mismo tamaño de modelo, y solo cambian los vóxels de la cara.</p>
+
+Como frame o en el juego, el ojo compara una expresión con la anterior y lee como movimiento **todo** lo que cambia. **Corrección:** si corriges el cuerpo, corrígelo en la neutral y rehaz las expresiones desde ella. Son pocos vóxels: se rehacen en minutos.
+</Mistake>
+
+<Warn title="Error típico: una expresión tímida">
+Mueves un vóxel de la boca o inclinas la ceja solo en un lado. De cerca se nota; de lejos, todas las caras son iguales. **Corrección:** exagera. En 8×5 vóxels no hay matices: una ceja está inclinada o no lo está. Compruébalo siempre de lejos, como en el paso 5.
+</Warn>
+
+<Warn title="Error típico: pintar lo que debía sobresalir">
+Pintas cejas y boca sobre la cara, sin relieve. De frente se ven, pero en el render pierden el borde de sombra y de lado desaparecen. **Corrección:** las líneas de la cara (ojos, cejas, boca) sobresalen 1 vóxel; solo las manchas de color (mejillas) van pintadas.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+<Checklist items={[
+  "Tengo chibi_neutral.vox y no lo he tocado después de guardarlo",
+  "Cada expresión cambia como mucho 10 vóxels respecto a la neutral",
+  "Las cejas y la boca hacen el trabajo; los ojos cambian solo si hace falta",
+  "Ojos, cejas y boca sobresalen 1 vóxel; las mejillas van pintadas",
+  "La cara usa como mucho tres colores nuevos y no tiene nariz ni ojos con blanco",
+  "Fuera de la cara, todas las expresiones son idénticas",
+  "Las tres expresiones se distinguen de lejos y desde la cámara del juego",
+  "He renderizado las tres con la misma cámara, la misma luz y la misma resolución",
+]} />
+
+<Quiz q="Tu chibi enfadado no se lee enfadado. ¿Qué cambias primero?" options={["Le añado nariz, labios y ojos con blanco", "La inclinación de las cejas: el vóxel de dentro más bajo que el de fuera", "Le pongo un color de piel más rojo"]} answer={1}>
+Las cejas son líneas con dirección, y la dirección es la emoción. Dos vóxels en diagonal que bajan hacia el centro dicen enfado; más detalle no lo arregla.
+</Quiz>
+
+<Quiz q="¿Cómo pones las mejillas rosadas de la alegría?" options={["Con Paint: pintando vóxels de la cara, sin que sobresalgan", "Con Attach: un vóxel por delante de la cara", "Con un vóxel blanco de brillo"]} answer={0}>
+Las mejillas son color sin forma. Si sobresalen, la cara tiene bultos. Lo que sobresale son las líneas: ojos, cejas y boca.
+</Quiz>
+
+<Quiz q="Vas a usar tres expresiones como frames de un sprite. ¿Qué tiene que ser igual en las tres?" options={["Solo la cara", "Todo salvo la cara: cuerpo, pelo, tamaño del modelo, y además la cámara, la luz y la resolución del render", "Nada: cada frame es un dibujo nuevo"]} answer={1}>
+El ojo lee como movimiento todo lo que cambia entre frames. Si solo cambia la cara, solo se mueve la cara.
+</Quiz>
+</Block>

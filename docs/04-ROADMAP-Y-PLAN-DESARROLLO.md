@@ -203,6 +203,12 @@
 - **Voxel:** V3-05 Agua y cristal (una fuente con material Glass), V6-05 Piezas que se mueven (un molino).
 - **Arte nuevo:** cuatro NPCs a partir del héroe y su error de solo recolorear, la poción flotando y su recogida con la escena buena y mala, la escena final en tres valores y su versión embarrada, y los modelos «fuente» y «molino».
 
+**Contenido · decimoctavo bloque: 5 lecciones más (103 en total).**
+- **Pixel:** P5-09 Retratos de diálogo (expresiones sin perder el modelo), P7-08 Hierba al viento (decorado animado).
+- **Fundamentos:** F07-02 Ritmo y repetición.
+- **Voxel:** V5-06 Caras voxel (expresiones con pocos vóxels), V7-05 Cuevas (vaciar una masa de roca).
+- **Arte nuevo:** el retrato de P5-05 alegre, enfadado, sorprendido y parpadeando, su versión «fuera de modelo» y dos cuadros de diálogo; un prado al viento en 4 frames y su error; tres pinos y tres filas (monótona, caótica y con ritmo), y los modelos «caras» y «cueva».
+
 **Fase 6 · Forge Tools (iniciada el 2026-11-10).** Tres scripts de Aseprite, la CLI `forja-vox` y la página Forge Tools con descargas y demos. Ver `forge-tools/README.md`.
 
 **Lecciones aprendidas durante la fase 1:**

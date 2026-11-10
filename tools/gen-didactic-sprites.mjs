@@ -1725,6 +1725,132 @@ function pathTile(mask, { square = false } = {}) {
   add("values-muddy-3", "La escena «embarrada» reducida a los mismos tres valores: casi todo cae en el valor medio. Sin oscuros ni claros, nada se separa.", ["valor", "escena", "error"], m3.pal, m3.rows);
 }
 
+// ---------- retratos para diálogo: el busto de P5-05 con expresiones (solo cejas, ojos y boca) y un cuadro de diálogo
+{
+  const P = spriteByName("portrait");
+  const base = () => P.rows.map((r) => [...r]);
+  const put = (g, pts, k) => pts.forEach(([x, y]) => { g[y][x] = k; });
+  const fin = (name, d, g) => add(name, d, ["personaje", "retrato"], usedOnly(P.palette, g.map((r) => r.join(""))), g.map((r) => r.join("")));
+  // cejas: la izquierda en la fila 11 (x 10–12) y la derecha en la fila 10 (x 19–21); párpado de arriba en la fila 13; ojos en 14–15
+  const browL = (g, y, k = "k") => { for (const x of [10, 11, 12]) g[11][x] = "s"; for (const x of [10, 11, 12]) g[y][x] = k; };
+  const browR = (g, y, k = "k") => { for (const x of [19, 20, 21]) g[10][x] = "S"; for (const x of [19, 20, 21]) g[y][x] = k; };
+  // alegre: cejas 1 px más arriba, ojos entornados (la fila de abajo del ojo se cubre de piel) y comisuras hacia arriba
+  const happy = base();
+  browL(happy, 10); browR(happy, 9);
+  put(happy, [[10, 15], [11, 15], [12, 15]], "s"); put(happy, [[19, 15], [20, 15], [21, 15]], "S");
+  put(happy, [[13, 19], [18, 19]], "m");
+  fin("portrait-happy", "El retrato alegre (32×32): las dos cejas suben 1 px, la fila de abajo de cada ojo se cubre de piel (ojos entornados) y la boca gana dos comisuras levantadas, una fila más arriba. El resto de la cara no cambia.", happy);
+  // enfadado: cada ceja sube por fuera y baja por dentro (hacia la nariz), y comisuras hacia abajo
+  const angry = base();
+  put(angry, [[10, 11]], "s"); put(angry, [[10, 10], [12, 12]], "k"); // izquierda: fuera (x10) arriba, dentro (x12) abajo
+  put(angry, [[21, 10]], "S"); put(angry, [[21, 9], [19, 11]], "k"); // derecha: fuera (x21) arriba, dentro (x19) abajo
+  put(angry, [[13, 21], [18, 21]], "m");
+  fin("portrait-angry", "El retrato enfadado (32×32): cada ceja sube 1 px por fuera y baja 1 px por dentro, hacia la nariz, y queda inclinada; la boca gana dos comisuras caídas, una fila por debajo.", angry);
+  // sorpresa: cejas 2 px más arriba y boca redonda
+  const surp = base();
+  browL(surp, 9); browR(surp, 8);
+  put(surp, [[14, 20], [17, 20]], "s"); put(surp, [[15, 20], [16, 20], [15, 21], [16, 21]], "k");
+  fin("portrait-surprise", "El retrato sorprendido (32×32): las cejas suben 2 px y la boca pasa a ser un hueco oscuro de 2×2. Los ojos se quedan como están.", surp);
+  // parpadeo: el párpado baja: la línea oscura pasa de la fila 13 a la 14 y el ojo desaparece
+  const blink = base();
+  put(blink, [[10, 13], [11, 13], [12, 13], [10, 15], [11, 15], [12, 15]], "s"); put(blink, [[19, 13], [20, 13], [21, 13], [19, 15], [20, 15], [21, 15]], "S");
+  put(blink, [[10, 14], [11, 14], [12, 14], [19, 14], [20, 14], [21, 14]], "o");
+  fin("portrait-blink", "El retrato con los ojos cerrados (32×32): el párpado baja una fila (la línea oscura pasa de la fila 13 a la 14) y el resto del ojo pasa a piel. Sirve para un parpadeo mientras habla.", blink);
+  // error: «fuera de modelo»: para sonreír se mueven los ojos y se cambia la mandíbula
+  const off = base();
+  for (const y of [14, 15]) for (const x of [9, 10, 11, 12, 13, 18, 19, 20, 21, 22]) off[y][x] = x < 16 ? "s" : "S";
+  put(off, [[9, 13], [10, 13], [11, 13], [20, 13], [21, 13], [22, 13]], "o"); put(off, [[12, 13], [19, 13]], "s");
+  put(off, [[9, 14], [10, 14], [11, 14], [20, 14], [21, 14], [22, 14]], "i"); put(off, [[9, 14], [22, 14]], "w");
+  for (let x = 12; x <= 19; x++) off[20][x] = "m"; for (let x = 13; x <= 18; x++) off[21][x] = "w"; off[21][12] = "m"; off[21][19] = "m";
+  fin("portrait-offmodel", "Error: una sonrisa «fuera de modelo». Para hacerla alegre se han movido los ojos 1 px hacia fuera (pierden la pupila y su fila de abajo) y se ha dibujado una boca de 8 px con dientes que rompe el contorno de la barbilla. Cada cambio por separado parece una mejora, pero juntos ya no es la misma persona.", off);
+  // cuadro de diálogo: retrato a la izquierda, nombre y tres líneas de texto (barras) a la derecha
+  const W = 112, H = 40, PNL = "#1d2742", PNL_L = "#3a4a72", O = "#1b1030", TXT = "#e8e6f0", NAME = "#f2c14e";
+  const box = (face) => {
+    const px = Array.from({ length: H }, (_, y) => Array.from({ length: W }, (_, x) => (x === 0 || y === 0 || x === W - 1 || y === H - 1 ? O : x === 1 || y === 1 || x === W - 2 || y === H - 2 ? PNL_L : PNL)));
+    const g = spriteByName(face);
+    g.rows.forEach((r, y) => [...r].forEach((k, x) => { if (k !== ".") px[4 + y][4 + x] = g.palette[k]; }));
+    for (let y = 3; y <= 36; y++) { px[y][3] = PNL_L; px[y][36] = PNL_L; } for (let x = 3; x <= 36; x++) { px[3][x] = PNL_L; px[36][x] = PNL_L; } // marco del retrato
+    for (let x = 41; x < 61; x++) for (let y = 5; y < 8; y++) px[y][x] = NAME; // nombre
+    [[41, 104], [41, 98], [41, 80]].forEach(([a, b], i) => { for (let x = a; x < b; x++) if ((x - a) % 9 < 7) for (let y = 13 + i * 7; y < 16 + i * 7; y++) px[y][x] = TXT; }); // líneas de texto («palabras» de 7 px)
+    return hexGridToSprite(px);
+  };
+  const dh = box("portrait-happy"), dn = box("portrait");
+  add("dialog-happy", "Cuadro de diálogo de 112×40: el retrato alegre en un marco a la izquierda, el nombre en amarillo arriba y tres líneas de texto (las «palabras» son barras de 7 px). La cara acompaña lo que dice.", ["ui", "retrato"], dh.pal, dh.rows);
+  add("dialog-neutral", "El mismo cuadro de diálogo con el retrato neutro de P5-05. Si todas las frases llevan esta cara, el diálogo pierde la mitad de lo que cuenta.", ["ui", "retrato"], dn.pal, dn.rows);
+}
+
+// ---------- hierba al viento: matas que se doblan (la punta se mueve, la base no) y una ola que recorre el prado
+{
+  const W = 64, H = 24, BL = { d: "#2c7a48", m: "#3fa45b", l: "#6fd17f", L: "#a8ec9a" };
+  const ground = () => Array.from({ length: H }, (_, y) => Array.from({ length: W }, (_, x) => (y < 8 ? null : shadeHex(GRASS[grassTile().rows[y % 16][x % 16]], 0.78)))); // el suelo un poco más oscuro que las matas
+  const TUFTS = [[4, 14], [11, 20], [18, 12], [25, 18], [33, 15], [40, 21], [47, 13], [54, 19], [60, 16]];
+  const tuft = (px, x, y, s, rigid) => {
+    // tres briznas: la del centro de 5, las de los lados de 4; la punta se desplaza s y la del medio, la mitad
+    for (const [dx, h] of [[-2, 4], [0, 5], [2, 4]]) for (let k = 0; k < h; k++) {
+      const off = rigid || k >= h - 2 ? s : 0; // en la buena solo se mueven los 2 px de la punta
+      const c = k === h - 1 ? BL.L : k >= h - 3 ? BL.l : BL.m;
+      const X = x + dx + off, Y = y - k;
+      if (px[Y]?.[X] !== undefined) px[Y][X] = c;
+    }
+  };
+  const frame = (t, { rigid = false } = {}) => {
+    const px = ground();
+    TUFTS.forEach(([x, y], i) => {
+      const s = [0, 1, 0, -1][rigid ? t : (((t - i) % 4) + 4) % 4]; // la ola avanza hacia la derecha: cada mata va un frame por detrás de la anterior
+      tuft(px, x, y, s, rigid);
+    });
+    return px;
+  };
+  const good = fixedFrames([0, 1, 2, 3].map((t) => frame(t)));
+  const bad = fixedFrames([0, 1, 2, 3].map((t) => frame(t, { rigid: true })));
+  const GD = [
+    "Prado al viento, frame 1 (64×24, sobre el tile de hierba de P7-01 oscurecido al 78 % para que las matas destaquen): nueve matas de tres briznas. Cada mata dobla las puntas según su posición: la ola de viento recorre el prado de izquierda a derecha.",
+    "Frame 2: la ola ha avanzado; las matas que estaban rectas se doblan y las dobladas vuelven. La base de cada brizna nunca se mueve.",
+    "Frame 3: en cada mata solo se desplazan 1 px los 2 píxeles de la punta; el resto de la brizna se queda. Así se doblan en vez de deslizarse.",
+    "Frame 4: cierra el bucle de 4 frames (recta, derecha, recta, izquierda). Cada mata va un frame por detrás de la de su izquierda, así que nunca hace lo mismo que su vecina.",
+  ];
+  good.forEach((f, i) => add(`grass-wind-${i + 1}`, GD[i], ["tile", "animación"], f.pal, f.rows));
+  const BD = [
+    "Error, frame 1: las mismas nueve matas rectas.",
+    "Error, frame 2: todas las matas se desplazan enteras 1 px a la derecha a la vez, la base incluida.",
+    "Error, frame 3: todas vuelven a su sitio a la vez.",
+    "Error, frame 4: todas se desplazan enteras 1 px a la izquierda. Parece que el prado se desliza, no que sople el viento.",
+  ];
+  bad.forEach((f, i) => add(`grass-wind-bad-${i + 1}`, BD[i], ["tile", "animación", "error"], f.pal, f.rows));
+}
+
+// ---------- ritmo y repetición: una fila de pinos monótona, caótica y con ritmo (96×32)
+function pineSprite(h, { snow = false } = {}) {
+  const w = Math.round(h * 0.6) | 1, cx = (w - 1) / 2, trunk = 2, crown = h - trunk;
+  const P = { o: "#1b1030", d: "#1f6b4a", m: "#2a8a5c", l: "#3fbf7f", t: "#6b3d2e", w: "#f4f8ff" };
+  const T = 3, tierH = crown / T; // tres pisos de ramas: cada piso se abre hacia abajo y el siguiente empieza más estrecho
+  const inside = (x, y) => { if (y >= crown) return Math.abs(x - cx) <= 0.6; const i = Math.min(T - 1, Math.floor(y / tierH)), f = (y - i * tierH) / tierH; const hw = ((i + 1) / T) * (w / 2 + 0.3) * (0.45 + 0.55 * f); return Math.abs(x - cx) <= hw; };
+  const rows = Array.from({ length: h }, (_, y) => Array.from({ length: w }, (_, x) => {
+    if (!inside(x, y)) return ".";
+    if (y >= crown) return "t";
+    const edge = !inside(x - 1, y) || !inside(x + 1, y) || !inside(x, y - 1) || (y + 1 < crown && !inside(x, y + 1));
+    if (edge) return "o";
+    if (snow && !inside(x, y - 2)) return "w";
+    return x < cx ? "l" : x > cx + 1 ? "d" : "m";
+  }).join(""));
+  return { pal: usedOnly(P, rows), rows };
+}
+{
+  const sizes = { s: pineSprite(12), m: pineSprite(18), l: pineSprite(26) };
+  for (const [k, p] of Object.entries(sizes)) add(`pine-${k}`, `Pino de ${p.rows[0].length}×${p.rows.length} para las filas de ritmo: copa en capas, luz a la izquierda, contorno y un tronco de 2 px.`, ["prop", "ritmo"], p.pal, p.rows);
+  const row = (items) => {
+    const px = Array.from({ length: 32 }, (_, y) => Array.from({ length: 96 }, () => (y >= 29 ? (y === 29 ? "#3fa45b" : "#2c7a48") : null)));
+    for (const [k, x] of items) { const n = `pine-${k}`, s = spriteByName(n); stamp(px, n, x, 29 - s.rows.length); }
+    return hexGridToSprite(px);
+  };
+  const mono = row([[2, "m"], [14, "m"], [26, "m"], [38, "m"], [50, "m"], [62, "m"], [74, "m"], [86, "m"]].map(([x, k]) => [k, x]));
+  const chaos = row([["l", 0], ["s", 13], ["s", 17], ["m", 26], ["l", 37], ["s", 52], ["m", 58], ["s", 70], ["l", 77], ["s", 91]]);
+  const rhythm = row([["l", 1], ["m", 15], ["s", 26], ["l", 46], ["m", 60], ["s", 71], ["m", 83]]);
+  add("rhythm-mono", "Error por monotonía: ocho pinos iguales de 18 px, con un tronco exactamente cada 12 px (las copas casi se tocan). Se lee como una valla, no como un bosque, y el ojo se aburre.", ["ritmo", "composición", "error"], mono.pal, mono.rows);
+  add("rhythm-chaos", "Error por caos: diez pinos de los tres tamaños puestos sin orden: de tronco a tronco hay entre 4 y 14 px, sin patrón, y las copas se tocan o se tapan. Hay variación, pero no patrón: el ojo no sabe dónde mirar.", ["ritmo", "composición", "error"], chaos.pal, chaos.rows);
+  add("rhythm-good", "Ritmo: siete pinos en dos grupos de grande-mediano-pequeño, separados por un hueco más ancho, y un mediano al final. Se repite un patrón (el ojo lo reconoce) con variación dentro (no aburre).", ["ritmo", "composición"], rhythm.pal, rhythm.rows);
+}
+
 // ---------- escribir y validar
 let bad = 0;
 for (const s of out) {

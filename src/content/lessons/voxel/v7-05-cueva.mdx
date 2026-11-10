@@ -1,0 +1,263 @@
+---
+id: v7-05
+discipline: voxel
+level: 7
+order: 5
+title: "Cuevas: vaciar una masa de roca"
+summary: "Modela por sustracción: parte de una masa de roca, vacía una cámara y su entrada, déjala en corte, oscurece el interior y guía la mirada con cristales y setas en Emit."
+duration: 45
+status: borrador
+prerequisites: [v7-02, v3-02]
+fundamentals: [f05, f10]
+objectives:
+  - "Modelar por sustracción: empezar con una masa y quitar hasta que aparezca el hueco"
+  - "Vaciar una cámara redondeada y una entrada en arco, dejando paredes y techo con grosor"
+  - "Dejar la cueva en corte y oscurecer las paredes de dentro para que se lea el interior"
+  - "Usar la luz como guía: fuentes en Emit que llevan la mirada desde la entrada hacia dentro"
+  - "Añadir detalles que cuentan algo, como la estalactita que gotea en un charco"
+tools: [magicavoxel]
+piece:
+  name: "Tu cueva vaciada en una masa de roca, en corte, con al menos dos fuentes de luz en Emit y un render"
+  canvas: "unos 22x16x14"
+xp: { concept: 10, guided: 20, piece: 70 }
+achievements: [cueva]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Hasta ahora has construido **sumando**: un suelo, unas paredes, un mueble encima de otro. En [el diorama (V7-01)](/forja-art/voxel/v7-01/) colocaste piezas sobre una base; en [V7-02](/forja-art/voxel/v7-02/) y en [la mazmorra (V7-03)](/forja-art/voxel/v7-03/) levantaste las paredes vóxel a vóxel. Una cueva no se levanta: **se vacía**. Hoy empiezas con un bloque de roca y le quitas lo que sobra.
+
+<VoxViewer model="cueva" stage={2} title="La cueva terminada: masa vaciada, en corte, con cristales y luz" />
+
+**Gira el visor** hasta mirar por el lado derecho: ahí la roca está cortada y se ve el interior. Luego recorre las tres etapas:
+
+1. **Masa:** un bloque de roca de 22×16, con la cima irregular y estratos de piedra.
+2. **Vaciado:** una cámara redondeada y una entrada en arco por delante. La parte derecha se quita para ver dentro.
+3. **Cristales y luz:** dos grupos de cristales, cuatro estalactitas, un charco y dos setas que brillan junto a la entrada.
+
+Tu pieza final: **tu propia cueva vaciada en una masa de roca**, de unos 22×16 y hasta 14 de alto, **en corte**, con las paredes de dentro más oscuras, **al menos dos fuentes de luz en Emit** que guíen desde la entrada hacia el fondo y **un render**.
+
+<Warn title="El visor no simula Emit">
+En el visor, los cristales y las setas son solo vóxels de colores vivos, y la cueva se ve con una luz uniforme. El brillo de verdad (la cueva oscura y los cristales alumbrando la roca) solo aparece en el modo **Render** de MagicaVoxel, como viste en [V3-02](/forja-art/voxel/v3-02/).
+</Warn>
+</Block>
+
+<Block kind="concepto">
+### 1. Modelar por sustracción
+
+<VoxViewer model="cueva" stage={0} title="Masa: el bloque de roca del que sale la cueva" />
+
+Mira la masa en el visor:
+
+- **Planta de 22×16** (x de 0 a 21, y de 0 a 15). En los bordes izquierdo y derecho faltan 13 columnas sueltas: los **bordes mordidos**, para que no parezca una caja. La cara de atrás se deja entera, porque será la pared del fondo de la cueva.
+- **Alto irregular:** la cima está entre la capa 8 y la 13, así que la roca mide **de 9 a 14 vóxels** según la columna. En los bordes baja 2.
+- **Tres grises azulados:** la fila de abajo en `#565d6e`, la roca en `#7d8698` y una banda de estrato en `#6a7284` **cada 4 capas**. En unas columnas la banda va una capa más arriba que en otras, así que los estratos dan pequeños saltos.
+
+La masa ya parece roca **antes de tener cueva**. Esa es la idea: el material existe primero y la forma sale de quitar.
+
+<Why title="¿Por qué quitar en vez de construir?">
+Si levantas una cueva pared a pared, acabas con **una caja con forma de cueva**: paredes de 1 vóxel, rectas, del mismo grosor en todas partes. Al vaciar una masa, las paredes salen **gruesas y desiguales** sin pensarlo: donde la cámara se acerca al borde la roca es fina; donde se aleja, gruesa. La roca tiene peso porque **es** un bloque. Es como el booleano de diferencia de Blender, pero a mano y vóxel a vóxel.
+</Why>
+
+### 2. La cámara y la entrada
+
+<VoxViewer model="cueva" stage={1} title="Vaciado: cámara redondeada, entrada en arco y la cueva en corte" />
+
+En la etapa **Vaciado** se quitan dos huecos que se tocan:
+
+- **La cámara:** una forma redondeada de **15 de ancho** (x de 4 a 18), **9 de fondo** (y de 5 a 13) y **7 de alto** (capas 1 a 7). Es más alta en el centro y baja hacia los bordes, como una burbuja aplastada.
+- **La entrada:** un túnel desde la cara de delante (y = 0) hasta la cámara (y = 7). De frente es un **arco**: 9 de ancho junto al suelo (x de 5 a 13), 6 de alto y solo 5 de ancho arriba del todo (x de 7 a 11). No está centrada en la cámara: va algo a la izquierda para que el arco entero quede dentro de la parte que no se corta.
+- **El suelo no se toca:** la capa 0 sigue entera. Lo que se quita empieza en la capa 1.
+- **El techo queda grueso:** por encima de la cámara y del túnel quedan de 3 a 10 capas de roca.
+
+<Why title="Redondeado por dentro, arco en la puerta">
+Una cueva la vacía el agua, no una pala: por dentro no hay esquinas en ángulo recto. Si vacías con cajas, el interior parece un sótano. La entrada en arco es lo que un ojo reconoce como **boca de cueva** desde fuera, igual que la silueta de un objeto se reconoce en negro ([F02](/forja-art/fundamentos/f02-01/)): más ancha abajo, cerrándose arriba.
+</Why>
+
+### 3. El corte: abrir la roca para enseñar el hueco
+
+Una cueva bien vaciada tiene un problema: **desde fuera no se ve nada**. Solo la boca, oscura. Por eso la etapa **Vaciado** usa el corte de [V7-02](/forja-art/voxel/v7-02/): se quita **todo lo que está a la derecha de x = 14**. La pieza visible mide 15 de ancho (x de 0 a 14).
+
+Gira el visor hasta mirar por la cara cortada. Verás:
+
+- **La cámara abierta**, como una tarta partida: el techo, el suelo y la pared del fondo en sección.
+- **El grosor de la roca** en el borde del corte: de 3 a 5 vóxels de pared a la izquierda, de 2 a 4 detrás, y al menos 3 capas de techo. El corte **enseña** que es un bloque.
+- **El arco de la entrada, entero:** mirado de frente, queda roca a los dos lados. La jamba derecha es fina (1 o 2 vóxels) porque justo detrás empieza el corte.
+
+<Tip>
+Usa también el **corte por capas** del visor: baja hasta la capa 1 y verás la planta de la cámara y del túnel, como en un plano.
+</Tip>
+
+### 4. Oscurecer lo de dentro
+
+En el **Vaciado**, cada vóxel de roca que **toca el hueco** cambia de color:
+
+- **Paredes y techo de dentro:** `#3e4352`, mucho más oscuro que la roca de fuera. Son 248 vóxels.
+- **El suelo de dentro:** pasa a **tierra** en dos marrones, `#5c5248` y `#4a4238`.
+
+<Why title="AO pintado a lo grande">
+Es la misma idea que el [AO pintado de V3-04](/forja-art/voxel/v3-04/), llevada al extremo: donde llega menos luz, el color es más oscuro. Dentro de una cueva casi no llega el cielo, así que **todo** lo de dentro baja de valor. Así, aunque el visor o el render iluminen igual, el ojo lee «dentro» y «fuera» al instante. Y el suelo de tierra, más cálido, te dice dónde se pisa.
+</Why>
+
+### 5. La luz como guía
+
+Vuelve al primer visor, a la etapa **Cristales y luz**. Hay tres tipos de fuentes, todas con colores que no usa nada más:
+
+- **Setas junto a la entrada:** dos setas de 2 vóxels (pie crema `#e8dcc0` y sombrero verde menta `#7dffb0`), una a cada lado del túnel, a 4 vóxels de la boca.
+- **Cristales azules al fondo a la izquierda:** tres cristales de 4, 3 y 2 de alto en azul `#38b6ff`, con la punta en cian `#7df9ff`. El más alto se inclina un vóxel hacia la derecha a partir de la tercera capa.
+- **Cristales morados al fondo, junto al corte:** dos cristales de 3 y 2 de alto en `#8a4fd8`, con la punta en `#c08aff`.
+
+Fíjate en el orden: **luz pequeña en la entrada, luz grande al fondo**. La mirada entra por la boca, pasa por las setas y acaba en el grupo azul, el más grande.
+
+<Why title="Migas de pan de luz (F05)">
+En una escena oscura, el ojo va a lo más claro ([F05-01](/forja-art/fundamentos/f05-01/)). Si pones las luces en fila desde la entrada hacia el fondo, **dibujas un camino**: es lo que hacen los juegos para decirte por dónde se va sin poner una flecha. Una sola luz grande en el centro iluminaría la cueva, pero no te llevaría a ninguna parte.
+</Why>
+
+<Sprite name="torch-1" scale={5} caption="P8-04: la antorcha en pixel art. La luz sube la piedra unos pasos junto a la llama y deja el resto casi negro: lo mismo que harán tus cristales en el render" />
+
+### 6. Detalles que cuentan
+
+- **Cuatro estalactitas** de piedra que cuelgan del techo: de 3, 2, 2 y 1 vóxel. La punta es del gris más oscuro de la roca.
+- **Un charco** azul `#2a6fc9` de 4 vóxels en el suelo, justo debajo de la estalactita más larga, la de 3.
+
+<Why title="Causa y efecto">
+La estalactita sola es decoración. Con el charco debajo es **una historia**: aquí gotea, lleva siglos goteando. Como en [Storytelling (F10-01)](/forja-art/fundamentos/f10-01/) y como los huesos de la mazmorra, el detalle vale por su relación con otro. Si pones el charco en otro sitio, la pista desaparece.
+</Why>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Decide la entrada y el corte">
+Antes de abrir MagicaVoxel, decide en un papel:
+
+1. **Por qué cara se entra.** En el modelo, por delante.
+2. **Qué lado cortas.** Tiene que ser el que mira a la cámara en el render, y no el de la entrada. En el modelo, el derecho.
+3. **Dónde va la luz más grande**: lejos de la entrada.
+
+<Why>
+Lo que quitas no se recupera fácil. Si cortas por el lado de la entrada, te quedas sin boca de cueva; si la luz grande va en la entrada, no guía hacia ningún sitio.
+</Why>
+</Step>
+
+<Step n={2} title="La masa de roca">
+1. Crea un modelo nuevo de unos **22×16 y 14 de alto**. Guárdalo como `cueva_v1.vox`.
+2. Prepara la paleta: tres grises azulados para la roca (base, roca, estrato), uno mucho más oscuro para el interior y dos marrones para el suelo.
+3. En modo **Attach**, con el pincel **Box**, rellena el bloque entero hasta unas 10 capas de alto.
+4. Con **Attach** y el pincel **Voxel**, sube algunas columnas de 1 a 3 vóxels más para que la cima sea irregular. Baja las de los bordes con **Erase**.
+5. Muerde los bordes: con **Erase** y el pincel **Voxel**, quita algunas columnas sueltas de los lados. Deja entera la cara de atrás: será la pared del fondo.
+6. Con **Paint**, pinta la fila de abajo en el gris de base y una banda de estrato cada 4 capas, subiéndola o bajándola 1 en algunos tramos.
+
+<Tip>
+Míralo desde lejos con la rueda del ratón: si parece un ladrillo, la cima es demasiado plana. Rompe más columnas.
+</Tip>
+</Step>
+
+<Step n={3} title="Vaciar la cámara">
+1. Pasa a modo **Erase**.
+2. Si tu versión tiene un pincel de **esfera o bola**, úsalo con un radio grande para morder la cámara desde dentro, en el centro de la masa y una capa por encima del suelo.
+3. Si no, con el pincel **Box**, borra la cámara **por capas**: una caja ancha en las capas de abajo y cajas cada vez más estrechas hacia arriba, como un tejado escalonado al revés ([V2-02](/forja-art/voxel/v2-02/)).
+4. Deja **al menos 2 o 3 vóxels de roca** a los lados y detrás, y **la capa de abajo entera** como suelo.
+5. Redondea las esquinas que hayan quedado con **Erase** y el pincel **Voxel**.
+
+<Warn>
+No vacíes sin ver lo que haces. Para trabajar dentro, borra primero el lado que vas a cortar (el paso 5): así ves la cámara mientras la tallas.
+</Warn>
+</Step>
+
+<Step n={4} title="La entrada en arco">
+1. Con **Erase** y **Box**, abre un túnel desde la cara de delante hasta la cámara: unos **9 de ancho** junto al suelo.
+2. Estrecha las capas de arriba: 1 vóxel menos por cada lado cada dos capas, hasta unos **6 de alto**.
+3. Mira el arco de frente: debe ser más ancho abajo y cerrarse arriba. Si parece una puerta de garaje, quita más esquinas.
+</Step>
+
+<Step n={5} title="El corte y el interior oscuro">
+1. Con **Erase** y **Box**, quita **toda la parte del lado que mira a la cámara**, por la mitad de la cámara más o menos: tienen que verse el suelo, el techo y la pared del fondo.
+2. Con **Paint** y el pincel **Voxel** (o **Face**), pinta del gris oscuro de interior **todas** las paredes y el techo que tocan el hueco.
+3. Pinta el suelo de dentro en los dos marrones, alternando sin patrón.
+4. Gira la cámara y repasa: no puede quedar ningún vóxel de roca clara dentro.
+
+<Tip>
+Al cortar, mira el borde: la roca debe tener grosor en todo el perfil. Si en algún sitio la cámara llega a 1 vóxel del exterior, ahí habrá un agujero o una pared de papel.
+</Tip>
+</Step>
+
+<Step n={6} title="Cristales, setas y la gota">
+1. **Cristales:** dos grupos. El grande al fondo, lejos de la entrada: tres cristales de 2 a 4 de alto, con la punta en un color más claro; inclina alguno un vóxel a partir de la tercera capa. El pequeño, en otro rincón y de otro color.
+2. **Setas:** dos setas de 2 vóxels (pie claro y sombrero de color vivo) junto a la entrada, una a cada lado.
+3. **Estalactitas:** tres o cuatro columnas de 1 a 3 vóxels que cuelgan del techo, con la punta en el gris más oscuro.
+4. **Charco:** con **Paint**, pinta de azul unos 4 vóxels del suelo justo debajo de la estalactita más larga.
+5. En la paleta, selecciona cada color de los cristales y de los sombreros de las setas y, en el panel de materiales, dales el tipo **Emit**. Todo lo demás, en *Diffuse*. El charco **no** emite.
+</Step>
+
+<Step n={7} title="Render con la cueva a oscuras">
+1. Pulsa **Render** y coloca la cámara mirando por el corte, con la entrada a un lado de la imagen.
+2. **Baja el sol y el cielo** hasta que la roca de dentro quede casi negra.
+3. Ajusta la emisión: las setas, más bajas; los cristales del fondo, más altos. La luz tiene que **crecer hacia dentro**.
+4. Comprueba: ¿la mirada va de la entrada al fondo? ¿Se adivina el charco junto a la luz? ¿Lo más claro son los cristales?
+5. Guarda la imagen del render y `cueva_v1.vox` en tu portfolio.
+</Step>
+
+<Warn title="Verifica en tu versión">
+Los nombres de los modos **Attach**, **Erase** y **Paint**, de los pinceles **Voxel**, **Face** y **Box**, y si hay un pincel de esfera o de bola (y cómo se fija su tamaño), pueden variar entre versiones de MagicaVoxel. En el modo **Render**, los ajustes del sol, del cielo y de la intensidad del material **Emit** cambian de nombre y de sitio: búscalos por su función. Lo mismo el panel de materiales y el botón para guardar la imagen.
+</Warn>
+</Block>
+
+<Block kind="version">
+Ahora, **tu** cueva. Misma receta: masa primero, vaciar después, corte, interior oscuro y luces que guían. Elige un reto:
+
+- **La mina:** una cueva con un túnel recto apuntalado con vigas de madera, raíles en el suelo y una vagoneta. La luz, dos faroles en Emit: uno en la entrada y otro al fondo, junto a la veta de mineral brillante.
+- **La gruta del lago:** la mitad del suelo hundida 1 vóxel y llena de agua, con estalactitas encima y cristales que se reflejan. Prueba el material Glass en el agua, como en [la fuente (V3-05)](/forja-art/voxel/v3-05/).
+- **La guarida:** un nido de huesos y paja al fondo, iluminado solo por unas setas, y unos ojos que brillan en la oscuridad (dos vóxels en Emit). Usa la sombra como en [la mazmorra (V7-03)](/forja-art/voxel/v7-03/).
+
+Antes de darla por buena, mira el render en pequeño: ¿se ve en un segundo que es un hueco **dentro** de una roca, y por dónde se entra?
+</Block>
+
+<Block kind="errores">
+<Mistake title="Una caja con forma de cueva" wrongLabel="Paredes levantadas" rightLabel="Masa vaciada">
+  <p slot="wrong">La cueva se ha construido sumando paredes de 1 vóxel: el mismo grosor en todas partes, interior en ángulo recto y techo plano. En el corte se ve una lámina, no roca.</p>
+  <p slot="right">Una masa con cima irregular y estratos, vaciada por dentro: paredes de 2 a 5 vóxels, techo grueso, cámara redondeada. En el corte se ve el bloque.</p>
+
+Empieza siempre por la masa. Si ya tienes la caja, rellena por fuera con **Attach** hasta hacer un bloque y vuelve a vaciar. Compáralo con las etapas «Masa» y «Vaciado» del visor.
+</Mistake>
+
+<Mistake title="La roca de dentro igual que la de fuera" wrongLabel="Un solo gris" rightLabel="Interior oscuro">
+  <p slot="wrong">Las paredes de dentro tienen el mismo gris claro que la roca de fuera. En el visor y en el render, el hueco no se distingue: parece que falta un trozo de modelo, no que haya una cueva.</p>
+  <p slot="right">Todo lo que toca el hueco, en un gris mucho más oscuro, y el suelo en tierra. El interior se lee como interior aunque la luz sea uniforme.</p>
+
+Es el AO pintado de V3-04 a lo grande. Pinta con **Paint** cada cara que mira al hueco y gira la cámara para no dejarte ninguna.
+</Mistake>
+
+<Warn title="Error típico: la cámara se come la pared">
+Si vacías la cámara hasta el borde de la masa, sobre todo donde mordiste columnas sueltas, la roca se agujerea: aparecen **huecos de 1 vóxel** en la pared del fondo o en los lados. Desde la cámara de trabajo no se ven, pero en el render entra por ahí la luz del cielo y estropea la oscuridad. **Corrección:** deja al menos 2 vóxels de roca entre la cámara y cualquier borde (en el modelo del curso, la pared del fondo tiene de 2 a 4), no muerdas los bordes junto a la cámara, y gira el modelo buscando agujeros antes de pintar el interior. Si encuentras uno, tápalo con **Attach**.
+</Warn>
+
+<Warn title="Error típico: una sola luz en el centro">
+Un cristal enorme en mitad de la cueva. La alumbra entera por igual y la mirada se queda en él: no hay camino ni fondo. **Corrección:** varias fuentes pequeñas, de menos a más, desde la entrada hacia el fondo. La sombra entre ellas es parte del dibujo.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+<Checklist items={[
+  "Mi cueva sale de una masa de roca con cima irregular y bordes mordidos, no de paredes levantadas",
+  "La cámara es redondeada y la entrada es un arco más ancho abajo que arriba",
+  "Las paredes y el techo tienen grosor: no hay agujeros ni paredes de 1 vóxel hacia fuera",
+  "La cueva está en corte por el lado que mira a la cámara y se ven el suelo, el techo y el fondo",
+  "Todo lo que toca el hueco está en un color más oscuro que la roca de fuera, y el suelo es de tierra",
+  "Hay al menos dos fuentes en Emit, de menos a más desde la entrada, con colores que no usa nada más",
+  "Hay al menos un detalle con causa y efecto, como el charco bajo la estalactita",
+  "He guardado cueva_v1.vox y un render en mi portfolio",
+]} />
+
+<Quiz q="¿Por qué se empieza la cueva con una masa de roca y no levantando paredes?" options={["Porque MagicaVoxel no deja borrar vóxels sueltos", "Porque al vaciar una masa las paredes salen gruesas e irregulares, y la roca tiene peso", "Porque así el archivo .vox pesa menos"]} answer={1}>
+Al quitar de un bloque, el grosor de la roca varía solo y el corte enseña un sólido. Levantando paredes de 1 vóxel sale una caja con forma de cueva.
+</Quiz>
+
+<Quiz q="En el visor, el hueco de tu cueva parece un trozo de modelo que falta. ¿Qué cambias primero?" options={["Oscurezco todas las paredes y el techo que tocan el hueco", "Hago la entrada más grande", "Añado más estalactitas"]} answer={0}>
+Lo de dentro recibe menos luz: pintado más oscuro, el ojo lo lee como interior aunque la luz sea uniforme. Es el AO pintado de V3-04 llevado al extremo.
+</Quiz>
+
+<Quiz q="¿Dónde va el charco en la cueva del curso, y por qué?" options={["Junto a la entrada, para que se vea bien", "Debajo de la estalactita más larga: el detalle cuenta que gotea", "En el centro, para equilibrar la composición"]} answer={1}>
+Un detalle cuenta una historia cuando se relaciona con otro. La estalactita sola es decoración; con el charco debajo, dice que aquí gotea desde hace mucho.
+</Quiz>
+</Block>

@@ -1,0 +1,278 @@
+---
+id: p7-08
+discipline: pixel
+level: 7
+order: 8
+title: "Hierba al viento: decorado que se mueve"
+summary: "Anima un prado de fondo sin robarle la mirada al héroe: matas que se doblan desde la base, una ola de viento con desfase, un bucle lento de 4 frames y poco contraste en lo que se mueve."
+duration: 45
+status: borrador
+objectives:
+  - "Doblar una brizna desde la base: la punta se mueve, la base no"
+  - "Desfasar las matas para que una ola de viento recorra el prado"
+  - "Cerrar un bucle corto y lento de 4 frames (0, 1, 0, −1)"
+  - "Bajar el contraste de lo que se mueve en el fondo para que no compita con el héroe"
+  - "Saber cómo llega al juego: tile animado o sprites sueltos con desfase"
+prerequisites: [p7-01, p7-02]
+fundamentals: [f01, f07]
+tools: [aseprite]
+piece:
+  name: "Franja de prado de 64×24 sobre tu tile de hierba, con matas que se doblan en una ola de viento, en un bucle de 4 frames exportado como spritesheet"
+  canvas: "64x24"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [viento]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Tu prado de [P7-01](/forja-art/pixel/p7-01/) no tiene costuras, pero está muerto. Hoy le pones **viento**.
+
+Vas a forjar una **franja de prado de 64×24** con matas de hierba que se doblan, y una **ola de viento** que la recorre de izquierda a derecha en un bucle de 4 frames. Dale a *Reproducir*:
+
+<Animator sprites={["grass-wind-1", "grass-wind-2", "grass-wind-3", "grass-wind-4"]} durations={[300, 300, 300, 300]} />
+
+Fíjate en tres cosas:
+
+- La **base** de cada brizna no se mueve nunca. Solo se doblan las puntas.
+- Las matas **no se mueven a la vez**: unas se doblan a la izquierda mientras otras vuelven o se doblan a la derecha. Eso es la ola.
+- Es **lento**: 300 ms por frame. Se nota que hay viento, pero no tira de la mirada.
+
+<Sprite name="grass-wind-1" scale={8} caption="grass-wind-1: nueve matas de tres briznas sobre la hierba de P7-01, oscurecida. Las 8 filas de arriba están vacías (transparentes)" />
+</Block>
+
+<Block kind="concepto">
+### Decorado que se mueve, pero no manda
+
+El decorado animado es un **fondo vivo**: hierba, juncos, flores, banderas. Le da vida a la escena, pero no es el protagonista. Tiene que cumplir tres reglas a la vez:
+
+1. **Moverse como algo real**: la hierba se dobla, no se desliza.
+2. **No moverse todo a la vez**: el viento llega antes a unas matas que a otras.
+3. **No llamar la atención**: bucle corto, lento y con poco contraste.
+
+<Why>
+El ojo está programado para detectar movimiento. Cualquier cosa que se mueva en la pantalla compite con el héroe, aunque sea pequeña. Por eso el decorado se mueve **poco, despacio y en valores cercanos al suelo**: lo justo para que el mundo respire, como el idle de [P6-01](/forja-art/pixel/p6-01/) o el brillo de [P4-03](/forja-art/pixel/p4-03/).
+</Why>
+
+### De dónde sale el suelo
+
+El suelo es el tile de P7-01, repetido cuatro veces a lo ancho y oscurecido al 78 %:
+
+<Sprite name="tile-grass" tile={3} scale={4} caption="tile-grass: el prado sin costuras de P7-01" />
+
+Las matas usan dos colores del propio tile **sin oscurecer** (el verde medio `#3fa45b` y el claro `#6fd17f`) y uno más claro para la punta (`#a8ec9a`). El suelo baja un paso y las matas quedan delante. En total, 6 colores.
+
+### Una mata: la base quieta, la punta se mueve
+
+Cada mata tiene **tres briznas** separadas por 1 píxel de suelo: la del centro mide 5 píxeles y las de los lados, 4. De abajo arriba, cada brizna va del verde medio al claro y termina en la punta más clara.
+
+Así se dobla una brizna en el ejemplo:
+
+- Solo los **dos píxeles de la punta** se desplazan 1 píxel a un lado.
+- El resto de la brizna, con la **base**, se queda en su sitio.
+
+<Why>
+Una brizna está **clavada** en el suelo. El viento empuja la parte que está libre, y cuanto más arriba, más se mueve. Si la base se mueve con la punta, el ojo no ve hierba doblándose: ve un objeto que patina por el suelo.
+</Why>
+
+### La ola: desfase entre matas
+
+Cada mata hace el mismo ciclo: **recta, doblada a la derecha, recta, doblada a la izquierda** (0, 1, 0, −1). Lo que cambia es **en qué punto del ciclo empieza**: cada mata va **un frame por detrás** de la de su izquierda. Cuanto más a la derecha, más tarde le llega el viento.
+
+Así están las nueve matas del ejemplo (de izquierda a derecha; −1 = doblada a la izquierda, 0 = recta, 1 = doblada a la derecha):
+
+- Frame 1: 0, −1, 0, 1, 0, −1, 0, 1, 0
+- Frame 2: 1, 0, −1, 0, 1, 0, −1, 0, 1
+- Frame 3: 0, 1, 0, −1, 0, 1, 0, −1, 0
+- Frame 4: −1, 0, 1, 0, −1, 0, 1, 0, −1
+
+Sigue un −1: en el frame 1 está en la mata 2; en el 2, en la 3; en el 3, en la 4. **Avanza una mata por frame hacia la derecha.** Como el ciclo dura 4 frames, en la franja caben dos olas a la vez (fíjate en el −1 de la mata 6). Eso es lo que el ojo lee como ráfagas que cruzan el prado. Y como cada mata va un frame por detrás de su vecina, dos matas vecinas nunca están igual.
+
+<Why>
+Es la misma idea que el agua de [P7-02](/forja-art/pixel/p7-02/): el ojo sigue un patrón que se desplaza con coherencia. Aquí ninguna mata viaja: cada una se queda en su sitio y solo se dobla. Lo que viaja es **el momento** en que se dobla, y eso basta para ver el viento.
+</Why>
+
+### El error: todo el prado se desliza
+
+Ahora, las mismas nueve matas mal animadas:
+
+<Animator sprites={["grass-wind-bad-1", "grass-wind-bad-2", "grass-wind-bad-3", "grass-wind-bad-4"]} durations={[300, 300, 300, 300]} />
+
+En `grass-wind-bad` hay **dos errores juntos**:
+
+- Cada mata se desplaza **entera**, base incluida: 1 píxel a la derecha, vuelve, 1 píxel a la izquierda, vuelve.
+- **Todas a la vez**, en el mismo frame y en la misma dirección.
+
+El resultado no parece viento: parece que el prado entero patina adelante y atrás. Entre un frame y el siguiente cambian **234 píxeles**; en la buena, **108**. La buena cambia menos de la mitad y se lee mejor.
+
+### Un bucle corto y lento
+
+Los dos bucles cierran: cada mata pasa por recta, un lado, recta y el otro lado, y vuelve al principio. La suma de sus desplazamientos es 0, como el ida y vuelta del agua de P7-02.
+
+<Why>
+Un decorado se ve durante minutos. Si el bucle es largo, cuesta muchos frames; si es rápido, cansa y tira de la mirada. Con **4 frames de 250–400 ms** se nota el viento sin que el fondo «hierva». Es el timing de [P6-01](/forja-art/pixel/p6-01/): lo lento se lee como calma.
+</Why>
+
+### Poco contraste en el fondo
+
+Mira el prado en grises:
+
+<Sprite name="grass-wind-1" scale={8} view="gray" caption="En grises: las puntas son lo más claro de la imagen. En esta lección las matas destacan a propósito, porque son el tema" />
+
+Aquí las puntas destacan mucho sobre el suelo oscurecido, porque el ejemplo tiene que enseñarte las matas. En un fondo de juego, **acerca el valor de lo que se mueve al del suelo**: usa el verde claro como punta en lugar del casi blanco, o pon menos matas. El héroe tiene que seguir siendo lo que más contrasta (F01, y el foco de F07-01).
+
+### Cómo llega al juego
+
+Hay dos formas habituales:
+
+- **Tile animado.** En Godot, un tile del **TileSet** puede tener animación: varios frames del atlas con su duración. Ojo: si el mismo tile animado se repite por todo el mapa, todas las copias se mueven **a la vez**, que es justo el error de esta lección. Para evitarlo, mete el desfase dentro del dibujo (como esta franja, donde cada mata va un frame por detrás de su vecina) o usa la opción del TileSet que hace empezar cada copia en un frame distinto al azar.
+- **Sprites sueltos.** Cada mata es un **AnimatedSprite2D** con su propio bucle, y cada una empieza en un frame distinto. Más trabajo de colocación, pero el desfase es total.
+
+Lo verás en el nivel 9. Por ahora basta con una spritesheet limpia.
+
+<Warn title="Verifica en tu versión">
+Los nombres de las opciones de animación del TileSet de Godot (número de frames, columnas, duración y modo de inicio al azar) pueden cambiar entre versiones. Usa Godot 4.3 o superior.
+</Warn>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Lienzo y suelo">
+1. <Keys k="Ctrl+N" />: **64×24**. Activa *View → Grid*.
+2. Pega tu tile de hierba de P7-01 cuatro veces a lo ancho en las 16 filas de abajo. Si no lo tienes a mano, usa cualquier suelo de 16×16 sin costuras.
+3. Oscurece el suelo un paso: cambia cada color por uno algo más oscuro de su misma rampa.
+
+<Why>
+Al bajar el suelo un paso, los colores originales del tile quedan libres para las matas. Las matas se leen delante sin inventar colores nuevos: la paleta sigue siendo la del prado.
+</Why>
+</Step>
+
+<Step n={2} title="Frame 1: matas repartidas sin rejilla">
+Con el lápiz (<Keys k="B" />) y *Pixel-perfect* activo, dibuja **entre 5 y 9 matas** de tres briznas: la central de 5 píxeles, las laterales de 4, separadas por 1 píxel de suelo. De abajo arriba: verde medio, verde claro y la punta más clara.
+
+Repártelas sin orden, como las matas del tile de P7-01: separaciones de 6 a 8 píxeles y la base de cada una a una **altura distinta**. En el ejemplo, las bases van de la fila 12 a la 21.
+
+En este primer frame, dibújalas **todas rectas**. Guarda con <Keys k="Ctrl+S" /> como `viento.aseprite`.
+
+<Tip>
+Bases a alturas distintas dan profundidad: las matas más bajas parecen más cerca. Si todas las bases están en la misma fila, el prado parece una valla.
+</Tip>
+</Step>
+
+<Step n={3} title="Planifica la ola antes de dibujar">
+Numera tus matas de izquierda a derecha y apunta, para cada una, su posición en el ciclo **0, 1, 0, −1** en el frame 1. Retrasa el ciclo en cada mata hacia la derecha: en el ejemplo, cada mata va un frame por detrás de la anterior.
+
+Con esa tabla, los frames 2, 3 y 4 salen solos: cada mata avanza un paso en su ciclo.
+
+<Why>
+Haz la cuenta antes de dibujar, como en P7-02. Si improvisas frame a frame, el desfase se rompe y aparecen matas que se mueven a destiempo sin formar ola.
+</Why>
+
+Ahora redibuja el frame 1 según tu tabla: dobla las matas que no empiezan en 0.
+</Step>
+
+<Step n={4} title="Dobla desde la base">
+Para doblar una brizna 1 píxel:
+
+1. Borra las **dos filas de arriba** (pinta encima el color del suelo que había).
+2. Vuelve a pintarlas **1 píxel a un lado**.
+3. El resto de la brizna no se toca: la **base se queda siempre en su sitio**.
+
+Haz lo mismo con las tres briznas de la mata, hacia el mismo lado.
+
+<Why>
+Las tres briznas de una mata reciben el mismo viento a la vez: se doblan juntas. El desfase va **entre matas**, no dentro de cada una.
+</Why>
+</Step>
+
+<Step n={5} title="Frames 2, 3 y 4 con onion skin">
+1. Añade un frame nuevo desde el menú *Frame*, como copia del anterior.
+2. Activa el **onion skin** en la línea de tiempo.
+3. Mueve cada mata un paso en su ciclo, según tu tabla.
+4. Repite hasta tener 4 frames.
+
+Con el onion skin, comprueba que las bases coinciden exactamente con su fantasma y que solo cambian las puntas.
+
+<Tip>
+Si quieres el suelo intacto, pon las matas en **otra capa** encima del suelo. Así solo editas la capa de las matas en cada frame y el suelo no se toca.
+</Tip>
+</Step>
+
+<Step n={6} title="Timing y prueba">
+Pon los 4 frames a **300 ms** (clic derecho sobre el frame, *Frame Properties*) y reproduce varias vueltas.
+
+1. ¿Ves una ola que cruza de izquierda a derecha? Si no, revisa la tabla.
+2. ¿Hay alguna base que se mueva? Corrígela.
+3. ¿Hay tirón al volver del frame 4 al 1? Alguna mata no cierra su ciclo.
+4. Prueba con 200 ms y con 400 ms. Elige el más lento que todavía se lea como viento.
+</Step>
+
+<Step n={7} title="Contraste y exportación">
+1. Pega encima un sprite del héroe o del slime y reproduce. Si la mirada se te va a la hierba, baja el valor de las puntas.
+2. *File → Export Sprite Sheet*: los 4 frames en una fila, PNG a 1×. Apunta las duraciones (4 × 300 ms) o guarda los datos en JSON si te deja.
+3. Para enseñarlo, exporta un GIF ampliado con *File → Export → Export As* y **Resize** al 400 % o más.
+</Step>
+
+<Warn title="Verifica en tu versión">
+Los nombres y la posición pueden variar según la versión de Aseprite: la creación de frames y capas, *Frame Properties*, el botón de onion skin y las opciones de *Export Sprite Sheet*. Si no encuentras algo, búscalo por nombre en los menús.
+</Warn>
+</Block>
+
+<Block kind="version">
+Ahora a tu manera. Mantén las tres reglas: doblar desde la base, desfase entre matas y un bucle lento de 4 frames. Elige uno:
+
+- **Juncos en la orilla:** junto al agua de [P7-03](/forja-art/pixel/p7-03/), briznas más altas (7–8 píxeles) que doblan las tres filas de arriba y la punta 2 píxeles. Más lentos: 400 ms.
+- **Flores que se mecen:** cambia algunas puntas por una flor de 1–2 píxeles. La flor se mueve con la punta. Cuidado con el contraste: pocas flores y de valor medio.
+- **Un tile de 16×16 animado:** dos o tres matas dentro del tile, cada una en un punto distinto del ciclo. Repítelo con el Tiled Mode y mira si se lee como viento o como un prado que late a la vez.
+</Block>
+
+<Block kind="errores">
+<Mistake title="El prado se desliza" wrongLabel="Matas enteras, todas a la vez" rightLabel="Puntas que se doblan, con desfase">
+  <Sprite slot="wrong" name="grass-wind-bad-2" scale={6} />
+  <Sprite slot="right" name="grass-wind-2" scale={6} />
+
+Los dos son el frame 2 de su bucle. A la izquierda, todas las matas se han movido 1 píxel a la derecha, base incluida: al reproducir, el prado patina adelante y atrás. A la derecha, cada mata está en un punto distinto de su ciclo y la base no se mueve: se ve una ola de viento. **Arréglalo:** deja quieta la fila de la base y reparte el ciclo entre las matas.
+</Mistake>
+
+<Mistake title="Desfase, pero sin ola" wrongLabel="Fases al azar" rightLabel="Fases que se retrasan hacia un lado">
+  <p slot="wrong">Cada mata empieza en un punto del ciclo elegido al azar. Ya no se mueven todas a la vez, pero tampoco se ve viento: el prado tiembla en sitios sueltos.</p>
+  <p slot="right">Cada mata va un poco detrás de su vecina de la izquierda. El grupo de matas dobladas avanza hacia la derecha y el ojo lee una ráfaga.</p>
+
+Un desfase al azar quita el «todo a la vez», pero no cuenta nada. **Arréglalo:** ordena las fases por posición, en la dirección del viento.
+</Mistake>
+
+<Mistake title="Un fondo que grita" wrongLabel="Rápido y con mucho contraste" rightLabel="Lento y con poco contraste">
+  <p slot="wrong">Frames de 100 ms, puntas casi blancas sobre un suelo oscuro y matas por todas partes. La hierba es lo que más se mueve y lo que más contrasta: se come al héroe.</p>
+  <p slot="right">Frames de 250–400 ms, puntas solo un paso más claras que el suelo y matas repartidas con huecos. El viento se nota, pero el héroe sigue mandando.</p>
+
+**Arréglalo:** reproduce el prado con el héroe encima. Si la mirada se va a la hierba, baja el valor de las puntas o alarga los frames.
+</Mistake>
+</Block>
+
+<Block kind="calidad">
+Sube **uno de tus frames a 1×** y revísalo con la rejilla y la vista de grises: las bases deben estar a alturas distintas y las puntas no deben ser lo más llamativo de una escena con personajes.
+
+<Inspector upload title="Revisa un frame de tu prado" />
+
+<Checklist items={[
+  "La fila de la base de cada brizna es idéntica en los 4 frames",
+  "Las puntas se mueven 1 píxel por frame en el ciclo 0, 1, 0, −1",
+  "Las matas tienen fases distintas, ordenadas en la dirección del viento: se ve una ola",
+  "El bucle cierra: no hay tirón al volver del frame 4 al 1",
+  "Los frames duran 250–400 ms y el viento se lee sin cansar",
+  "Con el héroe encima, la hierba no le quita la mirada",
+  "Exporté la spritesheet en una fila a 1×, apunté las duraciones y guardé el .aseprite",
+]} />
+
+<Quiz q="¿Por qué en grass-wind-bad parece que el prado patina?" options={["Porque usa demasiados colores", "Porque las matas se mueven enteras, base incluida, y todas a la vez", "Porque el bucle tiene 4 frames"]} answer={1}>
+La hierba está clavada en el suelo: solo se mueve la parte libre. Si la base se desplaza y todas las matas lo hacen juntas, el ojo ve un bloque que se desliza, no viento.
+</Quiz>
+
+<Quiz q="Repites el mismo tile animado por todo el mapa. ¿Qué problema tiene?" options={["Ninguno: los tiles animados siempre se desfasan solos", "Todas las copias se mueven a la vez y el prado late entero", "El tile pierde las costuras"]} answer={1}>
+Cada copia muestra el mismo frame en el mismo momento. Mete el desfase dentro del dibujo, usa un modo de inicio al azar o coloca matas sueltas que empiecen en frames distintos.
+</Quiz>
+
+<Quiz q="¿Qué hace que el desfase se lea como una ola y no como temblor?" options={["Que cada mata se retrase respecto a su vecina en la dirección del viento", "Que cada mata empiece en un frame al azar", "Que las matas sean de colores distintos"]} answer={0}>
+Si el retraso sigue la posición, el grupo de matas dobladas avanza por el prado y el ojo lo sigue, como las crestas del agua de P7-02.
+</Quiz>
+</Block>

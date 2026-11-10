@@ -1,0 +1,44 @@
+{
+  "name": "grass-wind-1",
+  "description": "Prado al viento, frame 1 (64×24, sobre el tile de hierba de P7-01 oscurecido al 78 % para que las matas destaquen): nueve matas de tres briznas. Cada mata dobla las puntas según su posición: la ola de viento recorre el prado de izquierda a derecha.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "tile",
+    "animación"
+  ],
+  "palette": {
+    "a": "#318047",
+    "b": "#a8ec9a",
+    "c": "#57a363",
+    "d": "#6fd17f",
+    "e": "#225f38",
+    "f": "#3fa45b"
+  },
+  "rows": [
+    "................................................................",
+    "................................................................",
+    "................................................................",
+    "................................................................",
+    "................................................................",
+    "................................................................",
+    "................................................................",
+    "................................................................",
+    "aaaaaaaaaaaaaaaaaabaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "aaaaaacaaaaaaaaabadabacaaaaaaaaaaaaaaacaaaaaaaabaaaaaacaaaaaaaaa",
+    "aaaabeaeaaaaaaaadadadeaeaaaaaaaaaaaaaeaeaaaaabadabaaaeaeaaaaaaaa",
+    "aabadabaaaaaaaaadafadaaaaaaaaaaaabaaaaaaaaaaadadadaaaaaaaaaaaaaa",
+    "aadadadaaaaacaaafafafaaaaaaacaabadabaaaaaaaacdafadaaaaaaaaaabaaa",
+    "aadafadaaaaeaeaaaaaaaaaaaaaeaeadadadaaaaaaaeafafafaaaaaaaabedeba",
+    "cafafafaaaaaaaaacaaaaaaaaabaaaadcfadaaaaaaaaaaaacaaaaaaaaadadada",
+    "aecaaaaaaaaaaaaeaecaaaaabadabaafafcfaaaaaaaaaaaeaecaaaabaadafade",
+    "aeaeaaaaaabaaaaaaeaeaaaaddaadaaaaeaeaaaaaaaaaaaaaeaeabadabfafafa",
+    "aaaaaaaabadabaaaaaaaaaadafcdaaaaaaaaaaabaacaaaaaaaaaaddaadcaaaaa",
+    "aaaaaaaadeaddaaaaaaaaaafafafaaaaaaaaabadabaeaaaaaaaadafadeaeaaaa",
+    "aaacaaaaadafadaaaaacaaaaaaaaaaaaaaacadaaddaaaaaaaaacfafafaaaaaaa",
+    "aaeaeaaaafafafaaaaeaeaaaaaaaaaaaaaeaeadafadaaaaaaaeaeaaaaaaaaaaa",
+    "aaaaaaaacaaaaaaaaaaaaaaacaaaaaaaaaaaaafafafaaaaaaaaaaaaacaaaaaaa",
+    "aaaaaaaeaeaaaacaaaaaaaaeaeaaaacaaaaaaaaeaeaaaacaaaaaaaaeaeaaaaca",
+    "aaaaaaaaaaaaaeaeaaaaaaaaaaaaaeaeaaaaaaaaaaaaaeaeaaaaaaaaaaaaaeae"
+  ]
+}

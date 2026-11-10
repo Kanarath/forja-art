@@ -1,0 +1,44 @@
+{
+  "name": "grass-wind-2",
+  "description": "Frame 2: la ola ha avanzado; las matas que estaban rectas se doblan y las dobladas vuelven. La base de cada brizna nunca se mueve.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "tile",
+    "animación"
+  ],
+  "palette": {
+    "a": "#318047",
+    "b": "#a8ec9a",
+    "c": "#57a363",
+    "d": "#6fd17f",
+    "e": "#225f38",
+    "f": "#3fa45b"
+  },
+  "rows": [
+    "................................................................",
+    "................................................................",
+    "................................................................",
+    "................................................................",
+    "................................................................",
+    "................................................................",
+    "................................................................",
+    "................................................................",
+    "aaaaaaaaaaaaaaaaabaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "aaaaaacaaaaaaaabadabaacaaaaaaaaaaaaaaacaaaaaaabaaaaaaacaaaaaaaaa",
+    "aaaaabaeaaaaaaadaaddaeaeaaaaaaaaaaaaaeaeaaaabadabaaaaeaeaaaaaaaa",
+    "aaabadabaaaaaaaadafadaaaaaaaaaaaaabaaaaaaaaadaaddaaaaaaaaaaaaaaa",
+    "aaaddaadaaaacaaafafafaaaaaaacaaabadabaaaaaaacdafadaaaaaaaaaacbaa",
+    "aadafadaaaaeaeaaaaaaaaaaaaaeaeaaddaadaaaaaaeafafafaaaaaaaaabadab",
+    "cafafafaaaaaaaaacaaaaaaaabaaaaadcfadaaaaaaaaaaaacaaaaaaaaaaddaad",
+    "aecaaaaaaaaaaaaeaecaaaabadabaaafafcfaaaaaaaaaaaeaecaaabaaadafade",
+    "aeaeaaaaaaabaaaaaeaeaaadadadaaaaaeaeaaaaaaaaaaaaaeaebadabafafafa",
+    "aaaaaaaaabcdabaaaaaaaaadafcdaaaaaaaaaaaabacaaaaaaaaadadadacaaaaa",
+    "aaaaaaaaadadadaaaaaaaaafafafaaaaaaaaaabadebeaaaaaaaadafadeaeaaaa",
+    "aaacaaaaadafadaaaaacaaaaaaaaaaaaaaacaadadadaaaaaaaacfafafaaaaaaa",
+    "aaeaeaaaafafafaaaaeaeaaaaaaaaaaaaaeaeadafadaaaaaaaeaeaaaaaaaaaaa",
+    "aaaaaaaacaaaaaaaaaaaaaaacaaaaaaaaaaaaafafafaaaaaaaaaaaaacaaaaaaa",
+    "aaaaaaaeaeaaaacaaaaaaaaeaeaaaacaaaaaaaaeaeaaaacaaaaaaaaeaeaaaaca",
+    "aaaaaaaaaaaaaeaeaaaaaaaaaaaaaeaeaaaaaaaaaaaaaeaeaaaaaaaaaaaaaeae"
+  ]
+}

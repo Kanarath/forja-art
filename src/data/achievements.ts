@@ -105,5 +105,10 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   { id: "tres-valores", name: "Tres valores", description: "Una escena que se lee reducida a oscuro, medio y claro (F01-02).", color: "#d6d6de" },
   { id: "fuente", name: "Fuente", description: "Una fuente voxel con el agua en material Glass y algo que se ve a través (V3-05).", color: "#3a8fd8" },
   { id: "molino", name: "Molino", description: "Un molino con las aspas como pieza aparte, giradas en cruz y a 45° (V6-05).", color: "#f4ecdc" },
+  { id: "dialogo", name: "Retratos de diálogo", description: "Un retrato con varias expresiones que siguen siendo la misma persona (P5-09).", color: "#f2c14e" },
+  { id: "viento", name: "Viento", description: "Hierba que se dobla con una ola de viento, sin que el prado se deslice (P7-08).", color: "#a8ec9a" },
+  { id: "ritmo", name: "Ritmo", description: "Una fila de elementos que repite un patrón con variación, ni monótona ni caótica (F07-02).", color: "#3fbf7f" },
+  { id: "caras", name: "Caras voxel", description: "Un personaje voxel con expresiones hechas con muy pocos vóxels (V5-06).", color: "#f29b9b" },
+  { id: "cueva", name: "Cueva", description: "Una cueva voxel vaciada en una masa de roca, con cristales que la iluminan (V7-05).", color: "#c08aff" },
   { id: "forma-primero", name: "Forma antes que detalle", description: "Un modelo voxel con su blockout guardado como primera versión (V2-01).", color: "#38e1ff" },
 ];
