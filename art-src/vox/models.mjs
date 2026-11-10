@@ -975,7 +975,85 @@ const rockDetail = (() => {
   return dedupe(v);
 })();
 
+
+// ---------- POZO: formas redondas en una rejilla (círculos de diámetro impar, anillo de piedra, tejado y cubo)
+const disc = (r, c, z = 0) => { const v = []; const R = Math.ceil(r); for (let x = -R; x <= R; x++) for (let y = -R; y <= R; y++) if (x * x + y * y <= r * r) v.push({ x, y, z, c }); return v; };
+const discEven = (d, c) => { const v = []; const h = d / 2; for (let x = 0; x < d; x++) for (let y = 0; y < d; y++) if ((x + 0.5 - h) ** 2 + (y + 0.5 - h) ** 2 <= h * h) v.push({ x: x - h, y: y - h, z: 0, c }); return v; }; // centro entre vóxels
+const wellCircles = [
+  ...move(disc(4, STONE.dark), -12, 0, 0), // radio 4 justo: un vóxel suelto en cada punta
+  ...disc(4.5, STONE.light), // radio 4,5: diámetro 9, borde limpio
+  ...move(discEven(8, STONE.dark), 11, 0, 0), // diámetro 8: no tiene vóxel central
+];
+const wellStone = (x, y, z) => { const a = Math.atan2(y, x) + Math.PI, seg = Math.floor((a / (2 * Math.PI)) * 11 + (z % 2) * 0.5); return (seg + z) % 3 === 0 ? STONE.dark : rnoise(seg, z, 5) < 40 ? "#8a93a5" : STONE.light; }; // sillares en hiladas alternas
+const wellRing = [];
+for (let z = 0; z <= 4; z++) for (const v of disc(4.5, null)) if (v.x * v.x + v.y * v.y > 2.5 * 2.5) wellRing.push({ ...v, z, c: z === 4 ? "#b4bccb" : wellStone(v.x, v.y, z) });
+const wellWater = [...disc(2.5, "#2f3442", 0), ...disc(2.5, WATER.deep, 1).map((v) => ({ ...v, c: (v.x + v.y) % 3 === 0 ? WATER.mid : WATER.deep }))]; // fondo oscuro y agua 3 por debajo del brocal
+const wellBody = [...wellRing, ...wellWater];
+const wellRoofPart = [];
+for (let k = 0; k <= 4; k++) for (let x = -5; x <= 5; x++) for (const y of k === 4 ? [0] : [-(4 - k), 4 - k, -(3 - k), 3 - k].filter((q, i, a) => a.indexOf(q) === i)) wellRoofPart.push({ x, y, z: 12 + k, c: k === 4 ? ROOF.dark : (x + k) % 2 ? ROOF.light : ROOF.dark }); // tejado a dos aguas, a lo largo de X
+const wellFinal = dedupe([
+  ...wellRoofPart,
+  ...wellBody,
+  ...box(-4, 0, 5, -4, 0, 15, WOOD.dark), ...box(4, 0, 5, 4, 0, 15, WOOD.dark), // dos postes sobre el brocal, hasta la cumbrera
+  ...box(-3, 0, 9, 3, 0, 9, WOOD.mid), // el torno
+  ...box(5, 0, 9, 5, 0, 9, METAL.mid), ...box(6, 0, 9, 6, 1, 9, METAL.mid), // manivela que sale por fuera
+  ...box(0, 0, 6, 0, 0, 8, "#e8d49a"), // la cuerda, hasta el asa del cubo
+  ...box(-1, -1, 5, 1, 1, 6, WOOD.mid).filter((v) => !(v.x === 0 && v.y === 0 && v.z === 6)).map((v) => ({ ...v, c: v.z === 6 ? METAL.dark : WOOD.mid })), // el cubo, con aro de metal
+  ...box(6, 3, 0, 7, 4, 1, WOOD.mid).filter((v) => !(v.z === 1 && v.x === 6 && v.y === 3)), { x: 6, y: 3, z: 1, c: WATER.mid }, // otro cubo en el suelo, lleno
+  ...disc(5.5, null).filter((v) => v.x * v.x + v.y * v.y > 4.5 * 4.5 && rnoise(v.x, v.y, 2) < 55).map((v) => ({ ...v, c: (v.x + v.y) % 2 ? LEAF.mid : LEAF.dark })), // hierba al pie, a manchas
+  ...[[-5, -2], [-3, 5], [2, -5]].flatMap(([x, y]) => [{ x, y, z: 0, c: LEAF.mid }, { x, y, z: 1, c: LEAF.light }]),
+]); // el tejado va primero: donde coincide con la punta de un poste, gana la madera
+
+// ---------- GALLINA: un animal de dos patas (mira hacia +X, como la oveja)
+const HEN = { w: "#f4ecdc", s: "#d8ccb4", f: "#c9b89a", r: "#d8343f", y: "#f2b33d", Y: "#d49a2a", e: "#1b1030" };
+const henBlock = [
+  ...box(-4, -3, 2, 4, 3, 8, HEN.s), // cuerpo
+  ...box(3, -1, 9, 5, 1, 11, HEN.s), // cabeza encima de la pechuga
+  ...box(-6, -1, 6, -5, 1, 10, HEN.s), // cola
+  ...box(0, -1, 0, 0, -1, 1, HEN.y), ...box(0, 1, 0, 0, 1, 1, HEN.y), // patas
+];
+const henBodyShape = [];
+for (let x = -5; x <= 5; x++) for (let y = -3; y <= 3; y++) for (let z = 2; z <= 8; z++) if ((x / 4.6) ** 2 + (y / 3.2) ** 2 + ((z - 5) / 3.3) ** 2 <= 1) henBodyShape.push({ x, y, z, c: HEN.w });
+const henHead = box(3, -1, 9, 5, 1, 11, HEN.w).filter((v) => !((v.x === 3 || v.x === 5) && v.z === 11 && v.y !== 0)); // esquinas de arriba fuera
+const henNeck = box(2, -1, 8, 4, 1, 8, HEN.w); // el cuello arranca del lomo, sin muesca
+const henRump = box(-4, -1, 7, -4, 1, 8, HEN.w); // la rabadilla: une la cola con el cuerpo
+const henTail = [...box(-5, -1, 6, -5, 1, 9, HEN.w), ...box(-6, -1, 8, -6, 1, 11, HEN.w), { x: -7, y: 0, z: 11, c: HEN.w }, { x: -7, y: 0, z: 10, c: HEN.w }]; // abanico que sube hacia atrás
+const henLegs = [[-1], [1]].flatMap(([y]) => [{ x: 0, y, z: 0, c: HEN.y }, { x: 0, y, z: 1, c: HEN.y }, { x: 1, y, z: 0, c: HEN.Y }, { x: -1, y, z: 0, c: HEN.Y }]); // patas de 1 vóxel y dedos delante y detrás
+const henForm = dedupe([...henBodyShape, ...henNeck, ...henRump, ...henHead, ...henTail, ...henLegs]);
+const henFinal = (() => {
+  const v = henForm.map((q) => {
+    if (q.c !== HEN.w) return q;
+    const body = q.x >= -5 && q.x <= 5 && q.z >= 2 && q.z <= 8 && !(q.x >= 3 && q.z === 8);
+    if (body && q.z <= 3) return { ...q, c: HEN.s }; // la tripa, en sombra
+    if (body && Math.abs(q.y) >= 2 && q.x >= -3 && q.x <= 2 && q.z >= 4 && q.z <= 6) return { ...q, c: q.z === 4 || (q.x + q.z) % 3 === 0 ? HEN.f : HEN.s }; // ala plegada a cada lado, con plumas marcadas
+    if (q.x <= -6 && q.z >= 10) return { ...q, c: HEN.f }; // puntas de la cola
+    return q;
+  });
+  v.push({ x: 3, y: 0, z: 12, c: HEN.r }, { x: 4, y: 0, z: 12, c: HEN.r }, { x: 5, y: 0, z: 12, c: HEN.r }, { x: 3, y: 0, z: 13, c: HEN.r }, { x: 5, y: 0, z: 13, c: HEN.r }); // cresta con dos picos
+  v.push({ x: 6, y: 0, z: 10, c: HEN.y }, { x: 5, y: 0, z: 8, c: HEN.r }); // pico y barbilla
+  v.push({ x: 4, y: -1, z: 10, c: HEN.e }, { x: 4, y: 1, z: 10, c: HEN.e }); // un ojo a cada lado
+  v.push(...[[8, 1], [9, -1], [7, -2], [10, 1]].map(([x, y]) => ({ x, y, z: 0, c: "#e8d49a" }))); // grano en el suelo, delante del pico
+  return dedupe(v);
+})();
+
 export const MODELS = {
+  pozo: {
+    description: "Pozo: círculos y cilindros en una rejilla",
+    stages: [
+      { label: "Círculos", note: "Tres discos de 1 vóxel de alto. A la izquierda, radio 4 justo: en cada punta queda un vóxel suelto. En el centro, radio 4,5 (diámetro 9): borde limpio y un vóxel en el centro. A la derecha, diámetro 8: también redondo, pero sin vóxel central.", voxels: wellCircles },
+      { label: "Brocal", note: "El disco de diámetro 9 subido 5 de alto y vaciado por dentro con un hueco de diámetro 5: un anillo de 2 de grueso. Los sillares van en hiladas alternas, el remate es más claro y dentro hay agua 3 vóxels por debajo del borde.", voxels: wellBody },
+      { label: "Tejado y cubo", note: "Dos postes sobre el brocal, un torno con manivela, un tejado a dos aguas a lo largo de X, la cuerda y el cubo colgando sobre el agua. Al pie, otro cubo lleno, hierba a manchas y unas matas.", voxels: wellFinal },
+    ],
+  },
+  gallina: {
+    description: "Gallina: un animal de dos patas",
+    stages: [
+      { label: "Masas", note: "Cuatro cajas: un cuerpo de 9×7×7, una cabeza de 3×3×3 encima de la parte de delante, una cola detrás y dos patas de 1 vóxel. Mira hacia +X, como la oveja.", voxels: henBlock },
+      { label: "Forma", note: "El cuerpo pasa a ser un huevo tumbado, la cabeza pierde las esquinas de arriba y la cola se abre en abanico hacia atrás y hacia arriba. Las patas son finas, con un dedo delante y otro detrás: dos apoyos bastan si el cuerpo queda encima.", voxels: henForm },
+      { label: "Color y detalle", note: "Plumas blancas y la tripa en sombra; un ala plegada a cada lado, con las plumas marcadas; las puntas de la cola más oscuras. Cresta roja con dos picos, pico amarillo, barbilla roja, un ojo a cada lado y grano en el suelo.", voxels: henFinal },
+    ],
+  },
+
   valla: {
     description: "Valla: una pieza que se duplica, se mueve y se gira",
     stages: [

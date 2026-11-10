@@ -2042,6 +2042,150 @@ function pineSprite(h, { snow = false } = {}) {
   add("form-lineup-same", "Error: las tres criaturas con el mismo cuerpo redondo; solo cambian el color y la cara (la azul con cejas rectas, la morada con ojos rasgados y colmillos). En silueta son tres círculos iguales, y la «peligrosa» sigue pareciendo un peluche.", ["personaje", "forma", "error"], B.pal, B.rows);
 }
 
+
+// ---------- utilidades del bloque 20: capa de objetos con contorno automático
+const blankGrid = (w, h, fill = null) => Array.from({ length: h }, () => Array.from({ length: w }, () => fill));
+const outlineLayer = (px, ink = "#1b1030") => { // pone contorno alrededor (4 vecinos) de todo lo pintado
+  const h = px.length, w = px[0].length, outp = px.map((r) => [...r]);
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) if (!px[y][x] && [[1, 0], [-1, 0], [0, 1], [0, -1]].some(([a, b]) => px[y + b]?.[x + a])) outp[y][x] = ink;
+  return outp;
+};
+const over = (base, layer) => base.map((r, y) => r.map((c, x) => layer[y][x] ?? c));
+
+// ---------- ESTACIONES: la misma escena en primavera, verano, otoño e invierno
+{
+  const W = 64, H = 40;
+  const grassHex = toHexGrid("tile-grass");
+  const SEASON = {
+    spring: { g: ["#4fb860", "#378a4c", "#8fe08a"], leaf: ["#2f7a3a", "#4caf50", "#8fd86a"], extra: ["#ffb3c8", "#fff3f6"], ground: ["#ffb3c8", "#fff3c4", "#ffe58a"] },
+    summer: { g: ["#3fa45b", "#2c7a48", "#6fd17f"], leaf: ["#1f6b3a", "#2f9a4a", "#5cc860"], extra: null, ground: null },
+    autumn: { g: ["#8f9a3f", "#6b7530", "#b8b860"], leaf: ["#8a3a1a", "#d8642a", "#f2a83a"], extra: ["#ffd36e"], ground: ["#d8642a", "#f2a83a", "#8a3a1a"] },
+    winter: { g: ["#e8eef8", "#b8c4dc", "#ffffff"], leaf: null, extra: null, ground: null },
+  };
+  const TRUNK = ["#3b2418", "#6b3d2e", "#a0603a"];
+  const SNOW = "#ffffff";
+  const blobs = [[18, 14, 9], [12, 17, 6], [24, 17, 6.5], [17, 9, 6]]; // copa: unión de cuatro círculos
+  const inCanopy = (x, y) => blobs.some(([cx, cy, r]) => (x - cx) ** 2 + (y - cy) ** 2 <= r * r);
+  const BR = [[16, 19, 10, 12], [10, 12, 8, 7], [10, 12, 6, 11], [18, 13, 25, 7], [25, 7, 27, 4], [22, 10, 26, 10], [17, 11, 13, 5], [18, 9, 20, 3], [14, 8, 12, 6]]; // ramas, del tronco hacia fuera (1 px, sin contorno)
+  const line = (x0, y0, x1, y1) => { const n = Math.max(Math.abs(x1 - x0), Math.abs(y1 - y0)); return Array.from({ length: n + 1 }, (_, i) => [Math.round(x0 + ((x1 - x0) * i) / n), Math.round(y0 + ((y1 - y0) * i) / n)]); };
+  function scene(key) {
+    const S = SEASON[key];
+    const map = { "#3fa45b": S.g[0], "#2c7a48": S.g[1], "#6fd17f": S.g[2] };
+    const ground = blankGrid(W, H).map((r, y) => r.map((_, x) => map[grassHex[y % 16][x % 16]]));
+    // sombra bajo el árbol y bajo el pino: el tono oscuro del suelo
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+      if (((x - 18) / 10) ** 2 + ((y - 32) / 3) ** 2 <= 1 || ((x - 44) / 5) ** 2 + ((y - 33) / 1.6) ** 2 <= 1 || ((x - 56) / 6) ** 2 + ((y - 35) / 1.5) ** 2 <= 1) ground[y][x] = S.g[1];
+    }
+    if (S.ground) for (let y = 28; y < H; y++) for (let x = 2; x < 36; x++) { const n = rnoiseS(x, y); if (n < (key === "autumn" ? 9 : 4)) ground[y][x] = S.ground[n % S.ground.length]; } // hojas caídas o flores
+    if (key === "winter") for (const [x, y] of [[4, 36], [33, 28], [60, 24], [40, 38], [9, 27]]) { ground[y][x] = "#5a8a60"; ground[y - 1][x] = "#5a8a60"; ground[y - 1][x + 1] = "#7aa870"; } // matas que asoman de la nieve
+    const obj = blankGrid(W, H);
+    // tronco
+    for (let y = 18; y <= 32; y++) for (let x = 16; x <= 19; x++) obj[y][x] = x === 16 ? TRUNK[2] : x === 19 ? TRUNK[0] : TRUNK[1];
+    obj[32][15] = TRUNK[1]; obj[32][20] = TRUNK[0]; // raíces
+    if (S.leaf) {
+      for (let y = 0; y < 24; y++) for (let x = 2; x < 34; x++) if (inCanopy(x, y)) {
+        const lit = -((x - 18) + (y - 13)) / 14 + (rnoiseS(x, y) % 7) / 20; // luz arriba a la izquierda, con algo de grano
+        obj[y][x] = lit > 0.35 ? S.leaf[2] : lit > -0.35 ? S.leaf[1] : S.leaf[0];
+        if (S.extra && rnoiseS(x * 3, y * 5) < (key === "spring" ? 12 : 6) && lit > -0.5) obj[y][x] = S.extra[rnoiseS(x, y * 7) % S.extra.length];
+      }
+    } else for (let y = 12; y < 18; y++) for (let x = 17; x <= 18; x++) obj[y][x] = x === 17 ? TRUNK[2] : TRUNK[1]; // sin copa: el tronco sigue hacia arriba, más fino
+    // pino (siempre verde) y roca
+    const pine = pineSprite(24, { snow: key === "winter" });
+    pine.rows.forEach((r, y) => [...r].forEach((k, x) => { if (k !== "." && k !== "o") obj[10 + y][38 + x] = pine.pal[k]; }));
+    const rock = spriteByName("rock-clean");
+    rock.rows.forEach((r, y) => [...r].forEach((k, x) => { if (k !== "." && k !== "o") obj[28 + y][51 + x] = key === "winter" && y <= 2 ? SNOW : rock.palette[k]; }));
+    if (key === "winter") for (let y = 28; y >= 1; y--) for (let x = 0; x < W; x++) if (obj[y][x] && !obj[y - 1][x] && (x < 36 || y < 30)) obj[y][x] = SNOW; // nieve en todo lo que mira hacia arriba
+    let px = over(ground, outlineLayer(obj));
+    if (!S.leaf) { const tw = blankGrid(W, H); for (const [x0, y0, x1, y1] of BR) for (const [x, y] of line(x0, y0, x1, y1)) if (!obj[y][x]) tw[y][x] = TRUNK[0]; for (let y = 1; y < H; y++) for (let x = 0; x < W; x++) if (tw[y][x] && !tw[y - 1][x] && !obj[y - 1][x] && (rnoiseS(x, y) % 3)) tw[y - 1][x] = SNOW; px = over(px, tw); } // ramas finas con nieve encima, a trozos
+    return px;
+  }
+  const D = {
+    spring: "Primavera (64×40): la hierba algo más clara, la copa verde tierno con flores rosas y blancas, y flores sueltas en el suelo bajo el árbol. El pino y la roca no cambian.",
+    summer: "Verano (64×40): la escena de referencia. Hierba del tile de P7-01, copa llena en tres verdes con la luz arriba a la izquierda, sombra oscura bajo el árbol, el pino y la roca.",
+    autumn: "Otoño (64×40): la hierba se apaga hacia el ocre, la copa pasa a una rampa de rojo, naranja y ámbar con algunas hojas amarillas, y hay hojas caídas bajo el árbol. El pino sigue verde.",
+    winter: "Invierno (64×40): el suelo es nieve (blanco y sombras azuladas, no grises), el árbol pierde la copa y enseña las ramas con nieve encima, el pino y la roca llevan nieve en lo alto y asoman matas verdes. No es un filtro: hay píxeles nuevos.",
+  };
+  const scenes = {};
+  for (const k of Object.keys(SEASON)) { scenes[k] = scene(k); const s = hexGridToSprite(scenes[k]); add(`season-${k}`, D[k], ["escena", "tiles", "paleta", "estaciones"], s.pal, s.rows); }
+  // ERROR: el invierno como filtro azul encima del verano
+  const tint = scenes.summer.map((r) => r.map((h) => h && hexOf(mix(rgbOf(h), [168, 192, 232], 0.45).map((v) => v * 0.92))));
+  const t = hexGridToSprite(tint);
+  add("season-winter-tint", "ERROR: el «invierno» hecho con un filtro azul sobre el verano. Todo se enfría y se apaga a la vez, pero el árbol conserva la copa, no hay nieve en lo alto de nada y el suelo sigue siendo hierba: parece verano de noche, no invierno.", ["escena", "estaciones", "error"], t.pal, t.rows);
+}
+function rnoiseS(x, y) { return (((x * 73856093) ^ (y * 19349663)) >>> 0) % 100; }
+
+// ---------- NIVELES DE OBJETO: tres espadas que se leen como mejora (madera, hierro, legendaria)
+{
+  const W = 17, H = 34, CX = 8;
+  const put = (px, x, y, c) => { if (px[y] && x >= 0 && x < W) px[y][x] = c; };
+  function swordWood() {
+    const px = blankGrid(W, H); const C = { L: "#d8a868", M: "#a0703a", D: "#6b4a2a", r: "#e8d49a", R: "#b09060" };
+    put(px, CX, 11, C.L); // punta roma
+    for (let y = 12; y <= 24; y++) { put(px, CX - 1, y, C.L); put(px, CX, y, y % 5 === 2 ? C.D : C.M); put(px, CX + 1, y, C.D); } // hoja de 3, vetas
+    for (let x = CX - 4; x <= CX + 4; x++) { put(px, x, 25, x === CX + 4 ? C.D : C.L); put(px, x, 26, x >= CX + 3 ? C.D : C.M); } // travesaño de 9
+    for (let y = 27; y <= 30; y++) for (let x = CX - 1; x <= CX + 1; x++) put(px, x, y, (x + y) % 2 ? C.r : C.R); // cuerda
+    put(px, CX, 31, C.M);
+    return px;
+  }
+  function swordIron() {
+    const px = blankGrid(W, H); const C = { e: "#eef3f8", l: "#c9d4e0", f: "#6f8296", m: "#a9b8c8", d: "#7d8fa3", L: "#c9d1dc", M: "#8f9bab", D: "#5c6676", b: "#6b3d2e", B: "#3b2418" };
+    put(px, CX, 4, C.e); for (let x = CX - 1; x <= CX + 1; x++) put(px, x, 5, x < CX ? C.e : x > CX ? C.d : C.l);
+    for (let y = 6; y <= 23; y++) [C.e, C.l, y >= 8 ? C.f : C.l, C.m, C.d].forEach((c, i) => put(px, CX - 2 + i, y, c)); // hoja de 5 con acanaladura
+    for (let x = CX - 5; x <= CX + 5; x++) { put(px, x, 24, Math.abs(x - CX) === 5 ? C.M : C.L); put(px, x, 25, x > CX + 2 ? C.D : C.M); } // guarda recta de 11
+    for (let y = 26; y <= 29; y++) for (let x = CX - 1; x <= CX + 1; x++) put(px, x, y, y % 2 ? C.B : C.b); // cuero con vueltas
+    for (const [x, y, c] of [[CX - 1, 30, C.L], [CX, 30, C.L], [CX + 1, 30, C.M], [CX - 1, 31, C.M], [CX, 31, C.M], [CX + 1, 31, C.D]]) put(px, x, y, c); // pomo
+    return px;
+  }
+  function swordLegend() {
+    const px = blankGrid(W, H); const C = { w: "#ffffff", e: "#f4fbff", l: "#bfe9ff", r: "#6fb8ff", m: "#8fc8f0", d: "#4a7ab8", Y: "#ffe58a", y: "#f2b33d", Yd: "#a8661c", g: "#d8343f", G: "#ff9a9a", p: "#5b2a6e", P: "#a4407e" };
+    put(px, CX, 1, C.w); for (let x = CX - 1; x <= CX + 1; x++) put(px, x, 2, x < CX ? C.e : x > CX ? C.d : C.l);
+    for (let y = 3; y <= 21; y++) { const hw = y < 5 ? 2 : y > 17 ? 2 : 2; [C.e, C.l, y % 4 === 1 && y > 4 ? C.w : C.r, C.m, C.d].forEach((c, i) => put(px, CX - hw + i, y, c)); } // hoja de 5 con una runa que brilla cada 4 px
+    // guarda en alas: sube por fuera
+    for (const [dx, dy] of [[6, -2], [6, -1], [5, -1], [6, 0], [5, 0], [4, 0], [3, 0], [3, 1], [4, 1], [5, 1], [2, 1], [2, 0]]) for (const s of [-1, 1]) put(px, CX + s * dx, 22 + dy, dy === -2 || (dy === -1 && dx === 6) ? C.Y : s > 0 && dy === 1 ? C.Yd : C.y);
+    for (let x = CX - 1; x <= CX + 1; x++) for (let y = 21; y <= 23; y++) put(px, x, y, C.g); put(px, CX - 1, 21, C.G); put(px, CX, 21, C.G); put(px, CX + 1, 23, "#8e1f35"); // gema en la guarda
+    for (let y = 24; y <= 28; y++) for (let x = CX - 1; x <= CX + 1; x++) put(px, x, y, (x + y) % 2 ? C.p : C.P); // empuñadura morada
+    for (const [x, y, c] of [[CX - 1, 29, C.Y], [CX, 29, C.y], [CX + 1, 29, C.y], [CX - 2, 30, C.y], [CX - 1, 30, C.g], [CX, 30, C.G], [CX + 1, 30, C.g], [CX + 2, 30, C.Yd], [CX - 1, 31, C.y], [CX, 31, C.Yd], [CX + 1, 31, C.Yd]]) put(px, x, y, c); // pomo de oro con gema
+    return px;
+  }
+  const tiers = { 1: outlineLayer(swordWood()), 2: outlineLayer(swordIron()), 3: outlineLayer(swordLegend()) };
+  const TD = {
+    1: "Espada de nivel 1, de madera (17×34): hoja roma de 3 px y 13 de largo con vetas, travesaño de madera y empuñadura de cuerda. Pocos colores, apagados, y la silueta más corta y simple.",
+    2: "Espada de nivel 2, de hierro (17×34): hoja de 5 px acabada en punta con una acanaladura oscura, guarda recta de 11, cuero con vueltas y pomo de metal. Más larga, más colores y un brillo frío.",
+    3: "Espada de nivel 3, legendaria (17×34): la hoja más larga, en azul claro, con una runa blanca cada 4 px; guarda de oro en alas que suben por fuera, una gema roja en el centro, empuñadura morada y pomo de oro con gema. La silueta cambia, no solo el color.",
+  };
+  for (const k of [1, 2, 3]) { const s = hexGridToSprite(tiers[k]); add(`sword-tier-${k}`, TD[k], ["objeto", "arma", "niveles"], s.pal, s.rows); }
+  const lineup = (cols) => { const px = blankGrid(W * 3 + 6, H); cols.forEach((g, i) => g.forEach((r, y) => r.forEach((c, x) => { if (c) px[y][i * (W + 3) + x] = c; }))); return hexGridToSprite(px); };
+  const l = lineup([tiers[1], tiers[2], tiers[3]]);
+  add("sword-tiers", "Las tres espadas en fila (57×34), alineadas por el pomo: de izquierda a derecha crecen la longitud, la guarda, el número de colores y la saturación. Cada nivel se reconoce por la forma antes que por el color.", ["objeto", "arma", "niveles"], l.pal, l.rows);
+  // ERROR: el mismo sprite de hierro con tres paletas
+  const recolor = (g, f) => g.map((r) => r.map((c) => c && (c === "#1b1030" ? c : f(c))));
+  const woodish = (c) => { const v = lumOf(rgbOf(c)); return hexOf(mix([107, 74, 42], [216, 168, 104], Math.min(1, v * 1.1))); };
+  const goldish = (c) => { const v = lumOf(rgbOf(c)); return hexOf(mix([168, 102, 28], [255, 229, 138], Math.min(1, v * 1.1))); };
+  const b = lineup([recolor(tiers[2], woodish), tiers[2], recolor(tiers[2], goldish)]);
+  add("sword-tiers-recolor", "ERROR: tres «niveles» que son la espada de hierro con tres paletas: marrón, gris y dorado. Misma silueta, mismo largo, mismos detalles. En el inventario parecen la misma arma pintada; la dorada no se lee como mejor, solo como más amarilla.", ["objeto", "arma", "niveles", "error"], b.pal, b.rows);
+}
+
+// ---------- SATURACIÓN Y FOCO: el color fuerte, solo donde quieres que mire el ojo
+{
+  const base = toHexGrid("scene-final");
+  const toHsl = ([r, g, b]) => { r /= 255; g /= 255; b /= 255; const mx = Math.max(r, g, b), mn = Math.min(r, g, b), l = (mx + mn) / 2; let h = 0, s = 0; if (mx !== mn) { const d = mx - mn; s = l > 0.5 ? d / (2 - mx - mn) : d / (mx + mn); h = mx === r ? (g - b) / d + (g < b ? 6 : 0) : mx === g ? (b - r) / d + 2 : (r - g) / d + 4; h *= 60; } return [h, s, l]; };
+  const fromHsl = ([h, s, l]) => hslToHex(h, Math.max(0, Math.min(1, s)), Math.max(0, Math.min(1, l)));
+  const GROUND = new Set(["#3fa45b", "#2c7a48", "#6fd17f", "#e8d49a", "#c9b07a", "#d8f0ff", "#2a6fc9", "#6fb8ff", "#1f4f9a"]);
+  const focusBox = (x, y) => (x >= 8 && x <= 54 && y >= 4 && y <= 31); // el héroe, el impacto y el slime
+  const isFocus = (x, y, c) => focusBox(x, y) && !GROUND.has(c) && !(x >= 57); // el cofre (a la derecha) no es foco
+  const adj = (c, ds, dl = 0) => { if (c === "#1b1030" || c === "#2a1020") return c; const [h, s, l] = toHsl(rgbOf(c)); return fromHsl([h, s * ds, l + (0.5 - l) * dl]); };
+  const desat = (c, k) => { if (c === "#1b1030" || c === "#2a1020") return c; const rgb = rgbOf(c), Y = lumOf(rgb) * 255; return hexOf(mix(rgb, [Y, Y, Y], k)); }; // hacia el gris de SU MISMO valor: la saturación baja y el valor no se mueve
+  const good = base.map((r, y) => r.map((c, x) => c && (isFocus(x, y, c) ? c : desat(c, 0.65))));
+  const g = hexGridToSprite(good);
+  add("sat-focus", "La escena final con la saturación repartida (80×48): el héroe, el slime y el impacto conservan sus colores; la hierba, el agua, la orilla, el cofre, la roca y la seta pierden un 65 % de su saturación, cada color hacia el gris de su mismo valor. Los valores no cambian: lo que guía el ojo es dónde queda el color.", ["escena", "color", "saturación"], g.pal, g.rows);
+  const loud = base.map((r) => r.map((c) => c && adj(c, 1.9)));
+  const l = hexGridToSprite(loud);
+  add("sat-all", "ERROR: la misma escena con TODO saturado al máximo (80×48). La hierba y el agua chillan tanto como el héroe y el impacto: no hay un sitio donde descansar la vista y el foco se pierde. Más saturación en todas partes no es más color, es ruido.", ["escena", "color", "saturación", "error"], l.pal, l.rows);
+  const grey = base.map((r) => r.map((c) => c && desat(c, 1)));
+  const gr = hexGridToSprite(grey);
+  add("sat-gray", "La escena final sin saturación (80×48): cada color pasa al gris de su valor (luminancia), así que solo quedan valores. Sirve para comprobar que el foco no depende del color: el impacto sigue siendo lo más claro.", ["escena", "color", "saturación", "valor"], gr.pal, gr.rows);
+}
+
 // ---------- escribir y validar
 let bad = 0;
 for (const s of out) {

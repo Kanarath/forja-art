@@ -1,0 +1,315 @@
+---
+id: v2-05
+discipline: voxel
+level: 2
+order: 5
+title: "Formas redondas: un pozo"
+summary: "Círculos limpios en una rejilla: diámetro impar para tener centro, radio 4,5 en vez de 4 para no dejar puntas sueltas y un cilindro vaciado en anillo. Un pozo de piedra con tejado."
+duration: 40
+status: borrador
+prerequisites: [v1-02, v2-04]
+fundamentals: [f02]
+objectives:
+  - "Construir círculos limpios por filas, con tramos que crecen y decrecen con orden"
+  - "Elegir el diámetro: impar si necesitas un vóxel central, par si algo debe quedar entre dos"
+  - "Evitar la punta solitaria del radio entero usando radios terminados en ,5"
+  - "Levantar un cilindro repitiendo el mismo círculo y vaciarlo en un anillo de grosor 2"
+  - "Contrastar lo redondo con piezas rectas: postes, torno y tejado a dos aguas"
+tools: [magicavoxel]
+piece:
+  name: "Un pozo propio: brocal redondo de diámetro impar, sillares en hiladas, postes, tejado y cubo"
+  canvas: "15x15x18"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [pozo]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Hasta ahora casi todo eran cajas. Hoy toca lo difícil de una rejilla: **lo redondo**. Vas a forjar **un pozo**: un brocal de piedra redondo, dos postes, un torno, un tejado y un cubo.
+
+<VoxViewer model="pozo" stage={2} title="El pozo: círculos, brocal y tejado" />
+
+Gíralo y recorre las tres etapas del visor:
+
+1. **Círculos:** tres discos planos de 1 vóxel de alto. Uno tiene puntas, otro es limpio y otro no tiene centro.
+2. **Brocal:** el disco limpio subido 5 capas y vaciado por dentro. Un anillo de piedra con agua al fondo.
+3. **Tejado y cubo:** postes, torno con manivela, tejado a dos aguas, cuerda, cubo y hierba al pie.
+
+Tu pieza final: **tu propio pozo**, con un brocal redondo **sin puntas sueltas**, sillares en hiladas alternas y un tejado. Y un render.
+</Block>
+
+<Block kind="concepto">
+### 1. Un círculo en vóxels es una pila de filas
+
+<VoxViewer model="pozo" stage={0} title="Tres discos: radio 4, radio 4,5 y diámetro 8" />
+
+En una rejilla no hay curvas. Hay **filas** de vóxels, cada una un poco más ancha que la anterior hasta el centro y luego más estrecha. Es lo mismo que el círculo de pixel art: tramos que crecen y decrecen **con orden**.
+
+Mira el disco del **centro** desde arriba. Cuenta las filas de un borde al otro:
+
+**5, 7, 9, 9, 9, 9, 9, 7, 5**
+
+Nueve filas, nueve de ancho como máximo, 69 vóxels. Los saltos son de 2 en 2 (un vóxel más por cada lado) y luego una meseta. Se lee redondo.
+
+<Why title="¿Por qué funciona?">
+El ojo no ve vóxels, ve **la línea del borde**. Si los escalones van creciendo o decreciendo con orden, la línea se lee como curva. Si un escalón se sale del orden, el ojo ve un bulto o una esquina. Es la regla de los tramos de las líneas y curvas de [P2-01](/forja-art/pixel/p2-01/), ahora en planta.
+</Why>
+
+### 2. Diámetro impar: un centro limpio
+
+El disco del centro mide **9**: impar. Eso le da **un vóxel central**, con 4 vóxels a cada lado en cada eje.
+
+Ese vóxel central es oro:
+
+- Ahí pones el **eje** de un torno, el **caño** de una fuente o la **cuerda** del pozo.
+- **Mirror X** y **Mirror Y** tienen un eje claro donde reflejar.
+- Todo lo que centras (postes, tejado, cubo) cae en una columna exacta, no «entre dos».
+
+En el pozo del visor, la cuerda y el cubo cuelgan justo sobre ese vóxel central.
+
+### 3. La punta solitaria del radio entero
+
+Ahora mira el disco de la **izquierda**. Es un círculo de **radio 4 justo**. Sus filas:
+
+**1, 5, 7, 7, 9, 7, 7, 5, 1**
+
+¿Ves los **1** de los extremos? En cada eje queda **un vóxel suelto** que sobresale: la **punta solitaria**. Desde arriba parece una flor de cuatro pétalos, no un círculo. Tiene 49 vóxels.
+
+<Why title="¿De dónde sale la punta?">
+Con radio 4, el vóxel que está a 4 del centro sobre el eje cae **justo en el borde** del círculo y entra. Pero sus dos vecinos, a 4 en un eje y 1 en el otro, ya están a algo más de 4 del centro y se quedan fuera. Resultado: una fila de un solo vóxel. Con **radio 4,5**, esos vecinos entran también y el borde sale plano: una fila de 5.
+</Why>
+
+<Tip title="La regla corta">
+Si construyes un círculo a partir de un radio, usa radios que acaben en **,5**: 2,5, 3,5, 4,5… El diámetro sale impar (5, 7, 9…) y sin puntas.
+</Tip>
+
+Aquí tienes las filas de varios círculos, contadas con el mismo cálculo que usa el modelo. Te sirven de plantilla para construir sin calcular:
+
+| Radio | Diámetro | Filas de un borde al otro | Vóxels | ¿Puntas? |
+| --- | --- | --- | --- | --- |
+| 2 | 5 | 1, 3, 5, 3, 1 | 13 | Sí |
+| 2,5 | 5 | 3, 5, 5, 5, 3 | 21 | No |
+| 3 | 7 | 1, 5, 5, 7, 5, 5, 1 | 29 | Sí |
+| 3,5 | 7 | 3, 5, 7, 7, 7, 5, 3 | 37 | No |
+| 4 | 9 | 1, 5, 7, 7, 9, 7, 7, 5, 1 | 49 | Sí |
+| 4,5 | 9 | 5, 7, 9, 9, 9, 9, 9, 7, 5 | 69 | No |
+| 5 | 11 | 1, 7, 9, 9, 9, 11, 9, 9, 9, 7, 1 | 81 | Sí |
+| 5,5 | 11 | 5, 7, 9, 11, 11, 11, 11, 11, 9, 7, 5 | 97 | No |
+
+<Warn title="Búscale las puntas a lo que ya hiciste">
+El **cilindro** de las primitivas de [V1-02](/forja-art/voxel/v1-02/) tiene radio 3 justo: tiene punta solitaria. Y la **cúpula del slime** de [V5-01](/forja-art/voxel/v5-01/) tiene una capa, la segunda desde abajo, con filas 1, 7, 9, 9, 9, 11, 9, 9, 9, 7, 1: puntas también. Ábrelas en el visor con el corte por **Capas** y búscalas. En un slime blando casi no se nota; en un brocal de piedra, sí.
+</Warn>
+
+### 4. Diámetro par: cuando algo va entre dos vóxels
+
+El disco de la **derecha** mide **8**. Sus filas:
+
+**4, 6, 8, 8, 8, 8, 6, 4**
+
+También es redondo y limpio (52 vóxels), pero **no tiene vóxel central**: el centro cae en la juntura entre cuatro vóxels.
+
+Eso no es un defecto. Es lo que necesitas cuando lo del centro mide **2**:
+
+- un poste de 2×2 como el de la valla de [V1-03](/forja-art/voxel/v1-03/);
+- el cuello de 2×2 de la poción de [V4-04](/forja-art/voxel/v4-04/);
+- una puerta de 2 de ancho centrada en una torre redonda.
+
+| Diámetro par | Filas | Vóxels |
+| --- | --- | --- |
+| 4 | 2, 4, 4, 2 | 12 |
+| 6 | 4, 6, 6, 6, 6, 4 | 32 |
+| 8 | 4, 6, 8, 8, 8, 8, 6, 4 | 52 |
+
+<Why>
+La regla es la paridad: **lo del centro y el círculo, los dos impares o los dos pares**. Un eje de 1 en un círculo de 9 queda centrado; un poste de 2 en un círculo de 8, también. Mezclarlos deja algo medio vóxel torcido, y en una rejilla no hay medios vóxels.
+</Why>
+
+### 5. Cilindro = el mismo círculo repetido
+
+<VoxViewer model="pozo" stage={1} title="Brocal: el disco de 9 subido y vaciado" />
+
+Un cilindro no es una forma nueva. Es **el mismo círculo**, capa tras capa. El brocal del visor es el disco de diámetro 9 repetido **5 capas** (de la 0 a la 4).
+
+Después se **vacía**: en el centro se quita un círculo de **diámetro 5** (radio 2,5, filas 3, 5, 5, 5, 3). Queda un **anillo**:
+
+- **Grosor 2** en los ejes: 9 menos 5, dividido entre 2. En las diagonales el muro se ve algo más ancho; es normal en una rejilla.
+- **48 vóxels por capa**: los 69 del disco menos los 21 del hueco.
+- Mueve el deslizador **Capas** y lo verás: las cuatro capas de piedra son idénticas en forma.
+
+<Why title="¿Por qué grosor 2 y no 1?">
+Un anillo de 1 vóxel, en una rejilla, toca a su vecino solo por la arista en las curvas: desde algunos ángulos se ve como una cadena de cubitos y la piedra parece de papel. Con 2, cada vóxel toca a otro por una cara y el muro se lee macizo. Para piedra, 2 como mínimo.
+</Why>
+
+Dentro del anillo hay **agua**: el fondo oscuro en la capa 0 y el agua en la capa 1. La última capa de piedra (la 4) es el **remate**, en un gris más claro. El agua queda **3 capas por debajo del borde**: se ve que es un pozo, no un plato.
+
+### 6. Sillares en hiladas alternas
+
+Gira el brocal. La piedra no es un color liso: cada capa está partida en **unos 11 sillares** alrededor, y en cada capa las juntas se desplazan **medio sillar**. Como en un muro de ladrillo: la junta de arriba nunca cae encima de la de abajo.
+
+Los sillares se distinguen por tres grises de valor parecido, y el remate, más claro, cierra arriba. Es el mismo remate claro del pretil de la fuente de [V3-05](/forja-art/voxel/v3-05/).
+
+<Tip title="Octógono frente a círculo">
+La fuente de V3-05 es un **octógono**: filas 5, 7, 9, 11, 13, cinco de 15 y vuelta a bajar. Lados rectos y diagonales 1:1 limpias. Se lee como «redondo y construido». El círculo del pozo tiene una meseta más larga y escalones más suaves: se lee más redondo. Para algo de 15 de ancho o más, el octógono es más fácil de construir y casi igual de redondo.
+</Tip>
+
+### 7. Lo recto hace que lo redondo se lea
+
+Vuelve a la etapa **Tejado y cubo**. Encima del brocal todo es **recto**:
+
+- **Dos postes** de 1×1 de madera oscura, en los dos lados del brocal, sobre el vóxel 4 del eje X. Suben de la capa 5 a la 15: 11 de alto, hasta tocar el tejado.
+- **El torno:** 7 vóxels de madera entre los postes, en la capa 9, y una **manivela** de metal que sale por fuera.
+- **El tejado a dos aguas:** 11 de largo y 176 vóxels. Baja en escalones de 1 en 1 a cada lado, de la capa 12 a la 15, y cada escalón tiene **2 vóxels de fondo**, así que toca al siguiente por una cara, no solo por la arista. La cumbrera, arriba (capa 16). Alterna los dos rojos, como el tejado de la casa modular de [V6-01](/forja-art/voxel/v6-01/).
+- **La cuerda** (3 vóxels, de la capa 8 a la 6) baja del torno y entra en el aro del **cubo**, de 3×3×2 con un aro de metal arriba, colgando sobre el centro.
+
+El pozo completo mide 13×11 de planta (con la manivela y el cubo del suelo) y 17 de alto.
+
+<Why>
+El contraste hace la forma. Un pozo todo redondo (postes redondos, tejado en cúpula) sería una masa blanda. Un pozo todo cuadrado sería una caja. Lo redondo abajo y lo recto arriba se refuerzan: el ojo lee «redondo» porque tiene al lado algo que no lo es. Es lo contrario del árbol de [V2-03](/forja-art/voxel/v2-03/), donde rompías la simetría a propósito: aquí la piedra es **construida**, y la precisión es la que cuenta.
+</Why>
+
+### 8. Y las esferas: círculos que encogen
+
+Una esfera o una cúpula es lo mismo, una capa más arriba cada vez: **un círculo distinto por capa**, cada vez más pequeño. La cúpula del slime de V5-01 son 7 capas de 11, 11, 9, 9, 9, 7 y 5 de ancho. Con la tabla de arriba puedes construir cualquier cúpula sin puntas: elige un círculo de la columna «No» para cada capa.
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Un lienzo impar">
+1. Crea un modelo nuevo y escribe en los campos de **tamaño** 15, 15 y 18.
+2. Gira la cámara con el botón derecho y comprueba que el suelo es de 15×15.
+
+<Why>
+15 es impar: el lienzo tiene una columna central, igual que el círculo. Si centras un círculo de 9 en un lienzo de 15, quedan 3 vóxels libres a cada lado y el centro del círculo cae en el centro del lienzo.
+</Why>
+</Step>
+
+<Step n={2} title="El disco de 9, fila a fila">
+1. Modo **Attach**, pincel **Box**, en la capa de abajo.
+2. Dibuja la fila central: **9** vóxels en el centro del lienzo.
+3. A su lado, arriba y abajo, filas de 9, 9, 7 y 5, centradas. Por cada lado: **9, 9, 7, 5**. En total, 5, 7, 9, 9, 9, 9, 9, 7, 5.
+4. Mira desde arriba: no debe haber ninguna fila de 1.
+
+<Tip>
+Con **Mirror X** y **Mirror Y** encendidos solo construyes un cuarto y los otros tres salen solos. Comprueba que el espejo refleja sobre la fila central y no la duplica: el disco debe medir 9, no 10.
+</Tip>
+</Step>
+
+<Step n={3} title="Del disco al cilindro">
+1. Repite el mismo disco en las capas 1, 2, 3 y 4. Tienes un cilindro de 9 de diámetro y 5 de alto.
+2. Si tu versión lo permite, el pincel **Face** en modo **Attach** añade una capa con la forma exacta de la cara sobre la que haces clic: un clic en la cara de arriba por capa.
+3. Si no, dibuja cada capa con **Box**, fila a fila, igual que la primera.
+
+<Why>
+Un cilindro es **el mismo círculo repetido**. Si una capa sale distinta (una fila de más, una de menos), el lateral se abolla. Comprueba con la cámara de lado que el contorno es una línea vertical recta.
+</Why>
+</Step>
+
+<Step n={4} title="Vaciar: un anillo de grosor 2">
+1. Modo **Erase**, pincel **Box**.
+2. En el centro de las capas 2, 3 y 4, borra un círculo de diámetro 5: filas **3, 5, 5, 5, 3**.
+3. Deja la capa 0 entera (será el fondo) y borra también el hueco de la capa 1 para dejar sitio al agua.
+4. Modo **Attach**: rellena el hueco de la capa 1 con un azul de la **paleta** de la izquierda. Modo **Paint**: pinta el centro de la capa 0 en un gris casi negro.
+5. Mira desde arriba: en los ejes el muro tiene 2 vóxels de grosor.
+</Step>
+
+<Step n={5} title="Sillares en hiladas alternas y remate">
+1. Elige en la **paleta** tres grises de valor parecido y uno más claro.
+2. Modo **Paint**, pincel **Voxel**. En la capa 0, divide la vuelta en tramos de 3 o 4 vóxels por fuera y alterna los grises: cada tramo es un sillar.
+3. En la capa 1, **desplaza** los tramos: que cada junta caiga en medio del sillar de abajo.
+4. Capa 2 como la 0, capa 3 como la 1.
+5. Pinta la capa 4 entera en el gris claro: el **remate**.
+
+<Warn>
+No pintes al azar vóxel a vóxel: eso es ruido, no piedra. Cada sillar es un **tramo** de un solo gris.
+</Warn>
+</Step>
+
+<Step n={6} title="Postes, torno, tejado y cubo">
+1. Modo **Attach**, pincel **Box**. Dos **postes** de 1×1 en madera oscura, encima del remate, en los extremos de la fila central (a 4 del centro, uno a cada lado). Súbelos hasta la **capa 15**.
+2. Entre los postes, a media altura (capa 9), el **torno**: una barra de 7 en madera media. Por fuera de un poste, una **manivela** de 2 o 3 vóxels de metal.
+3. El **tejado**, con filas de 11 de largo y 2 de fondo en cada vertiente: en la capa 12, a 3 y 4 del centro, a cada lado. En la 13, a 2 y 3. En la 14, a 1 y 2. En la 15, de 1 a 1, pasando por el centro (encima de los postes). En la 16, la **cumbrera** en el centro. Alterna dos rojos.
+4. Desde el centro del torno, la **cuerda**: 3 vóxels claros hacia abajo. Debajo, el **cubo**: 3×3×2 de madera, con el vóxel central de arriba vacío y un aro de metal en la capa de arriba. El último vóxel de la cuerda entra en ese hueco.
+
+<Warn title="Nada flota">
+Gira el modelo antes de seguir: los postes tienen que tocar el tejado, cada escalón del tejado tiene que tocar al siguiente **por una cara** (por eso van 2 de fondo) y la cuerda tiene que llegar al cubo. Un tejado de escalones de 1 vóxel de fondo solo se toca por las aristas y, de lado, se ve como una escalera de cubitos. Es la misma regla de las ruinas de [V2-04](/forja-art/voxel/v2-04/): todo toca algo que llega al suelo.
+</Warn>
+</Step>
+
+<Step n={7} title="El pie del pozo y el render">
+1. Modo **Attach**, pincel **Voxel**. En la capa 0, alrededor del brocal, manchas de hierba en dos verdes. A manchas, no un anillo entero.
+2. Dos o tres **matas** de 2 de alto (verde medio abajo, claro arriba).
+3. Un segundo **cubo** de 2×2×2 en el suelo, con un vóxel de agua arriba.
+4. Pulsa **Render**, gira la cámara hasta que se vea el agua dentro del brocal y guarda la imagen.
+5. Guarda como `pozo.vox`.
+</Step>
+
+<Warn title="Verifica en tu versión">
+Los nombres de los modos **Attach**, **Erase** y **Paint**, de los pinceles **Box**, **Voxel** y **Face**, de los botones **Mirror** y de los campos de tamaño pueden variar entre versiones de MagicaVoxel. Comprueba cómo refleja **Mirror** en un lienzo impar (sobre la fila central o duplicándola) y si el pincel **Face** extruye la cara completa en la tuya. Algunas versiones traen un modo de formas (*Shape*) o pinceles que generan esferas y cilindros: si los tienes, pruébalos y **cuenta las filas** del resultado con la tabla; muchos generan radios enteros con punta solitaria. En el modo **Render**, el botón para guardar la imagen cambia de sitio: búscalo por su función.
+</Warn>
+</Block>
+
+<Block kind="version">
+Ahora, **tu** pozo. Misma receta: círculo de la tabla sin puntas, cilindro repetido, anillo de grosor 2, sillares en hiladas alternas, lo recto encima y nada flotando. Elige un reto:
+
+- **El pozo grande:** brocal de diámetro 11 (radio 5,5) y 6 capas, con un hueco de 7 (radio 3,5). Tejado de 13 de largo.
+- **El pozo de cuatro postes:** brocal de diámetro **8** (par) con cuatro postes de 1×1 y un tejado a cuatro aguas; el cubo, de 2×2, queda centrado justo porque el diámetro es par.
+- **La torre redonda:** un cilindro de diámetro 9 y 10 de alto, vaciado, con una puerta de 1 de ancho y un tejado cónico hecho de círculos que encogen (7, 5, 3, 1).
+
+Antes de darlo por bueno, mira desde arriba y pregúntate: ¿hay alguna fila de 1 en algún círculo?
+</Block>
+
+<Block kind="errores">
+<Mistake title="La punta solitaria" wrongLabel="Radio 4: una flor" rightLabel="Radio 4,5: un círculo">
+  <p slot="wrong">Un círculo de radio 4 justo: filas 1, 5, 7, 7, 9, 7, 7, 5, 1. En cada eje sobresale un vóxel suelto. Desde arriba, cuatro pétalos.</p>
+  <p slot="right">Un círculo de radio 4,5: filas 5, 7, 9, 9, 9, 9, 9, 7, 5. Mismo diámetro, borde plano en los ejes, como el disco del centro en la etapa «Círculos».</p>
+
+**Corrección:** quita los cuatro vóxels sueltos y ensancha las filas de los extremos a 5. O usa la tabla: radios que acaban en ,5.
+</Mistake>
+
+<Mistake title="Escalones desordenados" wrongLabel="Abollado" rightLabel="Con orden">
+  <Sprite slot="wrong" name="circle-bumpy" scale={8} caption="Tramos sin orden: bultos y esquinas" />
+  <Sprite slot="right" name="circle-clean" scale={8} caption="Tramos que crecen y decrecen con orden" />
+
+Es el mismo error en pixel y en voxel. Si una fila es más ancha que la de al lado hacia el centro, o dos filas seguidas dan saltos distintos sin razón, el borde se abolla. **Corrección:** cuenta las filas de un extremo al otro y compáralas con la tabla. Los saltos solo crecen hacia el borde, nunca al revés.
+</Mistake>
+
+<Mistake title="Capas que no son iguales" wrongLabel="Cilindro abollado" rightLabel="El mismo círculo">
+  <p slot="wrong">Cada capa del brocal dibujada a ojo: una de 9, otra de 10 por un lado, otra con una fila de menos. Visto de lado, el muro tiene bultos y entrantes.</p>
+  <p slot="right">Las cinco capas con exactamente las mismas filas: 5, 7, 9, 9, 9, 9, 9, 7, 5. Visto de lado, el contorno es una recta vertical.</p>
+
+**Corrección:** construye **una** capa bien y cópiala (con el pincel **Face** si tu versión lo permite). Comprueba con el deslizador **Capas** del visor o girando la cámara.
+</Mistake>
+
+<Mistake title="Un anillo de 1 vóxel" wrongLabel="Piedra de papel" rightLabel="Grosor 2">
+  <p slot="wrong">Brocal de diámetro 9 con un hueco de 7: el muro tiene 1 vóxel. En las curvas los vóxels solo se tocan por la arista y se ve como una cadena.</p>
+  <p slot="right">Hueco de 5 en un disco de 9: 2 de grosor en los ejes, y cada vóxel toca a su vecino por una cara.</p>
+
+**Corrección:** usa un hueco 4 más pequeño que el disco: 9 y 5, 11 y 7. Así el muro tiene 2 en los ejes.
+</Mistake>
+</Block>
+
+<Block kind="calidad">
+<Checklist items={[
+  "Mi brocal es un círculo de la tabla y no tiene ninguna fila de 1",
+  "El diámetro y lo que va en el centro tienen la misma paridad",
+  "Todas las capas del cilindro tienen exactamente las mismas filas",
+  "El anillo tiene 2 vóxels de grosor en los ejes",
+  "Los sillares van en hiladas alternas y el remate es más claro",
+  "El agua está por debajo del borde y se ve desde la cámara del render",
+  "Postes, torno y tejado son rectos y nada flota: los postes tocan el tejado",
+  "Tengo un render del pozo en mi portfolio",
+]} />
+
+<Quiz q="Construyes un círculo de radio 4 justo y ves un vóxel suelto en cada eje. ¿Qué haces?" options={["Nada: es normal en vóxels", "Usar radio 4,5: el mismo diámetro, 9, sin puntas", "Bajar a radio 3 para que no se note"]} answer={1}>
+Con radio entero, el vóxel del eje cae justo en el borde y entra, pero sus vecinos no. Con 4,5 entran también y la fila del extremo pasa de 1 a 5. El radio 3 tiene el mismo problema: filas 1, 5, 5, 7, 5, 5, 1.
+</Quiz>
+
+<Quiz q="En el centro de tu torre redonda va una columna de 2×2. ¿Qué diámetro eliges?" options={["Uno par, como 8: el centro cae entre vóxels", "Uno impar, como 9: tiene un vóxel central", "Da igual"]} answer={0}>
+Lo del centro y el círculo deben tener la misma paridad. Una columna de 2 en un círculo de 9 quedaría medio vóxel descentrada; en uno de 8 queda exacta.
+</Quiz>
+
+<Quiz q="¿Por qué el brocal del visor tiene un hueco de diámetro 5 y no de 7?" options={["Porque el agua cabe mejor", "Para que el anillo tenga 2 de grosor y se lea macizo", "Porque 7 no se puede hacer sin puntas"]} answer={1}>
+9 menos 5 son 4: 2 por cada lado. Con un hueco de 7 el muro tendría 1 vóxel y en las curvas los vóxels solo se tocarían por la arista.
+</Quiz>
+</Block>

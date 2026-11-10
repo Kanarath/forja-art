@@ -1,0 +1,258 @@
+---
+id: f03-03
+discipline: fundamentos
+level: 3
+order: 3
+title: "Saturación y foco: dónde va el color fuerte"
+summary: "Ya sabes guiar el ojo con el valor. Ahora, con el color: el más saturado manda. Reserva el color fuerte para personajes, objetos y peligros, y apaga suelo y fondo."
+duration: 40
+status: borrador
+prerequisites: [f03-01, f01-02]
+fundamentals: [f03, f01]
+objectives:
+  - "Explicar por qué el color más saturado atrae la vista y por qué, si todo está saturado, nada destaca"
+  - "Separar saturación y valor: subir o bajar la saturación casi no mueve el valor"
+  - "Repartir la saturación de una escena: fuerte en lo importante y apagada en suelo y fondo"
+  - "Comprobar en grises que el foco no depende solo del color"
+  - "Aplicar el mismo reparto en la paleta de un modelo de MagicaVoxel"
+tools: [aseprite, magicavoxel]
+piece:
+  name: "Una escena tuya con la saturación repartida (pixel o render voxel), comprobada en grises"
+  canvas: "80x48"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [saturacion]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+En [F01-01](/forja-art/fundamentos/f01-01/) y [F01-02](/forja-art/fundamentos/f01-02/) guiaste el ojo con el **valor**. En [F03-01](/forja-art/fundamentos/f03-01/) separaste el color en tono, saturación y valor. Hoy juntas las dos cosas: la **saturación** también es una herramienta de foco.
+
+Esta es la escena final del curso, tal como la conoces:
+
+<Sprite name="scene-final" scale={5} caption="scene-final (80×48): el héroe, el impacto y el slime arriba; el cofre y la seta a la derecha; la roca abajo a la izquierda; hierba, orilla y agua" />
+
+Y esta es la misma escena con la saturación **repartida**:
+
+<Sprite name="sat-focus" scale={5} caption="sat-focus: el héroe, el impacto y el slime conservan sus colores. La hierba, el agua, la orilla, el cofre, la seta y la roca se apagan" />
+
+No has movido ni un píxel de sitio. Solo has decidido **dónde va el color fuerte**. Y ahora el ojo va directo a la pelea.
+
+Tu pieza: **una escena tuya** (la de [P8-01](/forja-art/pixel/p8-01/), la de [F07-01](/forja-art/fundamentos/f07-01/) o cualquier otra de unos 80×48) con la saturación repartida: fuerte en lo que importa, apagada en suelo y fondo. Y comprobada en grises. Si trabajas en voxel, haz lo mismo con la paleta de un modelo o un diorama tuyo, renderizado.
+</Block>
+
+<Block kind="concepto">
+### El color más saturado atrae la vista
+
+La saturación es lo **puro** que es un color: de un gris (0 %) a un color de rotulador (100 %). El ojo busca contraste, y un color muy saturado rodeado de colores apagados es un contraste fortísimo, igual que una mancha clara sobre un fondo oscuro.
+
+Mira las medias de saturación de cada zona (en HSL, solo con los píxeles de cada objeto, sin el contorno):
+
+- En `scene-final`: héroe **53 %**, slime **69 %**, impacto **81 %**… y el suelo (hierba, orilla y agua) **57 %**. El suelo está **más saturado que el héroe**. Compiten.
+- En `sat-focus`: héroe, slime e impacto **igual que antes**. El suelo baja a un **21 %**, el cofre a un 20 %, la seta a un 24 % y la roca a un 5 %.
+
+<Why title="Por qué funciona">
+El foco es **diferencia**. Lo que destaca no es lo que tiene «mucho color», sino lo que tiene **más color que lo que le rodea**. Al apagar el suelo, el héroe no ha ganado ni un punto de saturación, pero ahora es de lo poco que la tiene. Por eso manda.
+</Why>
+
+### Si todo está saturado, nada destaca
+
+La tentación es la contraria: «más color = más bonito». Mira lo que pasa:
+
+<Sprite name="sat-all" scale={5} caption="sat-all (ERROR): todo con la saturación ×1,9. La hierba y el agua chillan tanto como los personajes" />
+
+Aquí el suelo sube a un **93 %** de media y el slime llega al **100 %**. La hierba y el agua tienen tanta fuerza como el héroe, que se queda en un 84 %. No hay ningún sitio donde la vista descanse, así que tampoco hay ningún sitio que destaque. Más saturación en todas partes no es más color: es **ruido**.
+
+### La saturación no es el valor
+
+Esto es clave. Saturación y valor son **dos ejes distintos**. Puedes mover uno sin mover casi el otro.
+
+Compara la escena original y la sobresaturada en grises (aquí el gris es el **valor**, la luminancia, igual que en el Inspector):
+
+<Sprite name="scene-final" scale={5} view="gray" caption="scene-final en grises: el valor de la escena" />
+<Sprite name="sat-all" scale={5} view="gray" caption="sat-all en grises: casi idéntica. Toda esa saturación extra apenas ha movido el valor" />
+
+Lo he medido píxel a píxel: entre `scene-final` y `sat-all`, el valor cambia de media **5 puntos** y como mucho 9, aunque la saturación casi se duplica. Y `sat-focus` va más lejos: **no cambia el valor de ningún píxel** (la diferencia máxima es de 0,1 puntos). Cada color fuera del foco se mezcló un 65 % con el gris de **su mismo valor**: pierde color, pero no se aclara ni se oscurece. La hierba sigue al 54 % y el agua al 40 %, igual que en la original.
+
+<Why title="Por qué importa">
+Si la saturación casi no cambia el valor, entonces el **foco por valor** (F01) y el **foco por saturación** (hoy) son dos herramientas que **se suman**. En `sat-focus`, el impacto sigue siendo lo más claro (el blanco, al 100 %) **y** además está entre lo más saturado. Dos señales apuntando al mismo sitio.
+</Why>
+
+### Comprobar en gris: el foco no puede depender solo del color
+
+Ya lo viste en [F03-02](/forja-art/fundamentos/f03-02/): hay jugadores que no distinguen ciertos tonos. Si tu foco depende **solo** de la saturación, para ellos desaparece. Por eso la prueba de siempre: quitar el color y mirar si el foco sigue ahí.
+
+<Sprite name="sat-gray" scale={5} caption="sat-gray: la escena con la saturación a cero. El impacto sigue siendo lo más claro" />
+
+En `sat-gray` cada color pasa al gris de **su valor** (su luminancia): es la escena reducida a valores, lo mismo que ves con la vista de grises del Inspector. Y el impacto sigue mandando: su centro blanco está al 100 %, rodeado de su amarillo al 89 %. Lo único que se le acerca son 2 píxeles de brillo del slime (96 %) y las crestas de espuma del agua (93 %), pequeñas y repartidas.
+
+<Why title="La misma prueba sirve para las tres versiones">
+Como `sat-focus` no ha movido el valor, su versión en grises es **exactamente** `sat-gray`. Repartir la saturación no ha cambiado lo que se ve en grises: el foco por valor ya estaba en la escena y la saturación lo **refuerza** encima.
+</Why>
+
+### La regla práctica
+
+**Reserva el color fuerte para lo importante. Baja la saturación de todo lo demás.**
+
+- **Saturación alta**: personajes, enemigos, objetos interactivos (lo que se recoge, se abre o se usa), peligros, efectos.
+- **Saturación baja**: suelo, paredes, fondo, decorado que no se toca.
+
+En `sat-focus`, el cofre y la seta también se apagan: en esta escena **no** son el foco. Si tu juego quisiera que el jugador fuese a abrir el cofre, el cofre debería conservar su color. Es una decisión, no una receta.
+
+Lo mismo vale para los objetos: en [P4-09](/forja-art/pixel/p4-09/) (niveles de objeto), la espada legendaria es la más saturada de las tres (un 67 % de media, frente al 50 % de la de madera y el 34 % de la de hierro). El color fuerte dice «esto es especial».
+
+<Tip>
+Es lo mismo que hace la [perspectiva atmosférica](/forja-art/pixel/p8-03/): lo lejano pierde saturación y contraste. Apagar el fondo no es solo «quitar color»: también lo **aleja**, y lo cercano e importante queda delante.
+</Tip>
+
+### Lo que ya sabes de la composición
+
+En [F07-01](/forja-art/fundamentos/f07-01/) guiarás el ojo con la **posición** y el **valor**:
+
+<Sprite name="scene-focus" scale={5} caption="scene-focus (F07-01): el héroe frente al slime sobre una hierba oscura" />
+
+La saturación es la tercera herramienta. Posición, valor y saturación: cuantas más apunten al mismo sitio, más claro es el foco.
+
+### En voxel, igual
+
+En MagicaVoxel el color sale de la **paleta del modelo**, y el render añade luz y sombra encima. La regla es la misma: los colores del suelo, las paredes y el decorado, apagados; los del personaje y lo que importa, con fuerza. Como cada vóxel usa un índice de la paleta, si bajas la saturación de un color, **todo** lo que lo usa se apaga a la vez.
+
+<Inspector sprite="sat-focus" title="sat-focus: cambia entre Normal y Grises y pasa el ratón por la hierba, el héroe y el impacto" />
+</Block>
+
+<Block kind="guiada">
+### Parte 1 · Aseprite
+
+<Step n={1} title="Elige tu escena y decide el foco">
+1. Abre tu escena: la de [P8-01](/forja-art/pixel/p8-01/), la de [F07-01](/forja-art/fundamentos/f07-01/) o una tuya. Guarda una copia con otro nombre (*File → Save As*) para comparar al final.
+2. Antes de tocar nada, escribe en una línea **qué es lo importante**: «el héroe, el enemigo y el golpe», por ejemplo.
+3. Haz una lista de lo **demás**: suelo, agua, fondo, decorado.
+
+<Why>
+La saturación se reparte, no se añade. Si no decides antes qué es lo importante, acabas subiéndolo todo «un poquito» y vuelves a `sat-all`.
+</Why>
+</Step>
+
+<Step n={2} title="Mira tu escena en grises">
+1. Ve a *Sprite → Color Mode → Grayscale*.
+2. Comprueba si lo importante ya destaca en **valor**. Si no, arréglalo primero con lo que aprendiste en [F01-02](/forja-art/fundamentos/f01-02/).
+3. Vuelve al color con <Keys k="Ctrl+Z" />.
+
+<Warn>
+Deshaz **justo después** de mirar. Si sigues pintando en modo grises, pierdes el color.
+</Warn>
+
+<Why>
+La saturación **refuerza** el foco, no lo sustituye. Si en grises tu foco no se ve, ningún color lo va a salvar para quien no distingue ese tono.
+</Why>
+</Step>
+
+<Step n={3} title="Apaga el suelo y el fondo">
+1. Si tu escena tiene el suelo y el fondo en capas propias, selecciona esa capa. Si no, selecciona la zona con la selección rectangular (<Keys k="M" />).
+2. Abre el ajuste de tono y saturación (*Edit → Adjustments → Hue/Saturation*) y baja la **saturación** con fuerza. En `sat-focus` cada color fuera del foco perdió alrededor de un 65 % de su saturación.
+3. Si lo prefieres a mano, toma cada color del suelo con el cuentagotas (<Keys k="I" />), bájale la saturación en el selector de color sin tocar la claridad, y sustitúyelo con el cubo de pintura (<Keys k="G" />).
+
+<Tip>
+No llegues a gris puro: un suelo al 0 % parece muerto o de otra escena. Un resto de color (en torno a un 20 % de media, como en `sat-focus`) dice «hierba» y «agua» sin gritar.
+</Tip>
+
+<Warn title="El deslizador de saturación puede mover el valor">
+Un ajuste de saturación en modo HSL no conserva la luminancia: al bajarlo, los verdes y amarillos tienden a oscurecerse y los azules y rojos a aclararse. En una escena, eso puede juntar en valor dos zonas que antes se separaban (la hierba y el agua, por ejemplo). Por eso el paso 5 vuelve a mirar en grises.
+</Warn>
+</Step>
+
+<Step n={4} title="Revisa lo que no es foco">
+1. Repasa la lista del paso 1: decorado, props que no se usan, el cielo. Bájales también la saturación.
+2. Deja con su color los objetos con los que el jugador **interactúa** y los **peligros**.
+3. No toques los contornos oscuros: casi no tienen saturación que quitar y te ahorras trabajo.
+
+<Why>
+En `sat-focus` la roca baja a un 5 % y el cofre a un 20 %: no forman parte de la pelea. Si el cofre fuera el objetivo, se quedaría como está. Cada escena decide su foco.
+</Why>
+</Step>
+
+<Step n={5} title="Comprueba en grises otra vez">
+1. Repite *Sprite → Color Mode → Grayscale* y deshaz al terminar.
+2. Exporta a 1× (*File → Export → Export As*) y súbelo al Inspector de aquí abajo. Ponlo en **Grises** y pasa el ratón por el suelo y por tus personajes.
+3. Compara con la copia original en grises. Lo ideal es lo de `sat-focus`: **el mismo gris** que antes (allí la hierba sigue al 54 % y el agua al 40 %). Si tu ajuste ha movido el valor y dos zonas se funden, corrige su **claridad** a mano.
+
+<Inspector upload title="Sube tu escena y compruébala en grises" />
+</Step>
+
+### Parte 2 · MagicaVoxel
+
+<Step n={6} title="Reparte la saturación en la paleta">
+1. Abre un modelo o un diorama tuyo, por ejemplo el de [V7-01](/forja-art/voxel/v7-01/), guardado con otro nombre.
+2. En la **paleta de la izquierda**, localiza los colores del suelo, la hierba, el agua y las paredes.
+3. Edita cada uno y **baja su saturación**, sin cambiar mucho la claridad. Todo lo que usa ese color se apaga a la vez.
+4. Deja con fuerza los colores del personaje, la criatura o el objeto que quieres que se mire.
+5. Pulsa *Render*, guarda la imagen y ábrela en Aseprite para la prueba de grises.
+
+<Why>
+El render añade luz, sombra y a veces bloom encima de la paleta. Comprueba siempre la **imagen final**: un color muy saturado en una cara iluminada puede llamar más de lo que esperabas.
+</Why>
+</Step>
+
+<Warn title="Verifica en tu versión">
+En Aseprite, la ruta *Edit → Adjustments → Hue/Saturation*, su forma de aplicarse a la capa o a la selección y *Sprite → Color Mode → Grayscale* pueden variar entre versiones. En MagicaVoxel, la forma de editar un color de la paleta (y los deslizadores que ofrece) y el botón para guardar el render pueden cambiar de nombre o de sitio: búscalos por su función. Aseprite y el Inspector pueden calcular el gris con fórmulas un poco distintas: fíjate en las diferencias grandes.
+</Warn>
+</Block>
+
+<Block kind="version">
+Reparte la saturación a tu manera. Elige un reto:
+
+- **Cambio de foco**: la misma escena dos veces. En una, el foco es la pelea; en la otra, el cofre (o tu objeto). Solo cambia qué conserva el color.
+- **Peligro a la vista**: añade un peligro (pinchos, lava, un enemigo escondido) y haz que sea lo único saturado de su zona. Que en grises también destaque.
+- **Voxel**: tu diorama con el suelo y las casas apagados y un solo personaje o una sola luz con todo su color.
+
+**Prueba doble.** Mira tu escena en grises **y** entrecierra los ojos en color. En las dos, el ojo debe ir al mismo sitio.
+</Block>
+
+<Block kind="errores">
+<Mistake title="Saturarlo todo" wrongLabel="sat-all: todo chilla" rightLabel="sat-focus: el color, solo en la pelea">
+  <Sprite slot="wrong" name="sat-all" scale={4} />
+  <Sprite slot="right" name="sat-focus" scale={4} />
+
+«Le subo la saturación para que tenga más vida». Si se la subes a todo, la hierba y el agua compiten con el héroe y nada destaca. **Corrección**: decide qué es lo importante y baja la saturación de todo lo demás. El héroe no necesita más color: necesita que lo de alrededor tenga **menos**.
+</Mistake>
+
+<Mistake title="Dejar que el suelo compita con el personaje" wrongLabel="scene-final: suelo al 57 %" rightLabel="sat-focus: suelo al 21 %">
+  <Sprite slot="wrong" name="scene-final" scale={4} />
+  <Sprite slot="right" name="sat-focus" scale={4} />
+
+Es el error silencioso: nada «chilla», pero el suelo tiene tanto color como el héroe (57 % de saturación media frente a 53 %). El foco se lee gracias al valor, pero el color no ayuda. **Corrección**: apaga lo que ocupa más superficie, el suelo y el fondo. El héroe no cambia y aun así gana.
+</Mistake>
+
+<Warn title="Error típico: fiarse del deslizador de saturación para el valor">
+Bajar la saturación con un ajuste HSL (como el de Aseprite) no conserva el valor: unos colores se oscurecen y otros se aclaran, y dos zonas pueden acabar con el mismo gris o incluso darse la vuelta. **Corrección**: decide y comprueba el valor con la vista de **grises** del Inspector o con *Grayscale* de Aseprite, que miden la luminancia. Si el ajuste lo ha movido, corrígelo a mano.
+</Warn>
+
+<Warn title="Error típico: un foco que solo existe en color">
+Si lo importante solo se distingue por ser más saturado, pero tiene el mismo valor que el suelo, en grises desaparece. Y con él, para quien tiene daltonismo ([F03-02](/forja-art/fundamentos/f03-02/)). **Corrección**: que el foco destaque **también** en valor, en forma o en posición. La saturación es la señal extra, no la única.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+<Checklist items={[
+  "He escrito qué es lo importante de mi escena antes de tocar la saturación",
+  "Los personajes, objetos interactivos y peligros conservan su color fuerte",
+  "El suelo, el fondo y el decorado tienen la saturación baja, pero no son gris puro",
+  "En grises, lo importante sigue destacando: el foco no depende solo del color",
+  "Al apagar el suelo no se han fundido dos zonas en el mismo valor",
+  "He comparado mi escena con la copia original y se ve claramente dónde mirar",
+  "En voxel, el render final en grises también lleva el ojo al foco",
+]} />
+
+<Quiz q="En scene-final, el suelo tiene más saturación media que el héroe. ¿Qué consigue sat-focus?" options={["Sube la saturación del héroe para que gane al suelo", "Deja al héroe igual y baja la saturación del suelo y el decorado", "Quita el color a toda la escena menos al impacto"]} answer={1}>
+En `sat-focus` el héroe, el slime y el impacto no cambian. El suelo baja de un 57 % a un 21 % de saturación media, sin cambiar su valor. El foco es la diferencia, no la cantidad.
+</Quiz>
+
+<Quiz q="Subes la saturación de toda la escena ×1,9. ¿Qué pasa con el valor?" options={["Casi nada: cambia unos 5 puntos de media, porque saturación y valor son ejes distintos", "Todo se vuelve más claro", "Todo se vuelve más oscuro"]} answer={0}>
+Entre `scene-final` y `sat-all` el valor cambia de media 5 puntos, y como mucho 9. Por eso la saturación y el valor son dos herramientas de foco que se pueden sumar.
+</Quiz>
+
+<Quiz q="Tu escena tiene un cofre que el jugador debe abrir. ¿Qué haces con su saturación?" options={["La bajo, como en sat-focus", "La mantengo alta: es un objeto interactivo y debe llamar la atención", "Lo pinto en gris puro para que contraste"]} answer={1}>
+En `sat-focus` el cofre se apaga porque en esa escena el foco es la pelea. Si el cofre es lo que el jugador tiene que buscar, conserva su color. El reparto depende de qué es lo importante.
+</Quiz>
+</Block>

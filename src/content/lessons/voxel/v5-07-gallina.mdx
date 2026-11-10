@@ -1,0 +1,279 @@
+---
+id: v5-07
+discipline: voxel
+level: 5
+order: 7
+title: "Animales de dos patas: una gallina"
+summary: "Un bípedo en tres pasos: el cuerpo encima de dos patas finas, una cola que equilibra la cabeza, nueve vóxels de cara que dicen «gallina» y color que separa tripa y ala."
+duration: 40
+status: borrador
+prerequisites: [v5-04, v2-01]
+fundamentals: [f02, f09]
+objectives:
+  - "Montar las masas de un bípedo con el cuerpo justo encima de los apoyos, para que se sostenga a la vista"
+  - "Usar patas de 1 vóxel como contraste con un cuerpo grande, y saber por qué aquí no van de 2×2"
+  - "Equilibrar la cabeza con la cola y comprobarlo de perfil"
+  - "Decir la especie con muy pocos vóxels: cresta, pico, barbilla y ojos a los lados"
+  - "Separar las masas con color: tripa en sombra, ala plegada marcada y puntas de la cola"
+tools: [magicavoxel]
+piece:
+  name: "Tu propio bípedo (gallina, pato, pingüino, pájaro…) en tres pasos: masas, forma, y color y detalle"
+  canvas: "16x9x16"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [gallina]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+La oveja de [V5-04](/forja-art/voxel/v5-04/) se apoyaba en cuatro columnas. Hoy le quitas dos: un animal que se sostiene sobre **dos patas finas**. Una gallina.
+
+<VoxViewer model="gallina" stage={2} title="Tu pieza: una gallina de 14×7×14 en tres pasos" />
+
+Gírala de perfil, de frente y desde arriba. Un cuerpo grande y blanco, dos patas de un vóxel y una cabeza pequeña con un toque rojo. Y no parece que se vaya a caer.
+
+Recorre las tres etapas: **Masas**, **Forma** y **Color y detalle**.
+
+Tu pieza final: **tu propio bípedo** (la gallina, un pato, un pingüino, un pájaro…) hecho en esos tres pasos, con Mirror en Y, y un render.
+</Block>
+
+<Block kind="concepto">
+### 1. Las masas: cuatro cajas encima de un punto
+
+<VoxViewer model="gallina" stage={0} title="Masas: cuerpo, cabeza, cola y dos patas" />
+
+La etapa **Masas** son solo cajas, todas en el mismo beige salvo las patas:
+
+- **Cuerpo:** una caja de **9 de largo, 7 de ancho y 7 de alto**, de la capa **2** a la **8**.
+- **Cabeza:** una caja de **3×3×3** (capas 9 a 11), **encima** de la parte de delante del cuerpo. Sobresale 1 vóxel por delante del pecho.
+- **Cola:** una caja de 2 de largo, 3 de ancho y 5 de alto (capas 6 a 10), pegada detrás.
+- **Patas:** dos columnas amarillas de **1×1** y 2 de alto (capas 0 y 1), **justo debajo del centro del cuerpo**.
+
+En total, 12 de largo, 7 de ancho y 12 de alto. La gallina mira hacia **+X**, como la oveja.
+
+<Why title="Por qué las patas van en el centro">
+Un cuadrúpedo tiene el peso repartido entre cuatro apoyos en las esquinas: el cuerpo puede ir más o menos donde quiera entre ellas. Un bípedo solo tiene **un punto de apoyo** (las dos patas juntas, vistas de perfil). El ojo sabe, sin pensarlo, que algo con un solo apoyo tiene que tener **tanto peso delante como detrás**. Si no, se cae. Por eso las patas no van «donde quedan bien»: van **debajo del centro** de todo lo que hay encima.
+</Why>
+
+### 2. El equilibrio: la cola compensa la cabeza
+
+Mira la etapa **Masas** de perfil:
+
+- El cuerpo va de **−4 a +4** en X. Las patas están en **0**: el centro exacto.
+- La cabeza está **delante**, a partir de +3. Tira del animal hacia delante.
+- La cola está **detrás**, en −5 y −6. Tira hacia atrás.
+
+Si haces la media de la posición en X de todos los vóxels que hay por encima de las patas, sale **−0,1**: el centro de masas cae prácticamente encima de los apoyos. En la etapa **Forma**, casi igual: **−0,2**. Y si en **Forma** quitas la cola, el centro salta a **+0,4** (hacia delante); si quitas la cabeza y el cuello, a **−0,7** (hacia atrás).
+
+<Why title="Por qué la cola no es un adorno">
+La cola es el **contrapeso** de la cabeza. Las aves que andan erguidas (gallinas, palomas, pavos) llevan la cabeza por delante y la cola por detrás, con las patas entre las dos, como un balancín. Nadie calcula medias al mirar una gallina, pero el ojo nota cuando un lado pesa más: el animal parece a punto de caerse de morros o sentado hacia atrás. Es lo mismo que el equilibrio de pesos visuales de una composición, aplicado a un solo cuerpo.
+</Why>
+
+<Tip>
+No hace falta calcular nada: mira el modelo **de perfil** y tapa con el dedo la columna de las patas. ¿Hay más o menos la misma cantidad de animal a cada lado del dedo? Si no, mueve las patas o el cuerpo, no añadas cosas.
+</Tip>
+
+### 3. Patas de 1 vóxel: el contraste es la especie
+
+En la oveja, una pata de 1×1 era un error: un palillo bajo un cuerpo pesado. En la gallina es **lo correcto**.
+
+- Las patas son de **1×1** y solo **2 de alto**, frente a un cuerpo de 9×7×7.
+- En la etapa **Forma** ganan **un dedo delante y otro detrás** en la capa 0, en un amarillo más oscuro. Cada pie mide 3 de largo y 1 de ancho.
+
+<Why title="Por qué aquí sí van finas">
+Las aves tienen patas de hueso y escama, sin músculo a la vista: finas y duras. Un cuerpo **grande y blando** sobre apoyos **mínimos** es justo lo que dice «ave». Es el contraste de tamaños del lenguaje de formas de [F09-02](/forja-art/fundamentos/f09-02/): grande contra pequeño, redondo contra fino. Si engordas las patas, pierdes el contraste y la gallina pasa a parecer un mamífero con plumas. Los dedos delante y detrás no son detalle: alargan la base en la dirección en la que el animal podría caerse (hacia delante o hacia atrás).
+</Why>
+
+### 4. La forma: un huevo, una cabeza sin esquinas y un abanico
+
+<VoxViewer model="gallina" stage={1} title="Forma: cuerpo en huevo, cabeza redondeada y cola en abanico" />
+
+Compara **Forma** con **Masas** (de 502 vóxels se pasa a 285):
+
+- **Cuerpo:** la caja se convierte en un **huevo tumbado**. Abajo, en la capa 2, solo quedan **3×3** vóxels, justo encima de las patas. En las capas 4 y 5 alcanza el ancho completo: 9 de largo y 7 de ancho. Arriba, en la capa 8, vuelve a 3×3.
+- **Cuello:** una capa de 3×3 en la capa 8, que arranca del lomo y sube hasta la cabeza, sin muesca.
+- **Rabadilla:** una columna de 3 de ancho y 2 de alto (capas 7 y 8) en la parte de atrás del cuerpo, que une la cola con el lomo.
+- **Cabeza:** la caja de 3×3×3 pierde sus **4 esquinas de arriba**: quedan 23 vóxels. Ya no es un dado.
+- **Cola:** tres escalones que suben hacia atrás. Una columna de 3 de ancho en −5 (capas 6 a 9), otra en −6 (capas 8 a 11) y una punta de 1 de ancho en −7 (capas 10 y 11). Un **abanico** que se abre hacia atrás y hacia arriba.
+
+<Why title="Por qué el fondo del huevo es tan pequeño">
+El cuerpo se **estrecha hacia las patas**. Así la masa se lee apoyada en ellas: el ojo sigue la curva de la tripa y llega justo a los dos apoyos. Si el fondo fuera ancho y plano, como en la caja de **Masas**, el cuerpo parecería una mesa con dos patas muy finas en medio. La forma redonda, además, es amable: es el círculo de [F09-02](/forja-art/fundamentos/f09-02/). Una gallina no amenaza.
+</Why>
+
+<Sprite name="form-round" scale={6} caption="F09-02: la forma redonda se lee amable. El cuerpo de la gallina es un óvalo, y sus únicas puntas (pico, cresta, cola) son pequeñas" />
+
+### 5. Color que separa las masas
+
+Pasa de **Forma** a **Color y detalle**. El cuerpo es blanco, pero no plano. Solo hay **tres blancos**, del más claro al más oscuro:
+
+1. **Plumas** (blanco cálido): todo lo de arriba y los lados. 181 vóxels.
+2. **Sombra** (un paso más oscuro): la **tripa**, las capas 2 y 3 del cuerpo, y el relleno del ala. 60 vóxels.
+3. **Plumas marcadas** (dos pasos más oscuro): el borde de abajo del ala y unas diagonales dentro de ella, y las **puntas de la cola**. 34 vóxels.
+
+El **ala plegada** es una zona de 6 de largo y 3 de alto (capas 4 a 6) a cada lado del cuerpo: su fila de abajo va entera en el tono más oscuro, y dentro hay rayas en diagonal que marcan las plumas.
+
+<Why title="Por qué tres blancos y no uno">
+Con un solo blanco, el render separa las caras por la luz, pero el ala desaparece: es la misma superficie que el costado. El color **dibuja lo que la forma no dice**: dónde acaba el ala, dónde empieza la tripa. La tripa en sombra es el AO pintado de [V3-01](/forja-art/voxel/v3-01/), como la lana oscura de la oveja. Y el ala marcada es **una línea de color**: separa una masa de otra sin añadir vóxels.
+</Why>
+
+### 6. La cara: nueve vóxels
+
+En la misma etapa, la cabeza recibe sus rasgos. Son **9 vóxels** en total:
+
+- **Cresta:** 5 vóxels rojos encima de la cabeza: 3 en fila en la capa 12 y, sobre ellos, **dos picos** en la capa 13, uno delante y otro detrás, con un hueco en medio.
+- **Pico:** 1 vóxel amarillo delante de la cabeza, en la capa 10.
+- **Barbilla:** 1 vóxel rojo debajo de la parte de delante de la cabeza, en la capa 8.
+- **Ojos:** 2 vóxels casi negros, uno a cada lado de la cabeza (capa 10). Están **pintados** en la cabeza, no sobresalen.
+
+Al pie, 4 granos de color paja en el suelo, delante del pico, sueltos y sin simetría. Cuentan una pequeña historia: está comiendo.
+
+<Why title="Por qué tan pocos y por qué esos">
+Igual que en las caras de [V5-06](/forja-art/voxel/v5-06/): la especie la dicen los rasgos que la **diferencian**. Cresta y barbilla rojas: gallina. Sin ellas, con el mismo cuerpo, es un pato blanco o una paloma. El rojo es, además, el color más saturado del modelo, así que la cabeza, pequeña, es lo primero que se mira. Y los ojos van **a los lados**, no delante como en el chibi: las aves de corral tienen los ojos en los costados de la cabeza. Un ojo mal puesto dice «dibujo animado» antes que «gallina».
+</Why>
+
+### 7. Simetría en Y, con ancho impar
+
+La gallina mide **7 de ancho**: un número **impar**. Hay una **columna central** (Y = 0) por la que van la cresta, el pico, la barbilla y la punta de la cola. Todo lo demás va por parejas: patas, ojos, alas.
+
+<Tip>
+Es lo contrario de la oveja (ancho par, hocico de 2) y lo mismo que el murciélago de [V5-03](/forja-art/voxel/v5-03/). Si tu bípedo tiene pico o cresta de 1 vóxel, necesitas un ancho impar. Decídelo antes del primer vóxel: por eso el lienzo de la pieza es de 9 de ancho.
+</Tip>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Elige el ave y prepara la paleta">
+1. Decide tu bípedo y escribe en una línea **qué lo distingue**: «cuerpo de huevo, patas finas, cola en abanico, cresta y barbilla rojas».
+2. Crea un modelo nuevo de **16×9×16** (largo, ancho y alto). El ancho, **impar**.
+3. En la **paleta** de la izquierda, en una fila: tres tonos del color del cuerpo (claro, un paso más oscuro, dos pasos más oscuro), el amarillo de las patas y uno más oscuro para los dedos, el color de la cresta, el del pico y el casi negro de los ojos.
+
+<Why>
+Los tres tonos del cuerpo, **cerca** unos de otros: son sombra y marcas, no colores nuevos. El color fuerte (el rojo de la cresta) va aparte, y lo usarás en muy pocos vóxels.
+</Why>
+</Step>
+
+<Step n={2} title="Masas: empieza por las patas">
+1. Activa el botón **Mirror Y** (en la barra de pinceles). Gira la cámara con el **botón derecho** hasta ver el modelo de frente y comprueba que el reflejo cae en la columna central.
+2. Modo **Attach**, pincel **Box**, amarillo: una pata de **1×1 y 2 de alto**, en el centro del largo del lienzo, en la columna pegada a la central (no en ella). Mirror pone la otra y entre las dos queda libre la columna central.
+3. Color del cuerpo: encima de las patas, una caja de **9×7×7**, con las patas debajo de su centro.
+4. Encima de la parte de delante del cuerpo, la cabeza de **3×3×3**, saliendo 1 vóxel por delante. Detrás, la cola: una caja de 2 de largo, 3 de ancho y 5 de alto, en la mitad de arriba.
+
+<Why>
+Las patas primero porque son el **punto de apoyo**: todo lo demás se coloca respecto a ellas. Si haces primero el cuerpo y luego buscas dónde poner las patas, acabarán donde haya sitio, no donde está el centro.
+</Why>
+</Step>
+
+<Step n={3} title="Comprueba el equilibrio de perfil">
+1. Gira la cámara hasta ver el modelo **de perfil**, con la cabeza a un lado.
+2. Busca la columna de las patas y cuenta: ¿hay tanto animal delante como detrás? Cuerpo, cabeza y cola.
+3. Si pesa más la cabeza, alarga la cola o retrasa la cabeza un vóxel. Si pesa más la cola, acórtala.
+4. Gira **de frente**: las dos patas, separadas por la columna central, bajo el centro del cuerpo.
+5. Guarda como `ave_masas.vox`.
+
+<Tip>
+Compara con la etapa **Masas** del visor: las patas en el centro del cuerpo, la cabeza delante y arriba, la cola detrás y arriba. Mueve **Capas** para ver dónde acaban las patas y empieza el cuerpo.
+</Tip>
+</Step>
+
+<Step n={4} title="Forma: el huevo, la cabeza, la cola y los dedos">
+1. Con **Mirror Y** encendido, modo **Erase**, pincel **Voxel**: quita las esquinas de la caja del cuerpo, capa por capa, hasta que se lea como un **huevo**. Quita más abajo que arriba: el fondo tiene que quedar pequeño, justo encima de las patas.
+2. Quita las **4 esquinas de arriba** de la cabeza.
+3. En la cola, modo **Erase** y **Attach**: haz escalones que suban hacia atrás, cada uno más alto y más estrecho que el anterior, hasta una punta de 1 de ancho en la columna central.
+4. Modo **Attach**, amarillo oscuro: un dedo delante y otro detrás de cada pata, en la capa del suelo.
+5. Vuelve a mirar de perfil: ¿sigue en equilibrio? Al redondear se quita más de unos sitios que de otros.
+
+<Warn>
+Al quitar esquinas con Mirror encendido, si borras en la columna central Mirror no tiene nada que reflejar: solo se borra una. No pasa nada, pero no lo tomes por un fallo de Mirror.
+</Warn>
+</Step>
+
+<Step n={5} title="Color: tripa, ala y cola">
+1. Modo **Paint**, tono de sombra: pinta las **dos capas de abajo** del cuerpo. Es la tripa.
+2. En un costado, entre la mitad del cuerpo y el pecho, pinta el **ala**: una zona de unos 6 de largo y 3 de alto, en el tono de sombra.
+3. Tono más oscuro: la **fila de abajo** del ala entera, y dentro unas rayas en diagonal, de una en una. Mirror pinta el otro lado.
+4. Mismo tono oscuro: las puntas de la cola.
+
+<Why>
+No añades ni quitas un vóxel: solo pintas. La forma ya funciona; ahora el color **separa** las masas que el blanco unía. Si al terminar el ala no se distingue del costado, oscurece su borde de abajo, no todo el ala.
+</Why>
+</Step>
+
+<Step n={6} title="La cara, el grano y el render">
+1. Con **Mirror Y** encendido, modo **Attach**, rojo: la cresta en la columna central: una fila de 3 encima de la cabeza y, sobre sus extremos, dos picos de 1 vóxel con un hueco entre ellos. Debajo de la cabeza, delante, la barbilla.
+2. Amarillo: el pico, delante de la cabeza, a la altura de los ojos.
+3. Modo **Paint**, casi negro: un ojo en el costado de la cabeza. Mirror pinta el otro.
+4. **Apaga Mirror Y.** Modo **Attach**, color paja: unos granos sueltos en el suelo, delante.
+5. Guarda como `ave_v1.vox`. Pulsa **Render** arriba, elige una cámara en diagonal desde arriba donde se vean la cabeza y un costado, y guarda la imagen.
+
+<Tip>
+Aleja la cámara con la rueda del ratón hasta que el ave sea pequeña, como en un juego. Lo último que se debe perder es el rojo de la cabeza y las patas finas. Si la cresta desaparece, súbela un vóxel; no la ensanches.
+</Tip>
+</Step>
+
+<Warn title="Verifica en tu versión">
+Los nombres y la posición de **Mirror Y**, **Attach** / **Erase** / **Paint**, los pinceles **Voxel** y **Box** y los campos de tamaño del modelo pueden variar entre versiones de MagicaVoxel. Comprueba también qué eje es cada **Mirror** en tu versión (en el modelo del curso el ave mira hacia +X y el espejo es en Y) y cómo refleja con un ancho impar: el reflejo debe caer en la columna central.
+</Warn>
+</Block>
+
+<Block kind="version">
+Ahora, **tu** bípedo. Misma receta: patas bajo el centro, cuerpo grande sobre apoyos finos, cola o cuerpo que equilibre la cabeza, tres tonos que separen masas y muy pocos vóxels para los rasgos. Elige un reto:
+
+- **Un pato:** el cuerpo más bajo y alargado, sin cresta. El rasgo es el **pico ancho y plano**: una caja de 3 de ancho y 1 de alto, en naranja. Patas cortas y pies anchos (palmeados) que ya no necesitan dedo detrás. Comprueba que la cabeza, más adelantada, sigue equilibrada.
+- **Un pingüino:** el caso contrario. Está **de pie**, en vertical: la cabeza encima del cuerpo y no delante, y apenas cola. El equilibrio sale solo porque todo está en la misma columna. Lo dice el color: espalda negra, pecho blanco, pico y pies naranja.
+- **Un pájaro pequeño** (un gorrión, un petirrojo): cuerpo de 5 o 6 de largo, patas de 1 vóxel aún más cortas y una cola fina y larga hacia atrás. La mancha de color (el pecho rojo del petirrojo) es el rasgo.
+
+**Prueba final:** pon tu ave junto a la gallina en el modo **World**, las dos de perfil. Tapa la columna de las patas de cada una con el dedo. ¿Están las dos en equilibrio?
+</Block>
+
+<Block kind="errores">
+<Mistake title="Patas gruesas, como de mamífero" wrongLabel="Patas de 2×2 y 4 de alto" rightLabel="Patas de 1×1 y dedos">
+  <p slot="wrong">Copias las patas de la oveja: columnas de 2×2 y 4 de alto. El cuerpo deja de parecer grande y blando, y la gallina se lee como un animalito de peluche con patas de elefante.</p>
+  <p slot="right">Patas de 1×1 y 2 de alto, con un dedo delante y otro detrás. El contraste entre el cuerpo y los apoyos dice «ave».</p>
+
+En la oveja, 2×2 era lo mínimo; en un ave, es demasiado. Cada tipo de animal tiene su grosor. **Corrección:** baja a 1×1 y, si la pata parece que no aguanta, no la engordes: alarga la base con los dedos y comprueba que el cuerpo está encima.
+</Mistake>
+
+<Mistake title="El cuerpo detrás de las patas" wrongLabel="Patas bajo el pecho" rightLabel="Patas bajo el centro">
+  <p slot="wrong">Pones las patas debajo de la parte de delante, como si fueran las patas delanteras de un cuadrúpedo. Todo el cuerpo y la cola quedan detrás de los apoyos: de perfil, la gallina se cae de espaldas.</p>
+  <p slot="right">Patas justo debajo del centro del cuerpo. La cabeza delante y la cola detrás pesan más o menos lo mismo, y el centro de masas cae sobre los apoyos.</p>
+
+Mira la etapa **Masas** de perfil: las patas están en el centro exacto del cuerpo, y por eso las cajas, aunque sean cajas, no se caen. **Corrección:** mueve las patas (o el cuerpo) hasta el centro, y compensa con la cola, no con más patas. El truco del dedo sobre la columna de las patas (paso 3) lo detecta en segundos.
+</Mistake>
+
+<Mistake title="Una cara con demasiados vóxels" wrongLabel="Cresta grande, ojos con blanco, pico largo" rightLabel="9 vóxels de cara">
+  <p slot="wrong">Una cresta de 3 de ancho que cubre la cabeza, ojos de 2×2 con blanco e iris, un pico de 3 de largo con la boca marcada y una barbilla doble. La cabeza de 3×3×3 desaparece bajo los rasgos y el ave parece un muñeco.</p>
+  <p slot="right">Cresta de 5 vóxels con dos picos en la columna central, pico de 1, barbilla de 1 y un ojo pintado de 1 a cada lado. La cabeza sigue siendo pequeña y se lee de lejos.</p>
+
+Es el error de la etapa **Demasiado** de [V5-06](/forja-art/voxel/v5-06/), en un animal. En una cabeza de 3×3×3 cada vóxel es la tercera parte de la cara. **Corrección:** quita hasta quedarte con los rasgos que distinguen la especie y gasta en ellos el color fuerte. El resto de la cabeza, liso.
+</Mistake>
+
+<Warn title="Error típico: un bloque blanco">
+Haces todo el cuerpo de un solo blanco. De perfil y con luz se adivina, pero el ala no existe y la tripa se funde con el costado. **Corrección:** tres blancos cercanos: la tripa en sombra y el borde del ala en el más oscuro. No hace falta más.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+<Checklist items={[
+  "Las patas están debajo del centro del cuerpo, no debajo del pecho",
+  "De perfil, hay tanto animal delante como detrás de las patas",
+  "La cola equilibra la cabeza y sube hacia atrás",
+  "Las patas son de 1×1 y tienen dedos que alargan la base",
+  "El cuerpo es un óvalo que se estrecha hacia las patas",
+  "Uso tres tonos cercanos del cuerpo: claro, tripa en sombra y ala marcada",
+  "La cara (cresta, pico, barbilla, ojos) son 10 vóxels o menos",
+  "El ancho es impar y los rasgos de 1 vóxel van en la columna central con Mirror Y",
+  "He guardado ave_v1.vox y un render en mi portfolio",
+]} />
+
+<Quiz q="De perfil, tu gallina parece que se cae hacia delante. ¿Qué haces?" options={["Le pongo las patas de 2×2 para que aguante más", "Muevo las patas hacia delante o alargo la cola, hasta que haya el mismo peso a cada lado de las patas", "Le añado una tercera pata"]} answer={1}>
+Un bípedo se sostiene a la vista si el centro de masas cae sobre los apoyos. Engordar las patas no lo arregla: lo que falla es dónde están respecto al cuerpo.
+</Quiz>
+
+<Quiz q="¿Por qué en la oveja las patas eran de 2×2 y en la gallina son de 1×1?" options={["Por error: deberían ser iguales", "Porque la gallina es más pequeña", "Porque las patas finas bajo un cuerpo grande dicen «ave»; en un mamífero pesado, 1×1 parece que se dobla"]} answer={2}>
+El grosor de las patas también dice la especie. El contraste entre un cuerpo grande y unos apoyos mínimos es propio de las aves.
+</Quiz>
+
+<Quiz q="Quieres que el ala plegada se vea sin añadir vóxels. ¿Cómo?" options={["Pintando su borde de abajo y unas rayas en un tono un poco más oscuro que el cuerpo", "Haciendo que sobresalga 2 vóxels del costado", "Pintándola en un color muy distinto, como azul"]} answer={0}>
+El color separa las masas que la forma no separa. Un tono cercano marca el ala sin romper el blanco del cuerpo.
+</Quiz>
+</Block>

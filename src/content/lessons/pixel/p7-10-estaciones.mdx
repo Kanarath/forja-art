@@ -1,0 +1,316 @@
+---
+id: p7-10
+discipline: pixel
+level: 7
+order: 10
+title: "Estaciones: la misma escena en cuatro estaciones"
+summary: "La misma escena en cuatro estaciones: palette swap de la rampa entera donde solo cambia el color, píxeles nuevos donde cambia la forma, nieve con sombras azuladas y anclas que no cambian."
+duration: 45
+status: borrador
+objectives:
+  - "Decidir qué se resuelve con palette swap (lo que solo cambia de color) y qué hay que redibujar (lo que cambia de forma)"
+  - "Cambiar la rampa entera de la hierba y de las hojas, con hue shifting y sin perder los saltos de valor"
+  - "Pintar la nieve encima de todo lo que mira hacia arriba, con sombras azuladas y no grises"
+  - "Dejar anclas que no cambian (un pino, una roca) para que se lea que es el mismo sitio"
+  - "Distinguir un cambio de estación de un cambio de luz: por qué el invierno no es un filtro azul"
+prerequisites: [p7-01, p5-04]
+fundamentals: [f03, f01]
+tools: [aseprite]
+piece:
+  name: "Tu tile de hierba de P7-01 y un prop en las cuatro estaciones: cuatro escenas de 32×32 (2×2 tiles con el prop y un ancla) montadas en una lámina"
+  canvas: "32x32"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [estaciones]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Tu tile de hierba de [P7-01](/forja-art/pixel/p7-01/) ya se repite sin costuras. Hoy le pasa **un año por encima**.
+
+Vas a forjar **la misma escena en cuatro estaciones**: tu tile de hierba y un prop (un árbol, un arbusto o una roca con musgo) en primavera, verano, otoño e invierno. Mira el ejemplo, de 64×40:
+
+<Sprite name="season-spring" scale={5} caption="season-spring: primavera. Hierba más clara, copa verde tierno con flores rosas y blancas, flores en el suelo" />
+
+<Sprite name="season-summer" scale={5} caption="season-summer: verano, la referencia. La hierba de P7-01, copa en tres verdes con luz arriba a la izquierda, pino y roca" />
+
+<Sprite name="season-autumn" scale={5} caption="season-autumn: otoño. Hierba hacia el ocre, copa en rojo, naranja y ámbar, hojas amarillas y hojas caídas" />
+
+<Sprite name="season-winter" scale={5} caption="season-winter: invierno. Nieve con sombras azuladas, el árbol sin copa enseña sus ramas, nieve en lo alto de todo" />
+
+Fíjate en tres cosas:
+
+- **Mismo sitio.** El árbol, el pino y la roca están en los mismos píxeles en las cuatro.
+- **Unas cosas solo cambian de color** (la hierba, las hojas) y **otras cambian de forma** (la copa desaparece, aparece nieve encima).
+- **El pino y la roca no cambian** en primavera, verano y otoño. Son los que te dicen que es el mismo sitio.
+</Block>
+
+<Block kind="concepto">
+### Dos herramientas: cambiar el color o redibujar
+
+Cada estación tiene dos tipos de cambio, y cada uno se resuelve con una herramienta distinta:
+
+- **Lo que solo cambia de color** se resuelve con **palette swap**, como el slime de [P5-04](/forja-art/pixel/p5-04/): mismos píxeles, otra paleta. La hierba que se seca, las hojas que enrojecen.
+- **Lo que cambia de forma** hay que **redibujarlo**: píxeles nuevos. Las flores que salen, las hojas que caen, la copa que se queda en ramas, la nieve que se posa.
+
+Los números del ejemplo lo dejan claro. Si comparas cada estación con el verano y buscas los píxeles que un palette swap **no** puede explicar:
+
+| Estación | Qué es palette swap | Qué es redibujo |
+| --- | --- | --- |
+| Primavera | hierba y copa | **54 píxeles**: flores en la copa y en el suelo |
+| Otoño | hierba y copa | **64 píxeles**: hojas amarillas y hojas caídas |
+| Invierno | el suelo (hierba → nieve) | casi todo el árbol: los **360 píxeles de hoja** de la copa desaparecen, salen ramas y nieve encima de todo |
+
+<Why>
+Palette swap es barato y seguro: no puedes romper la forma, porque no la tocas. Por eso conviene usarlo para todo lo que pueda. Pero una estación **no es solo un color**: cambia lo que hay en el mundo. Si solo cambias colores, tienes la misma escena teñida, no otra estación.
+</Why>
+
+### Cambia la rampa entera, no un color
+
+Cuando la hierba pasa de verano a otoño, no cambia «el verde». Cambian **los tres verdes** de su rampa: la sombra, la base y la luz. Mira las rampas reales del ejemplo (valor de 0 a 255, de oscuro a claro):
+
+| Rampa | Sombra | Base | Luz |
+| --- | --- | --- | --- |
+| Hierba, verano | `#2c7a48` (93) | `#3fa45b` (125) | `#6fd17f` (170) |
+| Hierba, primavera | `#378a4c` (106) | `#4fb860` (143) | `#8fe08a` (190) |
+| Hierba, otoño | `#6b7530` (106) | `#8f9a3f` (140) | `#b8b860` (174) |
+| Copa, verano | `#1f6b3a` (79) | `#2f9a4a` (113) | `#5cc860` (156) |
+| Copa, otoño | `#8a3a1a` (78) | `#d8642a` (128) | `#f2a83a` (178) |
+
+Dos cosas se conservan en cada rampa:
+
+- **Los saltos de valor.** Entre sombra, base y luz sigue habiendo de 30 a 50 puntos. Por eso las matas del tile se siguen leyendo.
+- **El orden.** La sombra sigue siendo lo más oscuro y la luz lo más claro.
+
+<Why>
+Si cambias solo la base y dejas la sombra y la luz de verano, el tile se llena de manchas verdes sobre un ocre: los píxeles de la sombra y de la luz ya no son de la misma familia que la base. Una rampa es un **equipo**: se cambia entera, o se rompe. Es lo mismo que la regla de P5-04: el swap conserva la separación de valor.
+</Why>
+
+### Hue shifting también en otoño
+
+Las rampas de estación no son un color más claro y más oscuro. Llevan **hue shifting**, como las de [P3-02](/forja-art/pixel/p3-02/). En la copa de otoño, el tono sube de la sombra a la luz:
+
+- sombra `#8a3a1a`: un rojo casi marrón (tono 17°);
+- base `#d8642a`: naranja (20°);
+- luz `#f2a83a`: ámbar (36°);
+- y unas hojas sueltas `#ffd36e`: amarillo (42°), las más claras.
+
+Las sombras tiran al rojo y las luces al amarillo. La copa de verano hace lo mismo con los verdes (de 141° en la sombra a 122° en la luz, hacia el amarillo).
+
+<Tip>
+Hasta la hierba de otoño se mueve: de un verde (unos 137°) a un oliva ocre (unos 67°). No es «el verde, más marrón»: es otro tono con su propia rampa.
+</Tip>
+
+### La nieve no es gris
+
+En invierno, la rampa del suelo pasa a nieve:
+
+- base `#e8eef8` (valor 237): casi blanco, un poco azul;
+- sombra `#b8c4dc` (valor 195): **azul claro** (tono 220°), no gris;
+- luz `#ffffff`: blanco puro.
+
+La sombra del árbol y la del pino sobre la nieve son ese mismo azul.
+
+<Why>
+La nieve es blanca y refleja casi toda la luz. Donde no le da el sol, la sigue iluminando **el cielo**, que es azul. Por eso las sombras en la nieve son azuladas. Una sombra gris (con el rojo, el verde y el azul iguales) se lee como nieve sucia o como ceniza. Es la temperatura de [F03-01](/forja-art/fundamentos/f03-01/): luz y sombra no tienen la misma temperatura.
+</Why>
+
+Y ojo con el valor: el suelo ha pasado de un valor medio (125) a casi blanco (237). Ahora **lo oscuro es lo que destaca**: el tronco, las ramas, el pino. En invierno el foco de la escena se invierte.
+
+<Inspector sprite="season-winter" title="El invierno de cerca: mira la vista de grises y busca dónde cae la nieve" />
+
+### Nieve encima de lo que mira hacia arriba
+
+La nieve cae del cielo y se queda donde puede apoyarse. La regla de `season-winter` es simple: **todo píxel de un objeto que tiene aire encima se vuelve nieve**.
+
+- **El tronco** lleva nieve en su punta y las ramas la llevan en su borde de arriba, **a trozos**: en unos dos de cada tres píxeles. Nieve en todos queda demasiado ordenada.
+- **El pino** lleva nieve en la punta y en el extremo de cada piso.
+- **La roca** se queda con sus dos filas de arriba blancas.
+- La nieve del tronco, del pino y de la roca queda **dentro del contorno oscuro**: la silueta sigue cerrada y el blanco de la nieve se lee contra el blanco del suelo. Sin ese contorno, nieve y suelo se fundirían.
+- Unas **matas verdes** (cinco, de 3 píxeles) asoman de la nieve. Dicen que debajo sigue la hierba.
+
+<Why>
+Las caras de abajo y los laterales no llevan nieve. Eso es lo que hace que la nieve se lea **encima** de las cosas y no pintada por todas partes. Es la misma lógica de la luz de arriba a la izquierda que usas desde [P3-01](/forja-art/pixel/p3-01/): primero decides de dónde viene, luego pintas solo lo que mira hacia allí.
+</Why>
+
+<Tip>
+El suelo de nieve de `season-winter` es tu tile de hierba **con otra rampa**: por eso no tiene costuras. Las marcas de las matas del tile siguen ahí, ahora en azul claro. Funcionan como ondulaciones de la nieve. Si te parecen briznas, redibuja el tile de invierno con manchas más blandas.
+</Tip>
+
+### Las anclas: lo que no cambia
+
+En primavera y en otoño, los **154 píxeles** de verde del pino y de gris de la roca son **exactamente los mismos** que en verano. En invierno se conservan 131: los otros 23 están ahora tapados por nieve.
+
+<Why>
+Cuando todo cambia, el ojo no sabe si está viendo el mismo sitio u otro mapa. Un objeto que **no cambia** hace de referencia: el pino siempre verde y la roca dicen «esto es la misma colina». Por eso en la paleta el pino tiene **sus propios verdes**, distintos de los de la hierba y la copa. Si compartieran casilla, al cambiar la hierba cambiaría el pino.
+</Why>
+
+### Estación frente a hora del día
+
+En [P8-02](/forja-art/pixel/p8-02/) la noche **sí** era una regla para toda la paleta. ¿Por qué el invierno no?
+
+- **La hora del día cambia la luz.** La misma luz cae sobre todo: por eso una regla global funciona. El mundo no cambia; cambia lo que lo ilumina.
+- **La estación cambia el mundo.** Las hojas caen, sale nieve, brotan flores. Eso no es luz: son cosas que aparecen y desaparecen. Ninguna regla de color hace caer una hoja.
+
+Mira el error típico: el invierno hecho con un filtro azul encima del verano.
+
+<Sprite name="season-winter-tint" scale={5} caption="season-winter-tint (ERROR): el verano con un filtro azul. El árbol conserva la copa, no hay nieve y el suelo sigue siendo hierba" />
+
+Este «invierno» es, literalmente, un palette swap de los 16 colores de la escena, **contorno y anclas incluidos**: el contorno pasa de `#1b1030` a un gris azulado `#535878`, y de los 154 píxeles del pino y la roca no queda ni uno igual. El valor se aplasta: el verano va de 23 a 184, el filtro de 90 a 172. Parece verano de noche, no invierno.
+
+<Tip>
+Puedes **combinar** las dos cosas: primero haces la estación (paleta y redibujo) y después, encima, la hora del día con la regla de P8-02. Un invierno al atardecer son dos pasos, no uno.
+</Tip>
+
+### Cómo llega al juego
+
+En un motor como Godot, las estaciones suelen ser **variantes del mismo tileset**: cuatro imágenes con los tiles en las mismas posiciones. Como cada tile está en el mismo sitio, el mapa no cambia; solo cambia la imagen de la que se leen los tiles. Los props que cambian de forma (el árbol con copa o sin ella) son sprites distintos.
+
+<Warn title="Verifica en tu versión">
+Cómo se cambia la textura de un TileSet o se cargan variantes en Godot depende de la versión. Usa Godot 4.3 o superior y lo verás con más calma en el nivel 9.
+</Warn>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="El verano: tu escena de referencia">
+1. <Keys k="Ctrl+N" />: **32×32**. Activa *View → Grid*.
+2. Copia tu tile de hierba de P7-01 en las cuatro casillas de 16×16.
+3. En **otra capa**, dibuja tu prop (un árbol pequeño de copa redonda va muy bien) con la luz arriba a la izquierda, su sombra en el suelo con el tono oscuro de la hierba, y un **ancla**: una piedra o un pino pequeño.
+4. Guarda con <Keys k="Ctrl+S" /> como `verano.aseprite`.
+
+<Warn>
+El ancla tiene que usar **colores propios**. Si el pino usa el mismo verde que la hierba, en el paso 3 cambiará con ella. Si coinciden, cambia uno un poco.
+</Warn>
+</Step>
+
+<Step n={2} title="Ordena la paleta por papeles">
+1. Pasa a modo indexado: *Sprite → Color Mode → Indexed*.
+2. En el panel de paleta, identifica con el cuentagotas (<Keys k="I" />) qué casillas son de cada papel: **rampa del suelo** (3 o más), **rampa de la copa**, **ancla**, **tronco** y **contorno**.
+3. Apúntalo. Al lado de cada color escribe si en otoño se **cambia** (suelo y copa) o se **queda** (ancla, tronco, contorno).
+
+<Why>
+En modo indexado cambiar una casilla cambia todos los píxeles que la usan. Con la lista hecha, cada estación es tocar las casillas de dos papeles y no tocar las demás.
+</Why>
+</Step>
+
+<Step n={3} title="Otoño, primera parte: el palette swap">
+1. Guarda una copia como `otono.aseprite` (*File → Save As*).
+2. Cambia la **rampa del suelo entera**: los tres verdes hacia el oliva y el ocre.
+3. Cambia la **rampa de la copa entera**: sombra rojiza, base naranja, luz ámbar. Las sombras hacia el rojo, las luces hacia el amarillo.
+4. Exporta una copia a 1× y súbela al Inspector del final. En la vista de grises, comprueba que **el orden de valores** de cada rampa sigue igual que en verano.
+
+<Tip>
+No busques colores nuevos a ojo para cada casilla. Sube o baja todos los de la rampa en el mismo sentido: el mismo giro de tono y saltos de valor parecidos a los de verano.
+</Tip>
+</Step>
+
+<Step n={4} title="Otoño, segunda parte: los píxeles nuevos">
+1. Crea una capa nueva, `otono-extra`.
+2. Con el lápiz (<Keys k="B" />) y *Pixel-perfect*, pinta unas **hojas amarillas** sueltas en la copa, más en la zona de luz.
+3. Pinta **hojas caídas** en el suelo, bajo el árbol y cerca de su sombra, con los colores de la copa.
+
+<Warn>
+Las hojas caídas van en la **capa de la escena**, no dentro del tile. Si las metes en el tile, se repetirán por todo el mapa y formarán la retícula del error de `tile-grass-flower` de P7-01.
+</Warn>
+</Step>
+
+<Step n={5} title="Primavera">
+1. Vuelve a `verano.aseprite` y guarda una copia como `primavera.aseprite`.
+2. Palette swap: la hierba y la copa **un poco más claras** y hacia el amarillo, verde tierno.
+3. Capa `primavera-extra`: unas **flores** rosas y blancas en la copa y unas pocas en el suelo bajo el árbol.
+
+<Tip>
+Pocas flores. En el ejemplo son 35 píxeles en la copa y 19 en el suelo. Con más, la copa se convierte en confeti.
+</Tip>
+</Step>
+
+<Step n={6} title="Invierno: redibujar">
+1. Copia de `verano.aseprite` como `invierno.aseprite`.
+2. Palette swap del suelo: base casi blanca con un toque azul, sombra **azul claro** y luz blanca pura. La sombra del árbol se vuelve azul sola, porque usa la casilla de sombra.
+3. **Borra la copa** con la goma (<Keys k="E" />). Alarga el tronco un poco hacia arriba, más fino, y dibuja **ramas de 1 píxel** con el tono más oscuro del tronco.
+4. Capa `nieve` encima de todo: un píxel blanco en **cada píxel que tenga aire encima**: punta del tronco, borde de arriba de las ramas (a trozos), punta y pisos del ancla, lo alto de la roca.
+5. Cierra el contorno oscuro **por encima de la nieve** del tronco, del ancla y de la roca: sin él, la nieve blanca se pierde contra el suelo blanco.
+6. Deja asomar dos o tres **matas verdes** de 2–3 píxeles.
+
+<Why>
+La nieve en su propia capa te deja borrar y rehacer sin estropear lo de debajo. Y te obliga a pensar en la regla: si un píxel tiene algo encima, no lleva nieve.
+</Why>
+</Step>
+
+<Step n={7} title="Las cuatro juntas">
+1. Exporta las cuatro escenas a 1× (*File → Export → Export As*).
+2. Crea una lámina nueva de **128×32** en RGB y pega las cuatro en fila: primavera, verano, otoño, invierno.
+3. Exporta la lámina ampliada con *File → Export → Export As* y **Resize** al 400 %.
+4. Mírala de lejos. ¿Se lee que es el **mismo sitio**? ¿Se lee **qué estación** es cada una sin los nombres?
+
+<Warn title="Verifica en tu versión">
+Los nombres y la posición pueden variar según la versión de Aseprite: *Sprite → Color Mode*, cómo se edita una casilla del panel de paleta, *File → Save As* y las opciones de exportación. Si no encuentras algo, búscalo por nombre en los menús.
+</Warn>
+</Step>
+</Block>
+
+<Block kind="version">
+Ahora a tu manera. Mantén las reglas: rampas enteras, píxeles nuevos donde cambia la forma, nieve encima con sombras azules y al menos un ancla. Elige uno:
+
+- **Estanque:** añade un trozo de agua de P7-02. En invierno se hiela: el agua pasa a hielo azul claro con una grieta, y la orilla lleva nieve. El agua es palette swap; la grieta y la nieve, redibujo.
+- **Huerto:** en lugar del árbol, una fila de cultivos. Primavera, brotes de 1 píxel; verano, plantas altas; otoño, frutos; invierno, tierra con nieve. Aquí casi todo es redibujo: es un prop que **crece**.
+- **Invierno al atardecer:** termina tu invierno y después aplícale la regla del atardecer de P8-02 (luces cálidas, sombras violáceas). Comprueba en grises que la nieve sigue siendo lo más claro.
+</Block>
+
+<Block kind="errores">
+<Mistake title="El invierno como filtro azul" wrongLabel="El verano con un filtro azul" rightLabel="Rampa nueva y píxeles nuevos">
+  <Sprite slot="wrong" name="season-winter-tint" scale={4} />
+  <Sprite slot="right" name="season-winter" scale={4} />
+
+A la izquierda, todo se enfría y se apaga a la vez, pero el árbol tiene sus hojas y no hay nieve en ninguna parte: es verano de noche. Hasta el pino y el contorno han cambiado, así que la escena pierde sus anclas. A la derecha, el suelo es nieve, la copa ya no está y la nieve se posa encima de todo lo que mira hacia arriba. **Arréglalo:** cambia de paleta solo lo que cambia de color (el suelo), redibuja lo que cambia de forma (la copa, la nieve) y no toques el ancla.
+</Mistake>
+
+<Mistake title="Cambiar un solo color" wrongLabel="Solo la base de la hierba" rightLabel="La rampa entera">
+  <p slot="wrong">Cambias la base de la hierba a ocre y dejas la sombra y la luz de verano. Las matas del tile se quedan verdes sobre un fondo ocre: el tile parece manchado, y el ojo ve tres materiales distintos en vez de uno.</p>
+  <p slot="right">Cambias los tres colores de la rampa: sombra #6b7530, base #8f9a3f, luz #b8b860. Los tres del mismo oliva, con saltos de valor parecidos a los de verano. Las matas se siguen leyendo, ahora secas.</p>
+
+**Arréglalo:** en el panel de paleta, localiza **todas** las casillas de la rampa y cámbialas juntas. Comprueba en grises que el orden de valores no se ha cruzado.
+</Mistake>
+
+<Mistake title="Sombras de nieve grises" wrongLabel="Sombra gris neutra" rightLabel="Sombra azul claro">
+  <p slot="wrong">La sombra del árbol sobre la nieve en un gris neutro, con el rojo, el verde y el azul iguales. Se lee como nieve sucia, ceniza o cemento.</p>
+  <p slot="right">La sombra en #b8c4dc: el azul pasa al rojo en 36 puntos. Es la luz del cielo dentro de la sombra. La nieve se lee fría y limpia.</p>
+
+**Arréglalo:** mueve la sombra de la nieve hacia el azul sin cambiar su valor. Lo mismo vale para la base: un blanco con un toque azul (`#e8eef8`) se lee más a nieve que un blanco neutro.
+</Mistake>
+
+<Warn title="Nieve por todas partes">
+Si pones nieve también en los lados y en la parte de abajo de los objetos, deja de parecer que ha caído: parece que los has pintado de blanco. Solo lleva nieve lo que tiene aire encima, y en las ramas, a trozos.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+Sube **tu lámina a 1×** y revísala con la vista de grises: en cada estación, cada rampa conserva su orden de valores y el ancla se reconoce en las cuatro.
+
+<Inspector upload title="Revisa tus cuatro estaciones" />
+
+<Checklist items={[
+  "Tengo la misma escena de 32×32 en cuatro estaciones, con el prop en los mismos píxeles",
+  "El suelo y la copa cambian con la rampa entera, no con un solo color",
+  "Cada rampa nueva conserva el orden de valores y saltos parecidos a los de verano",
+  "Las rampas de otoño llevan hue shifting: sombras hacia el rojo, luces hacia el amarillo",
+  "Hay píxeles nuevos donde cambia la forma: flores, hojas caídas, ramas desnudas, nieve",
+  "La nieve solo está encima de lo que mira hacia arriba, y sus sombras son azuladas, no grises",
+  "El ancla tiene sus propios colores y no cambia en primavera, verano y otoño",
+  "Las hojas caídas y las flores están en la capa de la escena, no dentro del tile",
+  "Exporté la lámina de 128×32 a 1× y una copia ampliada, y guardé los cuatro .aseprite",
+]} />
+
+<Quiz q="¿Qué parte del invierno se puede resolver con un palette swap?" options={["La copa que se queda en ramas", "El suelo: la rampa de la hierba pasa a una rampa de nieve", "La nieve encima del tronco y del pino"]} answer={1}>
+El suelo solo cambia de color: los mismos píxeles del tile con otra rampa (por eso sigue sin costuras). La copa que desaparece y la nieve que se posa cambian la forma: son píxeles nuevos.
+</Quiz>
+
+<Quiz q="¿Por qué las sombras de la nieve son azuladas?" options={["Porque el azul queda bien con el blanco", "Porque donde no da el sol, a la nieve la ilumina el cielo, que es azul", "Porque la nieve es azul"]} answer={1}>
+La nieve refleja casi toda la luz que le llega. En la sombra, la luz que le llega es la del cielo: azul. Una sombra gris neutra se lee como nieve sucia.
+</Quiz>
+
+<Quiz q="La noche de P8-02 se hace con una regla para toda la paleta. ¿Por qué el invierno no?" options={["Porque el invierno tiene menos colores", "Porque la noche cambia la luz que cae sobre todo, y el invierno cambia lo que hay en el mundo: hojas que caen, nieve que aparece", "Porque Aseprite no deja cambiar toda la paleta dos veces"]} answer={1}>
+Una regla global sirve cuando cambia lo que ilumina la escena. La estación cambia las cosas mismas, y ninguna regla de color hace caer una hoja ni posa nieve encima del pino. Por eso el filtro azul parece verano de noche.
+</Quiz>
+</Block>

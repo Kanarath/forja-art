@@ -1,0 +1,276 @@
+---
+id: p4-09
+discipline: pixel
+level: 4
+order: 9
+title: "Niveles de objeto: tres espadas que se leen como mejora"
+summary: "Una mejora se lee en la forma: más largo, más guarda, más detalle y más colores, con el mismo eje y el pomo alineado como ancla. Recolorear el mismo sprite no es subir de nivel."
+duration: 40
+status: borrador
+objectives:
+  - "Diseñar tres niveles de un objeto en los que la mejora se lea por la silueta antes que por el color"
+  - "Hacer crecer en cada nivel el largo, la guarda, la complejidad del contorno y el número de colores"
+  - "Conservar la familia: mismo eje, misma luz, mismo contorno y el pomo alineado como ancla"
+  - "Distinguir cuándo basta un palette swap (variantes de enemigo) y cuándo hay que redibujar (mejoras)"
+  - "Fijar un límite de colores por nivel y comprobar los tres niveles en silueta y en grises"
+prerequisites: [p4-02, p1-02]
+fundamentals: [f02, f01, f03]
+tools: [aseprite]
+piece:
+  name: "Tres niveles de un arma o herramienta propia, de 17×34 cada uno, alineados por el pomo"
+  canvas: "17x34"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [niveles]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Vas a forjar **tres niveles del mismo objeto**: la versión del principio del juego, la de mitad y la legendaria. El jugador las verá en el inventario o en una tienda y tiene que saber, sin leer ningún número, cuál es mejor.
+
+<Sprite name="sword-tiers" scale={6} caption="sword-tiers · Madera, hierro y legendaria, alineadas por el pomo. De izquierda a derecha crecen el largo, la guarda, el detalle y el número de colores" />
+
+Y esto es lo que **no** vas a hacer:
+
+<Sprite name="sword-tiers-recolor" scale={6} caption="sword-tiers-recolor (ERROR) · La espada de hierro tres veces, en marrón, gris y dorado. Misma silueta, mismo largo, mismos detalles: tres pinturas de la misma arma" />
+
+En la de arriba, la mejora se ve aunque entrecierres los ojos. En la de abajo, la dorada solo es más amarilla.
+</Block>
+
+<Block kind="concepto">
+### Una mejora es otra forma, no otro color
+
+Abrí los tres sprites píxel a píxel. Cada uno mide 17×34, y las tres espadas acaban en la **misma fila**: el borde de abajo del pomo es la fila 32 en las tres. Esto es lo que cambia de un nivel a otro (las medidas incluyen el contorno):
+
+| | Nivel 1 · madera | Nivel 2 · hierro | Nivel 3 · legendaria |
+| --- | --- | --- | --- |
+| Alto total | 23 px | 30 px | 33 px |
+| Ancho total (la guarda) | 11 px | 13 px | 15 px |
+| Ancho de la hoja | 3 px | 5 px | 5 px |
+| Punta | un escalón: de 3 a 1 | dos escalones: 5, 3, 1 | dos escalones: 5, 3, 1 |
+| Guarda | travesaño recto de 9 | guarda recta de 11 | alas de oro que suben 2 filas por fuera |
+| Detalle | 3 vetas oscuras | acanaladura de 16 px | 4 runas blancas, una cada 4 px, y 2 gemas |
+| Píxeles de relleno | 71 | 134 | 155 |
+| Colores (con el contorno) | 6 | 11 | 15 |
+
+<Sprite name="sword-tier-1" scale={8} caption="sword-tier-1 · Madera: hoja de 3 px con tres vetas, travesaño de madera y empuñadura de cuerda en damero. El pomo es un solo píxel. 5 colores y el contorno" />
+<Sprite name="sword-tier-2" scale={8} caption="sword-tier-2 · Hierro: hoja de 5 px en punta con una acanaladura oscura, guarda recta, cuero con vueltas (filas alternas) y un pomo de metal de 3×2. 10 colores y el contorno" />
+<Sprite name="sword-tier-3" scale={8} caption="sword-tier-3 · Legendaria: hoja azul clara con cuatro runas blancas, guarda de oro en alas con una gema roja de 3×3, empuñadura morada y pomo de oro de 5 px con otra gema. 14 colores y el contorno" />
+
+Cuatro cosas suben de nivel a nivel:
+
+1. **El tamaño de la silueta.** Más alta y más ancha. La guarda es la que más se nota de lejos.
+2. **La complejidad del contorno.** La madera es una cruz: casi todo líneas rectas. El hierro añade una punta en dos escalones. La legendaria rompe la cruz con las alas que suben.
+3. **El número de colores.** 6, 11, 15. Más colores permiten más materiales en el mismo objeto: madera sola; acero y cuero; acero mágico, oro, gema y tela.
+4. **El brillo máximo.** El píxel más claro de cada espada tiene una luminancia (de 0 a 255) de 211, 242 y 255. La legendaria tiene blanco puro en la punta y en las runas.
+
+<Why title="El jugador compara siluetas (F02)">
+En [F02-01](/forja-art/fundamentos/f02-01/) viste que una forma se reconoce en negro antes que en color. En un inventario pasa lo mismo: el jugador ve una fila de iconos pequeños y busca «el más grande, el más complicado». Si la mejora solo está en el color, tiene que fijarse. Si está en la forma, la ve de reojo.
+</Why>
+
+### La saturación no sube en línea recta
+
+Mira la saturación media de los rellenos: madera **0,50**, hierro **0,25**, legendaria **0,77**. El hierro es **más apagado** que la madera, porque el acero es gris y la madera es marrón.
+
+No es un fallo. El material manda en el color de cada nivel. Lo que sí sube siempre es la forma y el brillo. El color fuerte (el azul, el oro, el rojo de las gemas) se **reserva** para el último nivel, y por eso destaca tanto.
+
+<Why title="El color raro, al final (F03)">
+En [F03-01](/forja-art/fundamentos/f03-01/) separaste tono, saturación y valor. Si ya el nivel 1 es muy saturado, no te queda sitio arriba: la legendaria no puede «gritar» más. Guarda la saturación alta para lo excepcional, como en [F03-03](/forja-art/fundamentos/f03-03/), donde el color fuerte solo iba en el foco de la escena.
+</Why>
+
+### Lo que NO cambia: la familia
+
+Que mejore no quiere decir que sea otra arma. Las tres comparten:
+
+- **El eje.** Todas son verticales, con la columna central en la x = 8.
+- **La empuñadura de 3 px de ancho.** Cambia el material (cuerda, cuero, tela morada), no el grosor.
+- **El ancla.** El pomo acaba en la misma fila en las tres. Puestas en fila, la mano del jugador está en el mismo sitio; lo que crece es lo que sale de ella.
+- **La luz.** Columna izquierda de la hoja clara, columna derecha oscura, arriba a la izquierda como en todo el curso.
+- **El contorno.** El mismo casi negro, `#1b1030`, y de 1 px.
+
+<Why title="Si vienes de Blender">
+Es como un *kit* de piezas hard surface en tres niveles de detalle: misma escala, mismo punto de pivote y mismo lenguaje de biseles. Si cada nivel tuviera otro pivote u otra luz, al cambiar de arma en el juego la mano «saltaría».
+</Why>
+
+Ponlas a prueba en negro. ¿Las ordenarías solo por el contorno?
+
+<SilhouetteLab sprites="sword-tier-3,sword-tier-1,sword-tier-2" title="¿Ordenas los tres niveles solo por la silueta?" />
+
+### Cuándo SÍ basta recolorear
+
+En [P5-04](/forja-art/pixel/p5-04/) hiciste tres slimes con un solo sprite, y estaba bien. ¿Por qué aquí no?
+
+| | Variantes de enemigo (P5-04) | Niveles de objeto (esta lección) |
+| --- | --- | --- |
+| Qué tiene que leer el jugador | «Es un slime, pero de fuego» | «Esta es mejor que la que tengo» |
+| La forma | Igual: dice qué es y cómo se mueve | Distinta: dice cuánto vale |
+| El color | Dice el elemento o el rango | Acompaña al material |
+| Recolorear | Basta | No basta |
+
+Con el enemigo, que la forma sea la misma es lo que **quieres**: el jugador ya sabe cómo pelear con él. Con la mejora, la forma igual dice justo lo contrario: «es lo mismo».
+
+Fíjate en la versión mala también por dentro. Recoloreada en marrón, la espada de hierro conserva la punta afilada y la acanaladura: es una espada de madera con forma de espada de acero. Y como el recoloreado aplasta la rampa, su luminancia va solo de 97 a 175, cuando el hierro original va de 42 a 242: también pierde volumen.
+
+<Tip title="Relaciónalo">
+- [P4-02](/forja-art/pixel/p4-02/): las tres espadas son un **set**: mismo lienzo, misma luz, mismo contorno. Lo que las distingue es la silueta, como a los iconos del set.
+- [P4-07](/forja-art/pixel/p4-07/): ahí sí cambiabas el mismo icono a grises para el estado bloqueado. Es el **mismo** objeto en otro estado. Aquí son objetos distintos.
+- [P5-06](/forja-art/pixel/p5-06/): el jefe era el mismo slime a 3×, **redibujado**. Mismo principio: se conserva la familia y se añade presencia dibujando, no escalando ni recoloreando.
+</Tip>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Lienzo para tres niveles y la línea del ancla">
+<Keys k="Ctrl+N" />: **57×34**, fondo transparente. Activa *View → Grid*.
+
+Vas a dibujar las tres versiones en el mismo lienzo, en tres columnas de 17 px separadas por 3 px vacíos: de la x = 0 a la 16, de la 20 a la 36 y de la 40 a la 56. Así las comparas siempre juntas.
+
+Crea una capa `guias` (*Layer → New Layer*). Con el lápiz (<Keys k="B" />) pinta, en un color chillón, una línea horizontal en la **fila 32**: ahí acabará el pomo de las tres. Marca también la columna central de cada zona (x = 8, 28 y 48).
+
+<Why>
+El ancla es lo primero, no lo último. Si dibujas cada nivel por separado y luego los alineas, cada uno tendrá la mano en un sitio distinto.
+</Why>
+</Step>
+
+<Step n={2} title="Empieza por el nivel del medio">
+Capa nueva, `nivel-2`. En la zona central dibuja el nivel 2 con *Pixel-perfect* activado: contorno casi negro de 1 px, la luz arriba a la izquierda y el pomo tocando la línea de la fila 32.
+
+Pon tu límite: **10 colores y el contorno**. Este nivel decide la familia: el grosor de la empuñadura, la forma del pomo, cómo cae la luz.
+
+<Why>
+El nivel del medio es el «normal». Desde él es fácil quitar (para el 1) y añadir (para el 3). Si empiezas por la legendaria, la madera acaba pareciendo una legendaria rota.
+</Why>
+
+<Tip>
+Puede ser otra arma o una herramienta: un hacha, un pico, un martillo, un báculo. Lo que importa es que tenga una parte que «crece» (hoja, cabeza) y una parte que se queda (el mango).
+</Tip>
+</Step>
+
+<Step n={3} title="Copia la empuñadura a las otras dos zonas">
+Con la selección rectangular (<Keys k="M" />) selecciona solo la empuñadura y el pomo del nivel 2. Cópiala (*Edit → Copy*), crea las capas `nivel-1` y `nivel-3`, y pégala (*Edit → Paste*) en cada una. Muévela hasta que su columna central y la fila 32 coincidan con las guías.
+
+<Why>
+Así la mano está en el mismo sitio en los tres niveles. Luego cambiarás el material de cada empuñadura, pero el grosor y la posición ya son de la familia.
+</Why>
+</Step>
+
+<Step n={4} title="El nivel 1: menos forma, menos colores">
+En la capa `nivel-1`, dibuja la parte que crece **más corta y más simple**:
+
+- hoja más estrecha y unos 6 px más corta que la del nivel 2;
+- guarda recta y más corta, o un simple travesaño;
+- punta de un solo escalón, o roma;
+- un detalle como mucho (vetas, una mella).
+
+Límite: **5 colores y el contorno**. Cambia la empuñadura a un material pobre (cuerda, madera) sin cambiar su grosor.
+
+<Warn>
+No quites contorno ni luz para que parezca «peor». El nivel 1 tiene que estar igual de bien dibujado que los otros: es más sencillo, no más feo.
+</Warn>
+</Step>
+
+<Step n={5} title="El nivel 3: otra silueta">
+En la capa `nivel-3`, la parte que crece se hace **más larga y cambia de forma**. El cambio de forma es lo que más cuenta:
+
+- la guarda deja de ser recta: alas, cuernos, una curva que sube;
+- un elemento que rompe el contorno (una gema que sobresale, un pomo más ancho);
+- un detalle que se repite con orden, como las runas cada 4 px.
+
+Límite: **14 colores y el contorno**. Aquí, y solo aquí, entra el color saturado y el píxel blanco puro.
+
+<Why>
+Comprueba la regla de P5-06: no estires el nivel 2. Si lo escalas, el contorno se engorda y no aparece nada nuevo. Redibuja encima, con contorno de 1 px.
+</Why>
+</Step>
+
+<Step n={6} title="Ordena la paleta y cuenta los colores">
+Abre el panel de paleta. Ordénala en tres grupos: los colores del nivel 1, los que añade el 2 y los que añade el 3. Si un color no lo usa ningún nivel, quítalo.
+
+Cuenta cada grupo con el límite de cada nivel: 5, 10 y 14, más el contorno, que es el mismo para todos. Si te pasas, fusiona dos tonos cercanos con el cubo de pintura (<Keys k="G" />) o el cuentagotas (<Keys k="I" />) y el lápiz.
+
+<Tip>
+Los colores pueden compartirse entre niveles. En el ejemplo, el oscuro de la guarda de oro también sirve para el pomo. Compartir no es un error: es lo que mantiene la familia.
+</Tip>
+</Step>
+
+<Step n={7} title="Prueba de silueta y de valor, y exporta">
+Oculta la capa `guias`. Exporta una copia a 1× con *File → Export → Export As* y súbela al laboratorio de siluetas de arriba (*+ Tu PNG*): en negro, ¿se ordenan solas de peor a mejor?
+
+Luego *Sprite → Color Mode → Grayscale*, mira y deshaz con <Keys k="Ctrl+Z" />. En grises, la legendaria tiene que tener lo más claro.
+
+Guarda con <Keys k="Ctrl+S" /> y exporta otra copia con **Resize** al 600 % para enseñarla.
+</Step>
+
+<Warn title="Verifica en tu versión">
+Los nombres y la posición pueden variar según la versión de Aseprite: *Layer → New Layer*, *Edit → Copy* y *Edit → Paste*, cómo se mueve lo pegado, el panel de paleta y cómo se ordenan o borran sus colores, *Sprite → Color Mode → Grayscale* y las opciones de *Export As*. Si una ruta no está donde dice, búscala por su función.
+</Warn>
+</Block>
+
+<Block kind="version">
+Ahora a tu manera. Mantén el ancla, la luz y el contorno, y haz que cada nivel cambie de forma. Elige uno:
+
+- **Una herramienta:** pico, hacha o caña de pescar en madera, hierro y algo raro (cristal, hueso, oro). Pregunta para cada nivel: ¿qué parte crece? ¿Qué parte se queda?
+- **Una rama de nivel 3:** dos legendarias distintas, fuego y hielo, con la **misma** silueta. Aquí sí vale el palette swap de P5-04: son dos versiones del mismo nivel, no una mejora. Comprueba en grises que conservan la rampa.
+- **Cuatro niveles:** añade uno entre el hierro y la legendaria. Es lo difícil: cada paso tiene que notarse y no puedes gastar todo el cambio de forma en el último. Reparte: largo en un paso, guarda en otro, color en el último.
+
+<Tip>
+Si ya hiciste el set de P4-02, mete tu nivel 2 en ese set y comprueba que sigue pareciendo del mismo juego.
+</Tip>
+</Block>
+
+<Block kind="errores">
+<Mistake title="Recolorear el mismo sprite" wrongLabel="sword-tiers-recolor: tres pinturas del hierro" rightLabel="sword-tiers: tres formas">
+  <Sprite slot="wrong" name="sword-tiers-recolor" scale={4} />
+  <Sprite slot="right" name="sword-tiers" scale={4} />
+
+A la izquierda, las tres tienen exactamente los mismos 134 píxeles de relleno y los mismos 10 colores, solo que cambiados. El jugador que encuentra la dorada no siente que ha subido: siente que ha encontrado la misma espada pintada. Y la marrón no parece de madera: tiene punta de acero y acanaladura. **Arréglalo:** conserva la empuñadura y el pomo, y redibuja lo que crece. Cambia el contorno, no solo la paleta.
+</Mistake>
+
+<Mistake title="En negro, todas iguales" wrongLabel="Recoloreadas, en silueta" rightLabel="Tres niveles, en silueta">
+  <Sprite slot="wrong" name="sword-tiers-recolor" scale={4} view="silhouette" />
+  <Sprite slot="right" name="sword-tiers" scale={4} view="silhouette" />
+
+La prueba que no engaña. En negro, las tres recoloreadas son la misma forma repetida. Las buenas se ordenan solas: la corta, la de guarda recta y la de alas. Si tus niveles no pasan esta prueba, la mejora está en el color y no en el objeto.
+</Mistake>
+
+<Warn title="Perder la familia">
+El error contrario: la legendaria es tan distinta que parece de otro juego. Otra luz, otro contorno, la empuñadura el doble de gruesa, otra inclinación. Mejora, sí, pero ya no es «tu espada mejorada»: es otra arma. Lo que crece es la hoja y la guarda; lo que se ancla no se toca.
+</Warn>
+
+<Warn title="Mejorar escalando">
+Hacer el nivel 3 escalando el 2 da una espada más grande con un contorno de 2 o 3 px y sin nada nuevo, como el slime ×3 de P5-06. Y si los niveles no caben en el mismo lienzo, en el inventario uno se verá más pequeño que los otros. Crece **dentro** del lienzo y redibuja.
+</Warn>
+
+<Warn title="Más colores, mismo dibujo">
+Subir de 6 a 15 colores sin cambiar la forma solo mete ruido: más tonos en la misma hoja recta. Cada color nuevo tiene que tener un trabajo (un material nuevo, una gema, una runa), como en P4-01.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+Pon tus tres niveles en fila **a 1×**, en silueta y en grises. Súbelos también al Inspector.
+
+<Inspector upload title="Revisa tus tres niveles" />
+
+<Checklist items={[
+  "En silueta negra, ordeno los tres niveles sin dudar",
+  "La silueta crece en cada nivel: más larga, más ancha o las dos cosas",
+  "El nivel 3 cambia la forma de la guarda o del contorno, no solo el tamaño",
+  "El pomo acaba en la misma fila en los tres y la empuñadura tiene el mismo grosor",
+  "Los tres tienen el mismo contorno, la misma luz y el mismo eje",
+  "Respeto el límite de colores de cada nivel",
+  "El color más saturado y el píxel más claro están en el último nivel",
+  "Ningún nivel es una copia recoloreada de otro",
+]} />
+
+<Quiz q="Tienes la espada de hierro y quieres un nivel superior. ¿Qué cambio se lee mejor como mejora en el inventario?" options={["Pintarla en dorado", "Redibujar la guarda con otra forma y alargar la hoja, conservando la empuñadura", "Escalarla al 150 %"]} answer={1}>
+La silueta se lee antes que el color. Una guarda nueva y una hoja más larga cambian el contorno. El dorado solo cambia la pintura y escalar engorda el contorno sin añadir nada.
+</Quiz>
+
+<Quiz q="En P5-04 recoloreaste el slime y estaba bien. ¿Por qué con las espadas no basta?" options={["Porque las espadas tienen más colores", "Porque en un enemigo la forma igual dice «es el mismo bicho», que es lo que quieres; en una mejora, la forma igual dice «es lo mismo», que es lo contrario", "Porque el palette swap no funciona en Aseprite con objetos"]} answer={1}>
+El palette swap sirve para variantes: mismo objeto, otro elemento o rango. Una mejora tiene que parecer otro objeto mejor, y eso lo dice la forma.
+</Quiz>
+
+<Quiz q="La espada de hierro está menos saturada que la de madera. ¿Es un error?" options={["Sí: cada nivel debe estar más saturado que el anterior", "No: el material manda en el color; la forma y el brillo suben, y la saturación fuerte se reserva para el último nivel", "Sí: hay que pintar el hierro de azul"]} answer={1}>
+El acero es gris. Lo que garantiza la mejora es la silueta, el detalle y el brillo máximo. Guardar el color fuerte para la legendaria la hace destacar más.
+</Quiz>
+</Block>

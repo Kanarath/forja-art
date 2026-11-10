@@ -215,6 +215,12 @@
 - **Voxel:** V1-03 Seleccionar, mover, rotar y duplicar (valla modular), V6-06 Rocas (de cajas a rocas).
 - **Arte nuevo:** un estandarte con pliegues, sus errores plano y a rayas y su bucle al viento; una cascada en 4 frames y su error «persiana»; tres criaturas círculo, cuadrado y triángulo y su error de cuerpos iguales, y los modelos «valla» y «rocas».
 
+**Contenido · vigésimo bloque: 5 lecciones más (113 en total).**
+- **Pixel:** P4-09 Niveles de objeto (tres espadas que se leen como mejora), P7-10 Estaciones (la misma escena en cuatro estaciones).
+- **Fundamentos:** F03-03 Saturación y foco.
+- **Voxel:** V2-05 Formas redondas (un pozo), V5-07 Animales de dos patas (una gallina).
+- **Arte nuevo:** espadas de madera, hierro y legendaria y su error de recolor; la escena del árbol, el pino y la roca en primavera, verano, otoño e invierno y el error del filtro azul; la escena final con la saturación repartida, toda saturada y en gris, y los modelos «pozo» y «gallina».
+
 **Fase 6 · Forge Tools (iniciada el 2026-11-10).** Tres scripts de Aseprite, la CLI `forja-vox` y la página Forge Tools con descargas y demos. Ver `forge-tools/README.md`.
 
 **Lecciones aprendidas durante la fase 1:**

@@ -115,5 +115,10 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   { id: "formas", name: "Lenguaje de formas", description: "Tres personajes que se distinguen por su forma base: círculo, cuadrado y triángulo (F09-02).", color: "#f29b7a" },
   { id: "valla", name: "Valla modular", description: "Una valla hecha duplicando, moviendo y girando una sola pieza, con variaciones (V1-03).", color: "#d08a50" },
   { id: "rocas", name: "Rocas", description: "Un grupo de rocas voxel de tres tamaños, con facetas y color según la orientación (V6-06).", color: "#9aa3b5" },
+  { id: "niveles", name: "Niveles de objeto", description: "Tres versiones de un arma que se leen como mejora por la forma, no solo por el color (P4-09).", color: "#f2b33d" },
+  { id: "estaciones", name: "Cuatro estaciones", description: "La misma escena en primavera, verano, otoño e invierno, con píxeles nuevos donde hacen falta (P7-10).", color: "#d8642a" },
+  { id: "saturacion", name: "Saturación y foco", description: "Una escena con el color fuerte solo en el punto de interés (F03-03).", color: "#ff4fa3" },
+  { id: "pozo", name: "Pozo", description: "Un pozo voxel con un brocal redondo de diámetro impar, tejado y cubo (V2-05).", color: "#7d8698" },
+  { id: "gallina", name: "Gallina", description: "Un animal voxel de dos patas: masas, forma y detalle (V5-07).", color: "#f4ecdc" },
   { id: "forma-primero", name: "Forma antes que detalle", description: "Un modelo voxel con su blockout guardado como primera versión (V2-01).", color: "#38e1ff" },
 ];
