@@ -1,0 +1,265 @@
+---
+id: p8-06
+discipline: pixel
+level: 8
+order: 6
+title: "HUD: la interfaz encima del juego"
+summary: "Pon un HUD sobre tu escena sin tapar el foco: en los bordes, con contraste de valor, márgenes, la fuente de 3×5 y el estilo del juego. Franja dedicada frente a HUD superpuesto."
+duration: 40
+status: borrador
+objectives:
+  - "Colocar el HUD en bordes y esquinas, lejos del foco de la escena"
+  - "Hacer legible el HUD por contraste de valor: franja oscura o sombra de 1 px"
+  - "Dejar márgenes y reservar sitio para que nada quede pegado al borde ni cortado"
+  - "Reutilizar la barra de P4-04, la fuente de P2-04 y la paleta de la escena para que el HUD sea del mismo juego"
+  - "Elegir entre franja dedicada y HUD superpuesto según lo que pierde cada uno"
+prerequisites: [p4-04, p8-01]
+fundamentals: [f07, f01]
+tools: [aseprite]
+piece:
+  name: "Tu escena de P8-01 con un HUD: barra de vida y un contador con icono, comprobado en grises y a 1×"
+  canvas: "80x57"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [hud]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Tu escena de P8-01 ya tiene un foco. Ahora vas a ponerle **la interfaz del jugador**: una barra de vida y un contador de monedas. Sin tapar nada importante y legible de un vistazo.
+
+<Sprite name="hud-good" scale={5} caption="hud-good (80×57): una franja oscura de 9 px encima de scene-final. Barra de vida a la izquierda, moneda y «12» a la derecha. La escena está entera debajo" />
+
+El lienzo pasa de 80×48 a **80×57**: los 48 píxeles de la escena, intactos, y 9 encima para el HUD. Todo lo que hay en la franja ya lo has dibujado antes:
+
+- la **barra de vida** es `ui-bar-full` de P4-04, sin tocar;
+- el **«12»** es la fuente de 3×5 de P2-04, en el mismo crema que `text-forja`;
+- la **moneda** es una versión de 5×5 con los colores de tu moneda de P4-05.
+
+<Sprite name="ui-bar-full" scale={8} caption="La barra de P4-04 (32×7). En el HUD entra tal cual" />
+</Block>
+
+<Block kind="concepto">
+### El HUD compite con el arte
+
+El HUD es lo único de la pantalla que el jugador mira **a propósito**: «¿cuánta vida me queda?». Por eso tiene que leerse. Pero cada vez que lo mira, deja de mirar el juego.
+
+Así que el HUD tiene dos trabajos que tiran en direcciones opuestas:
+
+- **leerse en medio segundo**: contraste, tamaño, siempre en el mismo sitio;
+- **no robar el foco**: lejos de la acción, pequeño, sin adornos.
+
+La solución es el **sitio**. En F07 viste que el foco va lejos de los bordes y que los bordes son marco. El HUD vive justo ahí: **en los bordes y en las esquinas**. Por costumbre, la vida arriba a la izquierda (es lo primero que lee el ojo en un idioma que se lee de izquierda a derecha) y los contadores arriba a la derecha.
+
+<Mistake title="El mismo HUD en dos sitios" wrongLabel="hud-bad: encima del juego, en el peor sitio" rightLabel="hud-good: en una franja, en los bordes">
+  <Sprite slot="wrong" name="hud-bad" scale={4} />
+  <Sprite slot="right" name="hud-good" scale={4} />
+
+Los mismos tres elementos. En `hud-bad` la franja de arriba está vacía (para que las dos imágenes midan lo mismo) y todo va encima de la escena. La barra cae sobre el impacto: de la estrella solo asoman la punta de arriba y la de abajo. La moneda está en la esquina de abajo a la derecha, toca el borde inferior y le falta la última columna. El «12» va en verde claro sobre el agua y toca la moneda.
+</Mistake>
+
+<Why title="Por qué la barra sobre el impacto es el peor error">
+En P8-01 construiste el foco con cuidado: el único blanco puro, entre los contornos del héroe y del slime. Una barra encima no solo lo tapa: pone **su propio contraste** (contorno casi negro, rojo, gris) justo donde el ojo iba a ir. El jugador ya no sabe si mirar el golpe o su vida.
+</Why>
+
+### Legibilidad: el contraste de valor
+
+Un HUD se lee por **valor**, igual que todo (F01). En `hud-good` la franja es casi negra y lo de encima es claro:
+
+| Elemento | Color | Valor aproximado (0–255) |
+| --- | --- | --- |
+| Fondo de la franja | casi negro | 20 |
+| Línea separadora | gris azulado oscuro | 46 |
+| Relleno de la barra | rojo | 121 |
+| Oro de la moneda | amarillo | 195 |
+| Número «12» | crema | 241 |
+
+El número es lo más claro de la franja, contra lo más oscuro: la máxima diferencia de valor que cabe. Por eso no lleva sombra: **la franja hace de sombra**.
+
+<Sprite name="hud-good" scale={5} view="gray" caption="hud-good en grises: la franja se separa de la escena y el «12» es una mancha clara sobre casi negro" />
+
+Fíjate en algo honesto de esta vista: el «12» es casi tan claro como el blanco del impacto. ¿Compite? Poco, por tres razones. Es pequeño (dos cifras de 3×5), está en una zona separada por una línea, y está en una esquina, lejos de la estrella. El foco sigue siendo **la mancha clara más grande**, en el centro de la acción. El HUD puede tener contraste; lo que no puede es estar cerca del foco ni ser más grande que él.
+
+Si el texto va **encima del juego**, sin franja, ya no tienes un fondo oscuro garantizado: debajo puede haber hierba, arena clara o agua. Entonces necesitas lo que aprendiste en P2-04: una **sombra de 1 píxel** (o un contorno) que lo separe de cualquier fondo.
+
+<Sprite name="text-forja" scale={8} caption="text-forja: tinta crema y sombra violeta de 1 px abajo a la derecha. Es el texto que puedes poner encima del juego" />
+
+### Márgenes y zona segura
+
+Nada del HUD toca el borde. En `hud-good`:
+
+- la barra empieza en la columna 2 (**2 px** de margen a la izquierda) y en la fila 1 (**1 px** arriba);
+- el «12» acaba en la columna 78: queda **1 px** libre a la derecha;
+- entre la moneda y el número hay **1 px**.
+
+Dos razones para el margen:
+
+1. **Visual.** Un elemento pegado al borde parece cortado aunque no lo esté. Con 1 o 2 píxeles de aire se lee como colocado.
+2. **Técnica: la zona segura.** No todas las pantallas enseñan el borde entero. Los televisores antiguos recortaban un poco por cada lado; los móviles tienen esquinas redondeadas y muescas. Lo importante del HUD va un poco hacia dentro.
+
+<Warn title="Reserva sitio para el número más largo">
+El «12» mide 7 px (dos cifras de 3 y un hueco de 1). Si llegas a 100 monedas, el número crece 4 px y en `hud-good` se saldría del lienzo. Decide antes cuántas cifras puede tener y deja el hueco para la más larga: 99 son 7 px; 999, 11.
+</Warn>
+
+### Tamaño y alineación
+
+La fuente de 3×5 es casi el **mínimo** que se lee como cifra a 1×. No la bajes; súbela a 4×6 si tu juego es más grande que 80×57.
+
+En `hud-good` todo comparte las mismas filas: el hueco interior de la barra, la moneda y el número ocupan **las filas 2 a 6**. La franja cuadra exacta: 1 fila de margen, 7 de barra y 1 de línea separadora, 9 en total. Al ojo le basta una línea imaginaria para leer los tres.
+
+### El mismo juego, también en el HUD
+
+La interfaz tiene que parecer **del mismo mundo** que la escena, como los iconos de P4-02:
+
+- el contorno de la barra es el **mismo casi negro** que el del héroe y el slime;
+- la moneda usa los **tres colores de la moneda de P4-05** (contorno marrón, oro y oro oscuro en la columna del centro), no un amarillo nuevo;
+- el número es el **crema de `text-forja`**.
+
+<Tip title="Y el 9-slice de P4-04">
+Una franja de 9 de alto no admite tu panel de 24×24 con cortes a 8: sus esquinas ya miden 8 y no queda centro. Para una franja con marco necesitarías un panel con esquinas más pequeñas (de 3 o 4) o una franja de al menos 16. Para cuadros de diálogo e inventario, tu panel 9-slice sí; para el HUD de una pantalla pequeña, una franja lisa con una línea suele bastar.
+</Tip>
+
+### Franja dedicada o HUD superpuesto
+
+| | Franja dedicada | HUD superpuesto |
+| --- | --- | --- |
+| Legibilidad | Garantizada: el fondo es siempre el mismo | Depende de lo que pase debajo; necesita sombra o contorno |
+| Arte | No tapa nada | Tapa trozos de la escena |
+| Espacio | Cuesta pantalla: aquí 9 de 57 filas (un 16 %) | Toda la pantalla para el juego |
+| Cuándo | Pantallas pequeñas, juegos con mucho movimiento en todos los bordes | Pantallas grandes, HUD mínimo en las esquinas |
+
+<Why>
+No hay una respuesta correcta: hay un precio. La franja paga en espacio y cobra en legibilidad. El superpuesto paga en legibilidad (cada elemento necesita su propia sombra y su sitio lejos del foco) y cobra en espacio. `hud-bad` no falla por ser superpuesto: falla porque pone los elementos en el centro de la acción, sin sombra y pegados al borde.
+</Why>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Mide el HUD de ejemplo">
+Amplía `hud-good` con la rejilla. Cuenta las filas de la franja, los márgenes de la barra y del número, y comprueba que el hueco interior de la barra, la moneda y el «12» ocupan las mismas filas.
+
+<Inspector sprite="hud-good" title="Cuenta las filas de la franja y los márgenes" />
+</Step>
+
+<Step n={2} title="Más lienzo y dos capas">
+1. Abre tu `escena.aseprite` de P8-01. Si tiene varias capas, guarda una copia y une las capas en una: el HUD no debe mezclarse con ellas.
+2. Amplía el lienzo **9 píxeles por arriba** con *Sprite → Canvas Size*, anclado abajo, para que la escena no se mueva respecto al borde inferior. Con una escena de 80×48 quedará en 80×57.
+3. Llama a la capa de la escena `escena`. Crea encima otra con *Layer → New Layer* y llámala `hud`.
+4. Guarda con <Keys k="Ctrl+S" />.
+
+<Why>
+Con el HUD en su capa, puedes ocultarlo y volver a verlo para comparar, o moverlo sin rozar un píxel de la escena. En el juego también irá por separado: la escena se mueve con la cámara y el HUD se queda quieto.
+</Why>
+</Step>
+
+<Step n={3} title="La franja y su línea">
+1. En la capa `hud`, selecciona con <Keys k="M" /> las 8 filas de arriba de lado a lado y rellénalas con el cubo (<Keys k="G" />) en un tono **casi negro**.
+2. En la fila 9 (la última de la franja), dibuja con el lápiz (<Keys k="B" />) una línea de lado a lado **un paso más clara** que el fondo.
+
+<Why>
+La línea separa el HUD del juego sin gritar. Sin ella, si tu escena tiene una parte oscura arriba, la franja y la escena se funden y el ojo no sabe dónde acaba la interfaz.
+</Why>
+</Step>
+
+<Step n={4} title="La barra de vida">
+1. Abre tu barra llena de P4-04, selecciónala con <Keys k="M" /> y cópiala (*Edit → Copy*).
+2. Pégala en la capa `hud` (*Edit → Paste*) y colócala con **2 px** de margen a la izquierda y **1 px** arriba.
+3. Comprueba que no toca el borde por ningún lado y que su parte de abajo llega como mucho hasta la línea.
+
+<Tip>
+No la redibujes ni la estires para que «quepa mejor». Es la misma barra que usarás en el juego: si la cambias aquí, tendrás dos.
+</Tip>
+</Step>
+
+<Step n={5} title="La moneda y el número">
+1. Dibuja una **moneda de 5×5** con los colores de tu moneda de P4-05: contorno con las esquinas vacías, oro dentro y la columna del centro en el oro oscuro. A este tamaño no caben el bisel ni el brillo: basta con que se lea «moneda».
+2. Copia de tu fuente de P2-04 las cifras que necesites y escribe el número a la derecha de la moneda, con **1 px** entre las dos. Si vas a tener números de tres cifras, deja ya el hueco.
+3. Alinea moneda y número con el hueco interior de la barra: las mismas cinco filas.
+4. Deja **1 o 2 px** libres a la derecha.
+
+<Warn>
+Si tu escena es más grande que 80×57, no amplíes la moneda ni las cifras con *Resize*: rompería el contorno, como `coin-squeezed` en P4-05. Dibuja una versión mayor o usa tu variante de fuente de 4×6.
+</Warn>
+</Step>
+
+<Step n={6} title="Comprueba en grises y a 1×">
+1. Oculta y vuelve a mostrar la capa `hud` con el ojo del panel de capas. Mira qué tapa: **no debe tocar el foco** de la escena.
+2. Pasa a grises con *Sprite → Color Mode → Grayscale*, mira y deshaz con <Keys k="Ctrl+Z" />. El número tiene que separarse del fondo; el foco de la escena tiene que seguir siendo la mancha clara más grande.
+3. Exporta a 1× (*File → Export → Export As*, sin Resize) y súbela al Inspector (en el bloque de calidad) para mirar la vista a 1×. ¿Lees el número sin acercarte?
+
+<Why>
+El HUD se mira en milésimas de segundo y casi siempre a tamaño real. Si a 1× tienes que pararte a descifrar una cifra, en el juego no la leerás.
+</Why>
+</Step>
+
+<Step n={7} title="Exporta">
+Guarda con <Keys k="Ctrl+S" />. Exporta la pieza con *File → Export → Export As*, PNG, una copia al 100 % y otra con **Resize** a una escala entera (400 % o 500 %).
+</Step>
+
+<Warn title="Verifica en tu versión">
+La ruta y las opciones de *Sprite → Canvas Size* (sobre todo cómo se ancla para añadir filas solo arriba), la forma de unir capas y de renombrarlas, el ojo de visibilidad del panel de capas y la ubicación de *Layer → New Layer* pueden variar entre versiones de Aseprite. Si no encuentras algo, búscalo por nombre en los menús.
+</Warn>
+</Block>
+
+<Block kind="version">
+Lleva el HUD a tu juego. Elige uno:
+
+- **Superpuesto bien hecho:** sin franja. Vida arriba a la izquierda y contador arriba a la derecha, directamente sobre la escena, con 2 px de margen y el número con **sombra de 1 px** como `text-forja`. Comprueba en grises que se lee sobre lo que haya debajo.
+- **Dos estados:** haz la misma pieza con tu barra baja de P4-04 (`ui-bar-low`) y otra cifra. El marco y la posición no cambian; solo el relleno y el número.
+- **Tercer elemento, y ni uno más:** añade una llave, una poción o una vida extra con un icono de 5×5 de tu set de P4-02, en la misma franja y alineado en las mismas filas. Si no cabe con márgenes, sobra.
+</Block>
+
+<Block kind="errores">
+<Mistake title="El HUD sobre el foco" wrongLabel="La barra tapa el impacto" rightLabel="La barra en la franja, lejos de la acción">
+  <Sprite slot="wrong" name="hud-bad" scale={4} />
+  <Sprite slot="right" name="hud-good" scale={4} />
+
+Es el error más caro: tapa justo lo que construiste en P8-01. **Corrección:** oculta la capa `hud`, busca tu foco y lleva cada elemento al borde o a la esquina más lejana. Si todo el borde está ocupado por la acción, usa una franja dedicada.
+</Mistake>
+
+<Mistake title="Texto sin contraste ni sombra" wrongLabel="hud-bad en grises: el 12 se funde con el agua" rightLabel="hud-good en grises: crema sobre casi negro">
+  <Sprite slot="wrong" name="hud-bad" scale={4} view="gray" />
+  <Sprite slot="right" name="hud-good" scale={4} view="gray" />
+
+El verde claro del «12» tiene el mismo valor que las crestas claras del agua que lo rodean, las crestas oscuras pasan entre sus cifras y el agua no es oscura. En grises el número se mezcla con las ondas. Además el verde ya existe en la escena (son las motas de la hierba): parece parte del mundo, no interfaz. **Corrección:** tinta clara con sombra de 1 px (P2-04) o un fondo oscuro detrás, y un color que no use la escena.
+</Mistake>
+
+<Warn title="Pegado al borde o cortado">
+En `hud-bad` la moneda toca el borde inferior y le falta su última columna: el contorno de la derecha no está. Y el «12» toca la moneda. A 1× parece un error de pantalla, no un diseño. **Corrección:** 1 o 2 px de margen con el borde, 1 px entre icono y número, y reserva el ancho del número más largo.
+</Warn>
+
+<Warn title="Demasiados elementos">
+Vida, maná, experiencia, monedas, llaves, minimapa, nivel… Cada elemento es una cosa más que el ojo tiene que descartar para ver el juego. En una pantalla de 80×57, dos o tres elementos son el límite. **Corrección:** pregúntate qué necesita el jugador **en cada segundo**. Lo demás va a un menú de pausa o al inventario (tu panel 9-slice de P4-04).
+</Warn>
+</Block>
+
+<Block kind="calidad">
+Sube tu escena con HUD a 1× y revísala con la rejilla, en grises y a tamaño real.
+
+<Inspector upload title="Revisa tu escena con HUD" />
+
+<Checklist items={[
+  "El HUD está en los bordes o las esquinas y no tapa el foco de la escena",
+  "Con la capa hud oculta y visible, la escena no pierde nada importante",
+  "En grises, el número y la barra se separan de lo que tienen detrás",
+  "Si el texto va encima del juego, lleva sombra o contorno de 1 px",
+  "Ningún elemento toca el borde: hay 1 o 2 px de margen en todos los lados",
+  "Hay sitio para el número más largo sin salirse",
+  "Barra, icono y número están alineados en las mismas filas",
+  "El contorno y los colores del HUD salen de la paleta del juego",
+  "Hay tres elementos como mucho",
+  "A 1× leo la vida y el número de un vistazo",
+]} />
+
+<Quiz q="¿Dónde va el HUD para no competir con el foco?" options={["En el centro, para que el jugador lo vea siempre", "Encima del personaje, que es donde mira el jugador", "En los bordes y esquinas, lejos de la acción"]} answer={2}>
+Los bordes son marco (F07). El HUD se mira a propósito, así que puede estar en una esquina; el foco necesita el centro de la acción libre.
+</Quiz>
+
+<Quiz q="En hud-good el «12» no lleva sombra. ¿Por qué se lee igual?" options={["Porque la franja casi negra hace de sombra: crema sobre casi negro es la máxima diferencia de valor", "Porque el crema es un color cálido", "Porque está escrito con una fuente de 3×5"]} answer={0}>
+La legibilidad depende del valor (F01). Con un fondo oscuro garantizado no hace falta sombra; sin franja, sí.
+</Quiz>
+
+<Quiz q="¿Qué ganas y qué pierdes con una franja dedicada frente a un HUD superpuesto?" options={["Ganas espacio y pierdes legibilidad", "Ganas legibilidad y no tapas el arte, pero pierdes pantalla", "No cambia nada: es solo estética"]} answer={1}>
+La franja garantiza el fondo y deja la escena entera, a cambio de filas: en hud-good, 9 de 57.
+</Quiz>
+</Block>

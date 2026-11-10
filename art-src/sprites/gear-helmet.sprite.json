@@ -1,0 +1,43 @@
+{
+  "name": "gear-helmet",
+  "description": "Capa del casco (16×24, el resto transparente): calota de hierro con luz arriba a la izquierda, una banda oscura en la frente, carrilleras a los lados de la cara y una cresta roja de 2 px. Está dibujada encima de la cabeza del héroe, siguiendo su silueta.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "personaje",
+    "equipo"
+  ],
+  "palette": {
+    "o": "#1b1030",
+    "L": "#c9d1dc",
+    "M": "#8f9bab",
+    "D": "#5c6676",
+    "r": "#c2413b"
+  },
+  "rows": [
+    "................",
+    ".......rr.......",
+    "....oooooooo....",
+    "...oLLMMMMMMo...",
+    "..oLMMMMMMMMDo..",
+    "..oLMMMMMMMMDDo.",
+    "..oDDDDDDDDDDDo.",
+    "..oM.........MDo",
+    "..oM.........Do.",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................"
+  ]
+}

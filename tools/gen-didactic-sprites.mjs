@@ -1321,6 +1321,70 @@ const deutan = (hex) => {
   add("rain-straight", "Error: la lluvia como líneas verticales discontinuas, todas iguales y repartidas cada 6 px. Sin profundidad ni viento: parecen rayas sobre la imagen, o una reja.", ["escena", "clima", "error"], st.pal, st.rows);
 }
 
+
+// ---------- equipo modular: casco y peto como capas que se ponen encima del héroe (16×24)
+{
+  const hero = spriteByName("hero-chibi");
+  const GEAR = { o: "#1b1030", L: "#c9d1dc", M: "#8f9bab", D: "#5c6676", r: "#c2413b" };
+  const E = "................";
+  const helmet = [E, ".......rr.......", "....oooooooo....", "...oLLMMMMMMo...", "..oLMMMMMMMMDo..", "..oLMMMMMMMMDDo.", "..oDDDDDDDDDDDo.", "..oM.........MDo", "..oM.........Do.", ...Array(15).fill(E)];
+  const armor = [...Array(14).fill(E), "...oLMMMMMMMo...", "..osLMMMMMMDso..", "..osMMMMMMMDso..", ...Array(7).fill(E)];
+  const over = (base, layer) => base.map((r, y) => [...r].map((c, x) => (layer[y][x] !== "." ? layer[y][x] : c)).join(""));
+  add("gear-helmet", "Capa del casco (16×24, el resto transparente): calota de hierro con luz arriba a la izquierda, una banda oscura en la frente, carrilleras a los lados de la cara y una cresta roja de 2 px. Está dibujada encima de la cabeza del héroe, siguiendo su silueta.", ["personaje", "equipo"], usedOnly(GEAR, helmet), helmet);
+  add("gear-armor", "Capa del peto (16×24, el resto transparente): una placa de hierro sobre el pecho, con la luz a la izquierda y la sombra a la derecha. Repinta los brazos con los mismos colores del héroe y deja a la vista el cinturón y las piernas.", ["personaje", "equipo"], usedOnly({ ...GEAR, s: hero.palette.s }, armor), armor);
+  const armored = over(over(hero.rows, helmet), armor);
+  add("hero-armored", "El héroe con el casco y el peto puestos: las dos capas encima del sprite base. Misma silueta, misma luz y mismo contorno: parece el mismo personaje, mejor equipado.", ["personaje", "equipo"], usedOnly({ ...hero.palette, ...GEAR }, armored), armored);
+  const GOLD = { ...GEAR, L: "#fff3c4", M: "#f2c14e", D: "#a8661c", r: "#3b6fd1" };
+  add("hero-armored-gold", "La misma armadura con otra paleta (oro y cresta azul): las capas de equipo admiten palette swap igual que los enemigos de P5-04. Un dibujo, varios equipos.", ["personaje", "equipo", "paleta"], usedOnly({ ...hero.palette, ...GOLD }, armored), armored);
+  // error: un casco dibujado aparte, como una caja, que no sigue la cabeza ni la luz del personaje
+  const BAD = { ...hero.palette, k: "#000000", q: "#a8b0bc", Q: "#6a7280" };
+  const pasted = hero.rows.map((r) => [...r]);
+  const box = ["kkkkkkkkkk", "kQQQQQQQqk", "kQQQQQQQqk", "kQQQQQQQqk", "kkkkkkkkkk"]; // q claro a la derecha: la luz al revés
+  box.forEach((r, dy) => [...r].forEach((c, dx) => { pasted[1 + dy][3 + dx] = c; }));
+  add("hero-helmet-pasted", "Error: un casco hecho aparte y pegado encima. Es una caja de 10×5 con contorno negro puro, la luz a la DERECHA (al revés que el héroe) y no sigue la cabeza: es más estrecha y no baja hasta la frente, así que asoma una fila entera de pelo debajo y un píxel de pelo a un lado.", ["personaje", "equipo", "error"], usedOnly(BAD, pasted.map((r) => r.join(""))), pasted.map((r) => r.join("")));
+}
+
+// ---------- HUD sobre la escena (80×48): legible y fuera del foco, frente a uno que compite con el arte
+{
+  const sceneHex = (() => { const s = spriteByName("scene-final"); return s.rows.map((r) => [...r].map((k) => (k === "." ? null : s.palette[k]))); })();
+  const put = (px, x, y, c) => { if (px[y]?.[x] !== undefined) px[y][x] = c; };
+  const bar = spriteByName("ui-bar-full");
+  const stampRows = (px, spr, x0, y0) => spr.rows.forEach((r, y) => [...r].forEach((k, x) => { if (k !== ".") put(px, x0 + x, y0 + y, spr.palette[k]); }));
+  const coin5 = [".ooo.", "oyYyo", "oyYyo", "oyYyo", ".ooo."], COINP = { o: "#5a3a10", y: "#f2c14e", Y: "#c98a2a" };
+  const text = (px, str, x0, y0, ink, shade) => typeset(str, { shadow: !!shade }).forEach((r, y) => [...r].forEach((c, x) => { if (c === "w") put(px, x0 + x, y0 + y, ink); else if (c === "d" && shade) put(px, x0 + x, y0 + y, shade); }));
+  // bien: una franja de HUD de 9 px encima de la escena (la escena no se tapa) con la barra a la izquierda y las monedas a la derecha
+  const good = [...Array.from({ length: 9 }, () => Array(80).fill("#14121c")), ...sceneHex.map((r) => r.slice())];
+  for (let x = 0; x < 80; x++) good[8][x] = "#2a2d3a"; // línea que separa el HUD del juego
+  stampRows(good, bar, 2, 1);
+  coin5.forEach((r, y) => [...r].forEach((c, x) => { if (c !== ".") put(good, 66 + x, 2 + y, COINP[c]); }));
+  text(good, "12", 72, 2, "#fff3c4", null);
+  // mal: los mismos elementos encima de la escena, sin franja, en el peor sitio
+  const bad = [...Array.from({ length: 9 }, () => Array(80).fill("#14121c")), ...sceneHex.map((r) => r.slice())].map((r, y) => (y < 9 ? r.map(() => null) : r));
+  stampRows(bad, bar, 24, 15); // encima del impacto: tapa el foco de la escena
+  coin5.forEach((r, y) => [...r].forEach((c, x) => { if (c !== ".") put(bad, 76 + x, 52 + y, COINP[c]); })); // pegado a la esquina, cortado
+  text(bad, "12", 69, 51, "#6fd17f", null); // verde claro sobre hierba y agua, sin sombra
+  const g = hexGridToSprite(good), b = hexGridToSprite(bad);
+  add("hud-good", "La escena final (80×48) con un HUD legible en una franja oscura de 9 px encima: la barra de vida a la izquierda y una moneda con el número 12 en crema a la derecha, con 1–2 px de margen. Una línea separa el HUD del juego, y la escena queda entera a la vista.", ["ui", "escena"], g.pal, g.rows);
+  add("hud-bad", "Error: el mismo HUD puesto encima de la escena, sin franja (arriba queda vacío para comparar con el bueno). La barra tapa casi todo el impacto, el foco de la escena (solo asoman sus puntas); la moneda está pegada a la esquina de abajo y cortada; y el 12 va en verde claro sin sombra sobre el agua: casi no se lee.", ["ui", "escena", "error"], b.pal, b.rows);
+}
+
+// ---------- paletas limitadas: la escena final reducida a 8 colores, con una buena paleta y con una mala
+{
+  const s = spriteByName("scene-final");
+  const rgb = (h) => { const n = parseInt(h.slice(1), 16); return [n >> 16, (n >> 8) & 255, n & 255]; };
+  const dist = (a, b) => { const [r1, g1, b1] = rgb(a), [r2, g2, b2] = rgb(b), rm = (r1 + r2) / 2; return Math.sqrt((2 + rm / 256) * (r1 - r2) ** 2 + 4 * (g1 - g2) ** 2 + (2 + (255 - rm) / 256) * (b1 - b2) ** 2); }; // distancia «redmean», cercana a la percepción
+  const GOOD8 = ["#1b1030", "#2c7a48", "#6fd17f", "#2a6fc9", "#8a8698", "#f2c29b", "#8a5a3c", "#fff3c4"]; // de muy oscuro a muy claro, con verde, azul, gris, piel y madera
+  const BAD8 = ["#4a8a4a", "#3a6fb0", "#b04a4a", "#8a6ab0", "#b0904a", "#4ab0a0", "#a07050", "#7a7a8a"]; // todos de valor medio: sin oscuros ni claros
+  const reduce = (pal) => s.rows.map((r) => [...r].map((k) => (k === "." ? "." : String(pal.reduce((bi, c, i) => (dist(s.palette[k], c) < dist(s.palette[k], pal[bi]) ? i : bi), 0)))).join(""));
+  const palObj = (pal) => Object.fromEntries(pal.map((c, i) => [String(i), c]));
+  const rg = reduce(GOOD8), rb = reduce(BAD8);
+  add("pal8-good", "La escena final reducida a 8 colores bien elegidos: un casi negro para los contornos, dos verdes, un azul, un gris, la piel, un marrón y un crema casi blanco. Cada color de la escena se cambia por el más parecido. Se pierden matices, pero se lee todo: hay oscuros y claros.", ["paleta", "escena"], usedOnly(palObj(GOOD8), rg), rg);
+  add("pal8-bad", "Error: la misma escena con 8 colores de valor medio, sin ningún oscuro ni ningún claro. Los contornos, las sombras y el impacto caen en los mismos tonos que el resto: la escena se aplana y el foco desaparece.", ["paleta", "escena", "error"], usedOnly(palObj(BAD8), rb), rb);
+  const swatch = (pal) => Array.from({ length: 6 }, () => pal.map((_, i) => String(i).repeat(6)).join(""));
+  add("pal8-good-swatch", "Las 8 muestras de la buena paleta, de 6×6 cada una, en el orden de la lista: casi negro, verde oscuro, verde claro, azul, gris, piel, marrón y crema.", ["paleta"], palObj(GOOD8), swatch(GOOD8));
+  add("pal8-bad-swatch", "Las 8 muestras de la mala paleta: verde, azul, rojo, violeta, ocre, turquesa, marrón y gris, todos de valor medio. En grises son casi la misma mancha.", ["paleta", "error"], palObj(BAD8), swatch(BAD8));
+}
+
 // ---------- escribir y validar
 let bad = 0;
 for (const s of out) {

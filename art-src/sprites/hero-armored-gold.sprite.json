@@ -1,0 +1,53 @@
+{
+  "name": "hero-armored-gold",
+  "description": "La misma armadura con otra paleta (oro y cresta azul): las capas de equipo admiten palette swap igual que los enemigos de P5-04. Un dibujo, varios equipos.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "personaje",
+    "equipo",
+    "paleta"
+  ],
+  "palette": {
+    "o": "#1b1030",
+    "s": "#f2c29b",
+    "S": "#c98f6b",
+    "h": "#6b3d2e",
+    "t": "#3b6fd1",
+    "T": "#26489a",
+    "b": "#6b3d2e",
+    "p": "#4a4560",
+    "P": "#2f2b40",
+    "B": "#3b2418",
+    "L": "#fff3c4",
+    "M": "#f2c14e",
+    "D": "#a8661c",
+    "r": "#3b6fd1"
+  },
+  "rows": [
+    "................",
+    ".......rr.......",
+    "....oooooooo....",
+    "...oLLMMMMMMo...",
+    "..oLMMMMMMMMDo..",
+    "..oLMMMMMMMMDDo.",
+    "..oDDDDDDDDDDDo.",
+    "..oMhssssssssMDo",
+    "..oMssssssssSDo.",
+    "..ohsosssosssho.",
+    "..ohsosssosssho.",
+    "..oSssssssssSSo.",
+    "...oSSsssssSSo..",
+    "....oooooooo....",
+    "...oLMMMMMMMo...",
+    "..osLMMMMMMDso..",
+    "..osMMMMMMMDso..",
+    "..oSbbbbbbbbSo..",
+    "...otttttttTo...",
+    "...opppppppPo...",
+    "...oppPo.opPPo..",
+    "...oppPo.opPPo..",
+    "...oBBBo.oBBBo..",
+    "...ooooo.ooooo.."
+  ]
+}

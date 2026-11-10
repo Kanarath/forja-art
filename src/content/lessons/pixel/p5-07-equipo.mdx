@@ -1,0 +1,251 @@
+---
+id: p5-07
+discipline: pixel
+level: 5
+order: 7
+title: "Equipo modular: vestir al héroe por capas"
+summary: "El equipo como capas que encajan sobre el personaje: misma luz, mismo contorno, la misma silueta. Cada pieza en su capa, tapa lo que debe, deja la cara y admite palette swap."
+duration: 40
+status: borrador
+prerequisites: [p5-01, p5-04]
+fundamentals: [f09, f05]
+objectives:
+  - "Entender el equipo como capas (paper doll) que se dibujan encima del sprite base"
+  - "Dibujar una pieza que siga la silueta, la luz y el contorno del personaje"
+  - "Decidir qué tapa cada pieza y qué debe quedar a la vista, como la cara"
+  - "Trabajar cada pieza en su propia capa de Aseprite, en las mismas coordenadas, y exportarlas por separado"
+  - "Sacar variantes de una pieza con palette swap sin redibujarla"
+tools: [aseprite]
+piece:
+  name: "Tu héroe de P5-01 con un casco y un peto en capas separadas, más una variante de color"
+  canvas: "16x24"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [equipo]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Vas a forjar **el equipo de tu héroe**: un casco y un peto que se ponen y se quitan. No redibujas al personaje. Dibujas cada pieza en su capa, encima del héroe de [P5-01](/forja-art/pixel/p5-01/), y la pieza encaja como si siempre hubiera estado ahí.
+
+<Sprite name="hero-chibi" scale={10} caption="hero-chibi · El héroe base, 16×24: pelo castaño, cara con ojos de 2 px, túnica azul con cinturón y botas" />
+
+<Sprite name="hero-armored" scale={10} caption="hero-armored · El mismo héroe con casco y peto de hierro. Mismo contorno, misma luz desde arriba a la izquierda y la cara a la vista" />
+
+Míralos juntos. Es **el mismo personaje**, mejor equipado. Eso es lo que buscas.
+</Block>
+
+<Block kind="concepto">
+### El muñeco recortable (paper doll)
+
+¿Recuerdas los muñecos de papel con ropa recortable? El muñeco es siempre el mismo y la ropa se pone encima. En los juegos se hace igual: el **sprite base** es el muñeco y cada pieza de equipo es **otro sprite** que se dibuja encima.
+
+Estas son las dos piezas del héroe, solas. Todo lo que no es pieza es transparente.
+
+<Sprite name="gear-helmet" scale={10} caption="gear-helmet · La capa del casco, en un lienzo de 16×24: calota de hierro con tres grises, una banda oscura en la frente, carrilleras de 1 px a los lados de la cara y una cresta roja de 2 px arriba" />
+
+<Sprite name="gear-armor" scale={10} caption="gear-armor · La capa del peto: tres filas sobre el pecho, gris claro a la izquierda y gris oscuro a la derecha. Repite el contorno y los brazos de esas filas con los mismos colores del héroe" />
+
+Fíjate en dos cosas:
+
+- **El lienzo es el del héroe.** Las dos capas miden 16×24, no lo justo para la pieza. El casco está en las filas de la cabeza y el peto en las del pecho. Al ponerlas encima, cada píxel cae en su sitio sin mover nada.
+- **El hueco es parte de la pieza.** La calota del casco es maciza, pero entre las carrilleras hay un hueco transparente justo donde va la cara. Ese hueco está dibujado a propósito.
+
+<Why title="Por qué capas y no un sprite nuevo">
+Con tres cascos, tres petos y el héroe sin nada, dibujar cada combinación son 16 sprites. Con capas son **7 dibujos** que se combinan solos. Y si corriges el héroe, todas las combinaciones heredan la corrección. Es lo mismo que en Blender: no modelas un personaje por cada armadura; modelas la armadura aparte y la pones encima.
+</Why>
+
+### Pruébalo: el probador
+
+<Animator sprites={["hero-chibi", "hero-armored"]} durations={[900, 900]} />
+
+El animador alterna el héroe sin nada y el héroe equipado. Mira lo que **no** cambia: los ojos, la boca, el cinturón, las piernas, las botas. Solo cambia lo que tapan las piezas.
+
+### Las tres reglas para que la pieza encaje
+
+**1. Sigue la silueta.** El casco no es una caja: copia la forma redonda de la cabeza y sale **1 px por fuera** en la parte de arriba (es el grosor del metal). Por eso el héroe equipado es una fila más alto, más la cresta. El peto ocupa exactamente las filas de la túnica que tapa, con el contorno en el mismo sitio.
+
+**2. La misma luz.** El héroe tiene la luz arriba a la izquierda (lo viste en P5-01). Las piezas también: el gris claro está a la izquierda de la calota y del peto, y el oscuro a la derecha, igual que la sombra de la piel. Si la luz de la pieza viene de otro lado, la pieza parece pegada de otra foto.
+
+**3. El mismo contorno.** Las dos piezas usan el mismo color de contorno que el héroe (`#1b1030`), con 1 px de grosor. Un contorno negro puro o más grueso separaría la pieza del cuerpo.
+
+<Why title="La luz es del mundo, no de la pieza (f05)">
+En F05 viste que la luz es **una** para toda la escena. El casco no trae su propia luz: recibe la misma que el héroe. Es lo que hace que el ojo lea las dos cosas como un solo objeto bajo la misma lámpara.
+</Why>
+
+### Qué tapa y qué deja
+
+Cada pieza tiene un trabajo: **tapar lo que sustituye** y **dejar lo que define al personaje**.
+
+- **El casco tapa el pelo de arriba**: la calota cubre todas las filas de pelo de la coronilla. Por debajo de las carrilleras asoma un mechón de pelo a cada lado, junto a los ojos, como asoma bajo un casco de verdad.
+- **El casco deja la cara.** Los ojos, las mejillas y la boca no se tocan. A 16×24 la cara son unos pocos píxeles y es lo que hace que el héroe sea **tu** héroe (P5-02). Si la tapas, el jugador ve una armadura, no un personaje.
+- **El peto tapa el pecho y deja el resto**: los brazos, el cinturón marrón, la franja azul de la túnica bajo el cinturón y las piernas siguen siendo los del héroe.
+
+<Tip title="Lo que la capa no pinta, se ve">
+Una capa solo tapa los píxeles que tiene pintados. Busca en `hero-armored` la fila de arriba de la cara: junto a la carrillera izquierda queda un píxel de pelo del héroe, porque el casco ahí es transparente. Aquí no molesta (es pelo bajo el casco), pero es la prueba de cómo funcionan las capas: **la base sigue debajo**.
+</Tip>
+
+### Variantes: palette swap del equipo
+
+Las piezas son dibujos con su propia rampa, así que admiten lo que aprendiste en [P5-04](/forja-art/pixel/p5-04/).
+
+<Sprite name="hero-armored-gold" scale={10} caption="hero-armored-gold · Los mismos píxeles que hero-armored. Solo cambian cuatro colores: los tres grises pasan a crema, oro y ocre, y la cresta roja pasa a azul (el mismo azul de la túnica)" />
+
+<Sprite name="hero-armored" view="gray" scale={8} caption="hero-armored en grises: calota y peto con claro, medio y oscuro separados" />
+
+<Sprite name="hero-armored-gold" view="gray" scale={8} caption="hero-armored-gold en grises: más claro en conjunto, pero con los mismos tres peldaños" />
+
+Hierro para el soldado, oro para el capitán. Un dibujo, dos equipos. Y como en P5-04, la regla es la misma: cambia el tono, **conserva la separación de valor**.
+
+<Why title="Un juego dibuja por orden">
+En el juego, cada pieza es un sprite aparte colocado en la misma posición que el héroe. El motor los dibuja **en orden**: primero el cuerpo, luego el peto, luego el casco. Lo que se dibuja después queda encima. Por eso el orden de tus capas en Aseprite tiene que ser el mismo que el del juego. En Godot, por ejemplo, serán varios Sprite2D apilados (lo verás en el nivel 9).
+</Why>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Abre tu héroe y prepara la capa base">
+1. Abre tu héroe de P5-01 (o copia `hero-chibi` píxel a píxel en un lienzo de 16×24 con <Keys k="Ctrl+N" />).
+2. Guárdalo con otro nombre con *File → Save As*: `heroe-equipo.aseprite`.
+3. Renombra su capa a `base` (doble clic sobre el nombre en el panel de capas) y bloquéala con el candado.
+4. Activa *View → Grid*.
+
+<Why>
+La capa `base` es el muñeco. No se toca nunca durante esta lección: si la bloqueas, no puedes pintar en ella por error.
+</Why>
+</Step>
+
+<Step n={2} title="Dos capas encima: armadura y casco">
+1. Crea una capa nueva con *Layer → New Layer* y llámala `armadura`.
+2. Crea otra y llámala `casco`.
+3. Ordénalas en el panel de capas, de arriba abajo: `casco`, `armadura`, `base`.
+
+<Why>
+El orden de las capas es el orden de dibujo del juego: lo de arriba tapa lo de abajo. El casco va encima de todo porque nada se le pone delante.
+</Why>
+
+<Tip>
+Todas las capas comparten el lienzo de 16×24, así que una pieza dibujada en su sitio ya está en las coordenadas correctas. No hace falta alinear nada después. Tampoco te hace falta el onion skin: no hay frames que comparar, la base está debajo y la ves todo el rato.
+</Tip>
+</Step>
+
+<Step n={3} title="El casco: sigue la silueta de la cabeza">
+1. Selecciona la capa `casco`. Lápiz (<Keys k="B" />) con *Pixel-perfect* y el **mismo color de contorno** del héroe: tómalo con el cuentagotas (<Keys k="I" />).
+2. Traza el contorno de la calota **1 px por fuera** de la parte alta de la cabeza, siguiendo su curva.
+3. Baja por los lados con dos carrilleras de 1 px junto a la cara y para antes de los ojos.
+4. Encima, si quieres, un adorno pequeño: la cresta del ejemplo son 2 px.
+
+<Warn>
+No dibujes la cara en esta capa ni tapes los ojos. Deja la zona de la cara **transparente**: el casco no la necesita, la base ya la tiene.
+</Warn>
+</Step>
+
+<Step n={4} title="Rellena con la misma luz">
+1. Elige tres tonos del metal: claro, medio y oscuro.
+2. Medio en la mayor parte de la calota, claro en el lado de la luz (arriba a la izquierda) y oscuro en el lado contrario (a la derecha).
+3. Una fila oscura en la frente marca el borde del casco y lo separa de la piel.
+4. Haz lo mismo en la capa `armadura`: un peto sobre las filas del pecho, claro a la izquierda y oscuro a la derecha, sin tocar el cinturón.
+
+<Why>
+Antes de pintar la luz de la pieza, mira dónde tiene el héroe su piel clara y su piel en sombra. La pieza copia ese reparto. Si dudas, oculta la base un momento: la pieza sola tiene que leerse con volumen y con la luz del mismo lado.
+</Why>
+</Step>
+
+<Step n={5} title="Comprueba ocultando capas">
+1. Oculta `casco` con el icono del ojo. Luego `armadura`. Luego las dos.
+2. Con cada combinación, pregúntate: ¿parece el mismo héroe? ¿Se ve la cara siempre?
+3. Oculta la `base` y mira las piezas solas: ¿la pieza tiene sentido por sí misma, sin agujeros raros ni restos?
+
+<Tip>
+Si al ocultar una pieza aparece algo raro (un hueco, un píxel que no cuadra), es que esa pieza estaba tapando un problema de la base o que pintaste algo en la capa equivocada. Arréglalo en su capa.
+</Tip>
+</Step>
+
+<Step n={6} title="Exporta cada capa por separado">
+1. Deja visible **solo** la capa `casco` y exporta con *File → Export → Export As*: `casco.png`, a 1×.
+2. Repite con `armadura` (`armadura.png`) y con `base` (`base.png`).
+3. Haz una exportación más con todo visible y **Resize** al 800 % para enseñarla.
+
+<Why>
+El juego necesita cada pieza en su PNG, todas del mismo tamaño (16×24), para dibujarlas encima en la misma posición. Si recortas el casco a su tamaño, tendrás que apuntar dónde va; si lo dejas en el lienzo completo, la posición viene incluida.
+</Why>
+</Step>
+
+<Step n={7} title="Una variante con palette swap">
+1. Guarda una copia con *File → Save As*: `heroe-equipo-oro.aseprite`.
+2. Pasa a *Sprite → Color Mode → Indexed* y cambia en la paleta solo los tres tonos del metal y el del adorno, como en P5-04.
+3. Exporta las capas de la variante igual que en el paso anterior.
+
+<Warn>
+Si la piel, el pelo o la túnica comparten color con la pieza, al cambiar la casilla cambiarán también. Usa colores propios para el equipo.
+</Warn>
+</Step>
+
+<Warn title="Verifica en tu versión">
+Los nombres y la posición pueden variar según la versión de Aseprite: *File → Save As*, *Layer → New Layer*, el renombrado con doble clic, el candado y el ojo del panel de capas y cómo se reordenan las capas (arrastrándolas en el panel). *File → Export → Export As* exporta las capas visibles; algunas versiones permiten además elegir en el propio diálogo qué capa exportar. *Sprite → Color Mode → Indexed* y la edición de casillas de la paleta: como en P5-04. Si una ruta no está donde dice, búscala por su función.
+</Warn>
+</Block>
+
+<Block kind="version">
+Ahora a tu manera. Mantén las tres reglas (silueta, luz, contorno) y elige un reto:
+
+- **Tres cascos:** uno de hierro con carrilleras, una capucha de tela y un yelmo cerrado con rendija para los ojos. Cada uno en su capa, todos sobre la misma base. ¿Cuál deja más personaje a la vista?
+- **El set completo:** casco, peto y botas de metal. Tres capas que se combinan entre sí: comprueba las ocho combinaciones ocultando capas.
+- **Rangos por color:** el mismo casco y el mismo peto en tres paletas (cuero, hierro, oro) que cuenten «recluta → soldado → capitán». En grises, las tres conservan claro, medio y oscuro.
+
+<Tip>
+Si haces la capucha, recuerda que la tela no brilla como el metal: menos contraste entre claro y oscuro. Lo viste con los materiales en P4-01.
+</Tip>
+</Block>
+
+<Block kind="errores">
+<Mistake title="Casco pegado: una caja que no sigue la cabeza" wrongLabel="hero-helmet-pasted: caja con contorno negro y luz a la derecha" rightLabel="hero-armored: sigue la cabeza, la luz y el contorno">
+  <Sprite slot="wrong" name="hero-helmet-pasted" scale={8} />
+  <Sprite slot="right" name="hero-armored" scale={8} />
+
+El de la izquierda es un rectángulo de 10×5 dibujado aparte y puesto encima. Tres fallos a la vez: su contorno es **negro puro** (`#000000`), no el violeta casi negro del héroe; su única columna clara está a la **derecha**, al revés que la luz del personaje; y es una caja de esquinas rectas sobre una cabeza redonda. Además se queda corto: por debajo asoma una fila entera de pelo sobre la frente y más pelo a los lados. Corrígelo dibujando el casco **sobre** la cabeza, siguiendo su curva, con el contorno y la luz del héroe.
+</Mistake>
+
+<Mistake title="La luz al revés en la pieza" wrongLabel="Luz a la derecha: parece de otra escena" rightLabel="Luz a la izquierda, como el héroe">
+  <Sprite slot="wrong" name="hero-helmet-pasted" scale={8} view="gray" />
+  <Sprite slot="right" name="hero-armored" scale={8} view="gray" />
+
+En grises se ve mejor. A la izquierda, el casco pegado es un bloque oscuro con una franja clara en el borde derecho, mientras que la piel del héroe tiene su sombra también a la derecha: dos luces que se contradicen. A la derecha, la calota es clara a la izquierda y oscura a la derecha, como la cara. Corrígelo mirando primero dónde tiene la luz la base y repitiendo ese reparto en la pieza.
+</Mistake>
+
+<Warn title="Una pieza que tapa la cara">
+Un yelmo cerrado, una bufanda hasta la nariz, una visera que baja hasta los ojos… A 16×24 la cara son pocos píxeles: si la tapas, el héroe deja de expresar nada y las caras de P5-02 desaparecen. Corrígelo dejando a la vista **por lo menos los ojos**. Si el diseño pide un yelmo cerrado, abre una rendija de 1 px a la altura de los ojos y deja asomar el color del ojo.
+</Warn>
+
+<Warn title="La pieza dibujada en la capa base">
+Pintas el casco directamente sobre el héroe, en la capa `base`. Queda igual de bien… hasta que quieres quitarlo. El pelo que había debajo se ha borrado: ya no existe. Corrígelo antes de que pase: la base siempre bloqueada y cada pieza en su capa. Si ya ha pasado, recupera el pelo del héroe original (por eso guardaste una copia en el paso 1) y vuelve a dibujar el casco en su capa.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+Estudia el héroe equipado en el inspector: busca el píxel de pelo junto a la carrillera izquierda y los mechones bajo las carrilleras. Luego sube tu héroe equipado, exportado a 1×, y revísalo en silueta y en grises.
+
+<Inspector sprite="hero-armored" upload title="El héroe equipado (y el tuyo)" />
+
+<Checklist items={[
+  "Tengo el héroe en una capa base bloqueada y cada pieza en su propia capa encima",
+  "Todas las capas miden lo mismo que el héroe y las piezas están en su sitio sin mover nada",
+  "Las piezas siguen la silueta del cuerpo: el casco copia la curva de la cabeza",
+  "Las piezas tienen la luz del mismo lado que el héroe y su mismo color de contorno",
+  "El casco tapa el pelo de arriba y deja la cara a la vista",
+  "Ocultando capas, todas las combinaciones parecen el mismo personaje",
+  "He exportado cada capa en su PNG a 1× y una variante de color con palette swap",
+]} />
+
+<Quiz q="Tienes tres cascos y tres petos. ¿Por qué dibujarlos en capas y no un sprite por combinación?" options={["Porque Aseprite no deja más de tres capas", "Porque así el casco no necesita contorno", "Porque las piezas se combinan solas y una corrección en la base vale para todas"]} answer={2}>
+Con capas dibujas cada pieza una vez y el juego las combina. Si redibujas cada combinación, cada corrección se repite en todas.
+</Quiz>
+
+<Quiz q="Tu casco tiene el gris claro a la derecha y el héroe tiene la luz a la izquierda. ¿Qué pasa?" options={["La pieza parece pegada de otra escena: hay dos luces que se contradicen", "Nada, porque el metal refleja la luz de otra forma", "Que el casco se ve más grande"]} answer={0}>
+La luz es de la escena, no de la pieza. El casco tiene que tener el claro del mismo lado que el héroe.
+</Quiz>
+
+<Quiz q="Pintas el casco directamente en la capa base. ¿Cuál es el problema?" options={["Que el PNG ocupa más", "Que no puedes quitar el casco: el pelo de debajo se ha borrado", "Que el casco sale con otro contorno"]} answer={1}>
+Una pieza en la capa base ya no es una pieza: es parte del héroe. Cada pieza va en su capa para poder ponerla y quitarla.
+</Quiz>
+</Block>

@@ -85,5 +85,10 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   { id: "lluvia", name: "Lluvia", description: "Una escena con clima: lluvia en dos capas, viento y la luz de un día gris (P8-05).", color: "#c9d6ea" },
   { id: "mazmorra", name: "Mazmorra", description: "Una sala voxel con atmósfera: piedra, atrezo y luz de antorchas (V7-03).", color: "#5e5a6e" },
   { id: "escudo", name: "Escudo", description: "Una pieza de equipamiento voxel con forma, estructura y emblema (V4-05).", color: "#c2413b" },
+  { id: "equipo", name: "Equipo modular", description: "Piezas de equipo dibujadas como capas que encajan sobre el personaje (P5-07).", color: "#8f9bab" },
+  { id: "hud", name: "HUD legible", description: "Una interfaz que se lee sobre el arte sin tapar el foco de la escena (P8-06).", color: "#fff3c4" },
+  { id: "paleta-8", name: "Ocho colores", description: "Una escena resuelta con una paleta limitada de 8 colores que conserva oscuros y claros (F04-02).", color: "#2a6fc9" },
+  { id: "oveja", name: "Cuadrúpedo", description: "Un animal voxel de cuatro patas: blockout, volumen y detalle de cara (V5-04).", color: "#f4ecdc" },
+  { id: "hoja-iso", name: "Hoja isométrica", description: "Una hoja de sprites isométrica hecha desde tus .vox con forja-vox (V8-02).", color: "#38e1ff" },
   { id: "forma-primero", name: "Forma antes que detalle", description: "Un modelo voxel con su blockout guardado como primera versión (V2-01).", color: "#38e1ff" },
 ];

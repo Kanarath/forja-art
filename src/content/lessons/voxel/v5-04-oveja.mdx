@@ -1,0 +1,271 @@
+---
+id: v5-04
+discipline: voxel
+level: 5
+order: 4
+title: "Animales: una oveja de cuatro patas"
+summary: "Un cuadrúpedo en tres pasos: cajas que ya dicen «animal», lana con bultos de 1 vóxel y dos tonos, y una cara oscura con orejas, ojos y hocico que dicen «oveja»."
+duration: 40
+status: borrador
+prerequisites: [v5-01, v2-01]
+fundamentals: [f02, f09]
+objectives:
+  - "Hacer el blockout de un cuadrúpedo con cajas y fijar ahí las proporciones y la especie"
+  - "Colocar la cabeza delante y más alta, y dar a las patas un largo y un grosor que aguanten el cuerpo"
+  - "Texturizar lana con bultos de 1 vóxel y un segundo tono abajo, sin ruido de colores"
+  - "Decir la especie con muy pocos vóxels: orejas, ojos, hocico y cola, con contraste cara oscura y lana clara"
+  - "Modelar con Mirror en Y y comprobar que el animal se reconoce de frente y desde arriba, no solo de perfil"
+tools: [magicavoxel]
+piece:
+  name: "Tu propio cuadrúpedo (oveja, vaca, cerdo, perro…) en tres pasos: blockout, volumen y cara"
+  canvas: "18x8x12"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [oveja]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+El chibi de [V5-01](/forja-art/voxel/v5-01/) estaba de pie. El murciélago de [V5-03](/forja-art/voxel/v5-03/) era casi todo alas. Hoy forjas un cuerpo **horizontal sobre cuatro patas**: una oveja.
+
+<VoxViewer model="oveja" stage={2} title="Tu pieza: una oveja de 17×8×12 en tres pasos" />
+
+Gírala. De perfil, de frente y desde arriba. En todas las vistas se lee **oveja**, y no por el detalle: por las **proporciones** y por un puñado de vóxels bien puestos.
+
+Recorre las tres etapas: **Blockout**, **Lana** y **Cara y detalle**.
+
+Tu pieza final: **tu propio cuadrúpedo** (la oveja, una vaca, un cerdo, un perro…) hecho en esos mismos tres pasos, con Mirror en Y, y un render.
+</Block>
+
+<Block kind="concepto">
+### 1. El blockout ya dice «animal»
+
+<VoxViewer model="oveja" stage={0} title="Blockout: un cuerpo, una cabeza y cuatro patas" />
+
+La etapa **Blockout** son solo cajas, en dos colores:
+
+- **Cuerpo:** una caja de **10 de largo, 6 de ancho y 5 de alto**, en blanco lana.
+- **Cabeza:** una caja oscura de 4×4×5, **pegada delante** del cuerpo.
+- **Patas:** cuatro columnas oscuras de **2×2**, de **4 vóxels** de alto, cerca de las cuatro esquinas.
+
+Sin ojos, sin orejas, sin lana. Y ya es un animal de cuatro patas. Casi una oveja.
+
+<Why title="Por qué las proporciones dicen la especie">
+Una oveja, una vaca y un perro tienen las mismas partes: cuerpo, cabeza, cuatro patas. Lo que cambia es **cuánto mide cada una**. Cuerpo largo y bajo con patas cortas: oveja o cerdo. Patas largas y cuerpo estrecho: ciervo o caballo. Cabeza grande y cuerpo corto: cachorro. Es la regla de las masas de [F02](/forja-art/fundamentos/f02-01/): la especie se decide en el blockout, no en el detalle. Si el blockout no se parece al animal, ningún ojo lo arregla.
+</Why>
+
+### 2. La cabeza: delante y más alta
+
+Mira el blockout de perfil:
+
+- El cuerpo va de la capa **4** a la **8**.
+- La cabeza va de la capa **6** a la **10**: empieza 2 capas más arriba y acaba **2 capas por encima del lomo**.
+- Está **delante** del cuerpo, no encima ni en medio. Y es más estrecha: 4 de ancho frente a 6.
+
+<Why title="Por qué más alta y delante">
+Un herbívoro en reposo lleva la cabeza por delante del pecho y algo levantada: el cuello sube. Eso da **dirección**: sabes hacia dónde mira y hacia dónde anda el animal. Una cabeza a la altura del cuerpo parece pegada como un parachoques; una cabeza en el centro del lomo ya no es un cuadrúpedo, es otra cosa.
+</Why>
+
+### 3. Las patas: que aguanten el cuerpo
+
+Las patas miden **4 de 11** vóxels de alto (un tercio del animal) y **2×2** de grosor: un tercio del ancho del cuerpo cada una. Están metidas 1 vóxel desde la punta del cuerpo, delante y detrás, y a ras de los lados.
+
+<Why title="Por qué 2×2 y no 1×1">
+En vóxels, el grosor dice el peso que se puede aguantar. Una pata de 1×1 bajo un cuerpo de 6 de ancho parece un palillo: el ojo espera que se doble. Con 2×2 la pata es una columna que **apoya**. A esta escala no hay término medio: 1 es frágil, 2 ya es sólido.
+</Why>
+
+### 4. La lana: bultos de 1 vóxel y dos tonos
+
+<VoxViewer model="oveja" stage={1} title="Lana: cuerpo redondeado, bultos de 1 vóxel y un segundo tono abajo" />
+
+Compara **Lana** con **Blockout**:
+
+- La caja del cuerpo se convierte en un **óvalo** que sale 1 vóxel por cada lado.
+- Sobre el óvalo aparecen **bultos de 1 vóxel**: unos 28 vóxels sueltos que sobresalen, repartidos sin orden. Rompen el contorno, como los rizos.
+- **Solo dos tonos de lana:** un blanco cálido y un beige un paso más oscuro. Toda la tripa (las capas de abajo del cuerpo) va en el oscuro, y unos pocos vóxels oscuros salpican el resto, como huecos entre rizos.
+- La cabeza recibe un **flequillo** de lana encima, más ancho que la cabeza.
+- Las patas ganan una **pezuña** casi negra en la capa del suelo.
+
+<Why title="Por qué bultos y no ruido">
+La lana es **forma** antes que color. Un contorno con bultos de 1 vóxel ya se lee blando y rizado, incluso en silueta. Si en vez de eso pintas la caja lisa con cinco tonos al azar, el contorno sigue siendo una caja y el color se convierte en ruido: el ojo ve interferencia, no lana. Y el segundo tono **abajo** es el AO pintado de [V3-01](/forja-art/voxel/v3-01/): la tripa recibe menos luz.
+</Why>
+
+<Tip>
+Fíjate en la proporción de tonos: de unos 400 vóxels de lana, solo unos 30 vóxels oscuros quedan fuera de la tripa. Son pocos a propósito. Si el segundo tono se reparte a partes iguales, deja de ser sombra y vuelve a ser ruido.
+</Tip>
+
+### 5. Los rasgos de la especie: muy pocos vóxels
+
+Pasa de **Lana** a **Cara y detalle** en el visor de la pieza. Cambian solo **14 vóxels**:
+
+- **Orejas:** 2 vóxels oscuros a cada lado de la cabeza, que salen **hacia fuera**, en horizontal. Debajo de cada oreja, 1 vóxel **rosado**: el interior que asoma.
+- **Ojos:** 1 vóxel blanco a cada lado, en la cara delantera, en las columnas de fuera.
+- **Hocico:** 2 vóxels en un violeta más claro que la cara, abajo y en el centro.
+- **Cola:** una bola de lana de 2×2 detrás, a media altura.
+
+<Why title="Por qué tan pocos">
+La especie la dicen **los rasgos que la diferencian**, no todos los rasgos. Orejas en horizontal a los lados: oveja. Orejas arriba y en punta: gato o zorro. Orejas grandes y caídas: perro. Si cambias solo esos 4 vóxels de las orejas, cambias de animal. Elige los dos o tres rasgos que separan tu animal de los demás y gasta ahí tus vóxels.
+</Why>
+
+### 6. Contraste: cara oscura, lana clara
+
+El orden de valor del modelo, del más oscuro al más claro:
+
+1. pezuñas (casi negro);
+2. cara, orejas y patas (violeta oscuro);
+3. hocico (violeta medio);
+4. interior de las orejas (rosado);
+5. lana oscura (beige);
+6. lana clara;
+7. ojos (blanco puro).
+
+Lo oscuro (cara y patas) **enmarca** lo claro (la lana), y los ojos blancos destacan justo sobre lo más oscuro. Es el mismo truco que los ojos del murciélago, al revés de valores: aquí la cara es la zona oscura, y por eso los ojos van en blanco.
+
+### 7. Simetría en Y
+
+Este animal mira hacia **+X** (la cabeza está en la X más alta). Su eje de simetría va de la cola al hocico, así que el espejo es en **Y**: lo que pasa a la izquierda del animal pasa igual a la derecha. Patas, cabeza, orejas, ojos, hocico y cola son simétricos.
+
+Los **bultos de lana**, no: en el modelo, 17 vóxels del cuerpo no tienen pareja al otro lado. Los rizos no salen en espejo, y eso es lo que los hace naturales.
+
+<Tip>
+El ancho es **par**: 8 en total y 6 el cuerpo. Con un ancho par, el centro cae entre dos columnas y todo va por parejas: dos columnas de hocico, ojos a los lados. Es lo contrario del murciélago de V5-03, que tenía una columna central impar para el cuerpo. Decide la paridad antes del primer vóxel.
+</Tip>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Elige el animal y prepara la paleta">
+1. Decide tu animal y escribe en una línea **qué lo distingue**: «cuerpo bajo, patas cortas, orejas en horizontal, lana». Eso guía el blockout.
+2. Crea un modelo nuevo de **18×8×12** (largo, ancho y alto). Si tu animal es más alto o más largo, ajústalo, pero mantén un **ancho par**.
+3. En la **paleta** de la izquierda, en una fila: el color del cuerpo, un segundo tono un paso más oscuro, el color de la cara y las patas, uno más oscuro para las pezuñas, uno medio para el hocico, uno rosado y el blanco de los ojos.
+
+<Why>
+Con la paleta delante ves el orden de valor antes de empezar. La regla: cara y patas oscuras, cuerpo claro, ojos lo más claro. El segundo tono del cuerpo, **cerca** del primero: es sombra, no otro color.
+</Why>
+</Step>
+
+<Step n={2} title="Blockout: cuerpo, cabeza y patas">
+1. Activa el botón **Mirror Y** (en la barra de pinceles). Gira la cámara con el **botón derecho** hasta ver el animal de frente y comprueba que el reflejo cae en el centro del ancho.
+2. Modo **Attach**, pincel **Box**, color oscuro: levanta dos patas de **2×2 y 4 de alto**, una delante y otra detrás, a un lado. Mirror pone las del otro lado.
+3. Color del cuerpo: sobre las patas, una caja de **10×6×5**. Deja que sobresalga 1 vóxel por delante y por detrás de las patas.
+4. Color oscuro: pegada delante, la cabeza de **4×4×5**, empezando 2 capas por encima de la base del cuerpo.
+
+<Tip>
+Compara con la etapa **Blockout** del visor. Mueve **Capas** para ver dónde acaban las patas y empieza el cuerpo.
+</Tip>
+</Step>
+
+<Step n={3} title="Comprueba el blockout desde tres cámaras">
+1. Gira el modelo: **de perfil**, **de frente** y **desde arriba**.
+2. De perfil: ¿la cabeza está delante y más alta? ¿Las patas son un tercio de la altura?
+3. De frente: ¿se ven las cuatro patas abiertas a los lados y la cabeza estrecha en el centro?
+4. Desde arriba: ¿se ve el cuerpo largo y la cabeza delante?
+5. Corrige ahora. Guarda como `animal_blockout.vox`.
+
+<Why>
+Es el momento barato. Cambiar el largo de las patas ahora es borrar una capa; después de la lana y la cara, es rehacer medio animal.
+</Why>
+</Step>
+
+<Step n={4} title="La lana: redondea, añade bultos y el segundo tono">
+1. Con **Mirror Y** encendido, modo **Attach**, pincel **Voxel**: añade 1 vóxel de lana por cada lado del cuerpo, más en el centro de cada cara que en las esquinas, hasta que la caja se lea como un óvalo.
+2. Modo **Erase**: quita las esquinas de la caja.
+3. **Apaga Mirror Y.** Con **Attach** y pincel **Voxel**, pon **bultos de 1 vóxel** sueltos por el lomo y los costados. Que no estén en rejilla ni en espejo.
+4. Modo **Paint**, segundo tono: pinta **toda la capa de abajo** del cuerpo y unos pocos vóxels sueltos más arriba. Pocos.
+5. Vuelve a encender **Mirror Y**. Con **Attach**, pon el flequillo de lana sobre la cabeza, algo más ancho que ella. Con **Paint**, la capa del suelo de cada pata en el color de las pezuñas.
+
+<Warn>
+Al poner bultos con **Attach**, es fácil apilar dos en el mismo sitio y crear un pincho de 2 vóxels. Un rizo es de **1**. Gira la cámara cada pocos bultos y borra los que sobresalgan más.
+</Warn>
+</Step>
+
+<Step n={5} title="Cara y detalle: los vóxels que dicen la especie">
+1. Con **Mirror Y** encendido, modo **Attach**, color de la cara: una oreja de 2 vóxels que salga hacia fuera del lado de la cabeza, a la altura del flequillo. Debajo, 1 vóxel rosado. Mirror pone la otra.
+2. Color blanco: un ojo de 1 vóxel delante de la cara, en la columna de fuera. Mirror pone el otro.
+3. Color del hocico: 1 vóxel delante, abajo, junto al centro. Con el ancho par, Mirror pone el segundo al lado y forman el hocico de 2.
+4. Color de la lana: detrás del cuerpo, a media altura, una bola de 2×2 para la cola.
+5. Guarda como `animal_v1.vox`.
+
+<Why>
+Son unos 14 vóxels y cambian el animal entero. Por eso van al final: sobre un blockout que ya funciona, cada uno de ellos se lee. Sobre un blockout que falla, ninguno lo salva.
+</Why>
+</Step>
+
+<Step n={6} title="Prueba de silueta y render">
+1. Guarda una copia como `animal_silueta.vox`. En la copia, cambia en la paleta todos los colores que usas por el **mismo color oscuro**.
+2. Mira la silueta de perfil, de frente y desde arriba. ¿Se adivina el animal en las tres?
+3. Vuelve a `animal_v1.vox`. Pulsa **Render** arriba y elige una cámara en diagonal, desde arriba, donde se vean la cara y un costado.
+4. Guarda la imagen y `animal_v1.vox` en tu portfolio.
+
+<Tip>
+Aleja la cámara con la rueda del ratón. Lo último que se debe perder es el contraste entre la cara oscura y la lana clara. Si la cara se funde con el cuerpo, oscurécela.
+</Tip>
+</Step>
+
+<Warn title="Verifica en tu versión">
+Los nombres y la posición de **Mirror Y**, **Attach** / **Erase** / **Paint**, los pinceles **Voxel** y **Box** y los campos de tamaño del modelo pueden variar entre versiones de MagicaVoxel. Comprueba también qué eje es cada **Mirror** en tu versión (en el modelo del curso, el animal mira hacia +X y el espejo es en Y), cómo refleja con un ancho par, y cómo se edita un color de la paleta para la prueba de silueta.
+</Warn>
+</Block>
+
+<Block kind="version">
+Ahora, **tu** animal. Misma receta: blockout que ya dice la especie, cabeza delante y más alta (o no, si tu animal la lleva baja: decídelo), patas que aguanten, textura con forma y no con ruido, y pocos vóxels para los rasgos. Elige un reto:
+
+- **Una vaca:** cuerpo más alto y patas más largas que la oveja, pero también **más gruesas**. Manchas grandes en dos colores, no motas; cuernos cortos y orejas a los lados.
+- **Un cerdo:** cuerpo más redondo y patas aún más cortas. Sin lana: la piel es lisa, así que la forma sale del óvalo. El rasgo es el **hocico**: una caja plana que sale delante, con dos vóxels oscuros. Cola de 1 vóxel enroscada.
+- **Un perro:** cabeza más grande y cola levantada. Las orejas dicen la raza: caídas, en punta o dobladas. Prueba dos versiones cambiando solo las orejas.
+
+**Prueba final:** pon tu animal junto a la oveja en el modo **World** y mira los dos en silueta desde arriba. ¿Se distinguen sin color?
+</Block>
+
+<Block kind="errores">
+<Mistake title="Patas demasiado largas o finas" wrongLabel="Patas de 1×1 y 8 de alto" rightLabel="Patas de 2×2 y 4 de alto">
+  <p slot="wrong">Las patas son palillos de 1×1, el doble de largas que el cuerpo de alto. El cuerpo parece flotar sobre zancos y el ojo espera que se doblen.</p>
+  <p slot="right">Patas de 2×2, un tercio del ancho del cuerpo, y un tercio de la altura total. Columnas que apoyan.</p>
+
+**Corrección:** dale a cada pata, como mínimo, 2×2. Si tu animal es de patas largas (un ciervo, un caballo), el cuerpo tiene que ser más estrecho y ligero, y aun así la pata no baja de 2×2 arriba. Compara siempre con el ancho del cuerpo.
+</Mistake>
+
+<Mistake title="Lana como ruido de colores" wrongLabel="Caja lisa con 5 tonos al azar" rightLabel="Bultos de 1 vóxel y 2 tonos">
+  <p slot="wrong">El cuerpo sigue siendo una caja de esquinas vivas, pintada con cinco blancos y beiges mezclados al azar. De cerca vibra; de lejos es una caja gris.</p>
+  <p slot="right">El cuerpo es un óvalo con bultos de 1 vóxel en el contorno, el blanco arriba y el beige en la tripa. La silueta ya es de lana.</p>
+
+Compara las etapas **Blockout** y **Lana** del visor: el cambio que más se nota es el contorno, no el color. **Corrección:** quita tonos hasta quedarte con dos, pinta el oscuro en la tripa y pon el resto del esfuerzo en la forma.
+</Mistake>
+
+<Warn title="Error típico: la cabeza en el centro del cuerpo">
+Pones la cabeza encima del lomo, a mitad del cuerpo, o a la misma altura y del mismo ancho que el cuerpo. El animal pierde la dirección: no sabes hacia dónde anda. **Corrección:** la cabeza va **pegada delante**, empieza por encima de la tripa y acaba por encima del lomo; y es más estrecha que el cuerpo. En el modelo: 2 capas más alta y 2 vóxels más estrecha.
+</Warn>
+
+<Mistake title="Un animal que solo se reconoce de perfil" wrongLabel="Pensado de perfil" rightLabel="Pensado en tres vistas">
+  <p slot="wrong">De perfil es una oveja perfecta. De frente es un bloque blanco con una mancha oscura; las orejas, pegadas a la cabeza, no se ven; desde arriba es un rectángulo.</p>
+  <p slot="right">Orejas que salen en horizontal hacia los lados, ojos en las columnas de fuera de la cara y patas a ras de los costados. De frente y desde arriba también se lee.</p>
+
+Gira el visor de la pieza: de frente se ven las orejas abiertas y los ojos; desde arriba, la cabeza oscura delante y las orejas a los lados. **Corrección:** comprueba las tres vistas en cada etapa, y pon los rasgos donde los vea la cámara de tu juego.
+</Mistake>
+</Block>
+
+<Block kind="calidad">
+<Checklist items={[
+  "El blockout (solo cajas) ya se lee como mi animal, sin detalle",
+  "La cabeza está delante del cuerpo, más alta y más estrecha que él",
+  "Las patas son de 2×2 como mínimo y su largo encaja con la especie",
+  "La textura del cuerpo es de forma (bultos de 1 vóxel) y como mucho dos tonos, el oscuro abajo",
+  "Los rasgos de la especie (orejas, ojos, hocico, cola) usan muy pocos vóxels",
+  "La cara y las patas contrastan en valor con el cuerpo, y los ojos destacan",
+  "He modelado con Mirror Y; solo la textura rompe la simetría",
+  "Mi animal se reconoce en silueta de perfil, de frente y desde arriba",
+  "He guardado animal_v1.vox y un render en mi portfolio",
+]} />
+
+<Quiz q="Tu blockout de oveja no parece una oveja. ¿Qué cambias primero?" options={["Las proporciones de las cajas: largo del cuerpo, altura de la cabeza y largo de las patas", "Le pongo los ojos y las orejas para que se entienda", "Le añado lana con más tonos"]} answer={0}>
+La especie se decide en el blockout. Si las cajas no tienen las proporciones del animal, los detalles se pondrán sobre una forma equivocada y no la salvarán.
+</Quiz>
+
+<Quiz q="¿Cómo haces que la lana se lea como lana?" options={["Pinto el cuerpo con muchos tonos de blanco al azar", "Hago el cuerpo más grande", "Redondeo el cuerpo, le pongo bultos de 1 vóxel y un segundo tono en la tripa"]} answer={2}>
+La lana es forma antes que color: el contorno con bultos se lee rizado incluso en silueta. El segundo tono abajo es sombra; muchos tonos al azar son ruido.
+</Quiz>
+
+<Quiz q="Tu oveja mira hacia +X. ¿Qué Mirror usas?" options={["Mirror X, porque la cabeza está en X", "Mirror Y, porque el eje del animal va de la cola al hocico y la izquierda y la derecha son iguales", "Ninguno: los animales no son simétricos"]} answer={1}>
+El espejo va de un costado al otro. Mirror X reflejaría la cabeza hacia atrás y te daría una oveja con dos cabezas.
+</Quiz>
+</Block>

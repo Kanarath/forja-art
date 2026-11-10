@@ -1,0 +1,52 @@
+{
+  "name": "hero-armored",
+  "description": "El héroe con el casco y el peto puestos: las dos capas encima del sprite base. Misma silueta, misma luz y mismo contorno: parece el mismo personaje, mejor equipado.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "personaje",
+    "equipo"
+  ],
+  "palette": {
+    "o": "#1b1030",
+    "s": "#f2c29b",
+    "S": "#c98f6b",
+    "h": "#6b3d2e",
+    "t": "#3b6fd1",
+    "T": "#26489a",
+    "b": "#6b3d2e",
+    "p": "#4a4560",
+    "P": "#2f2b40",
+    "B": "#3b2418",
+    "L": "#c9d1dc",
+    "M": "#8f9bab",
+    "D": "#5c6676",
+    "r": "#c2413b"
+  },
+  "rows": [
+    "................",
+    ".......rr.......",
+    "....oooooooo....",
+    "...oLLMMMMMMo...",
+    "..oLMMMMMMMMDo..",
+    "..oLMMMMMMMMDDo.",
+    "..oDDDDDDDDDDDo.",
+    "..oMhssssssssMDo",
+    "..oMssssssssSDo.",
+    "..ohsosssosssho.",
+    "..ohsosssosssho.",
+    "..oSssssssssSSo.",
+    "...oSSsssssSSo..",
+    "....oooooooo....",
+    "...oLMMMMMMMo...",
+    "..osLMMMMMMDso..",
+    "..osMMMMMMMDso..",
+    "..oSbbbbbbbbSo..",
+    "...otttttttTo...",
+    "...opppppppPo...",
+    "...oppPo.opPPo..",
+    "...oppPo.opPPo..",
+    "...oBBBo.oBBBo..",
+    "...ooooo.ooooo.."
+  ]
+}

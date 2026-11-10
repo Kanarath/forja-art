@@ -638,7 +638,41 @@ const shieldFinal = [
   ...box(4, 1, 6, 8, 1, 6, WOOD.dark), ...box(4, 2, 6, 4, 2, 6, WOOD.dark), ...box(8, 2, 6, 8, 2, 6, WOOD.dark), ...box(4, 3, 6, 8, 3, 6, "#6b3d2e"), // asa detrás: dos soportes y la empuñadura
 ];
 
+// ---------- OVEJA: un cuadrúpedo. Blockout de cajas, lana en volumen y cara con detalle
+const SHEEP = { wool: "#f4ecdc", woolD: "#d8ccb4", face: "#3a3040", faceL: "#5a4a5e", hoof: "#2a2230", eye: "#ffffff", pink: "#e8a0a8" };
+const sheepBlock = [
+  ...box(0, 0, 4, 9, 5, 8, SHEEP.wool), // cuerpo: una caja de 10×6×5
+  ...box(10, 1, 6, 13, 4, 10, SHEEP.face), // cabeza delante y más alta
+  ...[[1, 0], [1, 4], [7, 0], [7, 4]].flatMap(([x, y]) => box(x, y, 0, x + 1, y + 1, 3, SHEEP.face)), // cuatro patas de 2×2
+];
+// lana: el cuerpo se redondea y se llena de bultos (bolas pequeñas que sobresalen 1 vóxel)
+const woolBody = [];
+for (let x = -1; x <= 10; x++) for (let y = -1; y <= 6; y++) for (let z = 3; z <= 10; z++) {
+  const d = Math.hypot((x - 4.5) / 6, (y - 2.5) / 3.9, (z - 6.3) / 3.3);
+  const bump = rnoise(x, y, z) % 5 === 0 ? 0.12 : 0;
+  if (d <= 1 + bump) woolBody.push({ x, y, z, c: z <= 4 || rnoise(x + 1, y, z) % 7 === 0 ? SHEEP.woolD : SHEEP.wool });
+}
+const sheepHead = [...box(10, 1, 6, 13, 4, 10, SHEEP.face).filter((v) => !(v.x === 13 && v.z === 10)), ...box(9, 0, 9, 12, 5, 11, SHEEP.wool).filter((v) => v.x <= 11 || v.z === 11)]; // cabeza con un flequillo de lana encima
+const sheepLegs = [[1, 0], [1, 4], [7, 0], [7, 4]].flatMap(([x, y]) => box(x, y, 0, x + 1, y + 1, 3, null).map((v) => ({ ...v, c: v.z === 0 ? SHEEP.hoof : SHEEP.face })));
+const sheepWool = [...sheepLegs, ...woolBody, ...sheepHead];
+const sheepFinal = [
+  ...sheepWool,
+  ...box(11, -1, 9, 12, -1, 9, SHEEP.face), ...box(11, 6, 9, 12, 6, 9, SHEEP.face), // orejas a los lados
+  { x: 11, y: -1, z: 8, c: SHEEP.pink }, { x: 11, y: 6, z: 8, c: SHEEP.pink }, // el interior rosado de la oreja asoma por debajo
+  { x: 14, y: 1, z: 8, c: SHEEP.eye }, { x: 14, y: 4, z: 8, c: SHEEP.eye }, // ojos delante
+  { x: 14, y: 2, z: 6, c: SHEEP.faceL }, { x: 14, y: 3, z: 6, c: SHEEP.faceL }, // hocico más claro
+  ...box(-2, 2, 7, -2, 3, 8, SHEEP.wool), // cola: una bola de lana detrás
+];
+
 export const MODELS = {
+  oveja: {
+    description: "Oveja: un cuadrúpedo en tres pasos",
+    stages: [
+      { label: "Blockout", note: "Tres cajas y cuatro patas: un cuerpo de 10×6×5, una cabeza más alta delante y patas de 2×2 en las esquinas. Ya se lee como un animal de cuatro patas.", voxels: sheepBlock },
+      { label: "Lana", note: "El cuerpo se redondea y gana bultos de 1 vóxel; la lana de abajo es un tono más oscura y unos pocos vóxels oscuros salpican el resto, como huecos entre rizos. La cabeza recibe un flequillo de lana y las patas, pezuñas oscuras.", voxels: sheepWool },
+      { label: "Cara y detalle", note: "Orejas a los lados con el interior rosado, dos ojos blancos, un hocico más claro y una cola de lana detrás. Pocos vóxels, pero son los que dicen «oveja».", voxels: sheepFinal },
+    ],
+  },
   mazmorra: {
     description: "Mazmorra: una sala de piedra en corte, con atrezo y luz de antorchas",
     stages: [

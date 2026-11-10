@@ -7,6 +7,7 @@ export const NAV: NavItem[] = [
   { label: "Voxel Forge", href: "voxel/", accent: "voxel" },
   { label: "Fundamentos", href: "fundamentos/", accent: "fundamentos" },
   { label: "Labs", href: "labs/" },
+  { label: "Forge Tools", href: "tools/" },
   { label: "Portfolio", href: "portfolio/" },
   { label: "Logros", href: "logros/" },
 ];

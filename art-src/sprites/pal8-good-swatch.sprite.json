@@ -1,0 +1,27 @@
+{
+  "name": "pal8-good-swatch",
+  "description": "Las 8 muestras de la buena paleta, de 6×6 cada una, en el orden de la lista: casi negro, verde oscuro, verde claro, azul, gris, piel, marrón y crema.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "paleta"
+  ],
+  "palette": {
+    "0": "#1b1030",
+    "1": "#2c7a48",
+    "2": "#6fd17f",
+    "3": "#2a6fc9",
+    "4": "#8a8698",
+    "5": "#f2c29b",
+    "6": "#8a5a3c",
+    "7": "#fff3c4"
+  },
+  "rows": [
+    "000000111111222222333333444444555555666666777777",
+    "000000111111222222333333444444555555666666777777",
+    "000000111111222222333333444444555555666666777777",
+    "000000111111222222333333444444555555666666777777",
+    "000000111111222222333333444444555555666666777777",
+    "000000111111222222333333444444555555666666777777"
+  ]
+}

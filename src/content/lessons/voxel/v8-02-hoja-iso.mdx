@@ -1,0 +1,293 @@
+---
+id: v8-02
+discipline: voxel
+level: 8
+order: 2
+title: "Hojas isométricas: del .vox al sprite con forja-vox"
+summary: "Convierte tus .vox en una hoja de sprites isométrica 2:1 con forja-vox: misma caja y mismo suelo para todos los frames, cuatro vistas, contorno y lista para Godot."
+duration: 40
+status: borrador
+prerequisites: [v5-02, v8-01]
+fundamentals: [f08, f05]
+objectives:
+  - "Entender qué dibuja el render isométrico 2:1 de forja-vox y en qué se diferencia del render de MagicaVoxel"
+  - "Preparar varios .vox con el mismo suelo para que funcionen como frames de una animación"
+  - "Elegir el tamaño del cubo pensando en cómo se lee el sprite a 1×"
+  - "Usar check, palette, render, --angles 4 y --outline desde la terminal"
+  - "Llevar la hoja a Godot y retocarla en Aseprite si hace falta"
+tools: [magicavoxel, aseprite, godot]
+piece:
+  name: "Una hoja PNG con 4 frames de una animación tuya o con las 4 vistas de un modelo tuyo, hecha con forja-vox y lista para Godot"
+  canvas: "16x16x16"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [hoja-iso]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+En [V5-02](/forja-art/voxel/v5-02/) sacaste sprites de tus vóxels con el render de MagicaVoxel: cámara fija, cuatro renders, reducción a escala entera y mucha limpieza a mano. Hoy haces lo mismo **por otro camino**: una orden en la terminal.
+
+Vas a forjar **una hoja PNG isométrica** con:
+
+- **4 frames de una animación tuya** (el salto, un idle, una puerta que se abre…), o
+- **las 4 vistas de un modelo tuyo**, girando 90° cada vez.
+
+Todo sale de tus `.vox` con **forja-vox**, la herramienta de línea de comandos de la academia ([Forge Tools](/forja-art/tools/)). Esta hoja salió de los cuatro `.vox` del salto del slime con una sola orden:
+
+<img src="/forja-art/forge-tools/demo-salto.png" alt="Cuatro cuadros del slime saltando en isométrico, todos sobre el mismo disco de piedra: reposo, aplastado, estirado en el aire y en lo más alto" width="592" height="172" style="image-rendering: pixelated; max-width: 100%; height: auto;" />
+
+Cuatro cuadros de 74×86 píxeles, el slime mirándote (ojos y brillo a la vista), el mismo disco en el mismo sitio y la luz siempre igual. Sin cámara que fijar y sin limpiar bordes.
+
+<VoxViewer model="slime-salto" stage={3} title="El material de partida: las cuatro etapas del salto sobre el mismo disco de 13×13" />
+</Block>
+
+<Block kind="concepto">
+### Por qué isométrico 2:1
+
+En [F08-01](/forja-art/fundamentos/f08-01/) dibujaste la caja isométrica de píxel: aristas en tramos de **2 píxeles por 1 de alto**. Es la pendiente 2:1, una de las líneas limpias del pixel art.
+
+<Sprite name="view-iso" scale={10} caption="La caja isométrica de F08-01: aristas 2:1, tapa clara y dos caras (izquierda media, derecha oscura)" />
+
+forja-vox dibuja **cada vóxel con esa misma plantilla**: un hexágono cuya tapa es un rombo el doble de ancho que de alto. Por eso sus bordes son escaleras 2:1 limpias y la hoja ya parece pixel art, no una foto reducida.
+
+<Why title="Por qué no el isométrico «de verdad»">
+El isométrico matemático usa ángulos de 30°. En píxeles, 30° da escalones irregulares (1, 2, 2, 1, 2…) y el ojo los ve como dientes de sierra. El 2:1 (unos 26,6°) se acerca mucho y los escalones salen siempre iguales. Los juegos isométricos de píxel usan 2:1 por eso.
+</Why>
+
+### Qué hace (y qué no hace) el render de la CLI
+
+El render de forja-vox es deliberadamente simple:
+
+- **Tres tonos fijos por cubo:** la tapa con el color de la paleta tal cual, la cara izquierda al 78 % y la derecha al 60 %. Es la luz de **arriba a la izquierda** de la caja de F08-01 y de [F05-01](/forja-art/fundamentos/f05-01/).
+- **Sin sombras proyectadas:** un objeto no oscurece lo que tiene debajo.
+- **Sin materiales:** Metal, Glass y Emit se ven como colores planos.
+- **Sin antialiasing:** cada píxel es un color exacto.
+
+| | Render de MagicaVoxel (V8-01, V5-02) | render de forja-vox |
+|---|---|---|
+| Luz | Sol y cielo reales, sombras proyectadas | Tres tonos fijos, luz arriba a la izquierda |
+| Materiales | Metal, Glass, Emit, bloom | Solo color |
+| Bordes | Suavizados: hay que limpiar | Píxeles nítidos, 2:1 |
+| Frames | Cámara fija a mano, un render por etapa | Una orden, misma caja para todos |
+| Ideal para | Imagen de portfolio, sprites con luz rica | Hojas de juego, muchos frames, iterar rápido |
+
+<Why title="Cuándo conviene cada uno">
+Si quieres **una imagen bonita** o un sprite con la luz de una escena concreta, usa MagicaVoxel. Si quieres **muchos frames coherentes** para un juego, o rehacerlos cada vez que cambias el modelo, usa la CLI: cambias un vóxel, repites la orden y tienes la hoja nueva en un segundo. La luz fija no es una carencia: es lo que hace que todos los frames y todos los objetos parezcan del mismo juego.
+</Why>
+
+### La misma caja y el mismo suelo
+
+Cuando le das varios `.vox` a la vez, forja-vox calcula **una sola caja** que los contiene a todos y dibuja cada uno dentro de un cuadro de ese tamaño. Todos los cuadros miden lo mismo y comparten la línea del suelo.
+
+Pero ojo: coloca cada modelo **según sus propias coordenadas**. El vóxel (0, 0, 0) de un `.vox` cae en el mismo píxel en todos los cuadros. Por eso importa tanto el **disco de 13×13** de `slime-salto`:
+
+- Fija el origen: el slime está siempre sobre el mismo punto del suelo, aunque cambie de forma.
+- Fija la altura: el estirado está 2 vóxels por encima del disco y el punto alto, 6. Sin disco, el slime de cada `.vox` empezaría en la fila 0 y **no despegaría nunca**.
+
+<VoxViewer model="slime-salto" stage={2} title="Estirado: el hueco de 2 vóxels con el disco es lo que hace que salte en la hoja" />
+
+### El tamaño del cubo y la lectura a 1×
+
+`--size` es el **lado del cubo en píxeles**, y tiene que ser **par**: la tapa mide `size` de ancho por `size ÷ 2` de alto, y con un impar saldría medio píxel.
+
+Para un modelo que ocupa una caja de X × Y × Z vóxels, cada cuadro mide como mucho:
+
+- **ancho:** (X + Y) × size
+- **alto:** ((X + Y) ÷ 2 + Z) × size
+
+Una caja de 8×8×8 da cuadros de 32×32 con `--size 2` y de 64×64 con `--size 4`. El salto del slime da 36×42 con `--size 2` y 72×84 con `--size 4` (más 2 px por lado si añades contorno).
+
+<Why title="Elige el tamaño por el juego, no por el modelo">
+Tu héroe de pixel mide 16×24. Un slime de 72×84 al lado sería un gigante. Decide primero **cuánto mide el sprite en el juego** y después elige `--size`. Con `--size 2`, un vóxel son 4 píxeles de ancho: los ojos de 2 vóxels todavía se leen; un detalle de 1 vóxel ya es casi ruido. Si tu modelo tiene detalles de 1 vóxel que importan, necesitas `--size 4` o un modelo más simple.
+</Why>
+
+### Cuatro vistas, contorno y paleta
+
+- **`--angles 4`** gira el modelo 90° tres veces: cuatro cuadros por `.vox`, con la misma caja. Sirve para un objeto que se ve desde varios lados (un cofre, un personaje que camina en cuatro direcciones).
+- **`--outline`** añade un contorno de 1 px en violeta casi negro alrededor de la silueta de cada cuadro. Ayuda a que el sprite se separe del fondo del juego, como el contorno de P5.
+- **`palette`** saca los colores del modelo en `.gpl`, que se carga en Aseprite. Así tus sprites dibujados a mano y tus vóxels comparten paleta.
+
+<img src="/forja-art/forge-tools/demo-cofre-giro.png" alt="El cofre del curso visto desde cuatro lados en isométrico, con contorno" width="976" height="178" style="image-rendering: pixelated; max-width: 100%; height: auto;" />
+
+<Tip title="La vista 1 es el frente">
+Con una sola vista, forja-vox enseña el **frente** del modelo: las caras que miran hacia -Y y -X. Los modelos del curso tienen el frente hacia -Y, así que el slime sale con los ojos a la vista y el cofre con la cerradura. Con `--angles 4` la vista 1 sigue siendo esa y las otras tres enseñan los demás lados: en el cofre de arriba, la cerradura vuelve a asomar en la vista 4, en un lateral.
+</Tip>
+
+<Tip>
+La paleta que da `palette` son los colores **base**. La hoja tiene además sus versiones al 78 % y al 60 % (las caras en sombra). Si retocas en Aseprite, toma esos tonos de la propia hoja con el cuentagotas (<Keys k="I" />).
+</Tip>
+
+### Antes de exportar: check
+
+`check` busca errores que impiden usar el archivo y avisos de modelado: vóxels flotando sin tocar nada, piezas sueltas o demasiados colores. Un aviso **no** es un error: léelo y decide.
+
+<Tip title="Avisos que no son fallos">
+Con los `.vox` del salto, el reposo y el aplastado pasan sin avisos. El estirado y el punto alto avisan de que el modelo está **partido en 2 piezas**: el slime y el disco no se tocan porque el slime está en el aire. Es a propósito, así que sigues. Si el aviso es de algo que **no** buscabas, abre el `.vox` y busca la pieza.
+</Tip>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Instala Node.js">
+forja-vox es un solo archivo para **Node.js 18 o superior**, gratuito.
+
+1. Entra en [nodejs.org](https://nodejs.org/) y descarga la versión **LTS** para tu sistema.
+2. Instálala con las opciones por defecto.
+3. Abre una terminal nueva y escribe `node --version`. Debe responder algo como `v20…` o superior a `v18`.
+
+<Why>
+Node es lo que ejecuta el archivo `.mjs`. No necesitas saber programar: solo escribir órdenes.
+</Why>
+</Step>
+
+<Step n={2} title="Descarga forja-vox y los .vox en una carpeta">
+1. Crea una carpeta de trabajo, por ejemplo `hoja-iso`.
+2. En la página [Forge Tools](/forja-art/tools/), pulsa **Descargar forja-vox.mjs** y guárdalo en esa carpeta.
+3. Descarga los cuatro `.vox` del salto desde el visor de la pieza: elige cada etapa y pulsa **Descargar .vox**. Se llaman `slime-salto_1.vox` … `slime-salto_4.vox`. Guárdalos en la misma carpeta. (Si ya tienes tus propios `.vox`, úsalos.)
+4. Abre una terminal **en esa carpeta**. En Windows 11: clic derecho dentro de la carpeta, «Abrir en Terminal»; también puedes escribir `cmd` en la barra de direcciones del Explorador y pulsar <Keys k="Enter" />. En macOS: arrastra la carpeta a la ventana de Terminal después de escribir `cd ` y pulsa <Keys k="Enter" />.
+
+<Tip>
+Escribe `node forja-vox.mjs` sin nada más: te muestra la ayuda con todas las órdenes. Si sale, todo está en su sitio.
+</Tip>
+</Step>
+
+<Step n={3} title="Revisa los modelos con check e info">
+Ejecuta, uno por uno:
+
+```
+node forja-vox.mjs info  slime-salto_1.vox
+node forja-vox.mjs check slime-salto_1.vox
+node forja-vox.mjs check slime-salto_3.vox
+```
+
+`info` te dice el tamaño: los cuatro miden **13×13 en planta** (la altura cambia: 8, 6, 13 y 15). `check` del reposo responde «Sin errores ni avisos». El del estirado avisa de 2 piezas y termina con «Sin errores (revisa los avisos)»: es el slime en el aire, separado del disco.
+
+<Why>
+Si un `.vox` tuyo midiera distinto en planta, aquí lo verías antes de renderizar. Y un vóxel flotante que no querías es mucho más fácil de encontrar ahora que en la hoja.
+</Why>
+</Step>
+
+<Step n={4} title="Renderiza los cuatro .vox en una hoja">
+```
+node forja-vox.mjs render slime-salto_1.vox slime-salto_2.vox slime-salto_3.vox slime-salto_4.vox -o salto.png --size 4 --outline
+```
+
+La terminal responde: **4 cuadro(s) de 74×86 px en una fila (296×86)** y, debajo, **En Godot: hframes = 4.**
+
+- El **orden** de los archivos es el orden de los frames.
+- Los cuadros salen pegados, sin separación: 296 entre 4 da 74 exactos y Godot corta cada frame en su sitio. No pongas `--gap` si la hoja va a Godot.
+
+<Tip>
+Prueba también con `--size 2`: cuadros de 38×44 con contorno. Compara las dos hojas a 1× y decide cuál cabe en tu juego.
+</Tip>
+</Step>
+
+<Step n={5} title="Abre el PNG y míralo a 1×">
+1. Abre `salto.png` con el visor de imágenes de tu sistema o en Aseprite.
+2. Míralo a tamaño real (100 %) y después ampliado. El disco tiene que estar **en el mismo sitio** en los cuatro cuadros.
+3. Si quieres retocar, ábrelo en Aseprite: ahí puedes añadir la sombra del slime sobre el disco en el punto alto, redibujar un ojo o limpiar las rayas que dejan los escalones de la cúpula. Guarda la paleta del modelo con `node forja-vox.mjs palette slime-salto_1.vox -o slime.gpl` y cárgala en el panel de paleta.
+
+<Why>
+El render es un punto de partida muy limpio, pero no sabe qué es importante. Tú sí: un ojo, una sombra de contacto. Es la misma idea que la limpieza de V5-02, con mucho menos trabajo.
+</Why>
+</Step>
+
+<Step n={6} title="Cuatro vistas de un objeto">
+Si tu pieza son las cuatro vistas de un modelo:
+
+```
+node forja-vox.mjs render mi-modelo.vox --angles 4 --size 4 --outline -o vistas.png
+```
+
+Salen 4 cuadros iguales en tamaño, uno por cada giro de 90°. El primero es el frente; los otros tres, los demás lados.
+
+<Warn>
+Con `--angles 4` y cuatro `.vox` a la vez salen **16 cuadros**: las cuatro vistas del primero, luego las del segundo… Útil si quieres el salto desde las cuatro direcciones; en Godot serían 16 `hframes`.
+</Warn>
+</Step>
+
+<Step n={7} title="Llévala a Godot">
+Nota breve: los detalles están en [V9-01](/forja-art/voxel/v9-01/) y en [P9-01](/forja-art/pixel/p9-01/).
+
+1. Copia `salto.png` en tu proyecto de Godot 4.
+2. Asegúrate de que el filtro de texturas es **Nearest** (*Project Settings → Rendering → Textures → Canvas Textures → Default Texture Filter*), o pon `texture_filter` en Nearest en el nodo.
+3. En un **Sprite2D**, asigna la textura y pon `hframes` = **4** (sección Animation). Cambia `frame` de 0 a 3 y verás cada pose.
+4. Para que se anime sola, usa un **AnimatedSprite2D** con un recurso SpriteFrames y añade los frames desde la hoja indicando 4 en horizontal y 1 en vertical.
+</Step>
+
+<Warn title="Verifica en tu versión">
+La forma de abrir una terminal en una carpeta cambia según el sistema y su versión. En Godot, comprueba los nombres de las opciones de filtro y del diálogo para añadir frames desde una hoja (recomendado Godot 4.3 o superior). En Aseprite, comprueba cómo cargar una paleta `.gpl` en el panel de paleta.
+</Warn>
+</Block>
+
+<Block kind="version">
+La pieza es **una hoja PNG con 4 frames de una animación tuya, o con las 4 vistas de un modelo tuyo**, renderizada con forja-vox y comprobada en Godot o a 1×. Elige un reto:
+
+- **Tu animación:** cuatro `.vox` de tu criatura de V5-01 (o del slime de V5-02 si aún no la tienes) sobre **la misma base**. Un salto, un idle que respira, un parpadeo.
+- **Tu prop desde cuatro lados:** un modelo tuyo (el cofre viejo, la poción, el escudo) con `--angles 4`. Comprueba que se reconoce desde los cuatro lados, no solo de frente.
+- **Dos tamaños:** la misma hoja con `--size 2` y con `--size 4`. Ponlas junto a tu héroe de 16×24 y decide cuál pertenece a ese juego.
+
+<img src="/forja-art/forge-tools/demo-pocion.png" alt="La poción de 8×8×8 vista desde cuatro lados en isométrico, sin contorno" width="768" height="176" style="image-rendering: pixelated; max-width: 100%; height: auto;" />
+
+La poción de V4-04 con `--angles 4 --size 8` y sin contorno. Fíjate: el cristal es azul opaco. Glass solo existe en el render de MagicaVoxel.
+</Block>
+
+<Block kind="errores">
+<Mistake title="Renderizar cada frame por separado" wrongLabel="Cuatro órdenes" rightLabel="Una orden con los cuatro .vox">
+  <p slot="wrong">Renderizas el reposo solo (74×60) y el punto alto solo (74×86). Cada orden calcula su propia caja: los cuadros miden distinto y el disco cambia de altura.</p>
+  <p slot="right">Una sola orden con los cuatro archivos: una caja común, cuadros de 74×86 y el disco siempre en el mismo píxel.</p>
+
+La caja se calcula con los modelos que le das **en esa orden**. **Corrección:** pasa todos los frames de la animación en la misma orden `render`, en el orden en que se reproducen.
+</Mistake>
+
+<Mistake title="Modelos sin suelo común" wrongLabel="Cada .vox a su tamaño" rightLabel="Mismo suelo en todos">
+  <p slot="wrong">El aplastado en un .vox de 13 de ancho, el estirado en uno de 7 sin nada debajo. En la hoja, el slime se desplaza de lado y el estirado aparece pegado al suelo.</p>
+  <p slot="right">Todos sobre el mismo disco de 13×13: el slime no se mueve de sitio y los huecos de 2 y 6 vóxels se ven como un salto.</p>
+
+forja-vox coloca cada modelo por sus coordenadas, empezando en el vóxel (0, 0, 0). **Corrección:** pon la misma base en todos los `.vox`, en el mismo sitio, y deja el aire debajo de lo que vuela.
+</Mistake>
+
+<Warn title="Error típico: --size impar o demasiado pequeño">
+`--size 3` no da un tamaño intermedio: la CLI se para con el error «--size debe ser un número par de 2 en adelante». Lo mismo con `--size 1` o con algo que no es un número. **Corrección:** usa siempre un par (2, 4, 6, 8). Y que sea par no basta: si con 2 los detalles de 1 vóxel se pierden a 1×, sube a 4 o simplifica el modelo.
+</Warn>
+
+<Warn title="Error típico: esperar sombras o materiales">
+En la hoja del salto, el slime del punto alto flota sin sombra sobre el disco, y la poción de cristal es azul opaco. No es un fallo de tu modelo: este render no calcula sombras proyectadas ni materiales. **Corrección:** si necesitas la sombra, píntala (vóxels más oscuros en el disco, o en Aseprite). Si necesitas Glass, Metal o Emit, usa el render de MagicaVoxel (V8-01).
+</Warn>
+
+<Warn title="Error típico: separar los cuadros y usar hframes">
+Añades `--gap 2` para que la hoja «respire». Ahora mide 302 de ancho: 302 entre 4 no es exacto y `hframes` corta cada frame desplazado. La propia CLI te avisa al renderizar. **Corrección:** para un `Sprite2D` con `hframes`, renderiza sin `--gap` (el valor por defecto es 0). Si quieres la separación, en Godot tendrás que definir una región por cuadro.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+Mira la hoja **a 1×** y reprodúcela en Godot o en Aseprite. Si algo salta de sitio, revisa el suelo común.
+
+<Checklist items={[
+  "He pasado check a mis .vox y he leído los avisos",
+  "Todos los .vox de la animación comparten base y miden lo mismo en planta",
+  "He renderizado todos los frames en una sola orden, en el orden de reproducción",
+  "He usado un --size par elegido por el tamaño del sprite en el juego, no por el modelo",
+  "Si el objeto se ve desde varios lados, he revisado las cuatro vistas con --angles 4",
+  "La hoja se lee a 1×: silueta clara y los detalles importantes visibles",
+  "No he separado los cuadros con --gap y la hoja se corta bien en Godot con hframes",
+  "Si hacía falta, he retocado en Aseprite con la paleta del modelo",
+]} />
+
+<Quiz q="¿Por qué los cuadros de forja-vox tienen bordes en escalera de 2 píxeles por 1?" options={["Porque reduce un render grande con vecino más cercano", "Porque usa el ángulo isométrico exacto de 30°", "Porque dibuja cada vóxel con una plantilla isométrica 2:1, la pendiente limpia del pixel art"]} answer={2}>
+Cada cubo es un hexágono con la tapa el doble de ancha que de alta. La pendiente 2:1 da escalones siempre iguales; 30° los daría irregulares.
+</Quiz>
+
+<Quiz q="Renderizas el reposo y el punto alto con dos órdenes distintas. ¿Qué pasa?" options={["Los cuadros miden distinto y el suelo cambia de altura", "Nada: el disco común ya lo arregla", "La luz cambia entre los dos"]} answer={0}>
+Cada orden calcula su caja con los modelos que recibe. Para que compartan caja y suelo, van todos en la misma orden.
+</Quiz>
+
+<Quiz q="Quieres el slime de cristal con el brillo de Glass y su sombra en el suelo. ¿Qué render usas?" options={["forja-vox con --outline", "El render de MagicaVoxel", "forja-vox con --size 8"]} answer={1}>
+forja-vox no calcula materiales ni sombras proyectadas: solo tres tonos fijos. La luz real y los materiales son cosa del render de MagicaVoxel (V8-01).
+</Quiz>
+
+<Quiz q="Tu sprite debe medir unos 32 píxeles de ancho y tu modelo es de 8×8 en planta. ¿Qué --size eliges?" options={["--size 3", "--size 4", "--size 2"]} answer={2}>
+(8 + 8) × 2 = 32. Con 4 saldría 64. Y 3 no vale: la CLI da error porque no es par.
+</Quiz>
+</Block>

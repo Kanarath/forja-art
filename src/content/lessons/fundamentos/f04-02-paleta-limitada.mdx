@@ -1,0 +1,285 @@
+---
+id: f04-02
+discipline: fundamentos
+level: 4
+order: 2
+title: "Paletas limitadas: hacerlo todo con 8 colores"
+summary: "Con 8 colores bien repartidos se lee todo: un casi negro, un casi blanco y colores que se reutilizan. Cubre el valor antes que el tono, en pixel y en voxel."
+duration: 40
+status: borrador
+prerequisites: [f04-01, f01-01]
+fundamentals: [f04, f01]
+objectives:
+  - "Explicar qué ganas al limitar la paleta: coherencia, estilo, lectura y decisiones rápidas"
+  - "Repartir 8 colores cubriendo primero el rango de valor y después el de tono"
+  - "Reutilizar cada color en varios materiales y objetos"
+  - "Reducir una escena a 8 colores y corregir a mano lo que la conversión estropea"
+  - "Aplicar la misma fila de 8 colores a un modelo de MagicaVoxel"
+tools: [aseprite, magicavoxel]
+piece:
+  name: "Una escena o un modelo tuyo resuelto con solo 8 colores"
+  canvas: "80x48"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [paleta-8]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+En [F04-01](/forja-art/fundamentos/f04-01/) montaste una paleta de **16 colores** con una armonía. Hoy la aprietas a la mitad: **8 colores para todo**.
+
+Esta es la escena final del curso. Tiene **33 colores**:
+
+<Sprite name="scene-final" scale={5} caption="scene-final (80×48): 33 colores. Hierba, agua con orilla, héroe, impacto, slime, cofre, seta y roca" />
+
+Y esta es la misma escena con **solo 8**:
+
+<Sprite name="pal8-good" scale={5} caption="pal8-good: los mismos píxeles, cada color cambiado por el más parecido de una paleta de 8" />
+
+<Sprite name="pal8-good-swatch" scale={8} caption="pal8-good-swatch: los 8 colores. Casi negro, verde oscuro, verde claro, azul, gris, piel, marrón y crema" />
+
+Se pierden matices, pero **se lee todo**: el héroe, el impacto, el slime, el cofre, el agua.
+
+Tu pieza: **una escena tuya** (por ejemplo tu escena de [P8-01](/forja-art/pixel/p8-01/)) **o un modelo tuyo de MagicaVoxel**, resuelto con 8 colores exactos. No vale con convertir y ya: tienes que **retocar a mano** lo que la conversión estropea.
+</Block>
+
+<Block kind="concepto">
+### Por qué limitar
+
+Con 33 colores puedes improvisar. Con 8, no: cada color tiene un trabajo, y casi siempre más de uno.
+
+- **Coherencia**: todo comparte los mismos colores, así que todo parece del mismo mundo. Es lo de F04-01, llevado al extremo.
+- **Estilo**: una paleta corta se reconoce. Muchos juegos se identifican por su paleta antes que por sus personajes.
+- **Lectura**: pocos colores, bien separados en valor, se distinguen de lejos y a 1×.
+- **Decisiones rápidas**: no buscas «el marrón perfecto». Tienes un marrón. Lo usas y sigues.
+
+<Why title="La restricción como inspiración">
+Las consolas clásicas no tenían elección. La Game Boy original mostraba **4 tonos**. En la NES, cada sprite usaba **3 colores más el transparente**. Los artistas de entonces aprendieron a contarlo todo con muy poco, y ese oficio es justo lo que se entrena aquí. Hoy la limitación es voluntaria: la eliges porque mejora la pieza.
+</Why>
+
+### Cómo repartir 8 colores
+
+No eliges 8 colores bonitos. Repartes **8 trabajos**:
+
+1. **Un casi negro**: contornos, ojos, las sombras más profundas. Aquí, `#1b1030`, un violeta muy oscuro.
+2. **Un casi blanco**: brillos, el centro de la luz, la espuma. Aquí, un crema `#fff3c4`.
+3. **En medio, colores compartidos**: cada uno sirve a varios materiales a la vez.
+
+Mira qué hace cada color de `pal8-good` en la escena:
+
+- **Casi negro**: todos los contornos, los ojos del héroe y del slime, las botas.
+- **Verde oscuro**: la hierba, la base del slime, las piernas del héroe y la sombra de la roca.
+- **Verde claro**: las matas de la hierba y el cuerpo del slime.
+- **Azul**: la túnica del héroe y el agua.
+- **Gris**: el cuerpo de la roca, las crestas del agua y la sombra de la cara.
+- **Piel**: la cara, el impacto, las bandas del cofre, la arena y la luz de la roca.
+- **Marrón**: el pelo, el cinturón, la madera del cofre y el sombrero de la seta.
+- **Crema**: el centro del impacto, el brillo del slime, las motas de la seta y la espuma.
+
+Ningún color trabaja en un solo sitio. Eso es **reutilizar**.
+
+<Why title="Por qué compartir y no repartir">
+Si das un color a cada objeto (uno para el cofre, uno para la seta, uno para la roca…), con 8 colores te quedas sin sitio para luces y sombras. Si los compartes, la piel es a la vez la luz de la madera, la arena y el impacto. Cada color hace de **escalón de valor** para varios materiales.
+</Why>
+
+### Valor antes que tono
+
+Lo aprendiste en [F01](/forja-art/fundamentos/f01-01/): el ojo lee primero lo claro y lo oscuro. Con 8 colores es todavía más importante. Mira la paleta en grises:
+
+<Sprite name="pal8-good-swatch" scale={8} view="gray" caption="pal8-good-swatch en grises: del 8 % del casi negro al 95 % del crema" />
+
+Los valores aproximados, de izquierda a derecha: **8 %, 40 %, 71 %, 40 %, 53 %, 79 %, 38 %, 95 %**. Hay un extremo oscuro, un extremo claro y escalones en medio. El verde oscuro, el azul y el marrón están casi al mismo valor (en torno al 40 %): se distinguen por **tono** y por estar en sitios distintos, pero en grises serían gemelos. Es un compromiso aceptable porque el rango completo está cubierto.
+
+<Sprite name="pal8-good" scale={5} view="gray" caption="pal8-good en grises: contornos oscuros, impacto y espuma claros. La escena se sigue leyendo" />
+
+Ahora, una paleta elegida al revés: **ocho tonos distintos**, todos de valor medio.
+
+<Sprite name="pal8-bad-swatch" scale={8} caption="pal8-bad-swatch: verde, azul, rojo, violeta, ocre, turquesa, marrón y gris" />
+<Sprite name="pal8-bad-swatch" scale={8} view="gray" caption="pal8-bad-swatch en grises: todo entre el 38 % y el 60 %. Casi la misma mancha" />
+
+Más variedad de tono que la buena, y mucho peor resultado:
+
+<Sprite name="pal8-bad" scale={5} caption="pal8-bad (ERROR): sin oscuro, los contornos caen en el mismo verde que la hierba y desaparecen" />
+
+<Why title="Cubre el valor primero">
+La paleta buena va del 8 % al 95 %. La mala, del 38 % al 60 %. Con el rango de valor cubierto, la forma se lee aunque falten tonos. Sin él, ningún tono te salva. Al elegir 8 colores, fija **primero los dos extremos** y luego reparte el tono en medio.
+</Why>
+
+### Qué se pierde al reducir (y cómo se corrige)
+
+La conversión automática cambia cada color por **el más parecido** de la paleta. Es un buen punto de partida, no un resultado. Compara `scene-final` con `pal8-good` y busca:
+
+- **La roca**: era gris en tres tonos. Ahora su luz es **piel**, el cuerpo **gris** y su sombra **verde oscuro**, del mismo verde que la hierba que la rodea.
+- **Las piernas del héroe**: eran gris violáceo y ahora son **verde oscuro**, como la hierba. Solo las separa el contorno.
+- **La seta**: el sombrero rojo pasa a **marrón**, el mismo de la madera del cofre. No hay rojo en la paleta.
+- **La cerradura del cofre**: se funde con la madera.
+- **La hierba**: las franjas oscuras desaparecen; la hierba queda en un verde plano con matas claras.
+- **El agua**: las crestas claras pasan a **gris**, y las franjas oscuras se funden con el azul.
+
+<Sprite name="pal8-good" scale={5} caption="pal8-good: busca la roca abajo a la izquierda, las piernas del héroe y la seta" />
+
+La corrección es **a mano** y con los 8 colores que tienes: no puedes añadir un noveno.
+
+- **Roca**: cuerpo en gris, sombra en **azul** (una sombra fría, como en [F03-01](/forja-art/fundamentos/f03-01/), que además ya no se confunde con la hierba) y 2–3 píxeles de **crema** arriba a la izquierda como luz.
+- **Piernas**: repíntalas en **gris** o en **azul**, para que no se fundan con el suelo.
+- **Seta**: si el rojo era importante, quizá la paleta debía tenerlo. Si no, el marrón vale, pero dale sus motas crema y su contorno para separarla del cofre.
+
+<Tip>
+Si un objeto importante se queda sin su color, tienes dos salidas: **cambiar un color de la paleta** (y revisar todo lo que lo usaba) o **asumir la pérdida** y separar el objeto por valor y contorno. Las dos son decisiones válidas; lo que no vale es no decidir.
+</Tip>
+</Block>
+
+<Block kind="guiada">
+### Parte 1 · Aseprite
+
+<Step n={1} title="Prepara una copia">
+1. Abre tu escena (o cualquier sprite tuyo con muchos colores). Si no tienes una, usa la de [P8-01](/forja-art/pixel/p8-01/).
+2. Guárdala con otro nombre con *File → Save As*, por ejemplo `escena-8.aseprite`. Así el original queda intacto.
+3. Activa *View → Grid* y amplía con la rueda.
+
+<Why>
+Vas a convertir y retocar sin miedo. Si algo sale mal, el original sigue ahí para compararlo.
+</Why>
+</Step>
+
+<Step n={2} title="Monta los 8 colores en el panel de paleta">
+1. Apunta los 8 colores **antes** de tocar nada: un casi negro, un casi blanco y 6 en medio que cubran tus materiales. Puedes partir de `pal8-good`: `#1b1030`, `#2c7a48`, `#6fd17f`, `#2a6fc9`, `#8a8698`, `#f2c29b`, `#8a5a3c` y `#fff3c4`.
+2. Deja en el panel de paleta **solo esos 8**, ordenados de oscuro a claro o por rampa.
+3. Guarda la paleta también como archivo (por ejemplo en `.gpl`) para usarla en otros sprites.
+
+<Tip>
+Comprueba los extremos antes de seguir: el más oscuro tiene que poder hacer de contorno y el más claro de brillo. Si no, cambia esos dos primero.
+</Tip>
+</Step>
+
+<Step n={3} title="Convierte a modo indexado">
+1. Ve a *Sprite → Color Mode → Indexed*.
+2. Si te ofrece opciones de conversión, elige **sin dithering**: quieres que cada color cambie por el más parecido, no un tramado.
+3. Mira el resultado de lejos y a 1×.
+
+<Why>
+En modo indexado cada píxel guarda **un número de la paleta**, no un color libre. Es la misma idea que en [P5-04](/forja-art/pixel/p5-04/): si luego cambias un color del panel, cambian todos los píxeles que lo usan. Aquí lo aprovechas para ajustar la paleta entera con la escena delante.
+</Why>
+
+<Warn>
+Si el modo indexado conserva colores que no están en tus 8, la conversión ha usado otra paleta. Revisa el panel: tiene que haber exactamente 8.
+</Warn>
+</Step>
+
+<Step n={4} title="Busca lo que se ha roto">
+Haz la misma revisión que con `pal8-good`. Recorre la escena objeto por objeto y apunta:
+
+- objetos que han cambiado de material (una roca con color de piel);
+- partes que se funden con el fondo (unas piernas del color de la hierba);
+- detalles que han desaparecido (una cerradura, una franja de sombra).
+
+Después mira la escena en grises: *Sprite → Color Mode → Grayscale* y deshaz enseguida con <Keys k="Ctrl+Z" />.
+
+<Warn>
+No pintes en modo grises: deshaz **justo después** de mirar.
+</Warn>
+</Step>
+
+<Step n={5} title="Retoca a mano">
+1. Con el lápiz (<Keys k="B" />, con *Pixel-perfect*) y el cuentagotas (<Keys k="I" />), repinta cada problema con uno de tus 8 colores.
+2. Para zonas grandes de un solo color, usa el cubo de pintura (<Keys k="G" />).
+3. Si un mismo problema aparece en muchos sitios, prueba a **ajustar el color en el panel**: en modo indexado, todos sus píxeles cambian a la vez. Después revisa todo lo que usaba ese color.
+4. Guarda con <Keys k="Ctrl+S" /> y exporta a 1× con *File → Export → Export As*.
+
+<Why>
+Es lo mismo que la roca de `pal8-good`: la conversión no sabe que una roca es de piedra. Tú sí. El retoque devuelve a cada objeto su material con los colores que hay.
+</Why>
+</Step>
+
+<Step n={6} title="Comprueba en el Inspector">
+Sube tu PNG a 1×. Mira el dato **Colores**: tiene que decir **8** (o menos, si un hueco no hacía falta). Cambia a **Grises** y pasa el ratón por el color más oscuro y el más claro: busca un rango amplio, como el 8–95 % de `pal8-good`.
+
+<Inspector upload title="Tu escena de 8 colores" />
+
+<Warn title="Verifica en tu versión">
+En Aseprite, *Sprite → Color Mode → Indexed* existe, pero las opciones de la conversión (paleta de destino, dithering) y la forma de dejar solo 8 colores en el panel de paleta (y de cargarla o guardarla) pueden variar entre versiones. Si tu versión no muestra opciones al convertir, comprueba que el panel tenga tus 8 colores **antes** de convertir. *File → Save As* sirve para guardar la copia.
+</Warn>
+</Step>
+
+### Parte 2 · MagicaVoxel
+
+<Step n={7} title="Una fila de 8 colores y un modelo repintado">
+1. Abre un modelo del curso guardado con otro nombre: por ejemplo la roca de [V3-01](/forja-art/voxel/v3-01/) (descárgala del visor) o tu cofre.
+2. En la **paleta de la izquierda**, elige una fila y pon en ella tus **8 colores**, en el mismo orden que en Aseprite.
+3. En modo *Paint*, con el pincel *Voxel* (o *Face* para una cara entera), repinta el modelo **solo con esa fila**.
+4. Aplica las mismas reglas: el casi negro para las juntas y los huecos, el casi blanco solo para el brillo, y cada color de en medio en varios sitios.
+5. Pulsa *Render*, guarda la imagen y ábrela en Aseprite para la prueba de grises.
+
+<Why>
+Todos los modelos del `.vox` comparten la paleta de la escena (F04-01). Si mañana montas otro modelo con la misma fila, será del mismo juego que tu sprite.
+</Why>
+
+<Tip>
+El render añade luz y sombra encima de tus colores, así que el modelo tendrá más tonos en la imagen que en la paleta. Lo que cuenta es que **pintes** con 8: la luz la pone el render.
+</Tip>
+
+<Warn title="Verifica en tu versión">
+En MagicaVoxel, la forma de editar un color de la paleta (selector, código hexadecimal o importar una paleta) y el número de colores por fila pueden variar entre versiones. Si tu paleta no se ve en filas de 8, usa 8 casillas seguidas. El botón para guardar el render también puede cambiar de sitio: búscalo por su función.
+</Warn>
+</Step>
+</Block>
+
+<Block kind="version">
+Hazlo a tu manera. Elige un reto:
+
+- **Tu escena en 8**: la escena de P8-01 (o una tuya) convertida y retocada. Apunta tres cosas que arreglaste a mano.
+- **La paleta de la consola**: limítate a **4 tonos** de un solo color, como la Game Boy. Casi negro, oscuro, claro y casi blanco. Es la prueba de valor más dura.
+- **Un mundo, dos piezas**: la misma fila de 8 colores en un sprite y en un modelo de MagicaVoxel. Ponlos uno al lado del otro: tienen que parecer del mismo juego.
+
+**Prueba de reutilización.** Por cada uno de tus 8 colores, nombra **al menos dos sitios** donde lo usas. Si alguno solo tiene uno, cámbialo.
+</Block>
+
+<Block kind="errores">
+<Mistake title="Ocho colores, todos de valor medio" wrongLabel="pal8-bad-swatch en grises" rightLabel="pal8-good-swatch en grises">
+  <Sprite slot="wrong" name="pal8-bad-swatch" scale={6} view="gray" />
+  <Sprite slot="right" name="pal8-good-swatch" scale={6} view="gray" />
+
+Ocho tonos distintos parecen mucha variedad. En grises, la paleta mala va del 38 % al 60 %: no hay nada oscuro ni nada claro. **Corrección**: fija primero un casi negro y un casi blanco, y reparte los otros seis en escalones de valor distintos.
+</Mistake>
+
+<Mistake title="Sin casi negro, el contorno desaparece" wrongLabel="pal8-bad" rightLabel="pal8-good">
+  <Sprite slot="wrong" name="pal8-bad" scale={4} />
+  <Sprite slot="right" name="pal8-good" scale={4} />
+
+En `pal8-bad` el color más parecido al contorno es **el mismo verde de la hierba**: el contorno se funde con el suelo. Y el impacto, que era lo más claro de la escena, cae en el mismo ocre que la arena. Sin extremos, el foco desaparece. **Corrección**: el casi negro de `pal8-good` recoge todos los contornos, y el crema guarda la luz para el impacto.
+</Mistake>
+
+<Warn title="Error típico: un color usado una sola vez">
+Si un color de tus 8 solo aparece en un objeto (un rosa solo para una flor), estás gastando **un octavo de la paleta** en un detalle. **Corrección**: búscale otros trabajos (la luz de otro material, un brillo, una sombra) o cámbialo por uno que sí se reutilice. La excepción es un acento muy pensado, como en F04-01, y aun así suele servir para algo más.
+</Warn>
+
+<Warn title="Error típico: dos colores casi iguales">
+Dos verdes que solo se diferencian en un poco de tono malgastan un hueco: en la escena casi no se distinguen y en grises son el mismo. **Corrección**: funde los dos en uno y usa el hueco libre para el escalón de valor que te falte. En `pal8-good`, cada color está ahí porque hace algo que ningún otro hace.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+<Checklist items={[
+  "Mi pieza usa 8 colores exactos (o menos), y el Inspector lo confirma",
+  "Tengo un casi negro para contornos y un casi blanco para brillos",
+  "En grises, mi paleta va de muy oscuro a muy claro con escalones en medio",
+  "Cada color aparece en al menos dos sitios distintos",
+  "No hay dos colores casi iguales en mi paleta",
+  "He retocado a mano lo que la conversión estropeó (materiales cambiados, partes fundidas con el fondo)",
+  "El foco de la escena sigue siendo lo que más destaca en valor",
+  "En MagicaVoxel he repintado un modelo solo con la misma fila de 8 colores",
+]} />
+
+<Quiz q="Vas a elegir 8 colores para una escena. ¿Qué fijas primero?" options={["Ocho tonos lo más distintos posible", "Un rojo de acento muy saturado", "Un casi negro y un casi blanco, para cubrir el rango de valor"]} answer={2}>
+El valor se lee antes que el tono. Con los dos extremos fijados, los otros seis colores se reparten en escalones intermedios. `pal8-bad` tiene ocho tonos distintos y la escena se aplana.
+</Quiz>
+
+<Quiz q="Al reducir scene-final a 8 colores, la roca gris sale con luz de piel y sombra verde. ¿Qué haces?" options={["La retocas a mano con los 8 colores: cuerpo gris, sombra azul y un poco de crema como luz", "Añades tres grises más a la paleta", "Lo dejas así: la conversión automática siempre elige lo mejor"]} answer={0}>
+La conversión solo busca el color más parecido; no sabe que es una roca. Tú la retocas con los colores que hay. Añadir colores rompe el límite de 8.
+</Quiz>
+
+<Quiz q="En tu paleta de 8, un violeta solo aparece en el cinturón del héroe. ¿Qué indica?" options={["Que es un buen acento y no hay que tocarlo", "Que estás gastando un hueco de la paleta en un solo sitio: búscale más trabajos o cámbialo", "Que el cinturón necesita dos violetas más"]} answer={1}>
+Con 8 colores, cada uno tiene que trabajar en varios sitios. Un color de un solo uso casi siempre se puede cambiar por otro que ya tienes.
+</Quiz>
+</Block>

@@ -179,6 +179,14 @@
   - escena final con lluvia en dos capas en 8 frames y la lluvia en rayas como error;
   - modelos «mazmorra» (sala, atrezo, historia y luz) y «escudo» (forma, estructura, emblema y uso).
 
+**Contenido · decimocuarto bloque: 5 lecciones más (83 en total).**
+- **Pixel:** P5-07 Equipo modular (vestir al héroe por capas), P8-06 HUD (la interfaz encima del juego).
+- **Fundamentos:** F04-02 Paletas limitadas (hacerlo todo con 8 colores).
+- **Voxel:** V5-04 Animales (una oveja de cuatro patas), V8-02 Hojas isométricas con forja-vox.
+- **Arte nuevo:** casco y peto como capas sobre el héroe (y su versión en oro), HUD bien y mal colocado sobre la escena, la escena reducida a dos paletas de 8 colores, y el modelo «oveja».
+
+**Fase 6 · Forge Tools (iniciada el 2026-11-10).** Tres scripts de Aseprite, la CLI `forja-vox` y la página Forge Tools con descargas y demos. Ver `forge-tools/README.md`.
+
 **Lecciones aprendidas durante la fase 1:**
 - **`BASE_URL` sin barra final.** Astro 7 da `BASE_URL` sin barra final, así que hay que usar siempre `src/lib/url.ts`. El validador detecta enlaces sin la base.
 - **Colecciones nuevas en local.** El servidor de desarrollo no ve colecciones de contenido nuevas: hay que reiniciarlo (`npx astro dev --force`).
@@ -194,7 +202,7 @@
 | **2+3 · Academias (en paralelo)** | MVP de contenido: 9 lecciones + 2 encargos (ver plan de contenidos) | Primeras lecciones completas en ambas rutas |
 | **4 · Art Labs** | Ampliar los 4 labs del MVP y añadir comparador de siluetas, laboratorio de dithering, luz y contraste | Página LABS |
 | **5 · Quality & polish** | Revisión de contenido, accesibilidad, rendimiento, responsive, documentación | Versión 1.0 |
-| **6 · Forge Tools** ⏸ | **Solo con tu aprobación expresa** | Repo aparte `forja-art-tools` |
+| **6 · Forge Tools** 🔨 | Aprobada el 2026-11-10 | Carpeta `forge-tools/` en este repo y página Forge Tools con descargas |
 
 Fases 2 y 3 se fusionan porque elegiste ambas disciplinas desde el principio. Los labs del MVP se construyen **dentro** de las fases 1 y 2, justo cuando la primera lección los necesita.
 

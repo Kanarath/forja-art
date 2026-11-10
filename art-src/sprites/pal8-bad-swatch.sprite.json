@@ -1,0 +1,28 @@
+{
+  "name": "pal8-bad-swatch",
+  "description": "Las 8 muestras de la mala paleta: verde, azul, rojo, violeta, ocre, turquesa, marrón y gris, todos de valor medio. En grises son casi la misma mancha.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "paleta",
+    "error"
+  ],
+  "palette": {
+    "0": "#4a8a4a",
+    "1": "#3a6fb0",
+    "2": "#b04a4a",
+    "3": "#8a6ab0",
+    "4": "#b0904a",
+    "5": "#4ab0a0",
+    "6": "#a07050",
+    "7": "#7a7a8a"
+  },
+  "rows": [
+    "000000111111222222333333444444555555666666777777",
+    "000000111111222222333333444444555555666666777777",
+    "000000111111222222333333444444555555666666777777",
+    "000000111111222222333333444444555555666666777777",
+    "000000111111222222333333444444555555666666777777",
+    "000000111111222222333333444444555555666666777777"
+  ]
+}

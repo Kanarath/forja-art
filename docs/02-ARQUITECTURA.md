@@ -138,10 +138,10 @@ Añadir una lección = **crear un archivo `.mdx`**. Añadir una especialidad nue
 - Pages configurado con «Deploy from a branch: `gh-pages` / (root)», con `.nojekyll`. GitHub Actions está desactivado en el repo.
 - `npm run deploy` ejecuta antes `npm run check`: **si una lección no pasa, no se despliega**.
 
-## 8. Previsión para Forge Tools (fase 6, no se construye ahora)
+## 8. Forge Tools (fase 6, iniciada el 2026-11-10)
 
-- Repositorios aparte (`forja-art-tools`) para no mezclar ciclos de versión y licencias.
-- La web solo tendrá una página «Forge Tools — próximamente» y documentación.
+- **Decisión (2026-11-10):** dentro de este repo, en `forge-tools/` (no en un repo aparte), para no crear nada nuevo en la cuenta de GitHub. Licencia MIT.
+- Primera versión: tres scripts de Aseprite (revisar huérfanos, rampa en grises, exportar para Godot) y la CLI `forja-vox` para `.vox` (info, check, palette, recolor, render isométrico). Página `/tools/` con descargas que genera `tools/build-forge.mjs`. Detalle en `forge-tools/README.md`.
 - Hallazgos de la investigación preliminar:
   - **Aseprite**: API Lua madura (v41: diálogos, eventos de sprite incluidos `save` y `beforesave`, WebSocket, extensiones `.aseprite-extension`, plugins de formato de archivo desde la 1.3.17). Viable: analizador de huérfanos y clusters, gestor de paletas o rampas, exportador de spritesheets para Godot.
   - **MagicaVoxel**: sin API de plugins; shaders GLSL propios desde su consola (por verificar). Lo viable son **herramientas externas sobre `.vox`** (formato documentado): validador, gestor de paletas, exportador a Godot y renderizador de spritesheets isométricos.

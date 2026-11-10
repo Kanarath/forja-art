@@ -1,0 +1,52 @@
+{
+  "name": "hero-helmet-pasted",
+  "description": "Error: un casco hecho aparte y pegado encima. Es una caja de 10×5 con contorno negro puro, la luz a la DERECHA (al revés que el héroe) y no sigue la cabeza: es más estrecha y no baja hasta la frente, así que asoma una fila entera de pelo debajo y un píxel de pelo a un lado.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "personaje",
+    "equipo",
+    "error"
+  ],
+  "palette": {
+    "o": "#1b1030",
+    "s": "#f2c29b",
+    "S": "#c98f6b",
+    "h": "#6b3d2e",
+    "t": "#3b6fd1",
+    "T": "#26489a",
+    "b": "#6b3d2e",
+    "p": "#4a4560",
+    "P": "#2f2b40",
+    "B": "#3b2418",
+    "k": "#000000",
+    "q": "#a8b0bc",
+    "Q": "#6a7280"
+  },
+  "rows": [
+    "................",
+    "...kkkkkkkkkk...",
+    "...kQQQQQQQqk...",
+    "...kQQQQQQQqk...",
+    "...kQQQQQQQqk...",
+    "..okkkkkkkkkkho.",
+    "..ohhhhhhhhhhho.",
+    "..ohhsssssssshho",
+    "..ohssssssssSho.",
+    "..ohsosssosssho.",
+    "..ohsosssosssho.",
+    "..oSssssssssSSo.",
+    "...oSSsssssSSo..",
+    "....oooooooo....",
+    "...otttttttto...",
+    "..ostttttttTso..",
+    "..ostttttttTso..",
+    "..oSbbbbbbbbSo..",
+    "...otttttttTo...",
+    "...opppppppPo...",
+    "...oppPo.opPPo..",
+    "...oppPo.opPPo..",
+    "...oBBBo.oBBBo..",
+    "...ooooo.ooooo.."
+  ]
+}

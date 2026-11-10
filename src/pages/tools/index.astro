@@ -1,0 +1,87 @@
+---
+// FORGE TOOLS — herramientas gratuitas para trabajar fuera de la web: scripts de Aseprite y una CLI para .vox.
+// Las descargas las genera tools/build-forge.mjs en public/forge-tools/.
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { url } from "../../lib/url";
+const f = (name: string) => url(`forge-tools/${name}`);
+---
+
+<BaseLayout title="Forge Tools" description="Herramientas gratuitas de FORJA//ART: scripts de Aseprite para revisar píxeles, rampas y exportar a Godot, y forja-vox, una CLI para archivos .vox de MagicaVoxel.">
+  <p class="eyebrow">Fase 6 · Herramientas</p>
+  <h1>Forge Tools</h1>
+  <p class="lead">Lo que hacen los laboratorios de la web, pero dentro de tu taller: en Aseprite y sobre tus archivos de MagicaVoxel. Gratis, sin cuentas y sin dependencias (licencia MIT).</p>
+
+  <nav class="jump" aria-label="Herramientas">
+    <a href="#aseprite">Scripts de Aseprite</a><a href="#vox">forja-vox (CLI para .vox)</a><a href="#godot">Llevarlo a Godot</a>
+  </nav>
+
+  <h2 class="section-title" id="aseprite">Scripts de Aseprite</h2>
+  <div class="tool">
+    <p>Tres scripts en Lua. Se usan desde el menú <em>File → Scripts</em> y funcionan sobre el sprite que tengas abierto.</p>
+    <p><a class="btn" href={f("forja-aseprite-scripts.zip")} download>Descargar los scripts (.zip)</a></p>
+    <dl>
+      <dt>Forja - Revisar huerfanos</dt>
+      <dd>Analiza la capa activa con las mismas reglas que el inspector de la academia: píxeles huérfanos, sueltos y clusters de 1–2 px. Crea una capa <code>forja-revision</code> con los huérfanos en magenta y los sueltos en cian, para que los veas sobre tu dibujo. Se deshace con <kbd>Ctrl</kbd>+<kbd>Z</kbd>. Usado en <a href={url("pixel/p2-02/")}>P2-02 Clusters</a>.</dd>
+      <dt>Forja - Rampa en grises</dt>
+      <dd>Selecciona en el panel de paleta los colores de una rampa y ejecútalo: te da el valor de cada uno, avisa si dos pasos están demasiado cerca o si la rampa cambia de sentido, y crea muestras en color y en grises. Usado en <a href={url("pixel/p3-02/")}>P3-02 Rampas</a>.</dd>
+      <dt>Forja - Exportar para Godot</dt>
+      <dd>Exporta la animación como una hoja en fila más su JSON, junto al .aseprite, y te dice qué poner en Godot: <code>hframes</code>, FPS y qué frames forman cada etiqueta. Usado en <a href={url("pixel/p9-01/")}>P9-01 Del sprite al juego</a>.</dd>
+    </dl>
+    <details>
+      <summary>Instalación</summary>
+      <ol>
+        <li>En Aseprite, abre <em>File → Scripts → Open Scripts Folder</em>.</li>
+        <li>Descomprime ahí los tres archivos <code>.lua</code>.</li>
+        <li>Vuelve a Aseprite y pulsa <em>File → Scripts → Rescan Scripts Folder</em>. Aparecerán en ese mismo menú.</li>
+      </ol>
+      <p class="muted">Escritos para la API de scripts de Aseprite 1.3. Si un menú se llama distinto en tu versión, busca su equivalente. Avísame si un script falla y lo ajusto.</p>
+    </details>
+  </div>
+
+  <h2 class="section-title" id="vox">forja-vox · CLI para archivos .vox</h2>
+  <div class="tool">
+    <p>MagicaVoxel no admite plugins, así que esta herramienta trabaja <strong>sobre los archivos .vox</strong>. Es un solo archivo para <a href="https://nodejs.org/" rel="noopener">Node.js</a> 18 o superior (gratuito), sin nada más que instalar.</p>
+    <p><a class="btn" href={f("forja-vox.mjs")} download>Descargar forja-vox.mjs</a></p>
+    <pre><code>node forja-vox.mjs info    modelo.vox
+node forja-vox.mjs check   modelo.vox
+node forja-vox.mjs palette modelo.vox -o paleta.gpl
+node forja-vox.mjs recolor modelo.vox azul.vox --map "#e8484f:#2a4fbf"
+node forja-vox.mjs render  a.vox b.vox c.vox -o hoja.png --size 4 --outline</code></pre>
+    <dl>
+      <dt>info</dt><dd>Tamaño, número de vóxeles y los colores que usa el modelo.</dd>
+      <dt>check</dt><dd>Errores que impiden usar el archivo y avisos de modelado: vóxeles flotando sin tocar nada, piezas sueltas o demasiados colores.</dd>
+      <dt>palette</dt><dd>Saca la paleta usada como <code>.gpl</code> (se carga en Aseprite), como PNG de muestras o como texto. Así el sprite y el modelo comparten colores.</dd>
+      <dt>recolor</dt><dd>Cambia colores de la paleta sin tocar la forma: el palette swap de <a href={url("pixel/p5-04/")}>P5-04</a>, en vóxels.</dd>
+      <dt>render</dt><dd>Dibuja uno o varios .vox en isométrico 2:1, con tres tonos por cubo, y los pone en fila en una hoja PNG. Todos los cuadros miden lo mismo y comparten el suelo, así que sirven como frames. Con <code>--angles 4</code> saca las cuatro vistas de cada modelo. Lo usa <a href={url("voxel/v8-02/")}>V8-02</a>.</dd>
+    </dl>
+
+    <p class="demo-title">Hechos con <code>render</code> a partir de los modelos del curso:</p>
+    <figure><img src={f("demo-salto.png")} alt="Cuatro cuadros del slime saltando en isométrico, todos sobre el mismo disco de piedra: reposo, aplastado, estirado en el aire y en lo más alto" width="296" height="86" /><figcaption><code>render slime-salto_1.vox … slime-salto_4.vox --size 4 --outline</code>: los cuatro .vox de <a href={url("voxel/v5-02/")}>V5-02</a> como una hoja de animación.</figcaption></figure>
+    <figure><img src={f("demo-cofre-giro.png")} alt="El cofre del curso visto desde cuatro lados en isométrico" /><figcaption><code>render cofre_4.vox --angles 4 --size 6 --outline</code>: el cofre visto desde los cuatro lados.</figcaption></figure>
+    <figure><img src={f("demo-pocion.png")} alt="La poción de 8×8×8 vista desde cuatro lados en isométrico" /><figcaption><code>render pocion_3.vox --angles 4 --size 8</code>: la poción de <a href={url("voxel/v4-04/")}>V4-04</a>.</figcaption></figure>
+  </div>
+
+  <h2 class="section-title" id="godot">Llevarlo a Godot</h2>
+  <div class="tool">
+    <p>Las dos herramientas acaban igual: <strong>una hoja PNG con los frames en fila</strong>. En Godot, un <code>Sprite2D</code> con <code>hframes</code> igual al número de cuadros, o un <code>AnimatedSprite2D</code> cargando los frames desde la hoja. Importa siempre el PNG con el filtro <em>Nearest</em>. Los detalles, en <a href={url("pixel/p9-01/")}>P9-01</a> y <a href={url("voxel/v9-01/")}>V9-01</a>.</p>
+  </div>
+</BaseLayout>
+
+<style>
+  h1 { font-size: clamp(2rem, 4.5vw, 3rem); }
+  .jump { display: flex; gap: 8px; flex-wrap: wrap; margin: 16px 0; }
+  .jump a { border: 1px solid var(--line); padding: 6px 12px; text-decoration: none; font: 500 .85rem var(--font-head); }
+  .jump a:hover { border-color: var(--accent); }
+  .tool { background: var(--panel); border: 1px solid var(--line); padding: 16px 18px; }
+  .btn { display: inline-block; border: 1px solid var(--accent); padding: 8px 14px; text-decoration: none; font: 600 .9rem var(--font-head); }
+  dl { margin: 12px 0 0; }
+  dt { font: 600 .95rem var(--font-mono); margin-top: 12px; }
+  dd { margin: 4px 0 0; color: var(--muted); }
+  pre { overflow-x: auto; background: var(--panel-2); padding: 12px; border: 1px solid var(--line); font-size: .85rem; }
+  figure { margin: 16px 0; }
+  figure img { image-rendering: pixelated; max-width: 100%; height: auto; width: min(100%, 640px); background: var(--panel-2); }
+  figcaption { color: var(--muted); font-size: .85rem; margin-top: 6px; }
+  .demo-title { margin-top: 20px; }
+  details { margin-top: 14px; }
+  summary { cursor: pointer; font-weight: 600; }
+</style>

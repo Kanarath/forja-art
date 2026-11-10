@@ -14,7 +14,7 @@
     "test": "node --test tests/",
     "validate": "npm run assets && node tools/validate.mjs",
     "check": "npm test && npm run validate",
-    "assets": "node tools/build-sprites.mjs && node tools/build-vox.mjs",
+    "assets": "node tools/build-sprites.mjs && node tools/build-vox.mjs && node tools/build-forge.mjs",
     "deploy": "node tools/deploy.mjs"
   },
   "dependencies": {

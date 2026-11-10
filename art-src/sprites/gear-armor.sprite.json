@@ -1,0 +1,43 @@
+{
+  "name": "gear-armor",
+  "description": "Capa del peto (16×24, el resto transparente): una placa de hierro sobre el pecho, con la luz a la izquierda y la sombra a la derecha. Repinta los brazos con los mismos colores del héroe y deja a la vista el cinturón y las piernas.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "personaje",
+    "equipo"
+  ],
+  "palette": {
+    "o": "#1b1030",
+    "L": "#c9d1dc",
+    "M": "#8f9bab",
+    "D": "#5c6676",
+    "s": "#f2c29b"
+  },
+  "rows": [
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "...oLMMMMMMMo...",
+    "..osLMMMMMMDso..",
+    "..osMMMMMMMDso..",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................"
+  ]
+}

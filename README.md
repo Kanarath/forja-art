@@ -33,6 +33,10 @@ npm run deploy   # check + build y sube dist/ a la rama gh-pages (añade -- --dr
 
 El repo **no usa GitHub Actions** (están desactivadas). Se publica desde tu ordenador con `npm run deploy`: pasa los tests y la validación, construye con Astro y sube el resultado a la rama `gh-pages`. En GitHub, Pages está en «Deploy from a branch: `gh-pages` / (root)» y solo sirve esos archivos ya hechos. Si la comprobación falla, no se sube nada.
 
+## Forge Tools
+
+Herramientas gratuitas en [`forge-tools/`](forge-tools/README.md): scripts de Aseprite y la CLI `forja-vox` para `.vox`. La web las ofrece en la página Forge Tools.
+
 ## Añadir una lección
 
 1. Crea `src/content/lessons/<pixel|voxel|fundamentos>/<id>-<nombre>.mdx`.
