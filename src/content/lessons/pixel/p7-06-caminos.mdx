@@ -1,0 +1,304 @@
+---
+id: p7-06
+discipline: pixel
+level: 7
+order: 6
+title: "Autotiles: un camino de 16 piezas"
+summary: "Dibuja un camino de tierra en 16 piezas, una por combinación de vecinos (N=1, E=2, S=4, O=8), con el borde siempre en el mismo sitio, y monta un mapa eligiendo cada pieza por sus vecinos."
+duration: 45
+status: borrador
+objectives:
+  - "Entender qué es un autotile: la pieza de cada casilla se elige mirando a sus vecinos"
+  - "Calcular el número de pieza sumando N=1, E=2, S=4 y O=8, y ver por qué salen 16"
+  - "Dibujar el perfil del camino en la misma posición en todas las piezas para que el borde sea continuo"
+  - "Redondear las esquinas de fuera y dejar en ángulo las de dentro"
+  - "Montar un mapa de 6×6 tiles con las piezas y saber cómo se automatiza en Godot o Tiled"
+prerequisites: [p7-01, p7-04]
+fundamentals: [f02]
+tools: [aseprite, godot]
+piece:
+  name: "Hoja de autotile de un camino (16 piezas de 16×16) y un mapa de 6×6 tiles montado con ella"
+  canvas: "64x64"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [autotile]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+En P7-04 montaste bloques con 9 piezas. Pero un camino no es un bloque: gira, se cruza, se divide y se acaba. Hoy vas a forjar **una hoja de autotile de 64×64**: las **16 piezas** de un camino de tierra sobre hierba, una por cada forma posible de conectar con sus vecinos.
+
+<Sprite name="autotile-path" scale={6} caption="autotile-path (64×64): las 16 piezas en una rejilla de 4×4. Arriba a la izquierda, un trozo sin salidas; abajo a la derecha, un cruce" />
+
+Y la prueba de que funciona: un mapa en el que **cada casilla de camino eligió su pieza** mirando a sus cuatro vecinos.
+
+<Sprite name="map-path" scale={4} caption="map-path (96×96, 6×6 tiles): un lazo con un ramal que sale por la derecha. Las curvas son redondas y el borde no se corta nunca al pasar de una casilla a otra" />
+
+<Tip>
+Busca la rejilla de 16×16 en el mapa. Cuesta, ¿verdad? El camino parece dibujado de un trazo, pero son 14 casillas, cada una con una de las 16 piezas de arriba.
+</Tip>
+</Block>
+
+<Block kind="concepto">
+### Qué es un autotile
+
+Un **autotile** es un juego de piezas pensado para que la pieza de cada casilla **se deduzca de sus vecinos**. Tú solo decides «aquí hay camino» y «aquí no». La regla elige la pieza: si hay camino arriba y abajo, una recta vertical; si hay camino arriba y a la derecha, una curva; si hay camino por los cuatro lados, un cruce.
+
+Ya lo hiciste a mano dos veces:
+
+- En [P7-03](/forja-art/pixel/p7-03/), la orilla dependía de qué casillas vecinas eran hierba.
+- En [P7-04](/forja-art/pixel/p7-04/), cada casilla del nivel llevaba esquina, borde o centro según dónde estuviera el aire.
+
+Hoy le pones número a esa regla.
+
+### La máscara de 4 vecinos
+
+Mira solo los **cuatro lados** de la casilla: norte, este, sur y oeste. Cada uno vale un número, y la pieza es **la suma de los lados que tienen camino**:
+
+- **N** (arriba) = **1**
+- **E** (derecha) = **2**
+- **S** (abajo) = **4**
+- **O** (izquierda) = **8**
+
+Ejemplos: camino arriba y abajo, 1 + 4 = **5** (recta vertical). Camino a la derecha y a la izquierda, 2 + 8 = **10** (recta horizontal). Camino arriba y a la derecha, 1 + 2 = **3** (curva). Los cuatro, 1 + 2 + 4 + 8 = **15** (cruce). Ninguno: **0** (un trozo suelto).
+
+<Why>
+Cada lado puede estar conectado o no: son 2 posibilidades por lado, y 4 lados. 2 × 2 × 2 × 2 = **16** combinaciones, ni una más. Los valores 1, 2, 4 y 8 son potencias de 2: ninguna suma se repite, así que cada combinación tiene su número, del 0 al 15. Es como contar en binario con cuatro interruptores.
+</Why>
+
+<Sprite name="autotile-path" scale={6} caption="La pieza n está en la columna n mod 4 y la fila n ÷ 4 (sin decimales). Primera fila: 0, 1, 2, 3. Segunda: 4, 5, 6, 7. Tercera: 8, 9, 10, 11. Cuarta: 12, 13, 14, 15" />
+
+Las 16 piezas son seis formas:
+
+- **1 suelta:** la 0.
+- **4 finales** (una salida): 1, 2, 4 y 8.
+- **2 rectas:** 5 (vertical) y 10 (horizontal).
+- **4 curvas:** 3 (N-E), 6 (E-S), 12 (S-O) y 9 (N-O).
+- **4 T** (tres salidas): 7 (sin O), 11 (sin S), 13 (sin E) y 14 (sin N).
+- **1 cruce:** la 15.
+
+<Tip title="¿Por qué en P7-03 eran 13 y aquí 16?">
+Las de P7-03 y P7-04 son piezas de **zonas**: agua o tierra que ocupan áreas, con bordes y esquinas. Las de hoy son piezas de **líneas**: un camino que conecta lados. Un camino necesita finales, T y cruces, que una zona nunca tiene. Por eso la máscara mira los lados y salen 16.
+</Tip>
+
+### El perfil del camino: siempre en el mismo sitio
+
+Corta la recta vertical (la 5) de lado a lado y mira una fila. De izquierda a derecha:
+
+- columnas 0–2: **hierba** (3 px);
+- columna 3: **tierra húmeda**, el marrón más oscuro, contra la hierba (1 px);
+- columna 4: **borde oscuro** de la tierra (1 px);
+- columnas 5–10: **tierra** clara, con alguna piedrecita más clara y alguna mota oscura (6 px);
+- columna 11: borde oscuro;
+- columna 12: tierra húmeda;
+- columnas 13–15: hierba (3 px).
+
+La tierra, con su borde, mide **8 px** (columnas 4 a 11) y, con la línea húmeda, el camino ocupa **10 px** (columnas 3 a 12). Quedan 3 px de hierba a cada lado: el perfil es **simétrico** y está centrado en el tile. En la recta horizontal (la 10) es lo mismo, en las filas 3 a 12.
+
+<Inspector sprite="autotile-path" title="Inspecciona la hoja: busca dónde cruza la línea húmeda cada lado de cada pieza" />
+
+<Why>
+La regla de oro del autotile: **por donde un camino cruza el lado del tile, el perfil está siempre en la misma posición**. En las 16 piezas, cada salida cruza el lado con la línea húmeda en la columna (o fila) 3 y la 12, y el borde oscuro en la 4 y la 11. Así, cualquier pieza que salga por la derecha casa con cualquier pieza que entre por la izquierda. Es la regla de P7-01 («lo que sale por un borde entra por el opuesto») aplicada a un camino.
+</Why>
+
+<Tip title="Centrado: dibujas 6 y giras el resto">
+Como el perfil es simétrico y está centrado, girar 90° o voltear una pieza da otra pieza del juego con la misma forma, y sus salidas siguen cruzando el lado en las columnas o filas 3 y 12. Te basta con dibujar seis: la 0, un final, una recta, una curva, una T y el cruce. Las demás salen girando y volteando. Después, **retoca las piedrecitas** de las copias: si no, se ve el mismo dibujo girado en cada casilla.
+</Tip>
+
+### Esquinas: redondas por fuera, en ángulo por dentro
+
+Mira la curva 3 (camino arriba y a la derecha).
+
+<Sprite name="autotile-path" scale={8} caption="En la pieza 3 (cuarta de la primera fila), el lado de fuera de la curva, abajo a la izquierda, se dobla en un arco. El de dentro, arriba a la derecha, es un ángulo recto donde se encuentran las dos líneas húmedas" />
+
+- **Fuera de la curva** (el lado convexo), el borde sigue un arco de unos 4 px de radio. Un camino real gira así: nadie camina por la esquina de un cuadrado.
+- **Dentro de la curva** (el lado cóncavo), las dos líneas húmedas se juntan en un **ángulo recto**: la de arriba baja por la columna 12 y la de la derecha sigue por la fila 3.
+
+Pasa lo mismo en las T y en el cruce: entre dos salidas, la esquina de dentro es un ángulo. Y los finales y la pieza 0 acaban en **redondo**, como una gota de tierra.
+
+<Why>
+Es el principio de **forma** de [F02-01](/forja-art/fundamentos/f02-01/): las curvas suaves se leen como algo natural, gastado por los pies. Las esquinas de dentro no se redondean porque ahí la tierra tiene que llegar hasta las dos salidas: si las redondeas, el camino se estrecha justo en la unión y aparece una muesca de hierba. Es lo mismo que en la orilla de P7-03: punta de fuera redondeada, rincón en ángulo.
+</Why>
+
+### Cómo se usa en un motor
+
+En el juego, el motor hace lo que vas a hacer tú a mano en el paso 6: para cada casilla de camino mira los cuatro vecinos, suma 1, 2, 4 y 8, y coloca la pieza con ese número. Tú pintas «camino» con el ratón y las curvas, las T y los cruces salen solos. En la guiada tienes dónde se configura en Godot y en Tiled.
+
+<Tip title="El siguiente paso: 47 piezas">
+Si también miras **las cuatro diagonales**, aparece el autotile de **47 piezas** (el «blob»). Sirve para zonas anchas que se tocan en esquina, donde importa si el rincón de dentro está lleno o vacío. Para un camino de 1 casilla de ancho, las 16 piezas bastan. El blob lo dejamos para más adelante.
+</Tip>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="La hoja: 16 casillas de hierba">
+1. Abre tu tile de hierba sin costuras de P7-01 (o crea uno de 16×16 con <Keys k="Ctrl+N" />).
+2. <Keys k="Ctrl+N" />: **64×64**. Guárdalo como `camino-autotile.aseprite`.
+3. Pon la rejilla a **16×16** (*Grid Settings*, en el menú *View*) y actívala con *View → Grid*.
+4. Copia la hierba con <Keys k="M" /> y <Keys k="Ctrl+C" /> y pégala con <Keys k="Ctrl+V" /> en las 16 casillas.
+5. Anota en un papel la rejilla de números: fila 1 `0 1 2 3`, fila 2 `4 5 6 7`, fila 3 `8 9 10 11`, fila 4 `12 13 14 15`.
+
+<Why>
+Las 16 piezas empiezan con la misma hierba, así que la hierba de una casilla casa con la de cualquier otra. Ahora solo cambia lo que hay encima: el camino.
+</Why>
+</Step>
+
+<Step n={2} title="El perfil y las dos rectas">
+Prepara cuatro marrones: tierra húmeda `#6b4a30`, borde `#8a5e38`, tierra `#a87a4a` y piedrecita `#c9a06a` (son los de `autotile-path`).
+
+1. En la casilla **5** (recta vertical), con el lápiz (<Keys k="B" />), pinta de arriba abajo: columna 3 húmeda, columna 4 borde, columnas 5–10 tierra, columna 11 borde, columna 12 húmeda. Usa el cubo (<Keys k="G" />) para rellenar la tierra si te es más rápido.
+2. Salpica 3 o 4 piedrecitas claras y alguna mota de borde dentro de la tierra, sueltas y lejos del borde.
+3. En la casilla **10** (recta horizontal), lo mismo en filas: fila 3 húmeda, fila 4 borde, filas 5–10 tierra, fila 11 borde, fila 12 húmeda. O, más rápido, copia la 5 y gírala 90°.
+
+<Why>
+Este perfil es el contrato de todo el juego de piezas. Las 14 piezas restantes reutilizan exactamente estas columnas y filas en cada salida. Si lo fijas ahora, ya no tienes que pensar en las costuras.
+</Why>
+
+<Tip>
+Duplica la recta 5 en un lienzo aparte de 16×16 y activa *View → Tiled Mode*: el camino debe bajar sin cortes de copia en copia.
+</Tip>
+</Step>
+
+<Step n={3} title="Las cuatro curvas: 3, 6, 12 y 9">
+Empieza por la **3** (salidas N y E).
+
+1. Pinta la mitad de arriba de la recta vertical (filas 0 a 7) y la mitad derecha de la horizontal (columnas 7 a 15). Ya tienes una L cuadrada.
+2. **Esquina de dentro** (arriba a la derecha): deja que la línea húmeda de la columna 12 y la de la fila 3 se encuentren en un ángulo recto. No la redondees.
+3. **Esquina de fuera** (abajo a la izquierda): borra con la goma (<Keys k="E" />) la esquina cuadrada y dibuja el borde en arco: tierra húmeda por fuera, borde oscuro por dentro, con tramos que crecen y decrecen con orden, como en el círculo limpio.
+4. Repite para la **6** (E y S), la **12** (S y O) y la **9** (N y O).
+
+<Tip>
+Cuando la 3 esté bien, cópiala y gírala 90° para sacar la 6, otra vez para la 12 y otra para la 9 (las órdenes de rotar y voltear están en el menú *Edit*). Luego mueve unas cuantas piedrecitas en cada copia para que no se repitan.
+</Tip>
+</Step>
+
+<Step n={4} title="Las T y el cruce: 7, 11, 13, 14 y 15">
+1. **15 (cruce):** pinta la recta vertical y la horizontal en la misma casilla. Quedan cuatro esquinas de dentro: las cuatro en ángulo recto, donde se tocan las líneas húmedas.
+2. **7** (N, E, S): la recta vertical entera más la mitad derecha de la horizontal. A la izquierda, el borde sigue recto de arriba abajo.
+3. Saca la **11** (N, E, O), la **13** (N, S, O) y la **14** (E, S, O) girando la 7, y retoca sus piedrecitas.
+
+<Why>
+Una T es una recta con un brazo. El lado sin salida es el borde recto de la recta, y las dos uniones con el brazo son esquinas de dentro: en ángulo. Ninguna esquina de fuera: una T no tiene lado convexo.
+</Why>
+</Step>
+
+<Step n={5} title="Los finales y la pieza suelta: 1, 2, 4, 8 y 0">
+1. **0:** un disco de tierra en el centro, de 8 px de lado con su borde (columnas y filas 4 a 11), con la línea húmeda alrededor (de la 3 a la 12), redondeado.
+2. **1** (sale por arriba): la mitad de arriba de la recta vertical, que termina abajo en la mitad inferior de ese disco: un final redondo.
+3. Gira la 1 para sacar la **2** (sale a la derecha), la **4** (abajo) y la **8** (izquierda), y retoca sus piedrecitas.
+4. Guarda con <Keys k="Ctrl+S" />.
+
+<Tip>
+Compara tus finales con los de `autotile-path`: la punta redondeada de la 1 llega hasta la fila 12, igual que el disco de la 0. Así un camino que se acaba en un final y otro que es un trozo suelto miden lo mismo.
+</Tip>
+</Step>
+
+<Step n={6} title="Monta un mapa eligiendo cada pieza">
+1. <Keys k="Ctrl+N" />: **96×96** (6×6 tiles). Rejilla a 16×16 y ajuste a la rejilla (*Snap to Grid*, en *View*). Rellena las 36 casillas con la hierba. Guárdalo como `camino-mapa.aseprite`.
+2. Este es el mapa (`#` camino, `.` hierba), fila a fila:
+
+   - fila 1: `......`
+   - fila 2: `.####.`
+   - fila 3: `.#..#.`
+   - fila 4: `.#.###`
+   - fila 5: `.###..`
+   - fila 6: `......`
+
+3. Para cada `#`, suma: camino arriba 1, derecha 2, abajo 4, izquierda 8. La casilla del borde derecho de la fila 4 cuenta el exterior como camino: el ramal sale del mapa.
+4. Copia de la hoja la pieza con ese número y pégala en su casilla.
+
+Comprueba tus sumas: fila 2 → 6, 10, 10, 12. Fila 3 → 5 y 5. Fila 4 → 5, 6, 11, 10. Fila 5 → 3, 10, 9. Es el mismo mapa que `map-path`, y usa 7 de las 16 piezas.
+
+<Why>
+Acabas de hacer a mano lo que hará el motor. Cuando lo hagas tú una vez, sabrás por qué una casilla sale mal en Godot: casi siempre es una pieza dibujada en el sitio de otra número.
+</Why>
+</Step>
+
+<Step n={7} title="Revisa y exporta">
+Aleja el zoom hasta ver el mapa casi a 1×.
+
+1. ¿La línea húmeda es continua alrededor de todo el lazo, sin saltos en las líneas de la rejilla?
+2. ¿Las curvas se ven redondas por fuera y los rincones en ángulo por dentro?
+3. ¿Hay alguna casilla donde el camino se estrecha o se ensancha? Mira su número: puede ser la pieza equivocada.
+
+Exporta la hoja y el mapa con *File → Export → Export As*: al 100 % (la hoja de 64×64 es la que usará el juego) y con **Resize** al 400 % para el portfolio.
+</Step>
+
+<Warn title="Verifica en tu versión">
+Los nombres y la posición pueden variar según la versión de Aseprite: *Grid Settings*, *Snap to Grid*, el submenú de *Tiled Mode* y las órdenes de rotar y voltear del menú *Edit*. Aseprite 1.3 tiene capas de tilemap para pintar con tiles, pero no elige la pieza según los vecinos: ese trabajo lo hace el motor o un editor de mapas. Si no encuentras algo, búscalo por nombre en los menús.
+</Warn>
+
+<ToolNote tool="godot">
+
+En Godot 4 (recomendado 4.3 o superior), carga la hoja en un **TileSet** con tiles de 16×16. En el TileSet, crea un **terrain set** con el modo **Match Sides** (solo lados: justo la máscara de 4 vecinos) y dos terrains, «hierba» y «camino». Luego, en cada pieza, marca el centro y los lados que tienen salida como «camino», y el resto como «hierba». Al pintar con el terrain «camino» en un **TileMapLayer**, el motor elige la pieza. Los otros modos (*Match Corners and Sides*, *Match Corners*) son los de los juegos de 47 piezas y de zonas. **Verifica en tu versión** los nombres de los paneles y de los modos. Configurarlo paso a paso es trabajo del nivel 9.
+
+</ToolNote>
+
+<Tip title="Si usas Tiled">
+En Tiled, los autotiles se definen como **conjuntos de terrenos** (*Terrain Sets*) dentro del tileset. El tipo que mira solo los lados se llama **Edge**; *Corner* mira las esquinas y *Mixed*, las dos cosas (el de 47 piezas). Marcas los lados de cada pieza y pintas con el pincel de terrenos. **Verifica en tu versión**: los nombres han cambiado entre versiones de Tiled.
+</Tip>
+</Block>
+
+<Block kind="version">
+Ahora a tu manera. Mantén el perfil en la misma posición en todas las salidas, las esquinas de fuera redondas y las de dentro en ángulo. Elige uno:
+
+- **Otro material:** un camino de losas de piedra, un río estrecho o una valla vista desde arriba. Cambia los colores y la textura, pero conserva la línea de contraste contra la hierba y el perfil fijo.
+- **Tu propio mapa:** diseña un mapa de 8×8 tiles que use **las 16 piezas** al menos una vez (la 0 incluida). Escribe la máscara a mano antes de pegar ninguna pieza.
+- **Camino ancho:** redibuja el juego con el camino más ancho (por ejemplo, la línea húmeda en las columnas 2 y 13), sin perder la simetría. Comprueba que las piezas giradas siguen casando y que la hierba que queda a los lados aún se lee.
+</Block>
+
+<Block kind="errores">
+<Mistake title="Pintar cada casilla entera de tierra" wrongLabel="Una casilla, un bloque" rightLabel="Una casilla, la pieza de sus vecinos">
+  <Sprite slot="wrong" name="map-path-bad" scale={3} />
+  <Sprite slot="right" name="map-path" scale={3} />
+
+Con un solo tile de tierra, el camino es una fila de cuadrados de 16×16: las curvas son escalones, no hay borde entre la tierra y la hierba y se ve la rejilla en cada vuelta. **Arréglalo:** cada casilla lleva la pieza que le dicen sus cuatro vecinos, con su línea húmeda, su borde y sus curvas.
+</Mistake>
+
+<Mistake title="El borde cruza el lado en sitios distintos" wrongLabel="Escalón en la costura" rightLabel="Perfil fijo">
+  <p slot="wrong">La recta horizontal tiene la línea húmeda en la fila 3, pero la curva que la continúa la tiene en la fila 4. En cada unión entre esas dos piezas el borde salta 1 px y el camino parece hecho de trozos pegados.</p>
+  <p slot="right">Todas las salidas cruzan el lado del tile con la línea húmeda en la fila (o columna) 3 y la 12, y el borde oscuro en la 4 y la 11. Cualquier pieza casa con cualquier otra.</p>
+
+**Arréglalo:** decide el perfil una vez (paso 2) y comprueba en cada pieza, con el Inspector o con la rejilla, la fila o columna exacta donde la línea húmeda toca el lado.
+</Mistake>
+
+<Mistake title="Redondear también las esquinas de dentro" wrongLabel="Muesca en la unión" rightLabel="Rincón en ángulo">
+  <p slot="wrong">En la T y en el cruce, los rincones entre dos salidas se han redondeado. La hierba entra en la tierra justo en la unión: el camino se estrecha y, al juntar piezas, aparece una muesca verde en cada cruce.</p>
+  <p slot="right">Las esquinas de fuera de las curvas y los finales se redondean; los rincones de dentro se quedan en ángulo recto, donde se encuentran las líneas húmedas de las dos salidas.</p>
+
+**Arréglalo:** en los rincones de dentro, vuelve a pintar la tierra hasta que las dos líneas húmedas se toquen en una esquina de 90°.
+</Mistake>
+
+<Warn title="Una pieza en el sitio de otra">
+Si en el mapa una curva sale al revés o una T se abre hacia la hierba, casi nunca está mal dibujada: está en la casilla de otro número. Revisa la hoja con la rejilla `0 1 2 3 / 4 5 6 7 / 8 9 10 11 / 12 13 14 15`. El motor no adivina: coloca la pieza que hay en cada número.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+Revisa tu hoja y tu mapa en Aseprite con la rejilla a 16×16 y el zoom alejado, casi a 1×.
+
+<Checklist items={[
+  "Mi hoja mide 64×64 y tiene las 16 piezas, cada una en la casilla de su número (fila × 4 + columna)",
+  "Todas las salidas cruzan el lado del tile con el perfil en la misma posición",
+  "Las esquinas de fuera de las curvas, los finales y la pieza 0 son redondeados",
+  "Los rincones de dentro de las curvas, las T y el cruce están en ángulo recto",
+  "Monté el mapa de 6×6 calculando cada número con N=1, E=2, S=4 y O=8, y el borde es continuo",
+  "Exporté la hoja y el mapa al 100 % y ampliados, y guardé los .aseprite",
+]} />
+
+<Quiz q="Una casilla tiene camino arriba, a la derecha y a la izquierda, pero no abajo. ¿Qué pieza le toca?" options={["7", "11", "14"]} answer={1}>
+N + E + O = 1 + 2 + 8 = 11: una T sin salida abajo. La 7 es N + E + S y la 14, E + S + O.
+</Quiz>
+
+<Quiz q="¿Por qué un autotile de 4 vecinos tiene exactamente 16 piezas?" options={["Porque 16 es el tamaño del tile en píxeles", "Porque cada uno de los 4 lados puede tener camino o no: 2 × 2 × 2 × 2 = 16", "Porque es una rejilla de 4×4"]} answer={1}>
+Son todas las combinaciones de cuatro lados conectados o no. Que el tile mida 16 px y la hoja sea de 4×4 es casualidad (y comodidad).
+</Quiz>
+
+<Quiz q="¿Qué hace que el borde del camino sea continuo entre casillas?" options={["Que todas las piezas tengan el mismo número de piedrecitas", "Que el borde esté siempre en la misma columna o fila al cruzar el lado del tile", "Que el camino sea lo más ancho posible"]} answer={1}>
+Lo que importa es la posición del perfil en cada salida: en `autotile-path`, la línea húmeda cruza siempre en la columna o fila 3 y la 12. Las piedrecitas pueden cambiar de una pieza a otra sin problema.
+</Quiz>
+
+<Quiz q="En una curva, ¿qué esquina se redondea?" options={["La de fuera (el lado convexo)", "La de dentro (el rincón entre las dos salidas)", "Las dos"]} answer={0}>
+Fuera, el arco hace que el camino gire como un camino real. Dentro, el ángulo recto deja que la tierra llegue a las dos salidas; si lo redondeas, el camino se estrecha en la unión.
+</Quiz>
+</Block>

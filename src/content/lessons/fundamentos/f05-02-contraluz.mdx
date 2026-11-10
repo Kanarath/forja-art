@@ -1,0 +1,276 @@
+---
+id: f05-02
+discipline: fundamentos
+level: 5
+order: 2
+title: "Contraluz y luz de borde: separar la figura del fondo"
+summary: "Una figura oscura sobre un fondo oscuro desaparece. Con la luz detrás, oscurece el cuerpo y deja una línea de luz en el borde que mira a la fuente. En pixel y en voxel."
+duration: 40
+status: borrador
+prerequisites: [f05-01]
+fundamentals: [f05, f01]
+objectives:
+  - "Explicar por qué una figura con contorno oscuro se pierde sobre un fondo oscuro, midiendo el valor"
+  - "Oscurecer un personaje a contraluz lo justo: menos luz de frente, pero con el interior legible"
+  - "Pintar una luz de borde de 1 px solo en el lado de la fuente, más débil que la propia fuente"
+  - "Reconocer y corregir el halo uniforme, que separa la figura pero no viene de ninguna luz"
+  - "Conseguir el contraluz en el render de MagicaVoxel con el sol detrás del modelo"
+tools: [aseprite, magicavoxel]
+piece:
+  name: "Tu personaje de noche a contraluz, con la luna detrás: un sprite de 28×30 y un render en voxel"
+  canvas: "28x30"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [contraluz]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Hoy forjas **tu personaje de noche, con la luna detrás**. Dos veces, como en [F05-01](/forja-art/fundamentos/f05-01/):
+
+- un **sprite de 28×30** en Aseprite: cielo de noche, luna arriba a la derecha y tu personaje a contraluz;
+- un **render en MagicaVoxel** de tu chibi con el sol colocado **detrás** del modelo.
+
+<Sprite name="rim-good" scale={10} caption="rim-good (28×30): la luna detrás, a la derecha. El cuerpo más oscuro y una línea azul clara de 1 px en el borde derecho y arriba" />
+
+La prueba de la pieza: la figura se separa del fondo **y** se sabe de dónde viene la luz.
+</Block>
+
+<Block kind="concepto">
+### El problema: oscuro sobre oscuro
+
+Pon el héroe de siempre en una escena de noche.
+
+<Sprite name="rim-none" scale={10} caption="rim-none: los colores de día de hero-chibi sobre un cielo azul casi negro" />
+
+Algo falla, y no es el dibujo. Míralo en grises:
+
+<Sprite name="rim-none" scale={10} view="gray" caption="rim-none en grises: el contorno y el cielo casi no se distinguen" />
+
+Los números, con el valor que mide el Inspector:
+
+- **Cielo**: 10 % (y 15 % en las motas más claras).
+- **Contorno del héroe**: 8 %.
+- **Suelo**: 8 %.
+
+Dos puntos de diferencia entre el contorno y el cielo: **nada**. El contorno, que de día recorta la figura, de noche **se funde con el fondo**. La silueta se lee solo por los colores de dentro.
+
+Y esos colores tampoco cuadran: la cara está al 79 %, casi tan clara como la luna (94 %). Es la cara de un héroe **iluminado de frente a pleno sol**, pegado en una escena donde la única luz está detrás de él. Es la misma idea de [F01-01](/forja-art/fundamentos/f01-01/): el valor manda, y aquí el valor dice dos cosas que no casan.
+
+<Why title="Por qué el contorno deja de servir">
+Un contorno oscuro separa porque es **más oscuro que lo que tiene alrededor**. Funciona sobre la hierba, sobre la arena o sobre un cielo de día. Sobre un fondo igual de oscuro, ya no hay diferencia de valor que leer. No es un fallo del contorno: es que **se ha quedado sin contraste**. Hay que separar la figura con otra cosa.
+</Why>
+
+### La solución: contraluz y luz de borde
+
+Si la luz está **detrás** de la figura, pasan dos cosas a la vez:
+
+1. **La cara que ves queda en sombra.** Te mira a ti, no a la luz. Es la **sombra propia** de [F05-01](/forja-art/fundamentos/f05-01/), solo que ahora ocupa casi todo el cuerpo.
+2. **Los bordes que miran hacia la luz se encienden.** Por ahí la superficie se curva hacia atrás, hacia la fuente, y la luz la roza. Desde tu punto de vista, eso es una **línea fina de luz pegada a la silueta**: la **luz de borde** (en inglés, *rim light*).
+
+<Sprite name="rim-good" scale={10} caption="rim-good: la luz de borde recorre el pelo por arriba a la derecha y baja por el lado derecho de la cabeza, la túnica, las piernas y las botas" />
+
+Lo que hace `rim-good`, píxel a píxel:
+
+- **El cuerpo baja al 62 %**: cada color del héroe multiplicado por 0,62. La cara pasa del 79 % al 49 %; la túnica, del 42 % al 26 %. El contorno no cambia.
+- **Una línea de 1 px de azul claro** (`#9fd4ff`, un 80 % de valor) **por dentro del contorno**, en el borde derecho y en la parte de arriba del pelo, de la mitad hacia la derecha. También en el lado derecho de cada pierna y de cada bota: la luz se cuela por el hueco entre las piernas.
+- **El contorno de ese lado se aclara** a un azul medio (`#4a6a9a`, 40 %). El del lado izquierdo sigue casi negro.
+
+<Sprite name="rim-good" scale={10} view="gray" caption="rim-good en grises: la línea del borde derecho y de arriba es lo más claro después de la luna" />
+
+<Why title="Por qué tiene que salir del lado de la fuente">
+La luz de borde **es** la luz de la luna tocando la figura. Solo puede aparecer en los bordes que la luna ve: con la luna arriba a la derecha, el borde derecho y la parte de arriba. Por eso, además de separar la figura, **dice dónde está la luz**. Es la regla de una sola fuente de [P3-01](/forja-art/pixel/p3-01/), aplicada al borde: si la línea aparece también en el lado izquierdo, ya no hay una luna, hay dos, o ninguna.
+</Why>
+
+### Borde encontrado y borde perdido
+
+Fíjate en el lado izquierdo de `rim-good`: el contorno sigue fundido con el cielo. **No pasa nada.** El ojo completa la forma con el lado iluminado y con los colores de dentro.
+
+Eso tiene nombre: un borde que se **encuentra** (contrasta con el fondo) y un borde que se **pierde** (se funde con él). Perder el borde del lado de la sombra no es un error: es lo que haría la luz de verdad, y hace que el lado iluminado mande todavía más.
+
+### Cuánto oscurecer
+
+El cuerpo a contraluz está en sombra, pero no es un agujero negro. Hay un margen:
+
+- **Poco**: la figura sigue con su luz de día, como `rim-none`. La luz de borde convive con una cara iluminada de frente y la escena miente.
+- **Demasiado**: todo baja hasta el valor del cielo (en torno al 10 %) y el personaje se convierte en una silueta negra. Pierdes la cara, los ojos y el cinturón.
+- **Lo justo**: en `rim-good`, multiplicar por 0,62 deja el pelo entre el 17 % y el 26 %, la túnica al 26 % y la cara al 49 %. Todo baja, todo sigue **por encima del cielo** y la cara sigue siendo lo más claro del cuerpo.
+
+<Tip>
+No es un número mágico. Empieza por algo más de la mitad de luz (entre 0,55 y 0,7) y míralo en grises: los detalles de dentro se tienen que seguir leyendo y nada del cuerpo debe superar a la luz de borde.
+</Tip>
+
+<Why title="La luz de borde no se oscurece">
+Es lo mismo que en [P8-02](/forja-art/pixel/p8-02/): de noche baja todo **excepto** lo que viene de la fuente de luz. El cuerpo se oscurece porque no le llega la luna; la luz de borde no, porque es la luna. Y la jerarquía se mantiene: luna 94 %, luz de borde 80 %, cara 49 %. La fuente es lo más claro; lo que ilumina, un paso por debajo.
+</Why>
+
+### Cuál es el error típico
+
+<Sprite name="rim-halo" scale={10} caption="rim-halo: un borde blanco puro de 1 px por dentro del contorno, por todos lados" />
+
+`rim-halo` tiene el cuerpo igual de oscuro que `rim-good`, pero el borde es blanco puro (`#ffffff`, 100 %) **en todas partes**: izquierda, derecha, arriba, bajo la barbilla, en el cuello y hasta alrededor de cada ojo, porque los ojos son del mismo color que el contorno. Separa la figura, sí. Pero:
+
+- es **más claro que la luna** (100 % frente a 94 %): el borde brilla más que la luz que lo produce;
+- no tiene **dirección**: no se sabe dónde está la luz;
+- parece una **pegatina recortada**, no una figura dentro de la escena.
+
+### En voxel, el render lo calcula
+
+En pixel art pintas tú la línea de luz. En voxel, si colocas el sol **detrás** del modelo, el render ilumina las caras que miran hacia él: las de arriba y las de los lados que dan a la luz. Las caras que te miran a ti quedan en sombra. La luz de borde **sale sola**, de la geometría.
+
+<VoxViewer model="chibi" stage={1} title="El chibi de V5-01: tu modelo de prueba para el contraluz" />
+
+<Warn>
+El visor web **no calcula la luz**: solo muestra los colores de cada vóxel. El contraluz se ve en el modo Render de MagicaVoxel.
+</Warn>
+
+<Why title="Por qué no pintar la luz de borde en los vóxels">
+Podrías pintar de azul claro la columna derecha del modelo. Se vería bien **desde una cámara**. Gira el modelo y la «luz» se va con él: ahora está a la izquierda, o detrás. En pixel art la cámara no se mueve, así que la luz se pinta. En voxel, la luz que depende de la cámara se la dejas al render.
+</Why>
+</Block>
+
+<Block kind="guiada">
+### Parte 1 · Aseprite
+
+<Step n={1} title="La noche y la luna primero">
+1. <Keys k="Ctrl+N" />: **28×30**. Activa *View → Grid* y amplía con la rueda.
+2. Rellena todo con un azul casi negro (<Keys k="G" />). Las cuatro filas de abajo, con un tono aún más oscuro: el suelo.
+3. Con el lápiz (<Keys k="B" />), la **luna**: un círculo claro de unos 6 px de ancho **arriba a la derecha**, cerca del borde.
+4. Si quieres textura en el cielo, unos píxeles sueltos un poco más claros. Pocos: el cielo tiene que seguir siendo oscuro.
+
+<Why>
+La luna es la decisión de luz, como el papel de [F05-01](/forja-art/fundamentos/f05-01/) con «arriba a la izquierda». Hoy la fuente está **detrás y a la derecha**, y todo lo que pintes después responde a ella.
+</Why>
+</Step>
+
+<Step n={2} title="Coloca a tu personaje">
+1. Abre tu personaje (o `hero-chibi`, de [P5-01](/forja-art/pixel/p5-01/)). Selecciónalo con <Keys k="M" />, cópialo con *Edit → Copy* y pégalo en la escena con *Edit → Paste*.
+2. Ponlo en el centro, con los pies sobre la franja del suelo, y deja la luna a su derecha, algo por encima de la cabeza.
+3. Guarda (<Keys k="Ctrl+S" />) y exporta una copia a 1× con *File → Export → Export As*. Guárdala: es tu `rim-none`, el «antes». En el paso 5 la subirás al Inspector junto al «después».
+
+<Tip>
+Si tu contorno es de selout (de color, como en P2-03) y no casi negro, puede que todavía se lea algo. Míralo igual: con fondos oscuros, cualquier contorno oscuro se queda sin contraste.
+</Tip>
+</Step>
+
+<Step n={3} title="Oscurece el cuerpo, no el contorno">
+1. Trabaja en una copia del archivo. Pasa el sprite a modo indexado: *Sprite → Color Mode → Indexed*. Así, al cambiar un color de la paleta, cambian todos los píxeles que lo usan (es el palette swap de P5-04).
+2. En el panel de paleta, edita uno a uno los colores **del cuerpo** (piel, pelo, ropa, botas): bájales el brillo hasta algo más de la mitad. **No toques el contorno, el cielo, el suelo ni la luna.**
+3. Exporta a 1× y míralo en **Grises** en el Inspector del paso 5: la cara sigue siendo lo más claro del cuerpo y nada baja hasta el valor del cielo.
+
+<Why>
+Oscureces porque esa cara del personaje no ve la luna. Pero los detalles tienen que seguir ahí: si los ojos o el cinturón se pierden en grises, te has pasado.
+</Why>
+
+<Tip>
+Puedes enfriar un poco esos colores al bajarlos (un toque de azul o violeta): es la sombra fría de [F03-01](/forja-art/fundamentos/f03-01/). `rim-good` no lo hace, solo multiplica; prueba las dos y compara.
+</Tip>
+</Step>
+
+<Step n={4} title="La luz de borde, solo del lado de la luna">
+1. Añade a la paleta un color **claro y frío**, parecido a la luna pero **un poco más oscuro** que ella. En `rim-good` es `#9fd4ff` frente a la luna `#e8f0ff`.
+2. Con el lápiz (<Keys k="B" />) y *Pixel-perfect*, pinta **1 px por dentro del contorno** en los bordes que miran a la luna: el lado derecho de la cabeza, del cuerpo, de las piernas y de las botas, y la parte de arriba del pelo, de la mitad hacia la derecha.
+3. En la parte de arriba, deja que la línea se acabe hacia la izquierda. No la llevas hasta el otro lado.
+4. **No pintes nada en el lado izquierdo** ni en los bordes de dentro (ojos, boca, cuello).
+
+<Warn>
+Pinta solo en el borde de **fuera** de la silueta. Si una línea de luz rodea los ojos o el cuello, ya no es luz que roza la figura: es un halo.
+</Warn>
+</Step>
+
+<Step n={5} title="Aclara el contorno de ese lado y comprueba">
+1. Añade un azul **medio** (en `rim-good`, `#4a6a9a`) y pinta con él el contorno del **lado derecho**: los píxeles de contorno que quedan justo por fuera de tu luz de borde.
+2. El contorno del lado izquierdo, **casi negro**: es el borde perdido.
+3. Guarda, exporta a 1× y sube el PNG al Inspector. En **Grises**, el orden tiene que ser: luna, luz de borde, cara, resto del cuerpo, cielo. Sube después el «antes» del paso 2 y compara.
+
+<Inspector upload title="Tu contraluz terminado" />
+
+<Why>
+El contorno aclarado suaviza el salto entre la luz de borde y el cielo, y hace la línea más ancha a la vista sin gastar otro píxel de luz. Si lo dejas casi negro, la luz de borde parece una línea dibujada encima en vez de luz.
+</Why>
+</Step>
+
+### Parte 2 · MagicaVoxel
+
+<Step n={6} title="El sol detrás del modelo">
+1. Abre tu chibi de V5-01 (o descarga el del visor de arriba).
+2. Coloca la cámara de frente al personaje, en la vista que vas a renderizar, y **no la muevas más**.
+3. Pulsa *Render* arriba y busca los ajustes del **sol** (*Sun*): gira su dirección hasta que quede **detrás del modelo y un poco a la derecha**, mirando hacia la cámara. Dale una altura media.
+4. Baja la intensidad de la luz del **cielo** (*Sky*): es la que ilumina las caras de delante. Bájala hasta que el frente quede en sombra pero con los colores todavía legibles (como el 0,62 del sprite).
+5. Mira el borde: las caras de arriba y las del lado derecho tienen que encenderse. Guarda la imagen del render en PNG.
+
+<Tip>
+Otra forma: pon detrás del modelo, fuera de cámara o como fondo, unos vóxels con material **Emit** (como la llama del farol de V3-02). Si el motor de tu versión ilumina con ellos, será una luna real que ilumina por detrás. Si no basta, combínalo con el sol.
+</Tip>
+
+<Warn title="Verifica en tu versión">
+Los nombres del panel de luz del modo Render (*Sun*, *Sky*, dirección, altura, intensidad), dónde se asigna el material *Emit* y si su luz ilumina el resto de la escena cambian entre versiones de MagicaVoxel. Búscalos por su función. En Aseprite, la forma de editar un color del panel de paleta también puede variar.
+</Warn>
+</Step>
+</Block>
+
+<Block kind="version">
+Mismo principio, otra situación. Elige un reto:
+
+- **Luna a la izquierda**: repite la pieza con la luna arriba a la izquierda. La luz de borde, el contorno aclarado y el borde perdido cambian de lado. Nada más.
+- **Fuego cálido detrás**: en vez de la luna, una hoguera detrás del personaje, abajo. La luz de borde, naranja y por abajo y los lados; el cuerpo, oscuro y algo frío. Relaciónalo con la antorcha de P8-04.
+- **Dos personajes**: el héroe y el slime de noche, con la misma luna. Los dos con la luz de borde del mismo lado y con el mismo color.
+</Block>
+
+<Block kind="errores">
+<Mistake title="El halo uniforme" wrongLabel="rim-halo: blanco por todos lados" rightLabel="rim-good: solo del lado de la luna">
+  <Sprite slot="wrong" name="rim-halo" scale={8} />
+  <Sprite slot="right" name="rim-good" scale={8} />
+
+`rim-halo` separa la figura del fondo, pero con una línea blanca igual a la izquierda que a la derecha, que además rodea los ojos y el cuello. Es más clara que la luna y no viene de ella: parece una pegatina. **Corrección**: la luz de borde solo en los bordes de fuera que miran a la fuente, en un color de la luz y un paso por debajo de ella.
+</Mistake>
+
+<Mistake title="La figura de día en una escena de noche" wrongLabel="rim-none en grises" rightLabel="rim-good en grises">
+  <Sprite slot="wrong" name="rim-none" scale={8} view="gray" />
+  <Sprite slot="right" name="rim-good" scale={8} view="gray" />
+
+En `rim-none` el contorno (8 %) y el cielo (10 %) son el mismo gris, y la cara (79 %) casi iguala a la luna. La figura se pierde por fuera y miente por dentro. **Corrección**: oscurece el cuerpo, porque esa cara no ve la luz, y separa la silueta con la luz de borde.
+</Mistake>
+
+<Warn title="Error: la luz de borde en el lado contrario">
+La luna está a la derecha y la línea de luz, a la izquierda. A 1× casi nadie sabe decir qué pasa, pero el personaje parece de otra escena. **Corrección**: antes de pintar, señala la fuente con el dedo; la línea va en los bordes que dan hacia ella.
+</Warn>
+
+<Warn title="Error: oscurecer hasta el negro">
+Bajas el cuerpo tanto que en grises queda al nivel del cielo. Solo se lee la línea de luz, como un dibujo de alambre. **Corrección**: sube los colores del cuerpo hasta que se lean la cara, los ojos y la ropa, siempre por debajo de la luz de borde.
+</Warn>
+
+<Warn title="Error en voxel: la luz de borde pintada">
+Pintas de azul claro la columna derecha del modelo. En el render de esa cámara queda bien; giras la cámara y la luz se va con el modelo. **Corrección**: el color de los vóxels, el de siempre; la luz de borde, del sol colocado detrás en el render.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+<Checklist items={[
+  "En grises, la figura se separa del fondo aunque el contorno sea oscuro",
+  "La luz de borde está solo en los bordes que miran a la fuente",
+  "Es más clara que el cuerpo y más oscura que la propia fuente",
+  "El cuerpo está más oscuro que de día, pero se leen la cara, los ojos y la ropa",
+  "No hay luz de borde alrededor de los ojos, la boca ni el cuello",
+  "El contorno del lado iluminado está aclarado y el del lado contrario se pierde en el fondo",
+  "En el render de voxel, el sol está detrás del modelo y la luz de borde sale del render, no de la pintura",
+  "He guardado el .aseprite, el .vox y los dos PNG en mi portfolio",
+]} />
+
+<Quiz q="Tu personaje tiene contorno casi negro y lo pones sobre un cielo de noche. ¿Por qué se pierde la silueta?" options={["Porque el contorno es demasiado fino", "Porque el contorno y el fondo tienen casi el mismo valor", "Porque los colores del personaje son demasiado saturados"]} answer={1}>
+Un contorno oscuro separa solo si es más oscuro que lo que tiene alrededor. En `rim-none`, contorno al 8 % y cielo al 10 %: no queda diferencia que leer.
+</Quiz>
+
+<Quiz q="La luna está detrás del personaje, arriba a la derecha. ¿Dónde va la luz de borde?" options={["En todo el contorno, para separarlo bien", "En el borde derecho y la parte de arriba", "En el borde izquierdo, el contrario a la luna"]} answer={1}>
+La luz de borde es la luz de la fuente rozando la figura: solo aparece en los bordes que la fuente ve.
+</Quiz>
+
+<Quiz q="¿Qué es lo más claro de una escena de noche con contraluz bien hecha?" options={["La luz de borde", "La cara del personaje", "La propia fuente de luz, la luna"]} answer={2}>
+La fuente es lo más claro; la luz de borde, un paso por debajo; el cuerpo, en sombra. En `rim-good`: 94 %, 80 % y 49 % en la cara. En `rim-halo` el borde blanco supera a la luna, y por eso no parece luz.
+</Quiz>
+
+<Quiz q="En MagicaVoxel, ¿cómo consigues una luz de borde que aguante si giras la cámara?" options={["Pintando de claro los vóxels del borde", "Colocando el sol detrás del modelo en el render y bajando la luz del cielo", "Subiendo el contraste de la imagen al guardarla"]} answer={1}>
+La luz de borde depende de dónde están la luz y la cámara, así que la calcula el render. Pintada en los vóxels, se mueve con el modelo.
+</Quiz>
+</Block>

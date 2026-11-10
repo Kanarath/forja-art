@@ -1,0 +1,308 @@
+---
+id: p6-09
+discipline: pixel
+level: 6
+order: 9
+title: "Derrotas: el slime que se deshace"
+summary: "Una derrota se cuenta con intención: destello, aplastado, charco y la materia que se va hacia arriba. Frames cortos al principio, un final que se sostiene y nunca un borrado a ruido."
+duration: 40
+status: borrador
+objectives:
+  - "Ordenar una derrota en fases: golpe final, caída, charco, la materia que se va y el resto"
+  - "Dar un timing que arranca rápido y termina despacio, con un último frame que se sostiene"
+  - "Mantener legible quién es el enemigo mientras se deshace: contorno, ojos y colores"
+  - "Hacer que la materia se vaya con dirección (burbujas que suben) y no a ruido"
+  - "Animar la derrota de tu enemigo en Aseprite con el cuerpo y las partículas en capas separadas"
+prerequisites: [p6-03, p6-06]
+fundamentals: [f02]
+tools: [aseprite]
+piece:
+  name: "La derrota de tu enemigo en 16×20: destello, aplastado, charco, burbujas que suben y un resto, en 6 frames"
+  canvas: "16x20"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [derrota]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Vas a forjar **la derrota de tu enemigo**: lo que pasa cuando recibe el último golpe. No es «desaparecer». Es una pequeña historia de un segundo: «le han dado», «se viene abajo», «se deshace» y «ya no está».
+
+Este es el slime de siempre, en reposo, en el mismo lienzo de 16×20 que usaste para el salto de [P6-03](/forja-art/pixel/p6-03/):
+
+<Sprite name="slime-rest" scale={8} caption="slime-rest · El punto de partida: 10×8, apoyado en la última fila del lienzo" />
+
+Dale a *Reproducir*. Es su derrota en 6 frames:
+
+<Animator sprites={["slime-die-1", "slime-die-2", "slime-die-3", "slime-die-4", "slime-die-5", "slime-die-6"]} durations={[60, 120, 120, 140, 160, 600]} />
+
+El laboratorio lo repite en bucle para que lo estudies. En un juego se reproduce **una vez** y se queda en el último frame (o el enemigo se retira de la escena).
+
+Tu pieza será la derrota de tu slime o de tu enemigo de [P5-03](/forja-art/pixel/p5-03/) en un lienzo de **16×20**, con su timing.
+</Block>
+
+<Block kind="concepto">
+### Seis frames, una historia
+
+Mira cada frame por separado. El suelo es la fila de abajo del lienzo.
+
+<Sprite name="slime-die-1" scale={10} caption="slime-die-1 · Destello: la misma forma en el mismo sitio. Todo el relleno pasa a blanco; el contorno y los dos ojos se quedan en el violeta casi negro" />
+
+<Sprite name="slime-die-2" scale={10} caption="slime-die-2 · Aplastado: 14 de ancho en la base y 6 de alto. Los ojos se cierran: dos rayas de 2 píxeles. Conserva el brillo y la base oscura" />
+
+<Sprite name="slime-die-3" scale={10} caption="slime-die-3 · Charco: 16×4, de lado a lado del lienzo, relleno del verde del cuerpo, sin ojos ni brillo. Dos gotas claras de 1 píxel saltan por encima" />
+
+<Sprite name="slime-die-4" scale={10} caption="slime-die-4 · El charco encoge a 12×3 y se oscurece: su interior es todo del verde oscuro. Tres burbujas de 1 píxel suben, entre las filas 10 y 12" />
+
+<Sprite name="slime-die-5" scale={10} caption="slime-die-5 · Una mancha de 6×2 sin contorno, en verde oscuro. Las tres burbujas, más arriba (filas 6 a 9) y más separadas" />
+
+<Sprite name="slime-die-6" scale={10} caption="slime-die-6 · Una mancha de 4 píxeles en el suelo y las dos últimas burbujas, casi arriba del todo (filas 2 y 3)" />
+
+| Frame | Fase | Qué se ve | Píxeles | Duración |
+| --- | --- | --- | --- | --- |
+| 1 | Golpe final | Destello blanco, 10×8 | 66 | 60 ms |
+| 2 | Caída | Aplastado, 14×6, ojos cerrados | 68 | 120 ms |
+| 3 | Charco | Charco de 16×4 y 2 gotas | 58 | 120 ms |
+| 4 | Se va | Charco oscuro de 12×3 y 3 burbujas | 37 | 140 ms |
+| 5 | Se va | Mancha de 6×2 y 3 burbujas | 13 | 160 ms |
+| 6 | Resto | Mancha de 4 px y 2 burbujas | 6 | 600 ms |
+
+El slime en reposo tiene 66 píxeles. Fíjate en la columna de los píxeles: los tres primeros frames **conservan** la materia (66, 68, 58) y solo cambian su forma. A partir del 4 la materia **se va**: 37, 13, 6.
+
+### 1 · El golpe final: el destello
+
+El frame 1 es el mismo flash que en [P6-06](/forja-art/pixel/p6-06/): el relleno en blanco y el contorno intacto. Dura **60 ms** y el slime no se mueve: es el «le han dado».
+
+La diferencia está en lo que viene después. En el daño, después del flash llega el retroceso y el personaje vuelve a su sitio. Aquí, después del flash, el slime **se viene abajo**. El mismo arranque cuenta dos finales distintos.
+
+<Why title="Por qué el destello conserva el contorno y los ojos (f02)">
+Mientras el enemigo se deshace, el jugador tiene que seguir sabiendo **quién** se está deshaciendo. En el frame 1, la silueta es exactamente la del slime en reposo, y los ojos siguen en su sitio. Compruébalo en negro:
+
+<Sprite name="slime-rest" scale={6} view="silhouette" caption="slime-rest en silueta" />
+
+<Sprite name="slime-die-1" scale={6} view="silhouette" caption="slime-die-1 en silueta: idéntica" />
+
+El blanco cambia el **valor** de golpe (lo más claro de la pantalla) sin cambiar la **forma**. Es la regla de P6-06: el salto de valor dice «ahora», la silueta dice «a quién».
+</Why>
+
+### 2 · La caída: un aplastado que no rebota
+
+El frame 2 se parece al aplastado del salto de P6-03, y no es casualidad: es el mismo principio. El slime se ensancha (14 de ancho) y baja (6 de alto), y conserva su volumen: **68 píxeles** frente a los 66 del reposo.
+
+<Sprite name="slime-squash" scale={8} caption="slime-squash (P6-03) · El aplastado del salto: 14×5, con los ojos abiertos. Va a volver a subir" />
+
+<Sprite name="slime-die-2" scale={8} caption="slime-die-2 · El aplastado de la derrota: los ojos cerrados en dos rayas. No va a volver a subir" />
+
+Lo que cuenta que es el final no es la forma, es la **cara**. Dos rayas de 2 píxeles en lugar de dos puntos: los ojos cerrados. Con un solo cambio de cuatro píxeles, el aplastado deja de ser un impulso y pasa a ser una caída.
+
+### 3 · El charco: la gelatina se derrama
+
+En el frame 3 el slime pierde la forma de cúpula y se convierte en un **charco de 16×4**: de lado a lado del lienzo. Ya no tiene ojos ni brillo, pero sigue siendo **verde y con su contorno**. Todavía es «el slime», derramado.
+
+Las dos gotas claras que saltan son el último gesto de la materia: el charco ha caído con fuerza y salpica. Son 1 píxel cada una y duran solo 120 ms.
+
+<Tip>
+El charco es más ancho que el aplastado, y el aplastado más que el reposo: 10, 14, 16. La forma se extiende por el suelo **con orden**, frame a frame. Si saltara de 10 a 16 de golpe, parecería que el slime explota.
+</Tip>
+
+### 4 · La materia que se va
+
+Del frame 4 al 6 el slime **desaparece**, pero no de cualquier manera:
+
+- **El charco encoge** con forma: 12×3, luego una mancha de 6×2, luego 4 píxeles. Siempre centrado, siempre apoyado en el suelo.
+- **Se oscurece:** en el frame 4 el interior pasa al verde oscuro de la base, y en el 5 desaparece el contorno. El charco «se seca» y pierde contraste: deja de pedir atención.
+- **Las burbujas suben:** 3, 3 y 2 burbujas de 1 píxel, del color del brillo y del verde del cuerpo, cada frame unas 4 filas más arriba. La materia **se va hacia arriba**, como un vapor.
+
+<Why title="Por qué la materia necesita dirección">
+Las burbujas que suben convierten «se borra» en «se evapora». El ojo sigue un movimiento con dirección: de abajo arriba, de un charco a la nada. Es lo mismo que el humo del impacto de [P6-04](/forja-art/pixel/p6-04/), que sube y se apaga en vez de cortarse. Un efecto que se va con dirección cierra la historia; uno que se borra sin más la deja a medias.
+</Why>
+
+### El timing: rápido al principio, lento al final
+
+Mira las duraciones: **60, 120, 120, 140, 160, 600**. Cada frame dura igual o más que el anterior.
+
+- El golpe y la caída son **rápidos**: el destello es un instante y la caída, un derrumbe.
+- La desaparición se **frena**: el charco y las burbujas se toman su tiempo.
+- El último frame se **sostiene**: 600 ms, la mitad de toda la animación. Es el momento en que el jugador asimila «lo he vencido».
+
+Es el mismo reparto asimétrico del impacto de P6-04 (crece rápido, se apaga despacio) y del cofre de [P6-07](/forja-art/pixel/p6-07/) (un final asentado que se queda).
+
+<Tip title="Experimenta en el animador">
+1. Pon los seis frames a 120 ms. Se lee como un bucle mecánico, no como un final: nada pesa más que nada.
+2. Sube el destello (frame 1) a 300 ms. Deja de ser un golpe y parece que el slime se ha convertido en otra cosa.
+3. Baja el último frame a 120 ms. El final se escapa: no da tiempo a sentir que ha terminado.
+</Tip>
+
+### El resto: opcional, pero cuenta
+
+El frame 6 deja **una mancha de 4 píxeles** en el suelo. Puedes dejarla unos segundos y borrarla, o dejar un resto permanente: es storytelling. Un charco de slime en el suelo le dice al jugador, sin texto, que ahí hubo una pelea ([F10-01](/forja-art/fundamentos/f10-01/)):
+
+<Sprite name="slime-puddle" scale={8} caption="slime-puddle (F10-01) · Un resto permanente de 12×4: el charco aplanado, sin ojos ni brillo" />
+
+### El error: desaparecer a ruido
+
+La forma rápida de «hacer desaparecer» algo es borrar píxeles al azar, cada vez más. Dale a *Reproducir*:
+
+<Animator sprites={["slime-die-noise-1", "slime-die-noise-2", "slime-die-noise-3"]} durations={[150, 150, 400]} />
+
+De los 66 píxeles del slime quedan 41, luego 25 y luego 12, elegidos al azar. Se ve como una **señal que se corta**, no como una gelatina que se deshace:
+
+<Sprite name="slime-die-noise-2" scale={10} caption="slime-die-noise-2 · Quedan 25 de 66 píxeles: píxeles sueltos por toda la forma, con huecos en el contorno y en el interior" />
+
+No hay golpe, no hay caída, no hay dirección. La forma no cambia: se agujerea. Y como los píxeles sueltos parpadean a 1×, el ojo no sabe dónde mirar.
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Lienzo y capas">
+1. Abre el salto de P6-03 o crea uno nuevo con <Keys k="Ctrl+N" />: **16×20**, fondo transparente. Activa *View → Grid*.
+2. Dibuja (o pega) tu slime en reposo de 10×8, centrado y apoyado en la **última fila**.
+3. Desde el menú *Layer*, crea una capa nueva encima. Renómbralas con doble clic sobre su nombre en la línea de tiempo: `cuerpo` (el slime) y `particulas` (gotas y burbujas).
+4. Guarda con <Keys k="Ctrl+S" /> como `derrota.aseprite`.
+
+<Why>
+Las gotas y las burbujas van en su propia capa, como el VFX de P6-04. Así puedes mover, borrar o cambiar el timing de las partículas sin tocar el cuerpo, y el cuerpo se queda limpio para dibujar el charco.
+</Why>
+</Step>
+
+<Step n={2} title="Seis frames con su timing">
+Añade frames desde el menú *Frame* hasta tener **6**. Clic derecho sobre el número de cada frame, *Frame Properties*, y pon:
+
+- Frame 1 · destello: **60 ms**.
+- Frame 2 · aplastado: **120 ms**.
+- Frame 3 · charco: **120 ms**.
+- Frame 4 · charco oscuro: **140 ms**.
+- Frame 5 · mancha: **160 ms**.
+- Frame 6 · resto: **600 ms**.
+
+<Why>
+El timing primero, como siempre. Si cada frame dura lo que tiene que durar desde el principio, al reproducir sabrás enseguida si la caída pesa y si el final se sostiene.
+</Why>
+</Step>
+
+<Step n={3} title="Frame 1: el destello">
+En el frame 1, capa `cuerpo`, elige el **blanco puro**. Con el cubo (<Keys k="G" />), haz clic en cada zona de color del relleno: el verde, la base oscura y el brillo. No toques el contorno ni los ojos.
+
+<Warn>
+Antes de pintar, comprueba que los demás frames no cambian a la vez. Si cambian, los cels están **enlazados** (linked cels) y comparten el dibujo. Deshaz con <Keys k="Ctrl+Z" /> y sepáralos antes de seguir.
+</Warn>
+</Step>
+
+<Step n={4} title="Frame 2: el aplastado con los ojos cerrados">
+1. Ve al frame 2 y activa el onion skin (el botón está en la línea de tiempo): verás el reposo en transparencia.
+2. Con la goma (<Keys k="E" />), borra el slime y redibújalo con el lápiz (<Keys k="B" />) y *Pixel-perfect*: unos **14 de ancho y 6 de alto**, apoyado en la última fila. Con sus colores normales: el destello es solo del frame 1.
+3. Cambia los ojos por dos **rayas de 2 píxeles** en el color del contorno.
+
+<Why>
+Es un squash de P6-03: más ancho, más bajo y con el mismo volumen. Cuenta más o menos los píxeles: el del curso pasa de 66 a 68. Si te sale mucho más pequeño, el slime parece que encoge en vez de caer.
+</Why>
+</Step>
+
+<Step n={5} title="Frame 3: el charco y las gotas">
+1. Capa `cuerpo`: borra el aplastado y dibuja un **charco** de unas 4 filas de alto, más ancho que el aplastado (el del curso llega de lado a lado del lienzo). Con contorno, relleno verde, sin ojos ni brillo.
+2. Capa `particulas`: dos **gotas de 1 píxel** del color del brillo, unas filas por encima del charco y a los lados.
+
+<Tip>
+Dibuja el charco como media elipse aplastada: tramos largos abajo que se acortan hacia arriba, con orden (lo viste en las curvas de [P2-01](/forja-art/pixel/p2-01/)). Un charco con escalones irregulares parece una roca.
+</Tip>
+</Step>
+
+<Step n={6} title="Frames 4 a 6: la materia se va">
+1. **Frame 4:** capa `cuerpo`, un charco más estrecho y más bajo (el del curso, 12×3) con el interior **todo en el verde oscuro**. Capa `particulas`: borra las gotas y pon **3 burbujas** de 1 píxel varias filas por encima del charco.
+2. **Frame 5:** una mancha de unos 6×2 **sin contorno**, en verde oscuro. Sube cada burbuja unas 4 filas y sepáralas un poco.
+3. **Frame 6:** una mancha de 4 píxeles y solo **2 burbujas**, casi arriba del todo.
+
+<Why>
+Tres cosas a la vez: el charco encoge, se oscurece y suelta materia hacia arriba. Juntas cuentan «se evapora». Usa el onion skin para que cada burbuja suba **en línea** de un frame al siguiente: si salta a un sitio cualquiera, vuelve a ser ruido.
+</Why>
+</Step>
+
+<Step n={7} title="Prueba y exporta">
+1. Reproduce (botón de *play* de la línea de tiempo) a tamaño real y ampliado. ¿Se nota el destello? ¿La caída es rápida y el final, lento? ¿Se sabe en todo momento que es el slime?
+2. Si tienes tu impacto de P6-04, ponlo en una capa encima, arrancando en el frame 1: es el golpe final completo.
+3. Para enseñarlo: *File → Export → Export As*, formato **GIF**, **Resize** al 400 % o más.
+4. Para un juego: *File → Export → Export Sprite Sheet*, en una fila, PNG a 1× y fondo transparente. Apunta las duraciones o exporta también el JSON.
+</Step>
+
+<Warn title="Verifica en tu versión">
+Los nombres y la posición pueden variar según la versión de Aseprite: el menú *Layer*, el doble clic para renombrar, la opción de frame nuevo del menú *Frame*, *Frame Properties* (clic derecho sobre el frame), el botón de onion skin, los cels enlazados (linked cels) y cómo se separan, y las opciones de *Export Sprite Sheet*. Si usas etiquetas (tags), comprueba también si puedes indicar que la animación no se repita y si eso se guarda en el JSON exportado. Si no encuentras algo, búscalo por nombre en los menús.
+</Warn>
+
+<ToolNote tool="godot">
+
+Esto es opcional; lo verás en el nivel 9. En Godot, la derrota iría como una animación más del SpriteFrames del enemigo, **con el bucle desactivado**, para que se quede en el último frame. Cuando termina, el código decide si deja el resto en el suelo o retira al enemigo. Verifica en tu versión.
+
+</ToolNote>
+</Block>
+
+<Block kind="version">
+Ahora a tu manera. Mantén el destello con el contorno intacto, la caída que conserva el volumen, la materia que se va con dirección y el último frame largo. Elige uno o más:
+
+- **Otro enemigo:** la derrota de tu murciélago de P5-03 o P6-08. Destello en el aire, las alas se pliegan, cae al suelo y se aplasta. ¿La materia se va hacia arriba, o se queda tirado como resto?
+- **Otro material:** un enemigo de piedra que se agrieta y cae en tres trozos, o uno de fuego que se apaga y suelta humo. Cambia el cómo, no el orden: golpe, caída, se deshace, resto.
+- **Derrota crítica:** un destello de 2 frames, gotas que saltan más lejos y un resto permanente (como `slime-puddle`). Compárala con la normal: el jugador tiene que notar que ha sido un golpe más fuerte.
+
+<Tip>
+Sea cual sea tu variante, prueba que el último frame dura **mucho más** que el primero. Si los dos duran parecido, la derrota se lee como un bucle y no como un final.
+</Tip>
+</Block>
+
+<Block kind="errores">
+<Mistake title="Desaparecer a ruido" wrongLabel="Píxeles borrados al azar" rightLabel="Un charco que se seca y burbujas que suben">
+  <Sprite slot="wrong" name="slime-die-noise-2" scale={8} />
+  <Sprite slot="right" name="slime-die-4" scale={8} />
+
+Borrar píxeles al azar (izquierda) agujerea la forma: quedan píxeles sueltos que parpadean, el contorno se rompe y no hay dirección. Se lee como un fallo de la pantalla. Corrígelo cambiando la **forma** frame a frame (derecha): el charco encoge con orden, se oscurece y suelta burbujas que suben en línea.
+</Mistake>
+
+<Mistake title="Aplastar sin conservar el volumen" wrongLabel="Más bajo, igual de ancho" rightLabel="Más bajo y más ancho">
+  <Sprite slot="wrong" name="slime-shrunk" scale={8} />
+  <Sprite slot="right" name="slime-die-2" scale={8} />
+
+Si en la caída el slime solo baja de altura y mantiene su ancho de 10 (izquierda, el error de P6-03), parece que encoge o que se hunde en el suelo, no que se derrumba. Corrígelo ensanchándolo a la vez que baja (derecha): 14 de ancho, 6 de alto y casi los mismos píxeles que en reposo.
+</Mistake>
+
+<Mistake title="Un timing plano" wrongLabel="Todos los frames iguales" rightLabel="Rápido al principio, final sostenido">
+  <p slot="wrong">Los seis frames a 120 ms. El destello no se distingue de la caída y el final se escapa: en un juego, el enemigo parece que se ha borrado sin más.</p>
+  <p slot="right">60 ms el destello, 120–160 ms la caída y el charco, 600 ms el último frame. El golpe pega, la materia se toma su tiempo y el final se queda.</p>
+
+Corrígelo en *Frame Properties*: acorta el primer frame y alarga el último hasta que dure más que todos los demás juntos, o casi.
+</Mistake>
+
+<Warn title="Perder quién es demasiado pronto">
+Si en el primer frame ya cambias la forma, o si el destello se come el contorno y los ojos, el jugador pierde de vista **a quién** ha derrotado. Corrígelo así: el frame 1 tiene exactamente la silueta del reposo, el 2 conserva los ojos (cerrados) y el 3 conserva el verde y el contorno. El enemigo deja de ser reconocible poco a poco, no de golpe.
+</Warn>
+
+<Warn title="Desaparecer de golpe">
+Un enemigo que pasa del destello a nada en un frame no se «derrota»: se apaga. El jugador no sabe si lo ha vencido o si se ha escapado. Hacen falta al menos la caída y un frame de resto, aunque sea corto.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+Juzga tu derrota **a 1×** y a su velocidad real, varias veces seguidas. Pregúntate en cada frame: «¿sigue siendo mi enemigo?».
+
+<Checklist items={[
+  "La derrota tiene golpe final, caída, se deshace y resto, en ese orden",
+  "El destello dura un frame corto, con el relleno blanco y el contorno y los ojos intactos",
+  "En el destello el enemigo no se mueve: la caída llega después",
+  "La caída conserva el volumen: más ancho y más bajo, con casi los mismos píxeles",
+  "La cara cuenta el final (ojos cerrados o equivalente)",
+  "La forma se extiende y luego encoge con orden, frame a frame, apoyada en el suelo",
+  "La materia se va con dirección (burbujas, humo, trozos) y no con píxeles borrados al azar",
+  "Cada frame dura igual o más que el anterior y el último es el más largo",
+  "Partículas y cuerpo están en capas separadas",
+  "He exportado la animación con fondo transparente y he apuntado las duraciones",
+]} />
+
+<Quiz q="¿Por qué el último frame de la derrota dura 600 ms, mucho más que los demás?" options={["Para ahorrar frames en el spritesheet", "Para que el jugador asimile que ha terminado: el final se sostiene", "Porque el animador no admite frames más cortos al final"]} answer={1}>
+Un final corto se escapa y la derrota se lee como un bucle. Un último frame largo dice «ya está» y deja tiempo para sentir la victoria.
+</Quiz>
+
+<Quiz q="¿Qué falla si haces desaparecer al slime borrando píxeles al azar?" options={["Nada: es la forma más limpia de hacerlo", "Gasta demasiados colores", "La forma se agujerea en píxeles sueltos, sin caída ni dirección, y se lee como un fallo de la pantalla"]} answer={2}>
+El ruido no cuenta nada. Una derrota con intención cambia la forma con orden y hace que la materia se vaya hacia algún sitio.
+</Quiz>
+
+<Quiz q="El aplastado del salto (P6-03) y el de la derrota tienen casi la misma forma. ¿Qué cuenta que es el final?" options={["La cara: los ojos cerrados en dos rayas", "Que el de la derrota es más pequeño y pierde volumen", "Que el de la derrota está en blanco"]} answer={0}>
+Los dos conservan el volumen. Lo que cambia la historia son cuatro píxeles: los ojos cerrados dicen que no va a volver a subir.
+</Quiz>
+</Block>

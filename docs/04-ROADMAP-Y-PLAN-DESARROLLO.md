@@ -191,6 +191,12 @@
 - **Voxel:** V3-04 AO pintado (oclusión ambiental en la paleta), V7-04 Barco.
 - **Arte nuevo:** sala de mazmorra 3/4 con sus tiles (y la versión plana como error), icono con enfriamiento en 5 frames, bloqueado y su error, puerta de referencia y fila de escala buena y mala, modelos «barco» y «ao».
 
+**Contenido · decimosexto bloque: 5 lecciones más (93 en total).**
+- **Pixel:** P6-09 Derrotas (el slime que se deshace), P7-06 Autotiles (un camino de 16 piezas).
+- **Fundamentos:** F05-02 Contraluz y luz de borde.
+- **Voxel:** V4-06 Muebles a escala (un kit de taberna), V5-05 Criaturas grandes (un gólem).
+- **Arte nuevo:** derrota del slime en 6 frames y su error «a ruido», hoja de autotile de 16 piezas con su mapa (y el camino a casillas como error), el héroe de noche sin luz de borde, a contraluz y con halo, y los modelos «taberna» y «golem».
+
 **Fase 6 · Forge Tools (iniciada el 2026-11-10).** Tres scripts de Aseprite, la CLI `forja-vox` y la página Forge Tools con descargas y demos. Ver `forge-tools/README.md`.
 
 **Lecciones aprendidas durante la fase 1:**

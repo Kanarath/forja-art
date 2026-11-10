@@ -1,0 +1,39 @@
+{
+  "name": "slime-die-noise-1",
+  "description": "Error: el slime desaparece a ruido, frame 1. Se han borrado al azar 25 de sus 66 píxeles (un 38 %): aparecen huecos sueltos dentro y en el contorno.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "criatura",
+    "animación",
+    "error"
+  ],
+  "palette": {
+    "a": "#1b1030",
+    "b": "#d8ffe6",
+    "c": "#4ade80",
+    "d": "#1f8a4c"
+  },
+  "rows": [
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "......aaa.......",
+    ".....abb.ca.....",
+    "....a.c..cca....",
+    "......ac..ca....",
+    "....cc.cc..ca...",
+    "...acccccccca...",
+    ".....d.dd.......",
+    "...a...aaa..a..."
+  ]
+}

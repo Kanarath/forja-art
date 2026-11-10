@@ -95,5 +95,10 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   { id: "escala", name: "A escala", description: "Una escena en la que todo se mide con el mismo patrón: el personaje y una puerta (F08-02).", color: "#a0603a" },
   { id: "barco", name: "Barco", description: "Un barco voxel: casco curvo por capas, cubierta, mástil y vela (V7-04).", color: "#f4ecdc" },
   { id: "ao", name: "Oclusión pintada", description: "Un modelo voxel con oclusión ambiental pintada en la paleta, sin pasarse (V3-04).", color: "#6b4430" },
+  { id: "derrota", name: "Derrota", description: "Un enemigo que se deshace en frames con intención: destello, caída, charco y restos (P6-09).", color: "#4ade80" },
+  { id: "autotile", name: "Autotile", description: "Un camino de 16 piezas que se elige solo según sus vecinos (P7-06).", color: "#a87a4a" },
+  { id: "contraluz", name: "Contraluz", description: "Una figura separada del fondo con una luz de borde que viene de algún sitio (F05-02).", color: "#9fd4ff" },
+  { id: "taberna", name: "Kit de taberna", description: "Un kit de muebles voxel medido contra el personaje y montado en un rincón (V4-06).", color: "#d08a50" },
+  { id: "golem", name: "Gólem", description: "Una criatura voxel grande construida por masas, piezas de piedra y detalle (V5-05).", color: "#7df9ff" },
   { id: "forma-primero", name: "Forma antes que detalle", description: "Un modelo voxel con su blockout guardado como primera versión (V2-01).", color: "#38e1ff" },
 ];

@@ -1507,6 +1507,124 @@ function doorSprite(w, h) {
   add("scale-bad", "Error: la misma fila sin escala común. La puerta (14) es más baja que el héroe, la seta de 16 es casi el doble de alta que el cofre y el slime normal se ha cambiado por el jefe de 30×24. Cada objeto está bien dibujado, pero juntos no tienen sentido.", ["escala", "escena", "error"], bad.pal, bad.rows);
 }
 
+// ---------- derrota del slime: destello, aplastado, charco, burbujas que suben y una mancha (16×20, paleta fija)
+{
+  const SP = { ...SLIME_PAL, w: "#ffffff" };
+  const toHex = (rows) => rows.map((r) => [...r].map((k) => (k === "." ? null : SP[k])));
+  const f1 = toHex(slimeFrame(10, 8, 19).map((r) => r.replace(/[gGh]/g, "w"))); // destello: el interior en blanco, los ojos y el contorno se quedan
+  const sq = slimeFrame(13, 6, 19).map((r) => r.replace(/e/g, "g").split(""));
+  const eyeRow = sq.findIndex((r) => r.includes("g") && r.indexOf("g") > 0) + 2;
+  for (const x of [5, 6, 9, 10]) sq[eyeRow][x] = "e"; // ojos cerrados: dos rayas
+  const f2 = toHex(sq.map((r) => r.join("")));
+  const puddle = (w, h) => { // charco: media elipse aplastada apoyada en la última fila, sin ojos
+    const ins = (x, y) => { const r = 19 - y; if (r < 0 || r >= h) return false; return Math.abs(x + 0.5 - 8) <= (w / 2) * Math.sqrt(1 - (r / h) ** 2) + 0.3; };
+    return Array.from({ length: 20 }, (_, y) => Array.from({ length: 16 }, (_, x) => (!ins(x, y) ? "." : [[1, 0], [-1, 0], [0, 1], [0, -1]].some(([a, b]) => !ins(x + a, y + b)) ? "o" : "g")));
+  };
+  const p3 = puddle(15, 4); for (const [x, y] of [[4, 14], [11, 13]]) p3[y][x] = "h";
+  const p4 = puddle(12, 3).map((r) => r.map((k) => (k === "g" || k === "h" ? "G" : k))); for (const [x, y, k] of [[3, 11, "h"], [12, 10, "g"], [8, 12, "h"]]) p4[y][x] = k;
+  const p5 = Array.from({ length: 20 }, () => Array(16).fill("."));
+  for (let x = 5; x <= 10; x++) p5[19][x] = "G"; for (let x = 6; x <= 9; x++) p5[18][x] = "G";
+  for (const [x, y, k] of [[4, 7, "h"], [11, 6, "h"], [7, 9, "g"]]) p5[y][x] = k;
+  const p6 = Array.from({ length: 20 }, () => Array(16).fill("."));
+  for (let x = 6; x <= 9; x++) p6[19][x] = "G";
+  p6[3][7] = "h"; p6[2][10] = "g";
+  const frames = [f1, f2, toHex(p3.map((r) => r.join(""))), toHex(p4.map((r) => r.join(""))), toHex(p5.map((r) => r.join(""))), toHex(p6.map((r) => r.join("")))];
+  const D = [
+    "Derrota, frame 1: el golpe final. El interior del slime se vuelve blanco durante un instante; el contorno y los ojos se quedan, así se sigue leyendo quién es.",
+    "Frame 2: se aplasta a 14×6 y cierra los ojos (dos rayas de 2 px). Ya no es un aplastado de salto: no va a volver a subir.",
+    "Frame 3: se derrama en un charco de 16×4 que ocupa todo el ancho del lienzo. Dos gotas claras saltan del charco.",
+    "Frame 4: el charco encoge a 12 de ancho y se oscurece (todo en el verde oscuro). Tres burbujas suben: la materia se va hacia arriba.",
+    "Frame 5: queda una mancha de 6×2 en el suelo y las burbujas siguen subiendo, más separadas.",
+    "Frame 6: una mancha de 4 px en el suelo y las dos últimas burbujas arriba. Se puede dejar la mancha unos segundos o borrarla.",
+  ];
+  fixedFrames(frames).forEach((f, i) => add(`slime-die-${i + 1}`, D[i], ["criatura", "animación"], f.pal, f.rows));
+  // error: el slime desaparece «a ruido», quitando píxeles sueltos al azar
+  const rest = toHex(slimeFrame(10, 8, 19));
+  const h01 = (x, y) => (((x * 73856093) ^ (y * 19349663)) >>> 0) % 100 / 100;
+  const noise = [0.3, 0.6, 0.85].map((t) => rest.map((r, y) => r.map((c, x) => (c && h01(x, y) >= t ? c : null))));
+  const ND = [
+    "Error: el slime desaparece a ruido, frame 1. Se han borrado al azar 25 de sus 66 píxeles (un 38 %): aparecen huecos sueltos dentro y en el contorno.",
+    "Frame 2 del error: quedan 25 de 66 píxeles (un 62 % borrado). Quedan píxeles huérfanos por toda la forma; se ve como una señal que se corta, no como una gelatina que se deshace.",
+    "Frame 3 del error: quedan 12 de 66 píxeles (un 82 % borrado). Unos pocos píxeles sueltos donde estaba el slime, sin forma ni dirección.",
+  ];
+  fixedFrames(noise).forEach((f, i) => add(`slime-die-noise-${i + 1}`, ND[i], ["criatura", "animación", "error"], f.pal, f.rows));
+}
+
+// ---------- autotile de camino: 16 piezas según qué vecinos son camino (N=1, E=2, S=4, O=8)
+const PATHP = { g: "#3fa45b", d: "#2c7a48", l: "#6fd17f", e: "#a87a4a", E: "#8a5e38", r: "#6b4a30", p: "#c9a06a" };
+function pathTile(mask, { square = false } = {}) {
+  const C = 8, R = 4; // centrado: el camino ocupa las columnas 4–11 y queda igual al girarlo
+  const ends = [[1, [8, -1]], [2, [17, 8]], [4, [8, 17]], [8, [-1, 8]]].filter(([b]) => mask & b).map(([, p]) => p);
+  const segDist = (px, py, [ax, ay], [bx, by]) => { const vx = bx - ax, vy = by - ay, t = Math.max(0, Math.min(1, ((px - ax) * vx + (py - ay) * vy) / (vx * vx + vy * vy || 1))); return Math.hypot(px - ax - t * vx, py - ay - t * vy); };
+  return Array.from({ length: 16 }, (_, y) => Array.from({ length: 16 }, (_, x) => {
+    const px = x + 0.5, py = y + 0.5;
+    let d = Math.hypot(px - C, py - C);
+    for (const e of ends) d = Math.min(d, segDist(px, py, [C, C], e));
+    if (square) d = mask === 0 ? 99 : 0; // error: la casilla entera de tierra, sin bordes ni formas
+    const h = (x * 7 + y * 13) % 17;
+    if (d <= R) return square ? (h === 0 ? "E" : "e") : d > R - 1 ? "E" : h === 0 ? "p" : h === 5 ? "E" : "e";
+    if (d <= R + 1) return "r";
+    const blade = (bx, by) => ((bx * 37 + by * 91) ^ (bx * by * 7)) % 41 === 0; // matas repartidas sin patrón visible
+    return blade(x, y) ? "l" : blade(x, y - 1) || blade(x - 1, y - 1) ? "d" : "g";
+  }).map((k) => PATHP[k]));
+}
+{
+  const sheet = Array.from({ length: 64 }, () => Array(64).fill(null));
+  for (let m = 0; m < 16; m++) { const t = pathTile(m), ox = (m % 4) * 16, oy = Math.floor(m / 4) * 16; t.forEach((r, y) => r.forEach((c, x) => { sheet[oy + y][ox + x] = c; })); }
+  const s = hexGridToSprite(sheet);
+  add("autotile-path", "Hoja de autotile de 64×64: las 16 piezas de un camino de tierra, una por cada combinación de vecinos. La pieza n.º (fila×4 + columna) suma 1 si hay camino arriba, 2 a la derecha, 4 abajo y 8 a la izquierda. La 0 es un trozo de camino sin salidas; la 15, un cruce. La tierra tiene un borde más oscuro, una línea de tierra húmeda contra la hierba y piedrecitas.", ["tile", "autotile"], s.pal, s.rows);
+  const MASK = ["......", ".PPPP.", ".P..P.", ".P.PPP", ".PPP..", "......"]; // un lazo con una salida a la derecha y un ramal
+  const isP = (x, y) => MASK[y]?.[x] === "P";
+  const map = (square) => {
+    const px = Array.from({ length: MASK.length * 16 }, () => Array(MASK[0].length * 16).fill(null));
+    MASK.forEach((row, ty) => [...row].forEach((_, tx) => {
+      const m = isP(tx, ty) ? (isP(tx, ty - 1) ? 1 : 0) | (isP(tx + 1, ty) || (tx + 1 === MASK[0].length && isP(tx, ty)) ? 2 : 0) | (isP(tx, ty + 1) ? 4 : 0) | (isP(tx - 1, ty) ? 8 : 0) : 0;
+      const t = isP(tx, ty) ? pathTile(m, { square }) : pathTile(0, { square: true });
+      t.forEach((r, y) => r.forEach((c, x) => { px[ty * 16 + y][tx * 16 + x] = c; }));
+    }));
+    return hexGridToSprite(px);
+  };
+  const g = map(false), b = map(true);
+  add("map-path", "Mapa de 96×96 (6×6 tiles) montado con el autotile: cada casilla de camino mira a sus cuatro vecinos y elige su pieza. Sale un lazo con un ramal hacia la derecha, con curvas redondeadas y los bordes continuos de una casilla a otra.", ["tile", "autotile", "mapa"], g.pal, g.rows);
+  add("map-path-bad", "Error: el mismo camino pintando cada casilla entera de tierra. Las curvas son escalones de 16 px, no hay borde entre la tierra y la hierba y se ve la rejilla.", ["tile", "autotile", "mapa", "error"], b.pal, b.rows);
+}
+
+// ---------- luz de borde (rim light): el héroe a contraluz sobre un fondo de noche (28×30)
+{
+  const BG = "#141a2e", BG2 = "#1d2742", MOON = "#e8f0ff", RIM = "#9fd4ff", RIM_O = "#4a6a9a";
+  const W = 28, H = 30, X0 = 6, Y0 = 4;
+  const scene = (mode) => {
+    const px = Array.from({ length: H }, (_, y) => Array.from({ length: W }, (_, x) => {
+      if (Math.hypot(x - 22.5, y - 6.5) <= 3.2) return MOON; // la luna, detrás y a la derecha
+      return y >= 26 ? "#10141f" : (x + y * 2) % 9 === 0 && y < 20 ? BG2 : BG;
+    }));
+    const hero = toHexGrid("hero-chibi");
+    const isFig = (x, y) => !!hero[y]?.[x];
+    hero.forEach((r, y) => r.forEach((c, x) => {
+      if (!c) return;
+      const outline = c === "#1b1030";
+      let out = mode === "none" ? c : outline ? c : shadeHex(c, 0.62); // a contraluz, la cara de delante queda en sombra
+      if (mode === "rim") {
+        // borde iluminado: el píxel interior que toca el contorno por la derecha o por arriba, y el contorno de ese lado se aclara
+        const rightEdge = !outline && (hero[y][x + 1] === "#1b1030" && !isFig(x + 2, y));
+        const topEdge = !outline && hero[y - 1]?.[x] === "#1b1030" && !isFig(x, y - 2) && x >= 8;
+        if (rightEdge || topEdge) out = RIM;
+        if (outline && !isFig(x + 1, y) && x >= 7) out = RIM_O;
+      }
+      if (mode === "halo") {
+        const edge = !outline && [[1, 0], [-1, 0], [0, 1], [0, -1]].some(([a, b]) => hero[y + b]?.[x + a] === "#1b1030");
+        if (edge) out = "#ffffff"; // error: borde blanco por todos lados
+      }
+      px[Y0 + y][X0 + x] = out;
+    }));
+    return hexGridToSprite(px);
+  };
+  const n = scene("none"), r = scene("rim"), h = scene("halo");
+  add("rim-none", "El héroe de noche, sin luz de borde (28×30). Sus colores normales y el contorno oscuro sobre un fondo azul casi negro: el contorno se funde con el fondo y la silueta se pierde.", ["luz", "personaje"], n.pal, n.rows);
+  add("rim-good", "El mismo héroe a contraluz, con la luna detrás y a la derecha. El cuerpo baja al 62 % (está de espaldas a la luz) y una línea de 1 px de azul claro recorre el borde derecho y la parte de arriba, por dentro del contorno; el contorno de ese lado se aclara. La figura se separa del fondo y se sabe de dónde viene la luz.", ["luz", "personaje"], r.pal, r.rows);
+  add("rim-halo", "Error: un borde blanco de 1 px por todos lados, igual a la izquierda que a la derecha. Separa la figura, pero no viene de ninguna luz: parece una pegatina recortada.", ["luz", "personaje", "error"], h.pal, h.rows);
+}
+
 // ---------- escribir y validar
 let bad = 0;
 for (const s of out) {

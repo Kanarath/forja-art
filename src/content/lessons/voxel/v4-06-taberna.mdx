@@ -1,0 +1,251 @@
+---
+id: v4-06
+discipline: voxel
+level: 4
+order: 6
+title: "Muebles a escala: un kit de taberna"
+summary: "Forja una mesa, una silla, un barril y una jarra midiendo cada pieza contra tu personaje (manos, cintura, pecho), con él en la escena como regla, y monta un rincón de taberna reutilizando piezas."
+duration: 45
+status: borrador
+prerequisites: [v4-01]
+fundamentals: [f08, f02]
+objectives:
+  - "Usar el personaje como regla: medir cada mueble contra una parte de su cuerpo (manos, cintura, pecho)"
+  - "Guardar el personaje como un modelo más en la escena de MagicaVoxel para medir sin adivinar"
+  - "Construir un kit de cuatro props con la misma escala, la misma paleta y el mismo nivel de detalle"
+  - "Reutilizar piezas (duplicar mesas, sillas, barriles y jarras) en vez de modelarlas otra vez"
+  - "Montar un rincón de taberna que se lea como un lugar en el que el personaje cabe"
+tools: [magicavoxel]
+piece:
+  name: "Tu kit de taberna (mesa, silla, barril y jarra) medido contra tu personaje, y un rincón montado con él"
+  canvas: "28x16x16"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [taberna]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Hoy forjas un **kit de taberna**: una mesa, una silla, un barril y una jarra. Y con él, un **rincón** donde tu personaje podría sentarse a beber.
+
+<VoxViewer model="taberna" stage={2} title="Tu pieza: el rincón de taberna (28×16 de suelo)" />
+
+Lo difícil no es modelar una silla. Es que la silla, la mesa y el barril **midan lo mismo que tu personaje**. Pulsa las tres etapas: el kit junto al chibi, el mismo kit sin medir y, al final, el rincón.
+
+Fíjate en el chibi de la última etapa. Está de pie junto a la mesa. No es decoración: es **la regla con la que se midió todo**.
+</Block>
+
+<Block kind="concepto">
+### 1. La regla es el personaje
+
+En [V4-01](/forja-art/voxel/v4-01/) el yunque mandaba: el martillo y el cubo se medían contra él. Con muebles, la regla es otra. Los muebles están hechos **para un cuerpo**. Una mesa no mide «10»: mide «lo que hace falta para apoyar las manos».
+
+El personaje es el chibi que modelarás en [V5-01](/forja-art/voxel/v5-01/). Mide **15 vóxels** de alto. Contando desde el suelo (z = 0):
+
+- **z 0:** botas.
+- **z 1:** piernas.
+- **z 2–6:** túnica, con el **cinturón en z 3**.
+- **z 3–5:** brazos y **manos**, colgando a los lados.
+- **z 7–14:** cabeza (ojos en z 9–10, pelo arriba).
+
+Cabeza enorme, piernas cortas: es un chibi. Por eso sus muebles **no** pueden copiar las medidas de una persona real. Se miden contra **su** cuerpo.
+
+<VoxViewer model="taberna" stage={0} title="Kit a escala: el chibi y, a su lado, mesa, silla, barril y jarra" />
+
+Gira el visor hasta verlo de lado y mueve el deslizador **Capas**. Cada pieza llega a una parte del cuerpo:
+
+| Pieza | Medida | Contra qué se mide |
+|---|---|---|
+| **Mesa** | 10×6, tablero en **z 5**, patas de 5 | Las **manos** (z 3–5): el tablero queda a la altura de la mano |
+| **Silla** | 3×3, asiento en **z 3**, respaldo de 4 | El **cinturón** (z 3): el asiento queda por la cintura |
+| **Barril** | 5×5 de planta (radio 2,6), **7** de alto | El **pecho**: la tapa (z 6) queda a la altura del pecho, lo alto de la túnica |
+| **Jarra** | 2×2×2 + espuma + asa | La **mano**: el brazo mide 2×2 de grosor; la jarra, también |
+
+<Why title="¿Por qué medir contra partes del cuerpo y no contra la altura total?">
+Porque el ojo no compara alturas, compara **usos**. Si el tablero está a la altura de las manos, ves que el personaje puede apoyar la jarra. Si está a la altura de los ojos, ves que no, aunque no sepas cuántos vóxels mide nada. Es la regla de [F08-02](/forja-art/fundamentos/f08-02/): una unidad (el personaje) y todo en relación con ella.
+</Why>
+
+<Sprite name="scale-good" scale={4} caption="scale-good: en pixel art, la misma idea. El héroe y la puerta dan la medida; el cofre lleva la tapa a la altura de las manos" />
+
+### 2. Las alturas mandan; la planta se puede compactar
+
+La silla mide 3×3 y el chibi tiene 6 vóxels de ancho de cadera. En la vida real no cabría. En un chibi, sí lo aceptamos: todo el estilo es **compacto**. Lo que no perdona el ojo son las **alturas** contra el cuerpo: dónde quedan las manos, la cintura y la cabeza.
+
+Si tu personaje es más realista, ensancha la silla. Pero mide las alturas igual.
+
+### 3. El kit comparte paleta y detalle
+
+Las cuatro piezas usan **las mismas tres maderas**, como el yunque y el martillo de V4-01:
+
+- **Mesa:** tablero de tablas a lo largo, dos claras y una media (la junta) que se repiten; las patas, en madera oscura, **metidas 1 vóxel** desde el borde.
+- **Silla:** asiento en madera media, cuatro patas oscuras en las esquinas, respaldo de 3×4 con la fila de arriba oscura.
+- **Barril:** duelas alternando madera media y oscura, **dos aros de hierro** (en z 1 y z 5) y la tapa clara de 3×3.
+- **Jarra:** estaño gris, una fila de **espuma** crema encima y un asa de 1 vóxel en estaño más oscuro.
+
+Mismo nivel de detalle: cada pieza tiene **una idea** (tablas, patas, aros, espuma). Ninguna tiene veinte.
+
+### 4. Reutilizar es parte del oficio
+
+Mira otra vez el rincón. La mesa es la del kit. Las **dos sillas** son la misma pieza, una girada para mirar a la otra. Las **dos jarras**, iguales. Los dos barriles del suelo, idénticos; el tercero, encima del de atrás, es una variante de **6** de alto (z 8–13) en vez de 7. El de abajo de la pila lleva un **grifo** de hierro que asoma 1 vóxel por fuera de las duelas.
+
+En un juego, un mueble se modela una vez y se coloca cien. Lo que cuesta es medirlo bien **la primera vez**: si la mesa está mal, está mal en todas las tabernas del juego.
+
+<Why title="La variante del barril">
+Apilar dos barriles iguales funciona. Hacer el de arriba un poco más bajo rompe la repetición sin romper la escala: siguen siendo 5×5, con los mismos aros y la misma tapa. Es reutilizar con criterio: cambias **una** medida, no la pieza entera.
+</Why>
+
+### 5. El rincón: el personaje dentro
+
+- **Suelo:** 28×16 de tablas en dos tonos.
+- **Paredes:** al fondo y a la izquierda, de piedra en dos grises con un **zócalo de madera de 4** de alto.
+- **Mesa** con **dos sillas enfrentadas**, una a cada lado largo.
+- **Tres barriles** contra la pared izquierda, uno encima de otro.
+- **Dos jarras** y una **vela** (cera crema y llama amarilla, para el material **Emit**) sobre la mesa.
+- Un **estante** de 5 en la pared del fondo con dos piezas de 1×1×2 encima, una gris y una roja: una botella y una jarra.
+- **El chibi**, de pie a la derecha de la mesa. La mesa le llega a las manos.
+
+<Warn title="El visor no simula materiales">
+El visor web solo muestra colores. La llama de la vela con **Emit** y el brillo del estaño solo se ven en el modo **Render** de MagicaVoxel ([V3-02](/forja-art/voxel/v3-02/)).
+</Warn>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="El personaje entra en la escena">
+1. Abre una escena nueva en MagicaVoxel.
+2. Mete a tu personaje como **primer modelo**. Si aún no tienes el tuyo, pulsa **Descargar .vox** en el visor de la etapa «Kit a escala», ábrelo y borra los muebles con **Erase** y el pincel **Box**: te queda el chibi.
+3. Gira la cámara con el botón derecho y apunta sus alturas en un papel: suelo, cinturón, manos, pecho, ojos.
+
+<Why>
+El personaje es un modelo **más** de la escena, como el yunque en V4-01. No lo exportas con los muebles: está ahí para medir. Si lo borras al acabar, pierdes la regla.
+</Why>
+</Step>
+
+<Step n={2} title="La mesa, contra las manos">
+1. Pasa al modo **World**: ves todos los modelos de la escena. Crea un modelo nuevo de unos 10×6×6 y colócalo **junto al personaje**, apoyado en el mismo suelo.
+2. Entra a editarlo. Modo **Attach**, pincel **Box**, madera clara: el tablero, de 1 vóxel de grosor, a la altura de las **manos** de tu personaje.
+3. Madera oscura: cuatro patas de 1×1 desde el suelo hasta debajo del tablero, **metidas 1 vóxel** desde las esquinas.
+4. Modo **Paint**, madera media: una columna de cada tres en el tablero. Son las juntas entre tablas.
+5. Vuelve a **World** y mira la mesa y el personaje de lado, juntos.
+
+<Tip>
+Mide con el personaje en pantalla, no de memoria. En World puedes acercar los dos modelos y comparar filas. Si dudas entre dos alturas, elige la que deja las manos justo a la altura del tablero.
+</Tip>
+</Step>
+
+<Step n={3} title="La silla, contra la cintura">
+1. Modelo nuevo de 3×3×8 (o 4×4 si tu personaje es más ancho), junto a la mesa.
+2. Madera oscura: cuatro patas en las esquinas, hasta debajo del **cinturón**.
+3. Madera media: el asiento, de 1 vóxel, a la altura del cinturón.
+4. El respaldo: una fila de 3 en un lado, **4** vóxels por encima del asiento; la fila de arriba, oscura.
+5. Pon la silla junto a la mesa en **World**. El asiento debe quedar claramente **por debajo** del tablero.
+
+<Why>
+Mesa y silla se miden contra el cuerpo **y entre sí**. La diferencia entre asiento y tablero es el hueco donde van las piernas y la tripa. En el kit: asiento en z 3, tablero en z 5. Si los igualas, la silla parece un taburete pegado a la mesa.
+</Why>
+</Step>
+
+<Step n={4} title="El barril y la jarra">
+1. **Barril:** modelo nuevo de 5×5×7. Con **Attach** y **Box**, construye la planta redonda capa a capa: filas de **3, 5, 5, 5, 3** (como el círculo de V4-05, más pequeño). Sube hasta 7 de alto: la tapa a la altura del **pecho**.
+2. **Paint**: dos aros de hierro, una capa sobre el suelo y una bajo la tapa. Duelas alternando madera media y oscura. La tapa, de 3×3 en madera clara.
+3. **Jarra:** modelo nuevo pequeño. Un cuerpo de **2×2×2** en estaño (del **ancho de la mano** de tu personaje), una capa de espuma crema encima y el asa de 1 vóxel a un lado.
+4. Pon las cuatro piezas en fila junto al personaje, como en la etapa «Kit a escala». Guarda como `taberna_kit.vox`.
+
+<Warn>
+La jarra se mide contra la **mano**, no contra la cabeza. Una jarra del tamaño de media cabeza parece un cubo de fregar.
+</Warn>
+</Step>
+
+<Step n={5} title="El rincón: suelo y paredes">
+1. Modelo nuevo para el suelo, de unos 28×16 y 1 de alto. **Paint**: tablas en dos maderas, alternando filas.
+2. Dos modelos para las paredes, al fondo y a la izquierda, en piedra. Las cuatro primeras capas, un **zócalo de madera oscura**: es la altura donde rozan sillas y barriles.
+3. Pinta los sillares con dos grises, desplazados en filas alternas.
+
+<Tip>
+El zócalo de 4 también se mide contra el personaje: le llega a la cintura. En una taberna de verdad está ahí para que las sillas no rayen la piedra. Detalle con causa.
+</Tip>
+</Step>
+
+<Step n={6} title="Reutiliza: duplica en World">
+1. En **World**, coloca la mesa en el centro del rincón.
+2. **Duplica** la silla y pon una a cada lado largo de la mesa, **enfrentadas**: gira o refleja una para que el respaldo quede hacia fuera.
+3. Duplica el barril: dos contra la pared izquierda. Para el tercero, duplica otro y quítale **1 capa** del cuerpo (que mida 6) antes de ponerlo encima del de atrás.
+4. Duplica la jarra: dos sobre la mesa.
+5. Añade una **vela** (1 vóxel de cera y encima 1 de llama) en la mesa y un **estante** con una o dos piezas en la pared del fondo.
+6. Pon a tu personaje **dentro**, de pie junto a la mesa. Guarda como `taberna_rincon.vox`.
+
+<Why>
+Duplicar no es pereza: garantiza que las dos sillas midan **exactamente** lo mismo. Si las modelas por separado, una acaba un vóxel más alta y el ojo lo nota.
+</Why>
+</Step>
+
+<Step n={7} title="Render con la vela">
+1. Selecciona en la paleta el color de la llama y, en el **panel de materiales**, cambia su tipo a **Emit**. El estaño de las jarras puede ir en **Metal**.
+2. Pulsa **Render**. Encuadra el rincón con el personaje dentro y guarda la imagen.
+3. Haz otro render de **solo los muebles**, sin el personaje. ¿Se adivina su tamaño igual?
+
+<Tip>
+Si en el render sin personaje sigues «viendo» a alguien de su tamaño sentado a la mesa, la escala está bien. Esa es la prueba.
+</Tip>
+</Step>
+
+<Warn title="Verifica en tu versión">
+El nombre y la ubicación del modo **World**, cómo se crea un modelo nuevo y se fija su tamaño, cómo se **mueve**, **duplica**, **gira** o **refleja** un modelo (y si eso se hace en World o en el modo de edición) cambian entre versiones de MagicaVoxel. Si no encuentras cómo girar una silla, modela la segunda con el respaldo en el lado contrario: es lo mismo. Comprueba también los nombres de **Attach**, **Erase**, **Paint**, de los pinceles **Box** y **Voxel**, del **panel de materiales** y del botón para guardar en **Render**.
+</Warn>
+
+<Inspector upload title="Sube tu render: ¿se lee la escala a 1×?" />
+</Block>
+
+<Block kind="version">
+Forja **tu kit** medido contra **tu** personaje (cuatro props) y monta con él **un rincón**. Guarda el kit, el rincón y un render. Elige un reto:
+
+- **Taberna de tu personaje:** el mismo kit, pero con otra persona de referencia. Si es más alta o más realista, cambian todas las alturas. Apunta antes las cinco medidas del cuerpo.
+- **Otro oficio:** una cocina (mesa de trabajo, taburete, olla y cuchara), una biblioteca (atril, silla, estante, libro) o un puesto de mercado. Las mismas reglas: cada pieza contra una parte del cuerpo.
+- **El banquete:** una mesa larga con cuatro o seis sillas iguales y la vajilla repetida. Todo el reto es duplicar sin perder la escala y romper la repetición con **una** variante, como el barril bajo.
+
+Antes de guardar cada pieza, ponla junto al personaje y pregúntate: ¿podría **usarla**?
+</Block>
+
+<Block kind="errores">
+<Mistake title="Piezas bonitas sin escala común" wrongLabel="Sin medir" rightLabel="Medido contra el chibi">
+  <VoxViewer slot="wrong" model="taberna" stage={1} title="Sin escala" />
+  <VoxViewer slot="right" model="taberna" stage={0} title="Kit a escala" />
+
+Cada pieza está bien modelada. Juntas, no tienen sentido: el tablero está en z 10, **a la altura de los ojos**; la silla es de 2×2 con el asiento a 1, por las rodillas; el barril mide **14** de alto (el chibi, 15) y 9×9 de planta; la jarra de 3×3×4 es como media cabeza. Pasa cuando cada mueble se modela solo, en su modelo vacío, sin nada al lado. **Corrección:** el personaje dentro de la escena desde el primer vóxel, y cada pieza medida contra una parte de su cuerpo.
+</Mistake>
+
+<Mistake title="Medir contra la persona real, no contra tu personaje" wrongLabel="Medidas de persona" rightLabel="Medidas de chibi">
+  <p slot="wrong">«Una mesa mide unos 75 cm; una persona, 1,75 m»: la mesa al 43 % de 15 vóxels, unos 6 de alto. Para el chibi, eso es lo alto de la túnica, casi el pecho: sus manos quedan muy por debajo.</p>
+  <p slot="right">La mesa a la altura de **sus** manos y la silla a la de **su** cinturón. El chibi tiene piernas de 2: sus muebles son bajos.</p>
+
+Las proporciones reales sirven para personajes realistas. **Corrección:** mide contra el cuerpo que has dibujado, no contra el de la tabla de un manual.
+</Mistake>
+
+<Warn title="Error típico: medir contra otra regla que ya no vale">
+En [V7-02](/forja-art/voxel/v7-02/) la habitación se mide con la puerta de 4 vóxels de V6, que es la altura de una persona en ese mundo. Allí la mesa mide **4** de alto: tanto como la propia persona. Para esa regla, la mesa sale **alta**: le llegaría a la cabeza. No es un fallo grave y tiene arreglo fácil: cuando llegues a esa lección, baja el tablero a unos 2 de alto sobre el suelo (más o menos la cadera de alguien de 4) y el asiento a 1, siempre por debajo del tablero. Y si pones allí al chibi de 15 como referencia, como hoy, la escala de toda la habitación tendrá que crecer con él. **Corrección general:** elige **una** regla por escena y no la cambies a mitad.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+<Checklist items={[
+  "Mi personaje está en la escena como un modelo más, junto a los muebles",
+  "Apunté sus alturas: suelo, cinturón, manos, pecho y ojos",
+  "La mesa llega a las manos, el asiento al cinturón y queda claramente por debajo del tablero",
+  "El barril y la jarra se miden contra el cuerpo y la mano, no contra la cabeza",
+  "Las cuatro piezas comparten paleta de maderas y tienen el mismo nivel de detalle",
+  "En el rincón duplico piezas (sillas, jarras, barriles) y cambio como mucho una medida en una variante",
+  "He guardado el kit, el rincón y un render con la vela en Emit",
+]} />
+
+<Quiz q="Tu mesa y tu silla están bien hechas, pero juntas «no se sienten bien». ¿Qué compruebas primero?" options={["Que tengan los mismos colores de madera", "Sus alturas contra el personaje: tablero por las manos, asiento por la cintura", "Que tengan el mismo número de vóxels"]} answer={1}>
+La paleta común ayuda, pero lo que el ojo nota primero es el uso: si el personaje podría apoyar las manos en la mesa y sentarse en la silla. Eso se mide contra su cuerpo.
+</Quiz>
+
+<Quiz q="¿Por qué conviene duplicar la silla en vez de modelar la segunda?" options={["Porque MagicaVoxel no deja tener dos modelos distintos", "Porque así las dos miden exactamente lo mismo y lo que mediste bien una vez vale para todas", "Porque una silla duplicada pesa menos en el render"]} answer={1}>
+Una pieza bien medida se coloca muchas veces. Si modelas cada copia a mano, alguna acaba un vóxel más alta y la escala se rompe.
+</Quiz>
+
+<Quiz q="El tablero de la mesa del kit está en z 5. ¿Contra qué parte del chibi se midió?" options={["Contra sus manos, que cuelgan en z 3–5", "Contra sus ojos, en z 9–10", "Contra sus botas, en z 0"]} answer={0}>
+Las manos del chibi cuelgan entre z 3 y z 5: el tablero queda a su altura y se lee como una mesa en la que puede apoyar la jarra.
+</Quiz>
+</Block>

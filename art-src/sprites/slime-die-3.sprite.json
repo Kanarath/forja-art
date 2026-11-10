@@ -1,0 +1,37 @@
+{
+  "name": "slime-die-3",
+  "description": "Frame 3: se derrama en un charco de 16×4 que ocupa todo el ancho del lienzo. Dos gotas claras saltan del charco.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "criatura",
+    "animación"
+  ],
+  "palette": {
+    "a": "#1b1030",
+    "c": "#d8ffe6",
+    "d": "#4ade80"
+  },
+  "rows": [
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "...........c....",
+    "....c...........",
+    "................",
+    "...aaaaaaaaaa...",
+    ".aaddddddddddaa.",
+    "adddddddddddddda",
+    "aaaaaaaaaaaaaaaa"
+  ]
+}

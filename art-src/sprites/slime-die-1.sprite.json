@@ -1,0 +1,36 @@
+{
+  "name": "slime-die-1",
+  "description": "Derrota, frame 1: el golpe final. El interior del slime se vuelve blanco durante un instante; el contorno y los ojos se quedan, así se sigue leyendo quién es.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "criatura",
+    "animación"
+  ],
+  "palette": {
+    "a": "#1b1030",
+    "b": "#ffffff"
+  },
+  "rows": [
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "......aaaa......",
+    ".....abbbba.....",
+    "....abbbbbba....",
+    "....ababbaba....",
+    "...abbbbbbbba...",
+    "...abbbbbbbba...",
+    "...abbbbbbbba...",
+    "...aaaaaaaaaa..."
+  ]
+}

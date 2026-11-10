@@ -718,7 +718,114 @@ function bakeAO(voxels, { step = 0.82, t1 = 3, t2 = 5, onlyTops = true } = {}) {
 const aoRoom = bakeAO(roomDetail);
 const aoTooMuch = bakeAO(roomDetail, { step: 0.55, t1: 1, t2: 3, onlyTops: false });
 
+// ---------- TABERNA: un kit de muebles a la escala del chibi (15 de alto, cinturón en z=3, manos en z=3–5)
+const tavTable = (x, y, z0, top, w = 10, d = 6) => [
+  ...box(x, y, z0 + top, x + w - 1, y + d - 1, z0 + top, null).map((v) => ({ ...v, c: (v.x - x) % 3 === 2 ? WOOD.mid : WOOD.light })), // tablero de tablas
+  ...[[x + 1, y + 1], [x + w - 2, y + 1], [x + 1, y + d - 2], [x + w - 2, y + d - 2]].flatMap(([a, b]) => box(a, b, z0, a, b, z0 + top - 1, WOOD.dark)), // patas metidas 1 vóxel
+];
+const tavChair = (x, y, z0, seat, back = "y+", s = 3) => {
+  const v = [...box(x, y, z0 + seat, x + s - 1, y + s - 1, z0 + seat, WOOD.mid), ...[[x, y], [x + s - 1, y], [x, y + s - 1], [x + s - 1, y + s - 1]].flatMap(([a, b]) => box(a, b, z0, a, b, z0 + seat - 1, WOOD.dark))];
+  const by = back === "y+" ? y + s - 1 : y; // respaldo
+  v.push(...box(x, by, z0 + seat + 1, x + s - 1, by, z0 + seat + 4, WOOD.mid).map((q) => ({ ...q, c: q.z === z0 + seat + 4 ? WOOD.dark : WOOD.mid })));
+  return v;
+};
+const tavBarrel = (cx, cy, z0, r = 2.6, h = 7) => move(cylinder(r, h, WOOD.mid), cx, cy, z0).map((v) => {
+  const z = v.z - z0;
+  if (z === 1 || z === h - 2) return { ...v, c: METAL.dark }; // aros
+  if (z === h - 1 && Math.hypot(v.x - cx, v.y - cy) < r - 0.8) return { ...v, c: WOOD.light }; // tapa
+  return Math.round(Math.atan2(v.y - cy, v.x - cx) * 3) % 2 === 0 ? { ...v, c: WOOD.dark } : v; // duelas
+});
+const tavMug = (x, y, z0, s = 2, h = 2) => [...box(x, y, z0, x + s - 1, y + s - 1, z0 + h - 1, "#8a8698"), ...box(x, y, z0 + h, x + s - 1, y + s - 1, z0 + h, "#f4ecdc"), ...box(x + s, y, z0 + 1, x + s, y, z0 + h - 1, "#6a6678")]; // jarra de estaño con espuma y asa
+const tavKit = [
+  ...chibiDetail,
+  ...tavTable(13, 2, 0, 5),
+  ...tavChair(26, 3, 0, 3),
+  ...tavBarrel(35, 5, 0),
+  ...tavMug(41, 4, 0),
+];
+const tavWrong = [
+  ...chibiDetail,
+  ...tavTable(13, 2, 0, 10), // la mesa a la altura de los ojos
+  ...tavChair(26, 4, 0, 1, "y+", 2), // una silla de muñecas
+  ...tavBarrel(36, 5, 0, 4.3, 14), // un barril casi tan alto como el héroe
+  ...tavMug(15, 4, 11, 3, 4), // una jarra que es medio cabeza
+];
+const tavFloor = box(0, 0, 0, 27, 15, 0, null).map((v) => ({ ...v, c: v.y % 2 ? FLOOR.a : FLOOR.b })); // tablas a lo largo de X
+const tavWalls = [
+  ...box(0, 15, 1, 27, 15, 17, null).map((v) => ({ ...v, c: v.z <= 4 ? WOOD.dark : (v.x + (v.z % 2) * 2) % 4 === 0 ? STONE.dark : STONE.light })), // fondo: zócalo de madera y piedra encima
+  ...box(0, 0, 1, 0, 14, 17, null).map((v) => ({ ...v, c: v.z <= 4 ? WOOD.dark : (v.y + (v.z % 2) * 2) % 4 === 0 ? STONE.dark : STONE.light })),
+];
+const tavCorner = [
+  ...tavFloor, ...tavWalls,
+  ...tavTable(7, 5, 1, 5),
+  ...tavChair(10, 2, 1, 3, "y-"), ...tavChair(10, 11, 1, 3, "y+"), // dos sillas enfrentadas
+  ...tavBarrel(4, 12, 1), ...tavBarrel(4, 6, 1), ...tavBarrel(4, 12, 8, 2.6, 6), // barriles contra la pared, uno encima
+  ...box(1, 12, 3, 1, 12, 3, METAL.mid), // grifo del barril, por fuera de la duela
+  ...tavMug(9, 7, 7), ...tavMug(14, 8, 7), // jarras sobre la mesa
+  ...box(12, 7, 7, 12, 7, 7, "#f4e6c8"), { x: 12, y: 7, z: 8, c: "#ffd36e" }, // vela (Emit)
+  ...box(8, 15, 8, 12, 15, 8, WOOD.dark).map((v) => ({ ...v, y: 14 })), // estante en la pared del fondo
+  ...[[9, "#8a8698"], [11, "#c2413b"]].flatMap(([x, c]) => box(x, 14, 9, x, 14, 10, c)), // botella y jarra en el estante
+  ...move(chibiDetail, 16, 5, 1), // el chibi de pie junto a la mesa: la mesa le llega por las manos
+];
+
+// ---------- GÓLEM: una criatura grande por masas, piezas y detalle (mira hacia -Y)
+const GOLEM_PARTS = [
+  ["pierna-i", [3, 2, 0, 6, 6, 7], "#8a8f9e"], ["pierna-d", [9, 2, 0, 12, 6, 7], "#8a8f9e"],
+  ["cadera", [3, 1, 8, 12, 6, 9], "#7d8698"],
+  ["torso", [1, 0, 10, 14, 7, 19], "#9aa3b5"],
+  ["cabeza", [5, -2, 19, 10, 2, 23], "#a8b0c0"],
+  ["hombro-i", [-2, 1, 17, 1, 6, 20], "#8a8f9e"], ["hombro-d", [14, 1, 17, 17, 6, 20], "#8a8f9e"],
+  ["brazo-i", [-2, 2, 12, 0, 5, 16], "#7d8698"], ["brazo-d", [15, 2, 12, 17, 5, 16], "#7d8698"],
+  ["puño-i", [-3, 0, 5, 1, 5, 10], "#9aa3b5"], ["puño-d", [14, 0, 5, 18, 5, 10], "#9aa3b5"],
+];
+const golemMass = GOLEM_PARTS.flatMap(([, b]) => box(...b, STONE.light));
+const golemPieces = (() => {
+  const v = [];
+  for (const [name, [x0, y0, z0, x1, y1, z1], c] of GOLEM_PARTS) {
+    for (const q of box(x0, y0, z0, x1, y1, z1, c)) {
+      const corner = [q.x === x0 || q.x === x1, q.y === y0 || q.y === y1, q.z === z1].filter(Boolean).length === 3;
+      if (corner && !name.startsWith("pierna")) continue; // esquinas de arriba desconchadas: piedra, no cajas
+      const spot = ((q.x * 7 + q.y * 13 + q.z * 5) % 11) === 0;
+      v.push(spot ? { ...q, c: "#6a6f7e" } : q);
+    }
+  }
+  // articulaciones: codos de piedra oscura, más estrechos que el brazo
+  v.push(...box(-2, 2, 11, 0, 5, 11, "#4a4e5c"), ...box(15, 2, 11, 17, 5, 11, "#4a4e5c"));
+  return v;
+})();
+const GLOW = "#7df9ff", CORE = "#38b6ff";
+const golemDetail = (() => {
+  const top = new Map();
+  for (const q of golemPieces) { const k = `${q.x},${q.y}`; if (!top.has(k) || top.get(k).z < q.z) top.set(k, q); }
+  const moss = new Set([...top.values()].filter((q) => q.z >= 7 && ((q.x * 3 + q.y * 5 + q.z) % 5 < 2 || (q.z >= 20 && (q.x + q.y) % 2 === 0))).map((q) => `${q.x},${q.y},${q.z}`));
+  const v = golemPieces.map((q) => (moss.has(`${q.x},${q.y},${q.z}`) ? { ...q, c: (q.x + q.y) % 3 ? LEAF.mid : LEAF.dark } : q));
+  // musgo que cuelga 1 vóxel por el frente de los hombros
+  for (const x of [-1, 16]) v.push({ x, y: 0, z: 20, c: LEAF.dark }, { x, y: 0, z: 19, c: LEAF.dark });
+  // ojos que brillan (Emit) en la cara, y el núcleo de cristal en el pecho con grietas que salen de él
+  for (const x of [6, 9]) v.push({ x, y: -2, z: 21, c: GLOW });
+  v.push(...box(7, 0, 14, 8, 0, 15, CORE), { x: 7, y: -1, z: 15, c: GLOW });
+  for (const [x, z] of [[6, 16], [5, 17], [4, 18], [9, 13], [10, 12], [6, 13]]) v.push({ x, y: 0, z, c: "#3a3e4a" });
+  v.push({ x: 16, y: 3, z: 21, c: "#ffd36e" }, { x: 16, y: 4, z: 21, c: LEAF.light }); // una flor en el hombro
+  return v;
+})();
+
 export const MODELS = {
+  taberna: {
+    description: "Taberna: un kit de muebles a la escala del personaje",
+    stages: [
+      { label: "Kit a escala", note: "El chibi de 15 vóxels como referencia y, a su lado, el kit: una mesa de 10×6 con el tablero a 5 de alto (por las manos), una silla con el asiento a 3 y respaldo, un barril de 7 de alto (por el pecho) y una jarra de 2×2×2 con espuma y asa.", voxels: tavKit },
+      { label: "Sin escala", note: "Error: las mismas piezas sin medir contra el personaje. La mesa llega a la altura de los ojos, la silla es de muñecas, el barril de 14 de alto es casi tan alto como el héroe y la jarra es como media cabeza.", voxels: tavWrong },
+      { label: "Rincón", note: "El kit montado en un rincón de taberna con suelo de tablas y paredes de piedra con zócalo de madera: la mesa con dos sillas enfrentadas, tres barriles contra la pared (uno encima, con grifo), dos jarras y una vela, un estante con botella y el chibi de pie junto a la mesa.", voxels: tavCorner },
+    ],
+  },
+  golem: {
+    description: "Gólem: una criatura grande por masas, piezas y detalle",
+    stages: [
+      { label: "Masas", note: "Once cajas en un solo gris: piernas gruesas de 4×5×8, un torso de 14×8×10, hombros enormes, brazos largos con puños de 5×6×6 que cuelgan hasta las rodillas y la cabeza pequeña y adelantada. Con las proporciones ya se lee pesado y fuerte.", voxels: golemMass },
+      { label: "Piezas", note: "Cada masa es un bloque de piedra con su propio gris, las esquinas de arriba desconchadas y algunas manchas oscuras. Entre brazo y puño, una junta de piedra oscura (el codo), más estrecha que el puño: se ve que el cuerpo está hecho de piedras unidas.", voxels: golemPieces },
+      { label: "Detalle", note: "Musgo a manchas en lo que mira hacia arriba (más en hombros y cabeza, algo en los puños) y colgando por delante de los hombros, dos ojos y un núcleo de cristal en el pecho (para el material Emit), grietas que salen del núcleo y una flor en el hombro derecho: lleva mucho tiempo quieto.", voxels: golemDetail },
+    ],
+  },
   barco: {
     description: "Barco: casco curvo por capas, cubierta y mástil, vela y detalle",
     stages: [

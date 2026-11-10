@@ -1,0 +1,38 @@
+{
+  "name": "slime-die-2",
+  "description": "Frame 2: se aplasta a 14×6 y cierra los ojos (dos rayas de 2 px). Ya no es un aplastado de salto: no va a volver a subir.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "criatura",
+    "animación"
+  ],
+  "palette": {
+    "a": "#1b1030",
+    "c": "#d8ffe6",
+    "d": "#4ade80",
+    "e": "#1f8a4c"
+  },
+  "rows": [
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    ".....aaaaaa.....",
+    "...aaccddddaa...",
+    "..adddddddddda..",
+    "..addaaddaadda..",
+    ".aeeeeeeeeeeeea.",
+    ".aaaaaaaaaaaaaa."
+  ]
+}

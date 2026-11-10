@@ -1,0 +1,38 @@
+{
+  "name": "slime-die-4",
+  "description": "Frame 4: el charco encoge a 12 de ancho y se oscurece (todo en el verde oscuro). Tres burbujas suben: la materia se va hacia arriba.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "criatura",
+    "animación"
+  ],
+  "palette": {
+    "a": "#1b1030",
+    "c": "#d8ffe6",
+    "d": "#4ade80",
+    "e": "#1f8a4c"
+  },
+  "rows": [
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "............d...",
+    "...c............",
+    "........c.......",
+    "................",
+    "................",
+    "................",
+    "................",
+    "...aaaaaaaaaa...",
+    "..aeeeeeeeeeea..",
+    "..aaaaaaaaaaaa.."
+  ]
+}

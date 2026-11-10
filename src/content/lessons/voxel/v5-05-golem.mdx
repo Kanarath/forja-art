@@ -1,0 +1,281 @@
+---
+id: v5-05
+discipline: voxel
+level: 5
+order: 5
+title: "Criaturas grandes: un gólem por masas"
+summary: "Una criatura grande en tres pasos: masas con proporciones que dicen «pesado», bloques de piedra con su tono y sus juntas, y un detalle que cuenta que lleva siglos quieto."
+duration: 45
+status: borrador
+prerequisites: [v5-01, v3-02]
+fundamentals: [f02, f09]
+objectives:
+  - "Construir una criatura grande por masas y fijar en ellas las proporciones que dicen «pesado»"
+  - "Dividir las masas en piezas de piedra: un tono por bloque, esquinas gastadas y juntas oscuras"
+  - "Añadir detalle que cuente una historia: musgo en lo que mira hacia arriba, una flor, grietas"
+  - "Usar el material Emit en los ojos y el núcleo para crear el foco de la criatura"
+  - "Comprobar la silueta de frente, de lado y en isométrica, porque cada vista se lee distinto"
+tools: [magicavoxel]
+piece:
+  name: "Tu propia criatura grande (gólem, ent, coloso de hielo…) en tres pasos: masas, piezas y detalle"
+  canvas: "24x12x26"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [golem]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+El chibi de [V5-01](/forja-art/voxel/v5-01/) era pequeño y amable: cabeza enorme, cuerpo corto. Hoy forjas lo contrario: una criatura **grande y pesada**. Un gólem de piedra.
+
+<VoxViewer model="golem" stage={2} title="Tu pieza: un gólem de 22×10×24 en tres pasos" />
+
+Gíralo despacio. Ponlo **de frente**, **de lado** y **desde arriba en diagonal**. En las tres vistas se lee «pesado», pero cada una cuenta una cosa distinta. Lo verás al final del concepto.
+
+Recorre las tres etapas: **Masas**, **Piezas** y **Detalle**.
+
+Tu pieza final: **tu propia criatura grande** (el gólem, un ent de madera, un coloso de hielo, un guardián de bronce…) hecha en esos mismos tres pasos, con Mirror y un render comprobado desde tres vistas.
+</Block>
+
+<Block kind="concepto">
+### 1. Masas: el peso se decide con cajas
+
+<VoxViewer model="golem" stage={0} title="Masas: once cajas en un solo gris" />
+
+La etapa **Masas** son **11 cajas** en el mismo gris. Nada más. De abajo arriba, por capas:
+
+- **Piernas:** dos cajas de **4×5×8**, de la capa 0 a la 7, separadas por un hueco de 2 vóxels.
+- **Cadera:** una caja de 10×6×2 (capas 8 y 9) que une las dos piernas.
+- **Torso:** la caja grande, de **14×8×10** (capas 10 a 19).
+- **Hombros:** dos cajas de 4×6×4 (capas 17 a 20), pegadas a los lados del torso. Asoman **1 capa por encima** de él.
+- **Brazos:** dos cajas de 3×4×5 (capas 12 a 16), colgando de los hombros.
+- **Puños:** dos cajas de **5×6×6** (capas 5 a 10). Bajan por debajo de la cadera, **hasta las rodillas**.
+- **Cabeza:** una caja de **6×5×5** (capas 19 a 23), hundida entre los hombros.
+
+Sin color, sin musgo, sin ojos. Y ya es algo enorme que pesa.
+
+<Sprite name="shape-square" scale={6} caption="El cuadrado: estable, sólido, fiable. El gólem es todo cuadrados" />
+
+<Why title="Por qué estas proporciones dicen «pesado»">
+Es el lenguaje de formas de [F02-01](/forja-art/fundamentos/f02-01/): las formas cuadradas y anchas se leen estables y sólidas. Pero el peso lo dicen sobre todo **los tamaños relativos**. El chibi tenía la cabeza casi a la mitad de su altura: eso es «pequeño y tierno». El gólem es al revés: la cabeza mide **5 de 24** capas y solo asoma **3 por encima de los hombros**; los hombros abarcan **20** vóxels de ancho y la cabeza, **6**. Cuanto más pequeña es la cabeza frente al cuerpo, más grande parece la criatura.
+</Why>
+
+Tres medidas que conviene mirar en el visor:
+
+- **Los puños son más grandes que la cabeza:** 5×6×6 frente a 6×5×5. Todo el peso está en los brazos.
+- **Las piernas son cortas y gruesas:** un tercio de la altura (8 de 24) y 4×5 de sección cada una. Son columnas, no patas.
+- **El cuerpo se inclina hacia delante:** la cabeza sobresale **2 vóxels** por delante del torso, y el torso sobresale **2** por delante de las piernas. Los puños llegan hasta el frente del torso.
+
+<Why title="Por qué la cabeza adelantada">
+Una cabeza encima del torso, centrada, es la postura de un soldado firme. Adelantada y hundida entre los hombros, es la de algo que carga peso: el cuello desaparece y la espalda se curva. Es la misma idea de la oveja de [V5-04](/forja-art/voxel/v5-04/): la posición de la cabeza da **dirección e intención**. Aquí dice «encorvado, lento, imparable».
+</Why>
+
+<Tip>
+El ancho total es **par** (22) y todo es simétrico respecto al centro: piernas, hombros, brazos, puños y cabeza. Se modela con Mirror, como el murciélago de [V5-03](/forja-art/voxel/v5-03/). La asimetría llegará con el detalle.
+</Tip>
+
+### 2. Piezas: cada bloque de piedra con su tono
+
+<VoxViewer model="golem" stage={1} title="Piezas: cada masa con su gris, esquinas gastadas y juntas oscuras" />
+
+Compara **Piezas** con **Masas**. Las cajas no se mueven; cambian tres cosas:
+
+1. **Cada masa tiene su gris.** Del más claro al más oscuro: la **cabeza**; el **torso** y los **puños**; las **piernas** y los **hombros**; la **cadera** y los **brazos**. Las piezas que se tocan alternan tono: torso claro, hombro más oscuro, brazo más oscuro aún, puño claro otra vez.
+2. **Esquinas gastadas.** A cada bloque le falta el vóxel de sus **cuatro esquinas de arriba**. En las piernas no: encima apoya la cadera y no se verían.
+3. **Manchas y juntas.** Unos vóxels sueltos en un gris más oscuro salpican la piedra. Y entre cada brazo y su puño, en la capa 11, hay una **junta** de 3×4 en un gris casi negro. En **Masas** ese hueco estaba vacío: el puño no tocaba el brazo.
+
+<Why title="Por qué el gólem deja de ser cajas">
+Una caja de un solo color es un volumen abstracto. Cuando cada bloque tiene **su tono** y entre ellos hay una **junta oscura**, el ojo entiende cómo está construido: piedras talladas por separado y unidas. Es la misma lógica que las líneas de panel del hard surface que ya conoces de Blender: los cortes dicen que hay piezas. Y la junta es más estrecha que el puño (3×4 frente a 5×6): se ve **metida hacia dentro**, como una articulación de verdad.
+</Why>
+
+<Why title="Por qué gastar las esquinas">
+Una arista viva y perfecta dice «recién fabricado». La piedra vieja se gasta primero por las esquinas, que es lo que más golpes recibe. Quitar **un solo vóxel** por esquina basta: el bloque sigue siendo un bloque, pero ya tiene edad. Es el desgaste con intención de [V2-04](/forja-art/voxel/v2-04/): rompes donde el tiempo rompería, no al azar.
+</Why>
+
+<Tip>
+Las manchas del modelo se reparten con una fórmula, una de cada once más o menos, sin patrón visible. A mano, ponlas **pocas** y sueltas. Si las agrupas en rayas o las pones a todas a la misma distancia, se leen como un estampado.
+</Tip>
+
+### 3. Detalle: lo que cuenta la historia
+
+Vuelve al visor de la pieza (etapa **Detalle**) y compárala con **Piezas**. Ahora el detalle tiene un trabajo: decir **qué le ha pasado** a esta criatura.
+
+- **Musgo en lo que mira hacia arriba.** Unos 100 vóxels en dos verdes, pintados **solo en las caras de arriba**. Casi todos están en la cabeza, el torso y los hombros (capas 18 a 23); en los puños, solo 9. Y por delante de cada hombro **cuelga** un musgo de 2 vóxels en el verde más oscuro.
+- **Una flor.** Un vóxel amarillo con uno verde claro al lado, encima del hombro que ves a la derecha.
+- **Ojos y núcleo.** Dos ojos de 1 vóxel en un cian claro, en la cara, en la capa 21, con 2 vóxels entre ellos. En el pecho, un **núcleo de cristal azul de 2×2** (capas 14 y 15), con un vóxel cian que **sobresale** uno hacia delante.
+- **Grietas.** 6 vóxels en el gris más oscuro del modelo, que **salen del núcleo**: tres en diagonal hacia arriba y a la izquierda, dos hacia abajo y a la derecha, y uno suelto abajo.
+
+<Why title="Por qué el musgo arriba y la flor cuentan que lleva tiempo quieto">
+El musgo crece donde se posa la humedad y el polvo: en lo que mira al cielo. Si lo pones solo arriba, el espectador deduce sin pensarlo que el gólem **no se ha movido en mucho tiempo**. La flor es la prueba final: nadie deja crecer una flor sobre un hombro que se mueve. Es contar una historia con dos vóxels. Las grietas que salen del núcleo cuentan otra: la energía ha agrietado la piedra desde dentro.
+</Why>
+
+<Why title="Por qué los ojos y el núcleo son el foco">
+En una criatura de piedra gris y verde, lo único **saturado** y frío es el cian y el azul. Ahí va el ojo primero: a la cara y al corazón de la criatura, donde está la intención. En el render, con el material **Emit** de [V3-02](/forja-art/voxel/v3-02/), esos vóxels además **brillan** e iluminan la piedra de alrededor.
+</Why>
+
+<Warn title="El visor no enseña el brillo">
+El visor web **no simula** los materiales de render: los ojos y el núcleo se ven como colores planos. Fíjate: el cian de los ojos destaca por **saturación**, no por valor; la cabeza es el gris más claro del modelo y el valor de los dos se parece. El brillo de verdad solo aparece en el modo **Render** de MagicaVoxel, con Emit asignado a esos colores.
+</Warn>
+
+### 4. Cada vista se lee distinto
+
+Una criatura grande tiene mucha superficie, y cada cámara ve una parte distinta. Haz la prueba en el visor de la pieza:
+
+- **De frente:** manda la silueta ancha (22 vóxels de puño a puño contra las piernas metidas hacia dentro), y se ven la cara, los ojos, el núcleo y las grietas. El musgo solo asoma por los bordes de arriba y los dos que cuelgan.
+- **De lado:** se lee la **inclinación**: la cabeza adelantada, el torso por delante de las piernas, los puños colgando. Es la vista que dice «encorvado y pesado».
+- **Desde arriba en diagonal (isométrica):** ves sobre todo las caras de arriba. El **musgo pesa mucho más**, la cabeza parece aún más pequeña entre los hombros, y la cara y el núcleo, en caras de delante más oscuras, casi se pierden.
+
+<Why title="Por qué hay que comprobar las tres">
+Si solo miras la isométrica, pensarás que hay demasiado musgo y lo quitarás, y de frente el gólem se quedará limpio y sin historia. Si solo miras de frente, pondrás todo el detalle en la cara y desde la cámara del juego no se verá. El detalle tiene que funcionar **desde la cámara del juego** y el peso tiene que leerse **de frente y de lado**. Por eso se comprueban siempre las tres vistas.
+</Why>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Elige la criatura y prepara la paleta">
+1. Decide tu criatura grande y escribe en una línea **de qué está hecha y qué le ha pasado**: «piedra; lleva siglos dormido en un bosque».
+2. Crea un modelo nuevo de **24×12×26** (ancho, fondo y alto). Deja margen: el gólem del curso mide 22×10×24.
+3. En la **paleta** de la izquierda, en una fila: **cuatro grises** de piedra muy cercanos entre sí, un gris de **mancha** un paso más oscuro, uno casi negro para las **juntas** y otro aún más oscuro para las **grietas**. Al lado, **dos verdes** de musgo, un **cian** claro y un **azul** para los ojos y el núcleo, y un **amarillo** y un verde claro para la flor.
+
+<Why>
+Los cuatro grises tienen que estar **cerca**: separan piezas, no son colores distintos. Si uno salta mucho, esa pieza parecerá de otro material. Lo oscuro (juntas y grietas) sí tiene que separarse bien: es lo que se lee como hueco.
+</Why>
+</Step>
+
+<Step n={2} title="Masas: las once cajas con Mirror">
+1. Activa el botón **Mirror** del eje que va de izquierda a derecha de la criatura (en la barra de pinceles). Gira la cámara con el **botón derecho** hasta verla de frente y comprueba que el reflejo cae en el centro del ancho.
+2. Modo **Attach**, pincel **Box**, un solo gris: levanta una pierna de **4×5×8**. Mirror pone la otra, con 2 vóxels de hueco entre ellas.
+3. Encima, la cadera de 10×6×2, y sobre ella el torso de **14×8×10**. Que el torso sobresalga 2 vóxels por delante de las piernas.
+4. A los lados del torso, arriba, los hombros de 4×6×4, asomando 1 capa por encima. Debajo de cada hombro, un brazo de 3×4×5.
+5. Deja **una capa vacía** bajo el brazo y pon el puño de **5×6×6**, con su frente alineado con el del torso.
+6. Por último, la cabeza de **6×5×5**, hundida 1 capa en el torso y **2 vóxels por delante** de él.
+
+<Tip>
+Compara con la etapa **Masas** del visor y mueve **Capas** para ver dónde acaba cada caja. Si tu criatura es otra, cambia las medidas, pero conserva las relaciones: puños más grandes que la cabeza, piernas de un tercio de la altura, cabeza adelantada.
+</Tip>
+</Step>
+
+<Step n={3} title="Comprueba las masas de frente y de lado">
+1. Gira la cámara con el **botón derecho** hasta verlo **de frente**. ¿La cabeza es pequeña frente a los hombros? ¿Los puños llegan a las rodillas?
+2. Gíralo hasta verlo **de lado**. ¿Se ve la cabeza adelantada y el cuerpo inclinado hacia delante?
+3. Ponlo **desde arriba en diagonal**. ¿Sigue leyéndose grande?
+4. Corrige ahora. Guarda como `golem_masas.vox`.
+
+<Why>
+Es el momento barato. Mover la cabeza 2 vóxels ahora es borrar y volver a poner una caja. Después del musgo y las grietas, es repintar media criatura.
+</Why>
+</Step>
+
+<Step n={4} title="Piezas: tonos, esquinas y juntas">
+1. Modo **Paint**: pinta cada masa con **su gris**, alternando para que dos piezas que se tocan no compartan tono. Mirror pinta el otro lado.
+2. Modo **Erase**, pincel **Voxel**: quita el vóxel de las **cuatro esquinas de arriba** de cada bloque visible.
+3. Modo **Attach**, color de las juntas: rellena la capa vacía entre cada brazo y su puño con una junta del ancho del brazo, más estrecha que el puño.
+4. **Apaga Mirror.** Modo **Paint**, pincel **Voxel**, gris de mancha: pon manchas sueltas por la piedra, pocas y sin orden.
+5. Guarda como `golem_piezas.vox`.
+
+<Warn>
+Las esquinas de arriba sí puedes quitarlas con Mirror: en el modelo son una regla, iguales en los dos lados. Las manchas, no: con Mirror salen en espejo y el ojo descubre enseguida el truco. Por eso se apaga antes del paso 4.
+</Warn>
+</Step>
+
+<Step n={5} title="Detalle: musgo en lo que mira hacia arriba">
+1. Con **Mirror apagado**, modo **Paint**, pincel **Voxel**, los dos verdes: pinta musgo a manchas **solo en las caras de arriba**. Mucho en la cabeza y los hombros, algo en el torso, muy poco en los puños.
+2. Modo **Attach**, verde oscuro: delante de cada hombro, pon un musgo que **cuelgue** 2 vóxels desde arriba.
+3. Modo **Attach**, encima de un hombro: un vóxel amarillo y uno verde claro al lado. La flor.
+4. Gira la cámara: de lado y de frente no debería haber musgo en las caras verticales, salvo el que cuelga.
+
+<Why>
+Cada vóxel de musgo responde a una pregunta: «¿aquí se posaría el agua?». Si la respuesta es no, ese vóxel sobra. Con esa regla, el musgo deja de ser decoración y cuenta que el gólem lleva mucho tiempo quieto.
+</Why>
+</Step>
+
+<Step n={6} title="Ojos, núcleo, grietas y material Emit">
+1. Enciende **Mirror** de nuevo. Modo **Paint**, cian: un ojo de 1 vóxel en la cara, a media altura de la cabeza. Mirror pone el otro.
+2. Modo **Paint**, azul: un núcleo de **2×2** en el centro del pecho. Apaga Mirror y, con **Attach** y el cian, pon un vóxel que sobresalga del núcleo.
+3. Modo **Paint**, gris de las grietas: dibuja dos o tres grietas que **salgan del núcleo** en diagonal, de 2 o 3 vóxels cada una.
+4. En la paleta, selecciona el cian y, en el panel de materiales, elige **Emit**. Haz lo mismo con el azul si quieres que el núcleo también brille.
+5. Guarda como `golem_v1.vox`.
+
+<Tip>
+Los ojos y el vóxel que sobresale comparten el cian, así que **un solo Emit** enciende los tres. Que solo emitan estos colores: si pones Emit en más, la criatura se quema de luz y pierde el foco, como avisaba [V3-02](/forja-art/voxel/v3-02/).
+</Tip>
+</Step>
+
+<Step n={7} title="Render desde tres vistas">
+1. Pulsa **Render** arriba.
+2. Haz tres imágenes con la misma luz: **de frente**, **de lado** y **desde arriba en diagonal** (prueba la proyección isométrica).
+3. Compara: de frente, ¿se ven los ojos y el núcleo? De lado, ¿se lee la inclinación? En isométrica, ¿el musgo no se come la criatura?
+4. Si una vista falla, corrige el modelo, no la cámara. Guarda las tres imágenes y `golem_v1.vox` en tu portfolio.
+
+<Tip>
+Para comparar las cuatro caras de un vistazo en isométrica 2:1, `forja-vox` de [Forge Tools](/forja-art/tools/) lo hace con `render golem_v1.vox -o golem.png --angles 4`. Ese render no simula Emit: es otra forma más de ver la silueta. Lo verás a fondo en [V8-02](/forja-art/voxel/v8-02/).
+</Tip>
+</Step>
+
+<Warn title="Verifica en tu versión">
+Los nombres y la posición de **Mirror** X/Y/Z, **Attach** / **Erase** / **Paint**, los pinceles **Voxel** y **Box** y los campos de tamaño del modelo pueden variar entre versiones de MagicaVoxel. Comprueba en la tuya **qué eje es cada Mirror** (el gólem del curso mira hacia -Y, así que su espejo va de izquierda a derecha, en X) y cómo refleja con un ancho par. También cambian el nombre y el sitio del **panel de materiales**, de **Emit** y de su intensidad, y dónde se eligen las proyecciones de la cámara en el modo **Render**.
+</Warn>
+</Block>
+
+<Block kind="version">
+Ahora, **tu** criatura grande. Misma receta: masas que ya dicen «pesado», piezas con su tono y sus juntas, y un detalle que cuente qué le ha pasado. Elige un reto:
+
+- **Un ent de madera:** las masas, más altas y estrechas; las piezas son tramos de tronco con la veta en dos tonos y nudos oscuros en las articulaciones. La historia: un nido en un hombro, hongos en la parte en sombra.
+- **Un coloso de hielo:** bloques claros y azulados con juntas de un azul profundo; las esquinas, en vez de gastadas, afiladas en pico. El núcleo, con Emit. La historia: nieve acumulada en lo que mira hacia arriba.
+- **Un gólem roto:** el mismo gólem, pero con un brazo caído en el suelo a su lado y la junta del hombro al descubierto. Que la grieta del núcleo llegue hasta la rotura.
+
+**Prueba final:** pon tu criatura junto al chibi de V5-01 en el modo **World** y renderiza los dos desde la misma cámara. ¿Se ve a primera vista cuál es grande y pesado, aunque lo escales al mismo tamaño?
+</Block>
+
+<Block kind="errores">
+<Mistake title="La cabeza grande: el gólem parece una mascota" wrongLabel="Cabeza de un tercio de la altura" rightLabel="Cabeza de 5 de 24 capas">
+  <p slot="wrong">La cabeza es tan ancha como el torso y está encima, centrada. Los puños son más pequeños que ella. El gólem parece un muñeco simpático, un chibi de piedra.</p>
+  <p slot="right">La cabeza es pequeña, hundida entre los hombros y adelantada; los puños son más grandes que ella y los hombros la sobrepasan por los dos lados. Se lee enorme.</p>
+
+**Corrección:** encoge la cabeza hasta que asome solo unas capas por encima de los hombros y pasa ese volumen a los puños y los hombros. Mira las proporciones en la etapa **Masas**: puños de 5×6×6 frente a una cabeza de 6×5×5.
+</Mistake>
+
+<Mistake title="Un bloque de un solo gris: cajas, no piedras" wrongLabel="Etapa «Masas» con detalle encima" rightLabel="Etapa «Piezas»">
+  <p slot="wrong">Pones el musgo y los ojos directamente sobre las masas de un solo gris. Las cajas se funden entre sí: no se sabe dónde acaba el torso y empieza el hombro, y el gólem parece una figura de plástico.</p>
+  <p slot="right">Cada masa con su gris, las piezas vecinas alternando tono, esquinas gastadas y juntas oscuras entre brazo y puño. Se lee que es piedra tallada y unida.</p>
+
+Compara **Masas** y **Piezas** en el visor del concepto. **Corrección:** antes de cualquier detalle, separa las piezas con el tono y las juntas. El detalle va encima de una construcción que ya se entiende.
+</Mistake>
+
+<Mistake title="Musgo por todas partes: ruido sin historia" wrongLabel="Musgo al azar en todas las caras" rightLabel="Musgo solo en lo que mira hacia arriba">
+  <p slot="wrong">Hay musgo en las caras de los lados, debajo de los puños y en las piernas, repartido igual por todo el cuerpo. No cuenta nada: es un estampado verde.</p>
+  <p slot="right">El musgo está en las caras de arriba, sobre todo en la cabeza y los hombros, y solo cuelga un poco por delante de los hombros. Se lee como algo que se ha posado con los años.</p>
+
+**Corrección:** borra con **Paint** (pintando de gris) todo el musgo de las caras verticales y de abajo. Pregúntate por cada mancha: «¿aquí se posaría el agua?».
+</Mistake>
+
+<Warn title="Error típico: comprobarlo solo desde una vista">
+Lo modelas todo de frente y la cara queda perfecta. Luego lo ves desde la isométrica del juego: el musgo de arriba domina, la cara se pierde en sombra y la cabeza parece un bulto. O al revés: lo juzgas solo en isométrica y quitas el musgo, y de frente se queda limpio y sin historia. **Corrección:** gira la cámara en cada etapa y comprueba **de frente, de lado y desde arriba en diagonal**. El peso tiene que leerse en las tres; el detalle, desde la cámara del juego.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+<Checklist items={[
+  "Las masas, sin color, ya se leen grandes y pesadas",
+  "La cabeza es pequeña y adelantada; los puños son más grandes que ella",
+  "Las piernas son cortas y gruesas, unas columnas que aguantan el cuerpo",
+  "Cada pieza tiene su tono, y las piezas que se tocan no comparten gris",
+  "Las esquinas de arriba están gastadas y las articulaciones son juntas oscuras",
+  "El musgo está solo en lo que mira hacia arriba (y lo que cuelga de ahí)",
+  "Los ojos y el núcleo son lo único saturado y llevan el material Emit",
+  "He comprobado la silueta de frente, de lado y en isométrica",
+  "He guardado golem_v1.vox y los tres renders en mi portfolio",
+]} />
+
+<Quiz q="Tu gólem parece un muñeco simpático en vez de una criatura enorme. ¿Qué cambias primero?" options={["Le pongo más grietas y musgo para que parezca viejo", "Las proporciones de las masas: cabeza más pequeña y adelantada, puños y hombros más grandes", "Le doy a los ojos un color más oscuro"]} answer={1}>
+El tamaño y el peso se deciden en las masas. Una cabeza pequeña frente a unos hombros y unos puños enormes dice «grande»; ningún detalle arregla unas proporciones de mascota.
+</Quiz>
+
+<Quiz q="¿Por qué el musgo va solo en las caras de arriba?" options={["Porque ahí se posan el agua y el polvo: dice que la criatura lleva mucho tiempo quieta", "Porque en MagicaVoxel solo se pueden pintar las caras de arriba", "Porque así se gastan menos vóxels"]} answer={0}>
+El detalle que sigue una lógica del mundo cuenta una historia. Musgo arriba y una flor en el hombro: nadie se ha movido de ahí en años. Repartido por todas partes, solo es ruido.
+</Quiz>
+
+<Quiz q="En el visor web, los ojos de tu gólem no brillan. ¿Qué pasa?" options={["Que el material Emit está mal asignado", "Que el visor web no simula los materiales de render: el brillo de Emit solo se ve en el modo Render de MagicaVoxel", "Que los ojos tienen que ser blancos para brillar"]} answer={1}>
+El visor muestra solo los colores. Asigna Emit al color de los ojos en el panel de materiales y comprueba el brillo en el modo Render.
+</Quiz>
+</Block>
