@@ -1,0 +1,289 @@
+---
+id: v3-05
+discipline: voxel
+level: 3
+order: 5
+title: "Agua y cristal: una fuente con material Glass"
+summary: "Modela una fuente con agua quieta y agua que cae, y pon el agua en material Glass: transparencia, rugosidad y refracción para que se vean las monedas del fondo. Sin abusar del cristal."
+duration: 45
+status: borrador
+prerequisites: [v3-02]
+fundamentals: [f06, f01]
+objectives:
+  - "Modelar el agua quieta una capa por debajo del borde y el agua que cae en columnas finas con espuma"
+  - "Saber qué controlan la transparencia, la rugosidad y la refracción del material Glass"
+  - "Poner algo bajo el agua que solo se lea con Glass y comprobarlo en el render"
+  - "Usar el cristal solo donde aporta: poca profundidad, y la piedra y la espuma opacas"
+  - "Saber que el visor web no simula Glass y juzgar el agua en el modo Render"
+tools: [magicavoxel]
+piece:
+  name: "Una fuente con el agua en material Glass, monedas visibles en el fondo y dos renders (agua opaca y agua Glass)"
+  canvas: "17x17x13"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [fuente]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Hoy forjas **una fuente de plaza**: un estanque de piedra, una columna con una taza arriba, agua quieta, agua que cae y, en el fondo, **unas monedas que solo se ven si el agua es de cristal**.
+
+<VoxViewer model="fuente" stage={2} title="Tu pieza: la fuente (17×17 con el empedrado, 13 de alto)" />
+
+Pulsa las tres etapas: **Piedra**, **Agua** y **Detalle**. Es el orden en que la pensarás.
+
+Medidas del ejemplo:
+
+- **Estanque:** un octógono de **15×15**, con un suelo de piedra de 165 vóxels y un **pretil** (el murete) de 1 vóxel de grosor y **3 de alto**, con la capa de arriba en una piedra más clara: el **remate**.
+- **Columna:** una cruz de 5 vóxels que sube 6 capas. Encima, una **taza** de 7 de ancho con su borde y un caño de piedra.
+- **Agua:** una lámina en el estanque, **una capa por debajo del remate**; la taza llena; un chorro que sale del caño y **cuatro caños de agua** que caen de la taza al estanque.
+- **Detalle:** cuatro monedas y dos piedras en el fondo, un nenúfar con flor, espuma, musgo y un empedrado pegado al pretil. Con él, la pieza mide **17×17** y 13 de alto.
+
+Tu pieza final:
+
+- tu fuente guardada como `fuente_v1.vox`;
+- **dos renders** con la misma cámara: `fuente_opaca.png` (el agua en Diffuse) y `fuente_glass.png` (el agua en Glass). En el segundo se tienen que ver las monedas.
+
+<Warn title="El visor web no simula el cristal">
+En esta página el agua es un azul **opaco**: tapa el fondo por completo. La transparencia, la rugosidad y la refracción de **Glass** solo existen en el **modo Render de MagicaVoxel**, como viste con el farol de [V3-02](/forja-art/voxel/v3-02/). Aquí juzgas la forma y los colores; el agua de verdad, en el render.
+</Warn>
+</Block>
+
+<Block kind="concepto">
+### 1. Agua quieta: una capa por debajo del borde
+
+El agua quieta es **plana**: una capa horizontal de vóxels. La pregunta importante es **a qué altura**.
+
+En el ejemplo, el pretil ocupa las capas 1, 2 y 3 (el remate claro es la 3) y el agua está en la **capa 2**. Queda **un vóxel por debajo** del remate.
+
+<VoxViewer model="fuente" stage={1} title="Agua: la lámina en la capa 2, un vóxel por debajo del remate" />
+
+Gira el visor hasta ver el estanque de lado. Ese escalón de un vóxel entre el agua y el remate es la **orilla**: dice «aquí hay un recipiente con agua dentro».
+
+<Why>
+Si el agua llega al ras del borde, la superficie y el remate forman un solo plano y el estanque parece una losa azul. Con un vóxel de diferencia aparece una cara de piedra iluminada encima del agua y el ojo lee la **profundidad**. Es la misma regla que el río de [V6-02](/forja-art/voxel/v6-02/), un vóxel más bajo que la hierba.
+</Why>
+
+Fíjate en tres cosas más del ejemplo:
+
+- La lámina mezcla un azul medio (`#3a8fd8`, 108 vóxels) con unos pocos vóxels claros (`#9fd8ff`, 16) repartidos: son **reflejos**, no olas.
+- Debajo de la lámina, la capa 1 está **vacía**: el agua es una sola capa con aire debajo. Mueve el deslizador **Capas** del visor hasta **2/13** y lo verás: queda el suelo, la base del pretil y la columna, y nada más.
+- La taza de arriba está **llena hasta su borde**: por eso rebosa.
+
+### 2. Agua que cae: fina, clara y con espuma
+
+El agua que se mueve es **más clara** que la quieta: lleva aire, rompe la luz, hace espuma. En el ejemplo:
+
+- **Cuatro caños** de agua de **1×1 y 5 vóxels de alto**, uno a cada lado de la taza (delante, detrás, izquierda y derecha), justo por fuera de su canto. Bajan de la capa 7 (la altura de la taza) a la 3 y tocan la lámina del estanque.
+- Un **chorro** de 2 vóxels encima del caño de piedra, con **un vóxel de espuma** arriba (`#e8f6ff`, casi blanco).
+- En la etapa **Detalle**, el vóxel de abajo de cada caño se cambia por **espuma**: es el punto donde el agua choca.
+
+<Why title="¿Por qué columnas de un vóxel?">
+Un hilo de agua es **delgado**. A la escala de una taza de 7 de ancho, un caño de 2×2 parece una tubería, no agua. Y el valor: el agua que cae es el azul **claro** y la espuma es casi blanca. Lo más claro de la fuente es justo lo que se mueve: ahí va la mirada.
+</Why>
+
+Es la misma idea que el agua animada de [P7-02](/forja-art/pixel/p7-02/): una base de valor medio y **pocas crestas claras**. En pixel art las crestas se mueven frame a frame; en un modelo voxel el agua está quieta y el movimiento lo **sugiere** dónde pones lo claro.
+
+<Sprite name="tile-water-1" tile={3} scale={4} caption="tile-water-1 (P7-02): base azul, franjas oscuras y pocas crestas claras. Lo claro es lo que se mueve" />
+
+### 3. El material Glass: tres controles
+
+En [V3-02](/forja-art/voxel/v3-02/) asignaste **Glass** a un color de la paleta. Hoy te fijas en sus **parámetros**. Nómbralos por lo que hacen, porque su nombre exacto cambia entre versiones:
+
+- **Transparencia:** cuánta luz deja pasar. Al mínimo, el agua es un azul opaco como en el visor. Alta, se ve el fondo.
+- **Rugosidad:** lo lisa que es la superficie. Baja, el fondo se ve **nítido** y el reflejo es limpio, como un estanque en calma. Alta, se ve **borroso**, como un cristal esmerilado o agua revuelta.
+- **Refracción** (índice de refracción): cuánto **dobla** la luz al entrar. Por eso un palo en el agua parece partido. En el mundo real, el agua tiene un índice de unos **1,33** y el vidrio de una ventana, de unos **1,5**.
+
+<Sprite name="ball-glass" scale={8} caption="ball-glass (P4-01): el cristal deja ver el fondo oscuro, brilla arriba y acumula la luz abajo, en el lado contrario a la fuente" />
+
+<Why>
+En pixel art **pintas** lo que deja ver el cristal. En el render de MagicaVoxel lo **calcula** la luz, con estos tres controles. El principio es el de [F06-01](/forja-art/fundamentos/f06-01/): el material es **cómo responde la superficie a la luz**. El agua quieta es lisa y transparente; la que cae, revuelta.
+</Why>
+
+El color del vóxel también cuenta: con Glass, el color **tiñe** lo que se ve a través. Un azul medio deja ver el fondo azulado; un azul muy saturado y oscuro lo tapa aunque la transparencia esté alta.
+
+### 4. Algo debajo del agua
+
+Un agua transparente sobre un fondo vacío no enseña nada: es un suelo azulado. Lo que **demuestra** que el agua es agua es **ver algo dentro**.
+
+En la etapa **Detalle**, en la capa 1, justo debajo de la lámina:
+
+- **cuatro monedas**: tres de oro (dos en `#f2c14e` y una más oscura, `#d49a2a`) y una de plata (`#c9d1dc`);
+- **dos piedras** oscuras (`#5c6676`).
+
+Con el agua opaca, **no se ven desde ningún ángulo**: la lámina las tapa por arriba y el pretil por los lados. Con Glass, aparecen. Compruébalo en el visor: etapa **Detalle**, deslizador **Capas** en 2/13. Una de las monedas, la de oro oscuro, queda justo debajo de un vóxel **claro** de la lámina: búscala.
+
+<Why>
+Las monedas son **pequeñas, cálidas y claras** sobre un fondo de piedra gris y frío. Contraste de valor y de temperatura: aunque el agua las tiña de azul, se siguen leyendo. Una piedra gris más bajo el agua se perdería.
+</Why>
+
+### 5. No abuses del cristal
+
+Glass es caro y delicado:
+
+- **Cada capa de Glass** que atraviesa la luz la apaga y la tiñe un poco más. Muchas capas, y el fondo se vuelve una masa turbia (el error del farol macizo de V3-02).
+- El render **tarda más** en limpiar el ruido donde hay cristal.
+- Lo que en la vida real es opaco tiene que seguir opaco: la **piedra**, la **espuma** (es blanca porque está llena de aire), el **nenúfar**, el musgo.
+
+En el ejemplo, de sus 14 colores solo los dos azules del agua son candidatos a Glass, y el estanque tiene **una sola capa** de agua. Es poco a propósito.
+</Block>
+
+<Block kind="guiada">
+<VoxViewer model="fuente" stage={0} title="Piedra: el estanque, la columna y la taza, sin agua" />
+
+<Step n={1} title="El estanque octogonal y el pretil">
+1. Crea un modelo nuevo de **17×17×13** (la Z es la altura). Si prefieres empezar con la piedra hecha, descarga la etapa **Piedra** desde el visor de arriba.
+2. En la **paleta**, elige tres piedras frías: una oscura para el suelo (`#7d8698`), una media para el pretil (`#9aa3b5`) y una clara para el remate (`#b4bccb`).
+3. Con **Attach** y el pincel **Box**, haz el suelo en la capa 0, centrado: un octógono de 15 de ancho. Por filas, de una punta a la otra: **5, 7, 9, 11, 13**, luego **cinco filas de 15**, y otra vez **13, 11, 9, 7, 5**. Son 165 vóxels.
+4. Encima, en el borde del octógono, levanta el **pretil**: 1 vóxel de grosor y 3 capas de alto (capas 1, 2 y 3). La capa 3, en el color del remate.
+
+<Tip>
+Usa los botones **Mirror** X e Y: el octógono es simétrico en los dos ejes. Haces un cuarto y salen los cuatro.
+</Tip>
+
+<Why>
+El octógono se lee redondo sin la escalera de un círculo pequeño, y sus lados rectos son fáciles de hacer con Box. Mezcla algún vóxel oscuro en el pretil, como el ejemplo, para que no parezca de plástico.
+</Why>
+</Step>
+
+<Step n={2} title="Columna, taza y caño">
+1. En el centro, una **columna** en cruz (el vóxel central y sus 4 vecinos) desde la capa 1 hasta la 6, en piedra oscura.
+2. En la capa 7, la **taza**: un disco de 7 de ancho. Por filas: **3, 5, 7, 7, 7, 5, 3**.
+3. En la capa 8, solo el **anillo exterior** de ese disco, en el color del remate: es el borde de la taza.
+4. En el centro, un vóxel de piedra oscura en la capa 9: el **caño**.
+
+<Tip>
+Comprueba la proporción girando la cámara (botón derecho del ratón): la taza tiene que quedar bastante más estrecha que el estanque. Si la taza ocupa medio estanque, el agua que cae no tiene dónde caer.
+</Tip>
+</Step>
+
+<Step n={3} title="Lo que hay en el fondo, antes del agua">
+1. Elige dos oros y una plata en la paleta. Pon **cuatro monedas** de un vóxel en la capa 1, sobre el suelo del estanque, repartidas y **lejos** de la columna.
+2. Pon **dos piedras** de un vóxel en un gris más oscuro que el suelo.
+3. Sepáralas: ninguna moneda pegada al pretil ni a otra moneda.
+
+<Why>
+Primero el fondo, luego el agua. Cuando la lámina esté puesta, el fondo queda tapado en la vista de edición y alcanzarlo es incómodo. Y las monedas sueltas se leen mejor que un montón: cada una es un destello.
+</Why>
+</Step>
+
+<Step n={4} title="El agua quieta, una capa por debajo del remate">
+1. Elige el azul medio del agua (`#3a8fd8`) y otro claro para los reflejos (`#9fd8ff`).
+2. Rellena el estanque por dentro del pretil hasta la **capa 2**, alrededor de las monedas y de la columna. Te quedan las monedas metidas en el agua (capa 1) y la superficie en la capa 2, **un vóxel por debajo del remate**.
+3. Con **Paint** y el pincel **Voxel**, cambia unos pocos vóxels de la superficie al azul claro: unos 15 de cada 120, sueltos. Ni filas ni dibujos.
+4. Rellena también la taza: el hueco dentro de su borde, en la capa 8.
+
+<Tip>
+El ejemplo tiene **una sola capa** de agua y aire debajo, que es todavía menos cristal. Con dos capas también funciona y es más fácil de construir. Más de dos, no: recuerda el farol macizo.
+</Tip>
+
+<Warn>
+**Nunca** subas el agua a la capa 3. Al ras del remate desaparece la orilla y el estanque se convierte en una losa azul.
+</Warn>
+</Step>
+
+<Step n={5} title="El agua que cae y la espuma">
+1. Con **Attach** y el azul claro, levanta el **chorro**: 2 vóxels encima del caño. Arriba, un vóxel de **espuma** casi blanca (`#e8f6ff`).
+2. Los **cuatro caños**: en cada eje (delante, detrás, izquierda y derecha), justo por fuera del canto de la taza, una columna de 1×1 desde la capa 7 hasta la 3, tocando la superficie del estanque. Usa **Mirror** X e Y y haz solo uno.
+3. Cambia el vóxel de abajo de cada caño por **espuma**: ahí choca el agua.
+4. Añade el resto del detalle: un **nenúfar** de 3 vóxels verdes con una flor rosa, metido en la lámina de agua; unos pocos vóxels de **musgo** en la base del pretil; y un **empedrado** claro de un vóxel de ancho alrededor, pegado al pretil, con alguna losa que falta.
+</Step>
+
+<Step n={6} title="Glass en el agua, y nada más">
+1. Selecciona en la paleta el azul medio del agua. En el **panel de materiales**, cambia el tipo a **Glass**.
+2. **Transparencia:** súbela hasta que, en el render, se vea el suelo del estanque, pero el agua siga teniendo color.
+3. **Rugosidad:** baja. El estanque está en calma: las monedas tienen que verse nítidas.
+4. **Refracción:** si tu versión lo permite, prueba un valor cercano al del agua real (1,33).
+5. El azul **claro** lo usan a la vez los reflejos, los caños y el chorro: lo que le pongas, lo tendrán todos. Elige: déjalo en **Diffuse** (agua blanca de espuma, opaca) o ponlo en Glass con **más rugosidad** que el agua quieta (agua revuelta).
+6. La **espuma**, la piedra, el nenúfar y el musgo, en **Diffuse**. Las monedas, si quieres, en **Metal** (V3-02).
+
+<Why>
+El material va pegado al color, no al vóxel. Por eso el agua quieta y la que cae tienen colores distintos: así cada una puede tener su material. Si dejas el claro en Diffuse, recuerda que una moneda quedará tapada por un reflejo: muévela o cambia ese reflejo de sitio.
+</Why>
+</Step>
+
+<Step n={7} title="Dos renders y compara">
+1. Guarda como `fuente_v1.vox`.
+2. Pon el azul medio otra vez en **Diffuse**. Pulsa **Render**, elige una cámara de tres cuartos que deje ver el interior del estanque, espera a que se limpie el ruido y guarda `fuente_opaca.png`.
+3. Vuelve a poner el azul medio en **Glass**. **Misma cámara, misma luz**. Render y guarda `fuente_glass.png`.
+4. Compáralas. En la opaca, el estanque es una losa azul. En la de Glass, tienen que leerse las **cuatro monedas** y el suelo de piedra, con el agua todavía azul.
+5. Si el fondo sale turbio u oscuro, baja la rugosidad, aclara un poco el azul o quita una capa de agua. Si el agua desaparece, baja la transparencia.
+
+Si te pasas con algún cambio, deshaz con <Keys k="Ctrl+Z" />.
+</Step>
+
+<Warn title="Verifica en tu versión">
+El nombre y la ubicación del **panel de materiales** y de los parámetros de **Glass** cambian entre versiones de MagicaVoxel. La transparencia, la rugosidad y el índice de refracción pueden llamarse de otra forma (abreviados, en inglés), tener otros rangos o no estar todos; en algunas versiones hay además un control de densidad o atenuación (cuánto se tiñe la luz con el grosor). Búscalos por lo que hacen. Lo mismo con el botón **Render**, el ajuste de la cámara y el botón para guardar la imagen. Comprueba también que <Keys k="Ctrl+Z" /> deshace en la tuya y cómo se comportan **Mirror** X e Y con un lienzo impar de 17.
+</Warn>
+</Block>
+
+<Block kind="version">
+Ahora, **tu** agua. La misma receta: la superficie un vóxel por debajo del borde, lo que cae fino y claro, espuma donde choca, algo dentro del agua y Glass solo en el agua. Elige un reto:
+
+- **El pozo:** un brocal redondo de piedra con el agua **tres o cuatro capas** más abajo que el borde, y un cubo colgando. Sin Glass casi no se ve el fondo: pinta el agua más oscura que en la fuente. ¿Qué tiene que ver el render para leerse como agua honda?
+- **El abrevadero:** una pila alargada de madera o piedra junto a una pared, con **un solo caño** que cae de la pared. Dentro, algo que se lea a través del agua: una herradura, un pez naranja, unas piedras.
+- **La fuente de la plaza:** la fuente del ejemplo, con tu propia forma (cuadrada, de dos tazas, con un caño en forma de cabeza) y el empedrado de la plaza alrededor. Renderízala con un banco o un barril al lado para que se vea la escala.
+
+En cada uno, haz los dos renders (opaco y Glass) con la misma cámara: lo que cambia entre los dos es lo que aporta el cristal.
+</Block>
+
+<Block kind="errores">
+<Mistake title="El agua al ras del borde" wrongLabel="Al ras del remate" rightLabel="Un vóxel por debajo">
+  <p slot="wrong">La lámina en la capa 3, a la altura del remate: desde arriba, el estanque es una losa plana de azul y piedra. No hay orilla ni profundidad.</p>
+  <p slot="right">La lámina en la capa 2, como en el ejemplo: una cara de piedra iluminada encima del agua dice dónde acaba el recipiente.</p>
+
+El agua quieta se lee por su **borde**. Bájala un vóxel respecto a lo que la contiene, como el río de V6-02. Si es un pozo o un estanque hondo, más.
+</Mistake>
+
+<Mistake title="Todo de cristal" wrongLabel="Glass en todo" rightLabel="Glass solo en el agua">
+  <p slot="wrong">Glass en el agua, en la espuma, en el remate «para que brille» y un estanque de cuatro capas de agua. En el render, una masa turbia y ruidosa: no se sabe dónde acaba el agua, la espuma no es blanca y las monedas no se ven.</p>
+  <p slot="right">Glass solo en el azul del agua, una o dos capas, poca rugosidad. La piedra, la espuma y el nenúfar, opacos: enmarcan el agua y le dan contraste.</p>
+
+El cristal se luce **por contraste** con lo que no lo es. Cada capa de más apaga y tiñe el fondo, y cada material de más tarda más en renderizar. **Corrección:** un solo color en Glass, poca profundidad, y comprueba en el render que el fondo se ve.
+</Mistake>
+
+<Mistake title="Agua que cae como una tubería" wrongLabel="Gruesa, oscura y sin espuma" rightLabel="Fina, clara y con espuma">
+  <p slot="wrong">Caños de 2×2 en el mismo azul medio que el estanque, que se cortan un vóxel antes de tocar el agua. Parecen tubos azules o pilares, y flotan.</p>
+  <p slot="right">Columnas de 1×1 en el azul claro, que llegan hasta la superficie y acaban en un vóxel de espuma casi blanca.</p>
+
+El agua que se mueve es **más clara** que la quieta y es **fina**. Y tiene que tocar donde cae: la espuma es la prueba del choque, como la sombra de contacto de un objeto apoyado.
+</Mistake>
+
+<Warn title="Error típico: buscar las monedas en el visor">
+En el visor web el agua es opaca y las monedas no se ven: «no funciona». El visor no simula Glass. **Corrección:** usa el deslizador **Capas** para comprobar que las monedas están, y el **modo Render** de MagicaVoxel para ver el agua de verdad.
+</Warn>
+
+<Warn title="Error típico: el mismo color para el agua y la espuma">
+Pintas la espuma con el mismo azul claro de los caños, o los reflejos de la superficie con el azul del agua. Al poner Glass a ese color, la espuma se vuelve transparente o los reflejos desaparecen. **Corrección:** el agua quieta, la que cae y la espuma, cada una con **su** color en la paleta, aunque se parezcan.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+<Checklist items={[
+  "Mi fuente tiene un estanque con pretil, una taza más estrecha y agua quieta y que cae",
+  "La superficie del agua está un vóxel por debajo del borde: se ve la orilla",
+  "El agua que cae es de 1 vóxel de grosor, más clara que la quieta, y toca la superficie con espuma",
+  "Hay monedas u otro objeto pequeño y claro en el fondo, separados entre sí",
+  "Solo el agua lleva Glass; la piedra, la espuma y las plantas son opacas",
+  "El agua tiene una o dos capas de grosor, no más",
+  "He guardado fuente_v1.vox, fuente_opaca.png y fuente_glass.png con la misma cámara",
+  "En fuente_glass.png se ven las monedas y el agua sigue teniendo color",
+]} />
+
+<Quiz q="¿A qué altura pones la superficie del agua quieta de un estanque?" options={["Al ras del borde, para que se vea entera", "Un vóxel por debajo del borde, para que se lea la orilla", "En la capa 0, a la altura del suelo"]} answer={1}>
+Con un vóxel de diferencia aparece una cara de piedra encima del agua y el ojo lee el recipiente y su profundidad. Al ras, todo es un solo plano.
+</Quiz>
+
+<Quiz q="En el render, las monedas del fondo se ven borrosas aunque el agua es transparente. ¿Qué parámetro de Glass tocas?" options={["Subo la refracción al máximo", "Bajo la rugosidad: la superficie lisa deja ver el fondo nítido", "Pongo la espuma en Glass"]} answer={1}>
+La rugosidad controla si la superficie es lisa (fondo nítido) o esmerilada (fondo borroso). El agua en calma es lisa.
+</Quiz>
+
+<Quiz q="¿Por qué el agua quieta, el agua que cae y la espuma van en colores distintos de la paleta?" options={["Porque el material va pegado al color: así cada una puede tener su material", "Porque MagicaVoxel no deja repetir colores", "Porque el visor web lo exige"]} answer={0}>
+Todos los vóxels de un color comparten material. Si la espuma comparte color con el agua, al poner Glass al agua la espuma también se vuelve transparente.
+</Quiz>
+
+<Quiz q="Rellenas el estanque con cinco capas de agua en Glass y el fondo sale turbio. ¿Qué pasa?" options={["Falta material Emit", "La luz atraviesa demasiado cristal: se apaga y se tiñe. Una o dos capas bastan", "El agua tiene que ser más oscura"]} answer={1}>
+Cada capa de Glass apaga y tiñe la luz un poco más. Poca profundidad de cristal y un color no muy oscuro: así el fondo se ve.
+</Quiz>
+</Block>

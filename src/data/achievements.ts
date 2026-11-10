@@ -100,5 +100,10 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   { id: "contraluz", name: "Contraluz", description: "Una figura separada del fondo con una luz de borde que viene de algún sitio (F05-02).", color: "#9fd4ff" },
   { id: "taberna", name: "Kit de taberna", description: "Un kit de muebles voxel medido contra el personaje y montado en un rincón (V4-06).", color: "#d08a50" },
   { id: "golem", name: "Gólem", description: "Una criatura voxel grande construida por masas, piezas de piedra y detalle (V5-05).", color: "#7df9ff" },
+  { id: "aldeanos", name: "Aldeanos", description: "Un grupo de NPCs a partir de un personaje base, cada uno con su propia silueta (P5-08).", color: "#7a4a9a" },
+  { id: "recoger", name: "Para recoger", description: "Un objeto que flota, brilla y desaparece al cogerlo, y que no se confunde con el decorado (P4-08).", color: "#e0245e" },
+  { id: "tres-valores", name: "Tres valores", description: "Una escena que se lee reducida a oscuro, medio y claro (F01-02).", color: "#d6d6de" },
+  { id: "fuente", name: "Fuente", description: "Una fuente voxel con el agua en material Glass y algo que se ve a través (V3-05).", color: "#3a8fd8" },
+  { id: "molino", name: "Molino", description: "Un molino con las aspas como pieza aparte, giradas en cruz y a 45° (V6-05).", color: "#f4ecdc" },
   { id: "forma-primero", name: "Forma antes que detalle", description: "Un modelo voxel con su blockout guardado como primera versión (V2-01).", color: "#38e1ff" },
 ];

@@ -1,0 +1,37 @@
+{
+  "name": "pickup-get-1",
+  "description": "Recogida, frame 1: la poción salta 4 px hacia arriba y se vuelve blanca por dentro (el contorno se queda). La sombra encoge a 4.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "objeto",
+    "animación"
+  ],
+  "palette": {
+    "a": "#1b1030",
+    "b": "#ffffff",
+    "c": "#1f4f34"
+  },
+  "rows": [
+    "......abba......",
+    "......abba......",
+    ".....aaaaaa.....",
+    "......abba......",
+    ".....abbbba.....",
+    "....abbbbbba....",
+    "...abbbbbbbba...",
+    "...abbbbbbbba...",
+    "...abbbbbbbba...",
+    "...abbbbbbbba...",
+    "....abbbbbba....",
+    ".....aaaaaa.....",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    ".......cc.......",
+    "......cccc......",
+    "................"
+  ]
+}

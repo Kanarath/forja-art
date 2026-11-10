@@ -809,7 +809,76 @@ const golemDetail = (() => {
   return v;
 })();
 
+// ---------- FUENTE: piedra, agua (material Glass) y lo que se ve a través del agua
+const WATER = { deep: "#2a6fc9", mid: "#3a8fd8", light: "#9fd8ff", foam: "#e8f6ff" };
+const ring = (r0, r1, z0, z1, c) => { const v = []; const R = Math.ceil(r1); for (let x = -R; x <= R; x++) for (let y = -R; y <= R; y++) { const d = Math.max(Math.abs(x), Math.abs(y), (Math.abs(x) + Math.abs(y)) / 1.4); if (d <= r1 && d > r0) for (let z = z0; z <= z1; z++) v.push({ x, y, z, c }); } return v; }; // octógono
+const fountainStone = [
+  ...ring(-1, 7, 0, 0, STONE.dark), // suelo del estanque
+  ...ring(6, 7, 1, 3, STONE.light).map((v) => ({ ...v, c: v.z === 3 ? "#b4bccb" : (v.x + v.y + v.z) % 3 ? STONE.light : STONE.dark })), // pretil con remate claro
+  ...ring(-1, 1, 1, 6, STONE.dark), // columna central
+  ...ring(-1, 3, 7, 7, STONE.light), ...ring(2, 3, 8, 8, "#b4bccb"), // taza de arriba
+  ...ring(-1, 0.9, 8, 9, STONE.dark), // caño
+];
+const fountainWater = [
+  ...fountainStone,
+  ...ring(1, 6, 2, 2, WATER.mid).map((v) => ({ ...v, c: (v.x * 3 + v.y * 5) % 7 === 0 ? WATER.light : WATER.mid })), // agua del estanque, 1 por debajo del remate
+  ...ring(-1, 2, 8, 8, WATER.mid), // agua en la taza
+  ...box(0, 0, 10, 0, 0, 11, WATER.light), { x: 0, y: 0, z: 12, c: WATER.foam }, // chorro
+  ...[[3, 0], [-3, 0], [0, 3], [0, -3]].flatMap(([x, y]) => box(x + Math.sign(x), y + Math.sign(y), 3, x + Math.sign(x), y + Math.sign(y), 7, WATER.light)), // cuatro caños de agua que caen de la taza al estanque
+];
+const fountainDetail = [
+  ...ring(-1, 7, 0, 0, STONE.dark),
+  ...[[3, 2, GOLD.light], [-2, 4, GOLD.mid], [4, -3, GOLD.light], [-4, -2, METAL.light]].map(([x, y, c]) => ({ x, y, z: 1, c })), // monedas en el fondo: solo se ven si el agua es Glass
+  ...[[-4, 3], [4, 4]].flatMap(([x, y]) => box(x, y, 1, x, y, 1, "#5c6676")), // piedras en el fondo
+  ...fountainWater.filter((v) => v.z > 0),
+  ...[[2, -4], [3, -4], [2, -5]].map(([x, y]) => ({ x, y, z: 2, c: LEAF.mid })), { x: 3, y: -5, z: 2, c: "#ff8fb0" }, // nenúfar con flor flotando
+  ...ring(6, 7, 1, 1, LEAF.dark).filter((v) => (v.x * 5 + v.y * 3) % 4 === 0), // musgo en la base del pretil
+  ...ring(7, 8, 0, 0, PATH.light).filter((v) => (v.x + v.y) % 5 !== 0), // empedrado alrededor, pegado al pretil
+  ...[[0, 4], [0, -4], [4, 0], [-4, 0]].map(([x, y]) => ({ x, y, z: 3, c: WATER.foam })), // espuma donde cae el agua
+];
+
+// ---------- MOLINO: un cuerpo fijo y unas aspas que son otra pieza (se giran aparte)
+const millBody = [
+  ...box(0, 0, 0, 8, 8, 8, null).map((v) => ({ ...v, c: (v.x + 2 * (v.z % 2)) % 4 === 0 || v.z % 3 === 0 ? STONE.dark : STONE.light })), // base de piedra en hiladas
+  ...box(1, 1, 9, 7, 7, 15, null).map((v) => ({ ...v, c: v.x % 2 ? WOOD.mid : WOOD.light })), // cuerpo de tablas, más estrecho
+];
+for (let k = 0; k < 4; k++) millBody.push(...box(k, k, 16 + k, 8 - k, 8 - k, 16 + k, k % 2 ? ROOF.dark : ROOF.light)); // tejado escalonado
+millBody.push(...box(4, -1, 13, 4, 0, 13, WOOD.dark)); // eje que sale por delante
+// aspas: cuatro brazos en el plano y = -2, alrededor del buje (4, 13)
+const SAIL_C = "#f4ecdc";
+const bladeArm = (pts) => [[0, 1], [-1, 0], [0, -1], [1, 0]].flatMap(([cx, sx], k) => pts.map(([a, b, c]) => {
+  // giro de 90° en el plano XZ: (a, b) → (b, -a), k veces
+  let [p, q] = [a, b];
+  for (let i = 0; i < k; i++) [p, q] = [q, -p];
+  return { x: 4 + p, y: -2, z: 13 + q, c };
+}));
+const straightArm = [...Array.from({ length: 9 }, (_, i) => [0, i + 1, WOOD.dark]), ...Array.from({ length: 7 }, (_, i) => [[1, i + 3, i % 2 ? WOOD.mid : SAIL_C], [2, i + 3, i % 2 ? WOOD.mid : SAIL_C]]).flat()];
+const diagArm = [...Array.from({ length: 6 }, (_, i) => [i + 1, i + 1, WOOD.dark]), ...Array.from({ length: 4 }, (_, i) => [[i + 3, i + 2, SAIL_C], [i + 4, i + 2, i % 2 ? WOOD.mid : SAIL_C], [i + 4, i + 3, SAIL_C]]).flat()];
+const hub = [{ x: 4, y: -2, z: 13, c: METAL.dark }];
+const millCross = [...millBody, ...hub, ...bladeArm(straightArm),
+  ...box(3, -1, 1, 5, -1, 4, WOOD.dark), { x: 5, y: -2, z: 2, c: GOLD.light }, // puerta con tirador
+  ...box(2, 1, 11, 2, 1, 12, "#9fd8ff"), ...box(6, 1, 11, 6, 1, 12, "#9fd8ff"), // dos ventanas en la fachada
+  ...[[10, 1], [10, 3], [11, 2]].flatMap(([x, y]) => box(x, y, 0, x, y, 1, "#e8d49a")), // sacos de harina junto a la base
+];
+const millDiag = [...millCross.filter((v) => v.y !== -2 || (v.z < 4 && v.x === 5)), ...hub, ...bladeArm(diagArm)];
+
 export const MODELS = {
+  fuente: {
+    description: "Fuente: piedra, agua con material Glass y lo que se ve a través",
+    stages: [
+      { label: "Piedra", note: "Un estanque octogonal de 15 de ancho con un pretil de 3 de alto y remate claro, una columna central, una taza arriba y el caño. Toda la estructura en piedra, sin agua.", voxels: fountainStone },
+      { label: "Agua", note: "Una capa de agua en el estanque, 1 vóxel por debajo del remate, con algunos vóxels más claros; agua en la taza, un chorro que sube 3 vóxels con espuma arriba y cuatro caños que caen de la taza al estanque.", voxels: fountainWater },
+      { label: "Detalle", note: "Bajo el agua, cuatro monedas y dos piedras en el fondo: con colores opacos no se ven desde arriba; con el agua en material Glass, sí. Un nenúfar con flor, espuma donde cae el agua, musgo en la base del pretil y un empedrado alrededor.", voxels: fountainDetail },
+    ],
+  },
+  molino: {
+    description: "Molino: un cuerpo fijo y unas aspas que son otra pieza",
+    stages: [
+      { label: "Cuerpo", note: "Una base de piedra de 9×9×9 en hiladas, un cuerpo de tablas más estrecho (7×7×7), un tejado de cuatro escalones y el eje que sale por delante. Es la parte que nunca se mueve.", voxels: millBody },
+      { label: "Aspas en cruz", note: "Cuatro brazos de 9 vóxels en cruz delante de la fachada, con velas de tela y travesaños alternos, una puerta con tirador, dos ventanas y unos sacos de harina. Las aspas van en un plano propio, separadas 1 vóxel de la fachada: en MagicaVoxel serían otro modelo.", voxels: millCross },
+      { label: "Aspas a 45°", note: "Las mismas aspas giradas 45°, redibujadas en diagonal: los brazos quedan en escalera y las velas cambian de forma. Girar 90° es exacto en vóxels; 45° no, hay que volver a dibujar.", voxels: millDiag },
+    ],
+  },
   taberna: {
     description: "Taberna: un kit de muebles a la escala del personaje",
     stages: [

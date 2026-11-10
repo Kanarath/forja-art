@@ -1,0 +1,42 @@
+{
+  "name": "pickup-1",
+  "description": "Objeto para recoger, frame 1: la poción de 10×12 en lo más bajo de su vuelo, con su sombra debajo, una elipse verde oscura de 8 px (2 filas), separada del frasco por 1 fila vacía. No toca el suelo: flota.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "objeto",
+    "animación"
+  ],
+  "palette": {
+    "a": "#1b1030",
+    "b": "#5a3a28",
+    "c": "#8a5a3c",
+    "d": "#cfe8ff",
+    "e": "#ffffff",
+    "f": "#e0245e",
+    "g": "#8a1040",
+    "h": "#1f4f34"
+  },
+  "rows": [
+    "................",
+    "................",
+    "................",
+    "................",
+    "......abba......",
+    "......acca......",
+    ".....aaaaaa.....",
+    "......adda......",
+    ".....adedda.....",
+    "....aeddddda....",
+    "...aeffffffga...",
+    "...aefffffgga...",
+    "...affffffgga...",
+    "...afffffggga...",
+    "....afffggga....",
+    ".....aaaaaa.....",
+    "................",
+    ".....hhhhhh.....",
+    "....hhhhhhhh....",
+    "................"
+  ]
+}

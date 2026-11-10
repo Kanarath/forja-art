@@ -1,0 +1,43 @@
+{
+  "name": "pickup-2",
+  "description": "Frame 2: la poción sube 1 px y la sombra encoge a 6. Un destello en cruz aparece arriba a la derecha del frasco.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "objeto",
+    "animación"
+  ],
+  "palette": {
+    "a": "#1b1030",
+    "b": "#5a3a28",
+    "c": "#8a5a3c",
+    "d": "#cfe8ff",
+    "e": "#ffffff",
+    "f": "#e0245e",
+    "g": "#8a1040",
+    "h": "#1f4f34",
+    "i": "#ffe58a"
+  },
+  "rows": [
+    "................",
+    "................",
+    "................",
+    "......abba......",
+    "......acca..i...",
+    ".....aaaaaaiei..",
+    "......adda..i...",
+    ".....adedda.....",
+    "....aeddddda....",
+    "...aeffffffga...",
+    "...aefffffgga...",
+    "...affffffgga...",
+    "...afffffggga...",
+    "....afffggga....",
+    ".....aaaaaa.....",
+    "................",
+    "................",
+    "......hhhh......",
+    ".....hhhhhh.....",
+    "................"
+  ]
+}

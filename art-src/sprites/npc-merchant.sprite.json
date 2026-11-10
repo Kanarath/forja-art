@@ -1,0 +1,52 @@
+{
+  "name": "npc-merchant",
+  "description": "Mercader a partir del héroe (16×24): sombrero de ala ancha de 14 px con una copa de 8 y dos píxeles rojos de cinta, túnica verde y un delantal crema. La silueta cambia arriba: el sombrero hace plana y ancha la parte de arriba de la cabeza.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "personaje",
+    "npc"
+  ],
+  "palette": {
+    "a": "#1b1030",
+    "b": "#d08a50",
+    "c": "#c2413b",
+    "d": "#a0603a",
+    "e": "#6b3d2e",
+    "f": "#f2c29b",
+    "g": "#c98f6b",
+    "h": "#3fa45b",
+    "i": "#2c7a48",
+    "j": "#c9b8a0",
+    "k": "#f4ecdc",
+    "l": "#4a4560",
+    "m": "#2f2b40",
+    "n": "#3b2418"
+  },
+  "rows": [
+    "....aaaaaaaa....",
+    "....abbbbbba....",
+    "....accdddda....",
+    ".adddddddddddda.",
+    ".aaaaaaaaaaaaaa.",
+    "..aeedddddeeeea.",
+    "..aeeeeeeeeeeea.",
+    "..aeeffffffffeea",
+    "..aeffffffffgea.",
+    "..aefafffafffea.",
+    "..aefafffafffea.",
+    "..agffffffffgga.",
+    "...aggfffffgga..",
+    "....aaaaaaaa....",
+    "...ahhhhhhhha...",
+    "..afhhhhhhhifa..",
+    "..afhhhhhhhifa..",
+    "..agejkkkkjega..",
+    "...ahjkkkkjia...",
+    "...aljjjjjjma...",
+    "...allma.almma..",
+    "...allma.almma..",
+    "...annna.annna..",
+    "...aaaaa.aaaaa.."
+  ]
+}

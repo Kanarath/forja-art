@@ -1,0 +1,52 @@
+{
+  "name": "npc-elder",
+  "description": "Anciano a partir del héroe (16×24): pelo gris, una barba que cubre la parte de abajo de la cara y baja hasta el cuello de la túnica, túnica morada y un bastón con pomo dorado a su derecha. La barba cambia la mancha de valor de la cara; el bastón, la silueta.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "personaje",
+    "npc"
+  ],
+  "palette": {
+    "a": "#1b1030",
+    "b": "#8f9bab",
+    "c": "#c9d1dc",
+    "d": "#c98a2a",
+    "e": "#8a5a3c",
+    "f": "#f2c29b",
+    "g": "#c98f6b",
+    "h": "#b8bcc8",
+    "i": "#e8e8f0",
+    "j": "#7a4a9a",
+    "k": "#4e2f66",
+    "l": "#4a4560",
+    "m": "#2f2b40",
+    "n": "#3b2418"
+  },
+  "rows": [
+    "................",
+    "................",
+    "................",
+    "....aaaaaaaa....",
+    "...abbcccbbbaaa.",
+    "..abbcccccbbbbda",
+    "..abbbbbbbbbbbea",
+    "..abbffffffffbea",
+    "..abffffffffgbe.",
+    "..abfafffafffbe.",
+    "..abfafffafffbe.",
+    "..aghiiiiiihgge.",
+    "...ahiiiiiihgae.",
+    "....ahiiiiha..e.",
+    "...ajjhhhhjja.e.",
+    "..afjjjjjjjkfae.",
+    "..afjjjjjjjkfae.",
+    "..agkkkkkkkkgae.",
+    "...ajjjjjjjka.e.",
+    "...alllllllma.e.",
+    "...allma.almmae.",
+    "...allma.almmae.",
+    "...annna.annnae.",
+    "...aaaaa.aaaaae."
+  ]
+}

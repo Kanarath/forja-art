@@ -1,0 +1,42 @@
+{
+  "name": "pickup-4",
+  "description": "Frame 4: baja 1 px, de vuelta hacia el frame 1. El bucle 1-2-3-4 sube y baja con suavidad.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "objeto",
+    "animación"
+  ],
+  "palette": {
+    "a": "#1b1030",
+    "b": "#5a3a28",
+    "c": "#8a5a3c",
+    "d": "#cfe8ff",
+    "e": "#ffffff",
+    "f": "#e0245e",
+    "g": "#8a1040",
+    "h": "#1f4f34"
+  },
+  "rows": [
+    "................",
+    "................",
+    "................",
+    "......abba......",
+    "......acca......",
+    ".....aaaaaa.....",
+    "......adda......",
+    ".....adedda.....",
+    "....aeddddda....",
+    "...aeffffffga...",
+    "...aefffffgga...",
+    "...affffffgga...",
+    "...afffffggga...",
+    "....afffggga....",
+    ".....aaaaaa.....",
+    "................",
+    "................",
+    "......hhhh......",
+    ".....hhhhhh.....",
+    "................"
+  ]
+}

@@ -1,0 +1,295 @@
+---
+id: v6-05
+discipline: voxel
+level: 6
+order: 5
+title: "Piezas que se mueven: un molino"
+summary: "Separa lo que se mueve de lo que no: cuerpo fijo y aspas como otro modelo con el pivote en el buje, giros de 90° exactos, 45° redibujado y frames para animarlo sin saltos."
+duration: 45
+status: borrador
+prerequisites: [v6-01, v5-02]
+fundamentals: []
+objectives:
+  - "Separar un objeto en lo que nunca se mueve y lo que gira, cada parte como su propio modelo"
+  - "Poner el pivote en el eje: un modelo de tamaño impar con el buje justo en el centro"
+  - "Entender por qué girar 90° es exacto en vóxels y por qué 45° obliga a redibujar"
+  - "Sacar frames de un giro con la misma cámara o con forja-vox sin que el molino salte"
+  - "Saber cuándo es mejor animar la pieza girando un nodo en Godot"
+tools: [magicavoxel]
+piece:
+  name: "Tu molino con el cuerpo y las aspas como modelos aparte, las aspas en cruz y a 45° con el pivote en el buje, y una animación del giro"
+  canvas: "9x9x20 el cuerpo, 19x1x19 las aspas"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [molino]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Hasta ahora todo lo que has modelado estaba quieto. Una casa, un puente, un cofre. Hoy forjas algo con **una parte que se mueve**: un molino de viento.
+
+<VoxViewer model="molino" stage={1} title="Tu pieza: el cuerpo quieto y las aspas en cruz delante" />
+
+Gíralo y recorre las tres etapas:
+
+1. **Cuerpo:** base de piedra, cuerpo de tablas, tejado escalonado y el eje. Lo que **nunca** se mueve.
+2. **Aspas en cruz:** cuatro brazos con velas, en un plano propio delante de la fachada. Más la puerta, las ventanas y unos sacos.
+3. **Aspas a 45°:** las mismas aspas, giradas media posición. Fíjate en que **no** son las mismas con los vóxels movidos: están dibujadas otra vez.
+
+La idea de la lección cabe en una frase: **lo que se mueve va en un modelo aparte, con el pivote en su eje.**
+
+Tu pieza final: **un molino tuyo** con el cuerpo y las aspas como **dos modelos** en el modo **World** de MagicaVoxel, las aspas en cruz y a 45° con el buje siempre en el mismo vóxel, y **una animación del giro**: frames renderizados o el nodo girando en Godot.
+</Block>
+
+<Block kind="concepto">
+### 1. Lo que se mueve, aparte
+
+Piensa en el molino como en un juguete: **el cuerpo** está pegado al suelo y **las aspas** van clavadas a un eje. Si lo modelas todo en un solo bloque, para girar las aspas tendrías que borrarlas y redibujarlas **sin tocar la fachada** que hay detrás. En cada frame.
+
+<VoxViewer model="molino" stage={0} title="Cuerpo: la parte que nunca se mueve" />
+
+Mide el cuerpo con el visor:
+
+- **Base de piedra:** 9×9 de planta y 9 de alto, en hiladas de dos grises (`#9aa3b5` y `#7d8698`).
+- **Cuerpo de tablas:** más estrecho, 7×7 y 7 de alto, con tablas verticales en dos maderas (`#d08a50` y `#a0603a`). Queda 1 vóxel metido respecto a la piedra.
+- **Tejado:** 4 escalones (9×9, 7×7, 5×5 y 3×3), alternando dos rojos. Con él, el cuerpo mide **20 de alto**.
+- **El eje:** 2 vóxels de madera oscura `#6b3d2e` que salen de la fachada en la capa 14 contando desde el suelo y en el centro del ancho (la columna 5 de 9).
+
+<Why title="Separar por función, como en Blender">
+En Blender, una rueda o una puerta es **otro objeto**, con su propio origen, aunque toque el coche. Aquí igual. La pregunta no es «¿qué está junto?», sino **«¿qué se mueve junto?»**. Todo lo que gira con las aspas (brazos, velas, buje) va en un modelo; todo lo demás, en otro.
+</Why>
+
+En MagicaVoxel, eso son **dos modelos en el modo World**: como los módulos de pared de [V6-01](/forja-art/voxel/v6-01/), pero ahora uno de ellos va a cambiar de pose.
+
+### 2. Las aspas: un plano propio y el pivote en el buje
+
+Vuelve al primer visor, en **Aspas en cruz**:
+
+- Las aspas van en **un plano de 1 vóxel de grosor**, 3 vóxels por delante de las tablas. El eje cruza ese hueco y termina en **el buje**, un vóxel de hierro `#5c6676`.
+- Cada brazo mide **9 vóxels** desde el buje, en madera oscura. La cruz entera ocupa **19×19**: 9 + 1 + 9.
+- Cada brazo lleva una **vela de 2 de ancho y 7 de largo**, a partir del tercer vóxel. Alterna tela `#f4ecdc` y travesaños de madera: 4 filas de tela y 3 de madera.
+- Las cuatro velas van **al mismo lado** de su brazo según se gira: arriba a la derecha, a la derecha por debajo, abajo a la izquierda, a la izquierda por encima. Es un molinillo: se ve hacia dónde gira el viento.
+
+Cuenta: 36 vóxels de brazos, 56 de velas y el buje. **93 vóxels** que se mueven juntos.
+
+<Why title="Por qué 19 y no 18">
+Una pieza que gira lo hace **alrededor de un punto**: el pivote. Si el modelo de las aspas mide 19×1×19, su centro cae justo **en un vóxel**, el décimo: ahí pones el buje. Con 18 de ancho, el centro caería **entre dos vóxels** y el buje no podría estar en él: al girar, las aspas bailarían medio vóxel. Medida impar, buje en el centro. Es el origen del objeto de Blender, pero en vóxels.
+</Why>
+
+<Warn title="Lo que está en el plano no es siempre de las aspas">
+En el modelo, el tirador dorado de la puerta sobresale hasta el mismo plano que las aspas. Si separas «todo lo que está delante», te llevas el tirador con ellas y la puerta girará con el molino. Se separa por **función**, no por posición.
+</Warn>
+
+### 3. Girar 90° es exacto; 45°, no
+
+Mira cómo están hechas las aspas: **se dibuja un brazo y los otros tres son el mismo girado 90°**. Un giro de 90° lleva cada vóxel a otro vóxel: lo que estaba 1 a la derecha y 5 arriba pasa a estar 5 a la derecha y 1 abajo. Números enteros, sin redondeos. Por eso girar 90° (o 180°) **no estropea nada**.
+
+Con 45°, un vóxel que estaba 1 por encima del buje tendría que ir a 0,71 a la derecha y 0,71 arriba. Eso **no es un vóxel**. Hay que redondear, y al redondear se abren huecos, se pisan vóxels y las líneas se rompen. Por eso las aspas a 45° **se redibujan**.
+
+<VoxViewer model="molino" stage={2} title="Aspas a 45°: los mismos brazos, dibujados otra vez en escalera" />
+
+Compara las dos poses:
+
+- **Los brazos son escaleras 1:1**, la línea de 45° limpia del pixel art.
+- **Cada brazo tiene 6 vóxels, no 9.** Cada paso en diagonal mide 1,41 (la diagonal de un cuadrado): 6 × 1,41 ≈ 8,5, casi lo mismo que los 9 de la cruz.
+- **Las velas cambian de forma:** ahora son una banda de 2–3 vóxels en escalera, con 7 de tela y 2 de madera por brazo. Mismas proporciones, otro dibujo.
+- La pieza ocupa 15×15, pero el buje sigue en el mismo sitio.
+
+<Why title="Como la moneda de P4-05">
+En [P4-05](/forja-art/pixel/p4-05/) la moneda que gira no se escalaba: **cada pose se dibujaba**. En vóxels pasa lo mismo con los ángulos que no son múltiplos de 90°: la herramienta no puede inventar la pose, la tienes que decidir tú, vóxel a vóxel.
+</Why>
+
+### 4. Del modelo a la animación
+
+Tienes dos poses. ¿Basta con alternarlas? **No.** Las aspas son iguales cada 90°: la cruz girada 90° es otra vez la cruz. Si pasas de la cruz a 45° y vuelves a la cruz, el ojo no sabe si has girado 45° a la derecha o a la izquierda. Parece que **tiemblan**, no que giran.
+
+Para que se lea el sentido de giro necesitas **al menos 3 poses en cada cuarto de vuelta**. Una forma cómoda, con líneas limpias:
+
+| Pose | Ángulo | Brazos |
+|---|---|---|
+| 1 | 0° | rectos: la cruz |
+| 2 | ≈ 27° | líneas 2:1 y 1:2, inclinadas hacia un lado |
+| 3 | 45° | líneas 1:1 |
+| 4 | ≈ 63° | líneas 2:1 y 1:2, inclinadas hacia el otro lado |
+
+Después de la pose 4 viene otra vez la 1, y el bucle cierra. Las pendientes 2:1 (unos 27°) y 1:1 (45°) son las líneas limpias que ya conoces del pixel art; por eso salen bien en vóxels. Los saltos no son idénticos (27°, 18°, 18° y 27°), pero a este tamaño apenas se nota; si ves un tirón, alarga un poco las poses 2 y 4.
+
+Hay tres caminos para convertir las poses en una animación:
+
+1. **Render de MagicaVoxel:** una imagen por pose con **la misma cámara, la misma luz y la misma resolución**, y después a Aseprite como frames. Es el método de [V5-02](/forja-art/voxel/v5-02/).
+2. **forja-vox `render`:** una hoja isométrica con todas las poses en una orden, como en [V8-02](/forja-art/voxel/v8-02/). La CLI se descarga en [Forge Tools](/forja-art/tools/).
+3. **Girar la pieza en Godot:** exportas el cuerpo y las aspas por separado y giras **el nodo** de las aspas. Una malla 3D gira a cualquier ángulo sin redibujar nada. Lo verás con detalle en [V9-01](/forja-art/voxel/v9-01/).
+
+<Why title="Cuándo usar cada uno">
+Si el juego es **2D de píxel**, necesitas frames: render o forja-vox, y cada pose redibujada. Si el juego es **3D**, no redibujes nada: gira el nodo y tendrás un giro continuo con una sola pose. La separación en dos modelos sirve para los tres caminos.
+</Why>
+
+<Warn title="Los .vox del visor no miden lo mismo">
+Si descargas las etapas del visor, cada `.vox` está recortado a lo que ocupa: «Aspas en cruz» mide 19×11×23 y «Aspas a 45°», 15×11×21. Si pasas los dos a `forja-vox render`, el molino **cambia de sitio** de un cuadro a otro, porque la CLI coloca cada modelo por sus propias coordenadas. Por eso, en tu pieza, **todas las poses de las aspas tienen el mismo tamaño de modelo (19×1×19) y el buje en el mismo vóxel**.
+</Warn>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="El cuerpo, un modelo">
+1. Crea un modelo nuevo de **9×9 de planta y 20 de alto**. Guarda el archivo como `molino_v1.vox`.
+2. En la **paleta** de la izquierda, prepara: piedra `#9aa3b5` y `#7d8698`, madera `#d08a50`, `#a0603a` y `#6b3d2e`, tejado `#c2413b` y `#9c2f2c`, hierro `#5c6676`, tela `#f4ecdc`, ventana `#9fd8ff` y tirador `#f2c14e`.
+3. En modo **Attach**, con el pincel **Box**: la base de piedra de 9×9×9; encima, el cuerpo de 7×7×7 centrado; encima, el tejado en 4 escalones (9, 7, 5 y 3).
+4. Pasa a **Paint** y pinta hiladas en la piedra, tablas verticales alternas en el cuerpo y un rojo distinto en cada escalón del tejado.
+5. Delante, en la capa 14 y en la columna central, levanta con **Voxel** **el eje**: 2 vóxels de madera oscura que salen de la fachada.
+6. Añade la puerta (3 de ancho y 4 de alto, sobresaliendo 1), su tirador y dos ventanas de 1×2.
+
+<Why>
+El cuerpo va primero y entero, como el blockout de V2-01. El eje es la referencia de todo lo demás: marca **dónde** va a estar el pivote.
+</Why>
+</Step>
+
+<Step n={2} title="Las aspas, otro modelo de tamaño impar">
+1. Pasa al modo **World**, donde ves todos los modelos de la escena. Crea un **modelo nuevo** de **19×1×19**.
+2. Pon **el buje** en el vóxel central: el décimo de ancho y el décimo de alto. Usa el hierro `#5c6676`.
+3. Dibuja **un solo brazo** hacia arriba: 9 vóxels de madera oscura desde el buje.
+4. A su derecha, la vela: **2 de ancho y 7 de largo**, empezando en el tercer vóxel del brazo. Alterna una fila de tela y una de madera media.
+
+<Tip>
+Cuenta en voz alta: 9 + 1 + 9 = 19. Si el modelo de las aspas mide par, para ahora y cámbialo: con medida par no hay vóxel central.
+</Tip>
+</Step>
+
+<Step n={3} title="Los otros tres brazos: giros de 90°">
+1. Haz los otros tres brazos como **copias del primero giradas 90°**, 180° y 270° alrededor del buje. Puedes usar las herramientas de girar el modelo 90° y luego volver a dibujar el primer brazo, o copiar el brazo a mano contando vóxels.
+2. Comprueba que **las cuatro velas van al mismo lado** según se gira: si una está al revés, el molinillo pierde el sentido de giro.
+3. Gira la cámara de frente: tiene que verse una cruz perfecta, sin un vóxel de más ni de menos.
+
+<Why>
+Un giro de 90° lleva cada vóxel a otro vóxel. Por eso puedes fiarte de él: dibujas una vez y copias tres. Lo que sea simetría, que lo haga la herramienta; lo que sea pose, lo decides tú.
+</Why>
+</Step>
+
+<Step n={4} title="Coloca las aspas delante del eje">
+1. En **World**, mueve el modelo de las aspas hasta dejar **el buje justo delante del extremo del eje**, tocándolo.
+2. Mira el molino de lado: entre las aspas y la fachada tiene que haber aire, y ningún brazo debe tocar el tejado ni el suelo al pasar por abajo.
+3. Guarda.
+
+<Warn>
+Si el brazo de abajo roza el suelo o la puerta, aleja las aspas o súbelas junto con el eje. En el modelo de referencia, la punta de abajo queda a 4 vóxels del suelo.
+</Warn>
+</Step>
+
+<Step n={5} title="La pose a 45°, redibujada">
+1. Guarda una copia del archivo: `molino_45.vox`. Trabaja en la copia.
+2. Entra a editar el modelo de las aspas. Con **Erase**, borra los brazos y las velas, pero **deja el buje** y el tamaño de 19×1×19.
+3. Con **Voxel**, dibuja un brazo en diagonal: una escalera **1:1 de 6 vóxels** desde el buje.
+4. Dibuja la vela al mismo lado que en la cruz: una banda en escalera de 2–3 vóxels, con alguna fila de madera.
+5. Haz los otros tres brazos con giros de 90°, como en el paso 3.
+
+<Tip>
+Si el brazo diagonal te sale de 9 vóxels, las aspas a 45° medirán unos 12,7 de radio frente a los 9 de la cruz: al animarlas, **crecerán y encogerán**. 6 vóxels en diagonal son casi los mismos 9 de la cruz.
+</Tip>
+</Step>
+
+<Step n={6} title="Frames: las cuatro poses y la misma cámara">
+1. Si vas a hacer frames, añade dos copias más: `molino_27.vox` y `molino_63.vox`, con los brazos en líneas **2:1 y 1:2**, inclinados hacia un lado y hacia el otro (la tabla del concepto). Redibuja como en el paso 5, siempre con el buje en el mismo vóxel.
+2. **Con MagicaVoxel:** pulsa **Render**, fija la cámara con la primera pose y renderiza las cuatro **sin tocar cámara, luz ni resolución**, como en V5-02. Guarda `molino_1.png` … `molino_4.png` y ábrelos en Aseprite como frames, en orden: cruz, 27°, 45°, 63°.
+3. **Con forja-vox:** la CLI solo lee **el primer modelo** de cada `.vox` (`info` te avisa si hay más). Guarda las aspas de cada pose **solas**, en su propio archivo (una copia de la escena con el cuerpo borrado), y renderízalas juntas:
+
+```
+node forja-vox.mjs render aspas_1.vox aspas_2.vox aspas_3.vox aspas_4.vox -o aspas.png --size 4 --outline
+```
+
+Como todas miden 19×1×19 con el buje en el mismo vóxel, el buje cae en el mismo píxel de cada cuadro. El cuerpo, que no se mueve, se renderiza **una sola vez** y en el juego va detrás de la hoja de las aspas.
+
+<Why>
+Es la misma regla del disco del slime en V8-02: lo que no debe moverse tiene que estar **en el mismo sitio en todos los archivos**. Aquí, esa referencia es el buje.
+</Why>
+</Step>
+
+<Step n={7} title="La alternativa: girar el nodo en Godot (nota)">
+Solo para que sepas adónde va esto; los pasos de importación están en [V9-01](/forja-art/voxel/v9-01/).
+
+1. Exporta el cuerpo y las aspas **por separado** a **obj** desde el panel **Export**.
+2. En Godot, el cuerpo es un MeshInstance3D. Las aspas, otro MeshInstance3D **hijo de un Node3D colocado en el buje**: ese Node3D es el pivote. Mueve la malla de las aspas hasta que el buje coincida con él.
+3. Gira el Node3D. Con un script mínimo:
+
+```
+extends Node3D
+
+@export var vueltas_por_segundo := 0.25
+
+func _process(delta):
+    rotate_z(TAU * vueltas_por_segundo * delta)
+```
+
+Si gira en un plano que no es el de las aspas, cambia `rotate_z` por `rotate_x` o `rotate_y`: MagicaVoxel y Godot no orientan los ejes igual.
+</Step>
+
+<Warn title="Verifica en tu versión">
+Los nombres y la posición de los modos (**Attach**, **Erase**, **Paint**), de los pinceles (**Box**, **Voxel**) y del modo **World** pueden cambiar entre versiones de MagicaVoxel. Comprueba sobre todo: cómo se crea un modelo nuevo en World y se fija su tamaño; cómo se mueve, se gira 90° o se borra un modelo, y si eso se hace en World o editando el modelo; **alrededor de qué punto gira** un modelo en tu versión (por eso le damos medida impar con el buje en el centro: así coincide con el centro del modelo); si la cámara se guarda con el archivo; y si **Export → obj** exporta todos los modelos o solo el seleccionado. En Godot (recomendado 4.3 o superior), comprueba en qué eje llegan las aspas y dónde cae el origen de la malla importada.
+</Warn>
+</Block>
+
+<Block kind="version">
+Ahora, **tu** pieza que se mueve. Misma receta: separar por función, pivote en el centro de un modelo impar, giros de 90° para la simetría y poses redibujadas para lo demás. Elige un reto:
+
+- **Tu molino:** otro cuerpo (de madera entera, más alto, con una galería) y unas aspas con 4 brazos y velas a tu manera. Cruz, 45° y la animación de 4 poses.
+- **Seis aspas:** un molino de 6 brazos. Ojo: 60° no es múltiplo de 90°, así que solo los brazos opuestos se copian con un giro de 180°; los demás se dibujan. Descubrirás por qué casi todos los molinos voxel tienen 4.
+- **Otra pieza que gira:** una noria de agua junto al río de [V6-03](/forja-art/voxel/v6-03/), una veleta o la rueda del carro de V4-03. Lo que gira, en su modelo, con el pivote en su eje.
+
+Antes de darla por buena, reproduce la animación: ¿se ve **hacia dónde gira**? ¿El buje se queda **quieto** en el mismo píxel?
+</Block>
+
+<Block kind="errores">
+<Mistake title="Todo en un solo modelo" wrongLabel="Aspas pegadas al cuerpo" rightLabel="Dos modelos en World">
+  <p slot="wrong">Cuerpo y aspas en el mismo modelo. Para cada pose borras las aspas a mano y, sin querer, te llevas vóxels de la fachada que había detrás. Cada frame es un molino un poco distinto.</p>
+  <p slot="right">El cuerpo en un modelo y las aspas en otro. Para cambiar de pose solo editas las aspas: el cuerpo es el mismo, vóxel a vóxel, en todos los frames.</p>
+
+**Corrección:** pregúntate qué se mueve junto. Brazos, velas y buje, a un modelo; el resto, a otro. Y lo que solo está cerca (el tirador de la puerta), con el cuerpo.
+</Mistake>
+
+<Mistake title="Girar 45° moviendo los vóxels" wrongLabel="9 vóxels en diagonal" rightLabel="6 vóxels en escalera 1:1">
+  <p slot="wrong">Pasas el brazo recto de 9 vóxels a la diagonal, uno por uno. El brazo mide ahora unos 12,7, las velas se deshacen en dientes de sierra y en la animación las aspas crecen y encogen.</p>
+  <p slot="right">Dibujas la pose de nuevo: 6 vóxels en escalera 1:1 (≈ 8,5, casi los 9 de la cruz) y una vela con la misma proporción que la recta.</p>
+
+**Corrección:** para cualquier ángulo que no sea múltiplo de 90°, **redibuja**. Mide la longitud del brazo, no el número de vóxels.
+</Mistake>
+
+<Warn title="Error típico: el pivote fuera del buje">
+Las aspas miden 18×1×18, o el buje no está en el centro del modelo. Al girarlas, el buje se desplaza y las aspas **bailan** alrededor del eje. **Corrección:** modelo impar (19×1×19) con el buje en el vóxel central, el mismo en todas las poses.
+</Warn>
+
+<Warn title="Error típico: dos poses que tiemblan">
+Animas la cruz y la pose a 45°, una tras otra. Como la cruz se repite cada 90°, no se sabe si giran a la derecha o a la izquierda: las aspas parecen vibrar. **Corrección:** al menos 3 poses por cuarto de vuelta (en la lección, 4: recta, 2:1, 1:1 y 1:2), o gira el nodo en Godot.
+</Warn>
+
+<Warn title="Error típico: cada pose a su tamaño">
+Recortas cada copia de las aspas a lo que ocupa: la cruz de 19×19 y la de 45° de 15×15. Con forja-vox, la hoja coloca cada una por sus coordenadas y el buje **salta** de un cuadro a otro. **Corrección:** el mismo tamaño de modelo en todas las poses y el buje siempre en el mismo vóxel.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+<Checklist items={[
+  "El cuerpo y las aspas son dos modelos distintos en el modo World",
+  "En el modelo de las aspas solo está lo que gira: brazos, velas y buje",
+  "Las aspas miden impar (por ejemplo 19×1×19) y el buje está en el vóxel central",
+  "Los cuatro brazos son el mismo girado 90° y las velas van todas al mismo lado",
+  "La pose a 45° está redibujada, con brazos de una longitud parecida a los de la cruz",
+  "Todas las poses tienen el mismo tamaño de modelo y el buje en el mismo vóxel",
+  "Mi animación tiene al menos 3 poses por cuarto de vuelta, o gira el nodo en Godot, y se ve hacia dónde gira",
+  "He guardado molino_v1.vox, la pose a 45° y la animación (frames o hoja) en mi portfolio",
+]} />
+
+<Quiz q="¿Por qué puedes copiar un brazo girándolo 90° y no puedes hacer lo mismo con 45°?" options={["Porque MagicaVoxel no deja girar 45°", "Porque un giro de 90° lleva cada vóxel a otro vóxel; con 45° caen entre vóxels y hay que redondear", "Porque las velas son de otro color"]} answer={1}>
+Con 90°, lo que estaba 1 a la derecha y 5 arriba pasa a 5 a la derecha y 1 abajo: números enteros. Con 45° salen posiciones como 0,71 y hay que decidir cada vóxel, es decir, redibujar.
+</Quiz>
+
+<Quiz q="Tu modelo de aspas mide 18×1×18. ¿Qué problema tiene?" options={["Ninguno, es más pequeño", "Que no tiene un vóxel central: el buje no puede estar en el pivote y las aspas bailan al girar", "Que ocupa demasiado en el render"]} answer={1}>
+Con medida par, el centro cae entre dos vóxels. Con 19 (9 + 1 + 9), el buje ocupa justo el centro y gira sobre sí mismo.
+</Quiz>
+
+<Quiz q="Animas la cruz y la pose a 45° alternándolas. ¿Qué se ve?" options={["Las aspas giran despacio hacia la derecha", "Las aspas giran deprisa hacia la izquierda", "No se sabe hacia dónde giran: parecen temblar"]} answer={2}>
+La cruz se repite cada 90°, así que de 45° a la cruz se puede llegar por los dos lados. Con 3 o más poses por cuarto de vuelta, el ojo elige el camino corto y lee el sentido.
+</Quiz>
+
+<Quiz q="Tu juego es 3D y quieres que las aspas giren suaves y continuas. ¿Qué haces?" options={["Exportas el cuerpo y las aspas por separado y giras el nodo de las aspas en Godot", "Redibujas 32 poses de las aspas", "Lo modelas todo en un solo modelo y lo exportas a obj"]} answer={0}>
+Una malla 3D gira a cualquier ángulo sin redibujar. Basta con que las aspas sean una pieza aparte con el pivote en el buje: la misma separación que en MagicaVoxel.
+</Quiz>
+</Block>

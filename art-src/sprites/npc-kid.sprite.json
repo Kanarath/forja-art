@@ -1,0 +1,49 @@
+{
+  "name": "npc-kid",
+  "description": "Niño a partir del héroe (16×24): la misma cabeza con el cuerpo tres filas más corto (18 px de alto en total, frente a los 21 del héroe), pelo rojo y túnica amarilla. Misma cabeza, otra proporción: se lee más joven.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "personaje",
+    "npc"
+  ],
+  "palette": {
+    "a": "#1b1030",
+    "b": "#c2413b",
+    "c": "#e8484f",
+    "d": "#f2c29b",
+    "e": "#c98f6b",
+    "f": "#f2c14e",
+    "g": "#c98a2a",
+    "h": "#8a5a3c",
+    "i": "#4a4560",
+    "j": "#2f2b40",
+    "k": "#3b2418"
+  },
+  "rows": [
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "....aaaaaaaa....",
+    "...abbcccbbba...",
+    "..abbcccccbbbba.",
+    "..abbbbbbbbbbba.",
+    "..abbddddddddbba",
+    "..abddddddddeba.",
+    "..abdadddadddba.",
+    "..abdadddadddba.",
+    "..aeddddddddeea.",
+    "...aeedddddeea..",
+    "....aaaaaaaa....",
+    "...affffffffa...",
+    "..adfffffffgda..",
+    "..aehhhhhhhhea..",
+    "...aiiiiiiija...",
+    "...aiija.aijja..",
+    "...akkka.akkka..",
+    "...aaaaa.aaaaa.."
+  ]
+}

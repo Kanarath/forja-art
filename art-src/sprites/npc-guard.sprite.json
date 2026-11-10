@@ -1,0 +1,50 @@
+{
+  "name": "npc-guard",
+  "description": "Guardia a partir del héroe (16×24): el casco del equipo modular de P5-07, túnica roja y una lanza que sobresale por encima de la cabeza. La silueta acaba en punta.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "personaje",
+    "npc"
+  ],
+  "palette": {
+    "a": "#1b1030",
+    "b": "#c2413b",
+    "c": "#c9d1dc",
+    "d": "#8f9bab",
+    "e": "#6b3d2e",
+    "f": "#5c6676",
+    "g": "#f2c29b",
+    "h": "#c98f6b",
+    "i": "#9c2f2c",
+    "j": "#4a4560",
+    "k": "#2f2b40",
+    "l": "#3b2418"
+  },
+  "rows": [
+    "..............a.",
+    ".......bb....aca",
+    "....aaaaaaaa.dcd",
+    "...accdddddda.e.",
+    "..acddddddddfae.",
+    "..acddddddddffe.",
+    "..afffffffffffe.",
+    "..adeggggggggdea",
+    "..adgggggggghfe.",
+    "..aegagggagggee.",
+    "..aegagggagggee.",
+    "..ahgggggggghhe.",
+    "...ahhggggghhae.",
+    "....aaaaaaaa..e.",
+    "...abbbbbbbba.e.",
+    "..agbbbbbbbigae.",
+    "..agbbbbbbbigae.",
+    "..aheeeeeeeehae.",
+    "...abbbbbbbia.e.",
+    "...ajjjjjjjka.e.",
+    "...ajjka.ajkkae.",
+    "...ajjka.ajkkae.",
+    "...allla.alllae.",
+    "...aaaaa.aaaaae."
+  ]
+}

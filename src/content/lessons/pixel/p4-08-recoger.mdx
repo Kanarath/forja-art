@@ -1,0 +1,301 @@
+---
+id: p4-08
+discipline: pixel
+level: 4
+order: 8
+title: "Objetos para recoger: flotar, brillar y desaparecer"
+summary: "Un objeto para recoger no puede parecer decorado: flota sobre su sombra, que encoge al subir, brilla de vez en cuando y, al cogerlo, salta en blanco y se abre en un anillo de destellos."
+duration: 40
+status: borrador
+objectives:
+  - "Distinguir un objeto para recoger del decorado con una sombra separada, un brillo y el movimiento"
+  - "Animar un bucle de flotar de 2 px en el que la sombra encoge cuando el objeto sube"
+  - "Repartir el timing del bucle: extremos más largos y el brillo solo de vez en cuando"
+  - "Animar la recogida en tres frames cortos: salto en blanco y un anillo de destellos que se abre"
+  - "Organizar en Aseprite los dos estados, flotar y recoger, con etiquetas en la línea de tiempo"
+prerequisites: [p4-03, p4-05]
+fundamentals: [f01, f07]
+tools: [aseprite]
+piece:
+  name: "Un objeto para recoger de 16×20 con su bucle de flotar y su animación de recogida"
+  canvas: "16x20"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [recoger]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Vas a forjar **un objeto para recoger**: la poción que el jugador ve en el suelo y sabe, sin leer nada, que es para él. Flota, brilla de vez en cuando y, cuando la coge, desaparece con un destello.
+
+Dale a *Reproducir*. Son 4 dibujos de 16×20 montados en un bucle de 8 frames:
+
+<Animator sprites={["pickup-1", "pickup-2", "pickup-3", "pickup-4", "pickup-1", "pickup-4", "pickup-3", "pickup-4"]} durations={[240, 160, 240, 160, 240, 160, 240, 160]} />
+
+Y esto es lo que pasa cuando el jugador la toca:
+
+<Animator sprites={["pickup-get-1", "pickup-get-2", "pickup-get-3"]} durations={[90, 60, 90]} />
+
+<Sprite name="pickup-scene" scale={6} caption="pickup-scene · La poción entre una seta y una roca. Las dos están apoyadas en la hierba; la poción flota sobre su propia sombra y tiene un destello. Se ve enseguida qué se puede coger" />
+</Block>
+
+<Block kind="concepto">
+### Un objeto, una pregunta: «¿esto se coge?»
+
+En un juego, el decorado y los objetos para recoger comparten pantalla. Tienen el mismo estilo, el mismo contorno, la misma luz. Pero el jugador tiene que separarlos **de un vistazo**. Si duda, o se pierde la poción o intenta coger una seta.
+
+La poción de esta lección es la misma de siempre, la `potion` de 10×12. No se ha hecho más grande ni más saturada. Lo que la separa del decorado son **tres señales**:
+
+1. **Flota sobre su sombra.** Hay aire entre el frasco y el suelo.
+2. **Se mueve.** Sube y baja 2 px sin parar. El decorado está quieto.
+3. **Brilla de vez en cuando.** Un destello corto, no un parpadeo continuo.
+
+<Sprite name="potion" scale={8} caption="potion · La poción de 10×12 de siempre: corcho, cristal claro, líquido rojo y contorno. Es el mismo dibujo en todos los frames del bucle" />
+
+<Why title="El ojo busca lo que es distinto (F07)">
+En [F07-01](/forja-art/fundamentos/f07-01/) viste que el foco es lo que **rompe la norma** de la escena. Aquí la norma es «todo está apoyado y quieto». La poción la rompe por dos lados: no toca el suelo y se mueve. Un ojo que barre la pantalla se para justo ahí. No hace falta pintarla más fuerte que el resto.
+</Why>
+
+### La sombra separada: lo contrario que en P7-05
+
+En [P7-05](/forja-art/pixel/p7-05/) la regla era clara: la sombra de contacto va **pegada** a la base. Un hueco de aire entre el objeto y su sombra era un error, porque el objeto parecía flotar.
+
+Aquí lo quieres flotando. Así que usas esa misma lectura a tu favor:
+
+- **Decorado:** sombra pegada (o ninguna). Pesa, está en el suelo.
+- **Objeto para recoger:** sombra **separada**. No pesa, está esperando.
+
+<Sprite name="pickup-1" scale={10} caption="pickup-1 · Lo más bajo del vuelo: entre el frasco y la sombra queda 1 fila vacía. La sombra es una elipse de 2 filas, 6 px arriba y 8 abajo, en un verde muy oscuro" />
+
+La sombra no es negra: es un verde muy oscuro, `#1f4f34`. Es más simple que la de P7-05, que bajaba un paso cada verde de la hierba: aquí todos sus píxeles son del mismo color. Para un objeto que no toca el suelo, una mancha más difusa y sencilla funciona.
+
+### El bucle de flotar: 2 píxeles, no más
+
+Mide el frasco frame a frame. Su fila de arriba (el corcho) está en:
+
+| Frame | Altura respecto al frame 1 | Filas vacías hasta la sombra | Sombra |
+| --- | --- | --- | --- |
+| 1 | 0 (lo más bajo) | 1 | 6 + 8 px |
+| 2 | 1 px más arriba | 2 | 4 + 6 px |
+| 3 | 2 px más arriba (lo más alto) | 3 | 4 + 6 px |
+| 4 | 1 px más arriba | 2 | 4 + 6 px |
+
+Sube 1, sube 1, baja 1, baja 1. Cada paso es de **un solo píxel**, así que el movimiento es suave. El frame 4 es el mismo dibujo que el 2, pero sin destello: es el camino de bajada.
+
+<Sprite name="pickup-3" scale={10} caption="pickup-3 · Lo más alto: 2 px por encima del frame 1 y 3 filas de aire. La sombra es la pequeña" />
+
+<Why title="La sombra encoge al subir">
+Cuanto más se aleja un objeto del suelo, más pequeña y difusa es su sombra. Si la poción sube y la sombra se queda igual, el ojo no se cree la altura: parece que sube el dibujo, no el objeto. Aquí la sombra solo tiene dos tamaños, el grande en el frame 1 y el pequeño en los demás. Con un vuelo de 2 px, no hace falta más. La sombra **no se mueve** de su sitio: el suelo no flota.
+</Why>
+
+<Why title="Si vienes de Blender">
+Es un objeto animado en Z con una curva suave y una sombra proyectada por una luz cenital. En Blender, la sombra encogería sola. En pixel art la dibujas tú: decides en qué frame cambia de tamaño.
+</Why>
+
+### Timing: los extremos pesan más
+
+Los frames 1 y 3, abajo y arriba, duran **240 ms**. Los de paso, 2 y 4, duran **160 ms**. Es la regla de la facilidad (*ease*): un objeto que flota frena al llegar arriba y abajo, y pasa rápido por el medio. Con los cuatro iguales, el bucle se ve como un ascensor: sube, para en seco, baja.
+
+### El brillo, de vez en cuando
+
+En [P4-03](/forja-art/pixel/p4-03/) el brillo de la gema necesitaba una pausa larga para sorprender. Aquí igual. El destello es una cruz de 5 píxeles: un centro blanco y cuatro brazos amarillo claro, pegada a la derecha de la boca del frasco. Solo está en el frame 2.
+
+<Sprite name="pickup-2" scale={10} caption="pickup-2 · Subiendo: 1 px más arriba que el frame 1, sombra pequeña y el destello en cruz a la derecha de la boca del frasco" />
+
+Si el bucle fuera solo 1, 2, 3, 4, el destello saldría en cada vuelta, casi cada segundo. Demasiado: se vuelve un parpadeo. El bucle de la pieza tiene 8 frames: la primera vuelta usa el 2 (con destello) y la segunda usa el 4 (sin él) en su lugar. Mismo movimiento, destello en una vuelta de cada dos.
+
+<Tip title="Experimenta en el animador de la pieza">
+1. Pon los 8 frames a 200 ms: el flotar se vuelve mecánico.
+2. Sube el frame 1 a 600 ms: la poción se queda «pensando» abajo, como si costara despegar.
+3. Pon todos a 80 ms: ya no flota, tiembla. Un objeto para recoger tiene que llamar la atención, no poner nervioso.
+</Tip>
+
+### La recogida: corta y en tres tiempos
+
+Cuando el jugador toca el objeto, la animación tiene que confirmar «¡lo tienes!» y quitarse de en medio. Son tres frames:
+
+<Sprite name="pickup-get-1" scale={10} caption="pickup-get-1 · El salto: 4 px por encima del frame 1, todo blanco por dentro y el contorno intacto. La sombra encoge otra vez: 2 + 4 px" />
+<Sprite name="pickup-get-2" scale={10} caption="pickup-get-2 · El frasco ya no está. En su lugar, un anillo de 8 destellos de radio 3: blancos arriba, abajo y a los lados; amarillos en las diagonales. Sin sombra" />
+<Sprite name="pickup-get-3" scale={10} caption="pickup-get-3 · El anillo se abre a radio 6, los mismos 8 destellos. Después, nada" />
+
+1. **Salto en blanco.** El frasco sube de golpe y se rellena de blanco. Es el flash de [P6-06](/forja-art/pixel/p6-06/) con otro sentido: allí decía «te han dado», aquí dice «es tuyo». El contorno se queda, así que la forma se sigue reconociendo.
+2. **Anillo pequeño.** El objeto desaparece y deja un anillo de destellos centrado a la altura del frasco en reposo.
+3. **Anillo grande.** El anillo se abre y se disuelve. Ni humo ni restos.
+
+<Why title="Un VFX en miniatura (P6-04)">
+Es la misma estructura que el impacto de [P6-04](/forja-art/pixel/p6-04/): un destello que crece rápido, una forma que se abre y luego nada. Pero mucho más corto. En la pieza, 90 + 60 + 90 = **240 ms**. El jugador recoge decenas de objetos por partida: si cada uno le roba medio segundo de pantalla, molesta. Y el anillo solo tiene 8 píxeles: deja ver lo que hay detrás.
+</Why>
+
+El animador repite la recogida en bucle para que la estudies. En el juego se reproduce **una vez** y el objeto deja de existir.
+
+<Warn title="Dos paletas: dos animadores">
+Los frames de flotar y los de recoger están en dos animadores separados porque sus paletas no casan: la misma letra es un color en un grupo y otro distinto en el otro. En tu archivo de Aseprite no hay problema: todo vive en la misma línea de tiempo.
+</Warn>
+
+### Prueba de valor
+
+<Sprite name="pickup-scene" scale={5} view="gray" caption="En grises: el destello es de lo más claro de la escena y la sombra, una mancha más oscura que cualquier verde de la hierba, separada del frasco" />
+<Sprite name="pickup-scene-bad" scale={5} view="gray" caption="La versión mala en grises: el rojo de la poción y el de la seta tienen casi el mismo valor, y el cristal es tan claro como las motas de la seta. Nada la separa del decorado" />
+
+La poción **no** destaca por su color: su rojo y el de la seta dan casi el mismo gris. Destaca por lo que tiene alrededor: el aire, la sombra oscura y el destello ([F01-01](/forja-art/fundamentos/f01-01/)).
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Lienzo y capas">
+<Keys k="Ctrl+N" />: **16×20**, fondo transparente. Activa *View → Grid*.
+
+Crea tres capas (*Layer → New Layer*), de abajo arriba: `sombra`, `objeto` y `brillo`.
+
+<Why>
+El objeto, la sombra y el brillo cambian en frames distintos. Separados, puedes mover el frasco sin arrastrar la sombra, y borrar el brillo sin tocar el cristal.
+</Why>
+</Step>
+
+<Step n={2} title="El objeto en reposo (frame 1)">
+En la capa `objeto`, dibuja tu objeto con el lápiz (<Keys k="B" />) y *Pixel-perfect* activado. Puede ser la poción de 10×12 o algo tuyo de tamaño parecido, con contorno oscuro y la luz arriba a la izquierda.
+
+Colócalo centrado y deja **4 filas libres arriba** y **4 abajo**:
+
+- arriba, el sitio para flotar (2 px) y para el salto de la recogida (4 px);
+- abajo, 1 fila de aire, 2 de sombra y 1 de margen.
+
+<Tip>
+Si ya hiciste el set de iconos de P4-02, reutiliza uno. Un objeto para recoger suele ser el mismo dibujo que su icono de inventario: el jugador reconoce lo que ha cogido.
+</Tip>
+</Step>
+
+<Step n={3} title="La sombra">
+En la capa `sombra`, dibuja una elipse de **2 filas** centrada bajo el objeto: **8 px** la de abajo y **6 px** la de arriba. Deja **1 fila vacía** entre la base del objeto y la sombra.
+
+Elige un color muy oscuro del suelo, no negro: para hierba, un verde casi negro. Comprueba que se ve con claridad sobre el verde más oscuro de la hierba.
+
+<Why>
+Esa fila vacía es la que dice «flota». Pégala y el objeto parecerá apoyado, como los props de P7-05.
+</Why>
+</Step>
+
+<Step n={4} title="Cuatro frames y sus tiempos">
+Abre la línea de tiempo (*Timeline*). Añade frames desde el menú *Frame* hasta tener **4**: cada frame nuevo copia el actual.
+
+Clic derecho sobre el número de cada frame, *Frame Properties*: **240 ms** el 1 y el 3, **160 ms** el 2 y el 4.
+
+<Why>
+Como en P4-03 y P4-05: primero el timing y luego el dibujo. Así, cada vez que reproduzcas, verás el movimiento a su velocidad real.
+</Why>
+</Step>
+
+<Step n={5} title="Sube y baja el objeto">
+Activa el onion skin (el botón está en la línea de tiempo).
+
+1. **Frame 2:** en la capa `objeto`, selecciona el objeto con la selección rectangular (<Keys k="M" />) y arrástralo **1 px hacia arriba**. Cuenta en la rejilla.
+2. **Frame 3:** igual, **2 px** por encima del frame 1.
+3. **Frame 4:** 1 px por encima del frame 1, como el 2.
+4. En los frames 2, 3 y 4, cambia la sombra por la pequeña: **4 px** arriba y **6 px** abajo, en el mismo sitio.
+
+<Why>
+El onion skin te enseña el frame anterior en transparencia: comprueba que cada paso es de 1 px exacto y que la sombra no se ha movido de su centro.
+</Why>
+
+<Warn>
+No subas 2 px de golpe en un solo paso. Con 1 px por frame el objeto flota; con saltos de 2 o más, rebota.
+</Warn>
+</Step>
+
+<Step n={6} title="El destello, solo en el frame 2">
+Ve al frame 2, capa `brillo`. Pinta una **cruz de 5 píxeles**: el centro blanco y los cuatro brazos en un amarillo muy claro, junto al borde de la boca del frasco, a la derecha. Comprueba que en los demás frames esa capa está vacía.
+
+Para el destello «de vez en cuando», duplica los frames hasta tener 8 y haz que la segunda vuelta use un frame **sin** destello donde la primera tenía el frame 2: 1, 2, 3, 4, 1, 4, 3, 4.
+</Step>
+
+<Step n={7} title="La recogida y las etiquetas">
+Añade tres frames al final (5, 6 y 7) y ponles **90**, **60** y **90 ms**.
+
+1. **Frame 5:** el objeto **4 px** por encima del frame 1. Con el lápiz, pinta de blanco todo lo que no es contorno. Sombra aún más pequeña: 2 px arriba y 4 abajo.
+2. **Frame 6:** borra el objeto y la sombra (<Keys k="E" />). En la capa `brillo`, pinta **8 píxeles en anillo**, a 3 px del centro del objeto en reposo: blancos arriba, abajo y a los lados; amarillos en las cuatro diagonales (2 px en horizontal y 2 en vertical desde el centro).
+3. **Frame 7:** el mismo anillo a **6 px** del centro. Las diagonales, a 4 y 4.
+
+Ahora crea dos etiquetas (*tags*) en la línea de tiempo: `flotar` con los frames 1–8 y `recoger` con los tres últimos. El motor del juego reproducirá una en bucle y la otra una sola vez.
+
+Guarda con <Keys k="Ctrl+S" />.
+
+<Tip>
+Antes de exportar, mira la escena: pon una capa de fondo con un trozo de hierba y algún prop apoyado (puede ser tu escena de P7-05). Si tu objeto se confunde con el decorado, no es por la animación: revisa la sombra y el aire.
+</Tip>
+</Step>
+
+<Warn title="Verifica en tu versión">
+Los nombres y la posición pueden variar según la versión de Aseprite: *Layer → New Layer*, el panel *Timeline*, la opción de frame nuevo del menú *Frame*, *Frame Properties* (clic derecho sobre el frame), el botón de onion skin, si al arrastrar una selección se mueven los píxeles de la capa activa, cómo se crean las etiquetas (*tags*) y las opciones de *Export Sprite Sheet*. Si una ruta no está donde dice, búscala por su función.
+</Warn>
+
+Para terminar, exporta con *File → Export Sprite Sheet*, en una fila, PNG a 1× y fondo transparente. Y un GIF del bucle con *File → Export → Export As* y **Resize** al 400 % para enseñarlo.
+</Block>
+
+<Block kind="version">
+Ahora a tu manera. Mantén las tres señales (sombra separada, movimiento suave, destello de vez en cuando) y una recogida corta. Elige uno:
+
+- **Otro objeto:** una llave, una gema o una moneda. Combina con [P4-05](/forja-art/pixel/p4-05/): la moneda que gira, encima de una sombra que no gira. Fíjate en que la sombra de una moneda no cambia de ancho aunque la moneda sí.
+- **Otro suelo:** el mismo objeto sobre piedra o agua. Cambia el color de la sombra por un oscuro de ese suelo, y repasa en grises que siga separándose del fondo.
+- **Rareza:** dos versiones del mismo objeto, una normal y otra «rara». La rara puede brillar más a menudo o con un destello más grande, pero el movimiento es el mismo. ¿Se distinguen de lejos sin cambiar el dibujo?
+
+<Tip>
+Si el juego mueve el objeto por código (subirlo y bajarlo con una curva), tú dibujas un solo frame. Aun así, pide que se mueva en **píxeles enteros**: si se mueve medio píxel, se emborrona o tiembla según cómo se dibuje en pantalla.
+</Tip>
+</Block>
+
+<Block kind="errores">
+<Mistake title="Apoyado y sin sombra: parece decorado" wrongLabel="pickup-scene-bad: apoyada en la hierba" rightLabel="pickup-scene: flotando con su sombra">
+  <Sprite slot="wrong" name="pickup-scene-bad" scale={5} />
+  <Sprite slot="right" name="pickup-scene" scale={5} />
+
+A la izquierda, la misma poción, en la misma columna, apoyada en la hierba: su base está en la misma fila que la de la seta y la roca. Sin sombra, sin aire y sin destello, es **un elemento más** del decorado. El jugador pasa de largo, o intenta coger la seta. A la derecha, el frasco está 6 filas más arriba, con 3 filas de hierba hasta su sombra y un destello: se lee «cógeme». **Arréglalo:** separa el objeto del suelo, ponle sombra debajo y un destello de vez en cuando.
+</Mistake>
+
+<Mistake title="Flotar a saltos" wrongLabel="Solo dos frames: abajo y arriba" rightLabel="pickup-2: el frame de paso">
+  <Animator slot="wrong" sprites={["pickup-1", "pickup-3"]} durations={[400, 400]} />
+  <Sprite slot="right" name="pickup-2" scale={8} />
+
+Reproduce la de la izquierda. Pasa del punto más bajo al más alto en un salto de 2 px, sin nada en medio. No flota: **rebota**, como algo que se mueve por un mecanismo. **Arréglalo:** mete los frames de paso a 1 px (el 2 y el 4) y dales menos tiempo que a los extremos.
+</Mistake>
+
+<Warn title="La sombra pegada o negra">
+Si la sombra toca la base del objeto, el ojo lee «apoyado»: es la sombra de contacto de P7-05, la de un prop del decorado. Si es negra pura, parece un agujero en el suelo y es lo más oscuro de la escena, más que el propio objeto. Deja siempre al menos 1 fila de aire y usa un oscuro del suelo.
+</Warn>
+
+<Warn title="Una recogida que no se acaba">
+Una recogida de 600 ms con humo y restos queda espectacular la primera vez y molesta la vigésima. Y mientras dura, tapa lo que hay detrás. Hazla corta, de unos 250 ms, con pocos píxeles, y que termine en **nada**.
+</Warn>
+
+<Warn title="Brilla en todos los frames">
+Si el destello está en cada frame, o en cada vuelta corta del bucle, deja de ser un aviso y se vuelve un parpadeo. Y si todos los objetos de la pantalla brillan a la vez, ninguno destaca. Una vez cada pocas vueltas basta.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+Juzga tu objeto **a 1×**, a su velocidad real y **sobre un fondo de escena**, no sobre el lienzo transparente.
+
+<Checklist items={[
+  "Sobre la escena, se distingue del decorado a la primera",
+  "Hay al menos 1 fila de aire entre el objeto y su sombra en todos los frames",
+  "La sombra es un oscuro del suelo, no negro, y se queda en su sitio",
+  "La sombra es más pequeña cuando el objeto está más alto",
+  "El objeto sube y baja 2 px en pasos de 1 px, sin saltos",
+  "Los frames de arriba y abajo duran más que los de paso",
+  "El destello sale de vez en cuando, no en cada frame",
+  "La recogida dura unos 250 ms y termina sin restos",
+  "En el frame blanco de la recogida, el contorno se mantiene",
+  "He creado las etiquetas flotar y recoger y exportado la spritesheet a 1×",
+]} />
+
+<Quiz q="En P7-05 una sombra separada de la base era un error. ¿Por qué aquí es lo correcto?" options={["Porque los objetos para recoger no necesitan sombra", "Porque el aire entre objeto y sombra dice «flota, no está apoyado», y eso lo separa del decorado", "Porque así la sombra se ve más grande"]} answer={1}>
+La misma lectura sirve en los dos sentidos. Para un prop, el hueco es un fallo: debería pesar. Para un objeto para recoger, el hueco es el mensaje: está esperando a que lo cojas.
+</Quiz>
+
+<Quiz q="La poción sube 2 px. ¿Qué hace su sombra?" options={["Sube con ella", "Se queda en su sitio y encoge", "Se hace más grande"]} answer={1}>
+El suelo no se mueve, así que la sombra tampoco. Cuanto más lejos del suelo está el objeto, más pequeña es su sombra.
+</Quiz>
+
+<Quiz q="¿Cómo debe ser la animación de recogida?" options={["Larga y con humo, para que se note", "Corta, con pocos píxeles, y que acabe en nada", "Igual que el bucle de flotar, pero más rápida"]} answer={1}>
+El jugador recoge muchos objetos. Un salto en blanco y un anillo que se abre, unos 250 ms en total, confirman la recogida sin tapar el juego.
+</Quiz>
+</Block>

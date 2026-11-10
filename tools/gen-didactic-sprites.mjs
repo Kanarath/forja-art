@@ -1625,6 +1625,106 @@ function pathTile(mask, { square = false } = {}) {
   add("rim-halo", "Error: un borde blanco de 1 px por todos lados, igual a la izquierda que a la derecha. Separa la figura, pero no viene de ninguna luz: parece una pegatina recortada.", ["luz", "personaje", "error"], h.pal, h.rows);
 }
 
+// ---------- NPCs: variar el héroe base cambiando silueta, no solo colores (16×24)
+{
+  const O = "#1b1030";
+  const base = () => toHexGrid("hero-chibi").map((r) => r.slice());
+  const recolor = (px, map) => px.map((r) => r.map((c) => (c && map[c]) || c));
+  const TUNIC = (a, b) => ({ "#3b6fd1": a, "#26489a": b });
+  // anciano: pelo y barba grises, túnica morada y un bastón
+  const elder = recolor(base(), { ...TUNIC("#7a4a9a", "#4e2f66"), "#a0603a": "#c9d1dc", "#6b3d2e": "#8f9bab" });
+  const BEARD = "#e8e8f0", BEARD_D = "#b8bcc8";
+  for (const [y, x0, x1] of [[11, 4, 11], [12, 4, 11], [13, 5, 10], [14, 6, 9]]) for (let x = x0; x <= x1; x++) elder[y][x] = y === 14 || x === x0 || x === x1 ? BEARD_D : BEARD;
+  elder[17] = elder[17].map((c) => (c === "#8f9bab" ? "#4e2f66" : c)); // el cinturón vuelve a ser oscuro (compartía color con el pelo)
+  for (let y = 5; y <= 23; y++) elder[y][14] = y === 5 ? O : "#8a5a3c"; // bastón
+  elder[4][14] = O; elder[5][13] = elder[5][13] || O; elder[5][15] = O; elder[6][15] = O; elder[4][13] = O;
+  elder[5][14] = "#c98a2a"; // pomo
+  // mercader: sombrero de ala ancha, túnica verde y delantal
+  const merch = recolor(base(), TUNIC("#3fa45b", "#2c7a48"));
+  for (let x = 1; x <= 14; x++) { merch[3][x] = x === 1 || x === 14 ? O : "#a0603a"; merch[4][x] = O; }
+  for (let x = 4; x <= 11; x++) { merch[0][x] = O; merch[1][x] = x === 4 || x === 11 ? O : "#d08a50"; merch[2][x] = x === 4 || x === 11 ? O : x < 7 ? "#d08a50" : "#a0603a"; }
+  merch[2][5] = "#c2413b"; merch[2][6] = "#c2413b"; // cinta
+  for (let y = 17; y <= 19; y++) for (let x = 5; x <= 10; x++) merch[y][x] = y === 19 || x === 5 || x === 10 ? "#c9b8a0" : "#f4ecdc"; // delantal
+  // niño: el mismo cuerpo con tres filas menos (tunica más corta y piernas más cortas), pelo rojo, túnica amarilla
+  const kid0 = recolor(base(), { ...TUNIC("#f2c14e", "#c98a2a"), "#a0603a": "#e8484f", "#6b3d2e": "#c2413b" });
+  kid0[17] = kid0[17].map((c) => (c === "#c2413b" ? "#8a5a3c" : c)); // cinturón marrón
+  const kid = [[...Array(16)].map(() => null), [...Array(16)].map(() => null), [...Array(16)].map(() => null), ...kid0.filter((_, y) => y !== 15 && y !== 18 && y !== 20)];
+  // guardia: casco, túnica roja y una lanza
+  const guard = recolor(base(), TUNIC("#c2413b", "#9c2f2c"));
+  toHexGrid("gear-helmet").forEach((r, y) => r.forEach((c, x) => { if (c) guard[y][x] = c; }));
+  for (let y = 0; y <= 23; y++) guard[y][14] = y <= 2 ? (y === 0 ? O : "#c9d1dc") : "#6b3d2e";
+  guard[1][13] = O; guard[1][15] = O; guard[2][13] = "#8f9bab"; guard[2][15] = "#8f9bab";
+  const add16 = (name, d, px) => { const s = hexGridToSprite(px); add(name, d, ["personaje", "npc"], s.pal, s.rows); };
+  add16("npc-elder", "Anciano a partir del héroe (16×24): pelo gris, una barba que cubre la parte de abajo de la cara y baja hasta el cuello de la túnica, túnica morada y un bastón con pomo dorado a su derecha. La barba cambia la mancha de valor de la cara; el bastón, la silueta.", elder);
+  add16("npc-merchant", "Mercader a partir del héroe (16×24): sombrero de ala ancha de 14 px con una copa de 8 y dos píxeles rojos de cinta, túnica verde y un delantal crema. La silueta cambia arriba: el sombrero hace plana y ancha la parte de arriba de la cabeza.", merch);
+  add16("npc-kid", "Niño a partir del héroe (16×24): la misma cabeza con el cuerpo tres filas más corto (18 px de alto en total, frente a los 21 del héroe), pelo rojo y túnica amarilla. Misma cabeza, otra proporción: se lee más joven.", kid);
+  add16("npc-guard", "Guardia a partir del héroe (16×24): el casco del equipo modular de P5-07, túnica roja y una lanza que sobresale por encima de la cabeza. La silueta acaba en punta.", guard);
+  const lineup = (list) => { const px = Array.from({ length: 24 }, () => Array(70).fill(null)); list.forEach((g, i) => g.forEach((r, y) => r.forEach((c, x) => { if (c) px[y][i * 18 + x] = c; }))); return hexGridToSprite(px); };
+  const g = lineup([elder, merch, kid, guard]);
+  add("npc-lineup", "Los cuatro NPCs en fila (70×24): anciano, mercader, niño y guardia. Comparten cabeza y estilo, pero cada uno tiene una silueta propia: barba y bastón, sombrero ancho, cuerpo corto, lanza y casco.", ["personaje", "npc"], g.pal, g.rows);
+  const clones = [TUNIC("#7a4a9a", "#4e2f66"), TUNIC("#3fa45b", "#2c7a48"), TUNIC("#f2c14e", "#c98a2a"), TUNIC("#c2413b", "#9c2f2c")].map((m) => recolor(base(), m));
+  const b = lineup(clones);
+  add("npc-lineup-bad", "Error: cuatro NPCs hechos solo cambiando el color de la túnica del héroe (morado, verde, amarillo y rojo). En silueta son idénticos: parecen el mismo personaje cuatro veces.", ["personaje", "npc", "error"], b.pal, b.rows);
+}
+
+// ---------- objeto que se recoge: flota sobre su sombra, brilla y desaparece al cogerlo (16×20)
+{
+  const W = 16, H = 20, SH = "#1f4f34";
+  const potion = toHexGrid("potion"); // 10×12
+  const frame = (dy, shadowW, { sparkle = null, flash = false, burst = 0 } = {}) => {
+    const px = Array.from({ length: H }, () => Array(W).fill(null));
+    if (shadowW) { // sombra: una elipse oscura de 2 filas (la de arriba, 2 px más estrecha)
+      for (let x = 8 - shadowW / 2; x < 8 + shadowW / 2; x++) px[18][x] = SH;
+      for (let x = 8 - shadowW / 2 + 1; x < 8 + shadowW / 2 - 1; x++) px[17][x] = SH;
+    }
+    if (!burst) potion.forEach((r, y) => r.forEach((c, x) => { if (c) px[4 + dy + y][3 + x] = flash && c !== "#1b1030" ? "#ffffff" : c; }));
+    if (sparkle) { const [sx, sy] = sparkle; px[sy][sx] = "#ffffff"; px[sy - 1][sx] = "#ffe58a"; px[sy + 1][sx] = "#ffe58a"; px[sy][sx - 1] = "#ffe58a"; px[sy][sx + 1] = "#ffe58a"; }
+    if (burst) {
+      const r = burst; // anillo de destellos que se abre
+      for (let a = 0; a < 8; a++) { const x = Math.round(8 + Math.cos((a * Math.PI) / 4) * r), y = Math.round(9 + Math.sin((a * Math.PI) / 4) * r); if (px[y]?.[x] !== undefined) px[y][x] = a % 2 ? "#ffe58a" : "#ffffff"; }
+    }
+    return px;
+  };
+  const idle = [frame(0, 8), frame(-1, 6, { sparkle: [12, 5] }), frame(-2, 6), frame(-1, 6)];
+  const ID = [
+    "Objeto para recoger, frame 1: la poción de 10×12 en lo más bajo de su vuelo, con su sombra debajo, una elipse verde oscura de 8 px (2 filas), separada del frasco por 1 fila vacía. No toca el suelo: flota.",
+    "Frame 2: la poción sube 1 px y la sombra encoge a 6. Un destello en cruz aparece arriba a la derecha del frasco.",
+    "Frame 3: lo más alto, 2 px por encima del frame 1, con la sombra de 6.",
+    "Frame 4: baja 1 px, de vuelta hacia el frame 1. El bucle 1-2-3-4 sube y baja con suavidad.",
+  ];
+  fixedFrames(idle).forEach((f, i) => add(`pickup-${i + 1}`, ID[i], ["objeto", "animación"], f.pal, f.rows));
+  const get = [frame(-4, 4, { flash: true }), frame(0, 0, { burst: 3 }), frame(0, 0, { burst: 6 })];
+  const GD = [
+    "Recogida, frame 1: la poción salta 4 px hacia arriba y se vuelve blanca por dentro (el contorno se queda). La sombra encoge a 4.",
+    "Recogida, frame 2: la poción ya no está; en su lugar, un anillo de 8 destellos (blancos y amarillos) de radio 3.",
+    "Recogida, frame 3: el anillo se abre a radio 6 y se acaba. Después, nada: el objeto se ha recogido.",
+  ];
+  fixedFrames(get).forEach((f, i) => add(`pickup-get-${i + 1}`, GD[i], ["objeto", "animación"], f.pal, f.rows));
+  // en escena: sobre hierba, junto a una seta y una roca del mismo tamaño
+  const scene = (good) => {
+    const px = Array.from({ length: 32 }, (_, y) => Array.from({ length: 48 }, (_, x) => { const k = grassTile().rows[y % 16][x % 16]; return GRASS[k]; }));
+    stamp(px, "mushroom8", 4, 18); stamp(px, "rock-clean", 36, 18);
+    if (good) { const f = frame(-2, 6, { sparkle: [12, 5] }); f.forEach((r, y) => r.forEach((c, x) => { if (c && px[y + 6]?.[x + 16] !== undefined) px[y + 6][x + 16] = c; })); }
+    else potion.forEach((r, y) => r.forEach((c, x) => { if (c) px[14 + y][19 + x] = c; })); // apoyada en el suelo, sin sombra ni brillo
+    return hexGridToSprite(px);
+  };
+  const sg = scene(true), sb = scene(false);
+  add("pickup-scene", "La poción como objeto para recoger en la hierba (48×32), entre una seta y una roca: flota con 3 filas de aire entre el frasco y su sombra, y tiene un destello. Se distingue del decorado: eso se puede coger.", ["objeto", "escena"], sg.pal, sg.rows);
+  add("pickup-scene-bad", "Error: la misma poción apoyada en la hierba, sin sombra, sin flotar y sin destello, entre la seta y la roca. Parece un elemento más del decorado.", ["objeto", "escena", "error"], sb.pal, sb.rows);
+}
+
+// ---------- tres valores: la escena final reducida a oscuro / medio / claro, y una escena «embarrada» sin contraste
+{
+  const sf = spriteByName("scene-final");
+  const grid = sf.rows.map((r) => [...r].map((k) => (k === "." ? null : sf.palette[k])));
+  const three = (px) => px.map((r) => r.map((c) => (c === null ? null : lum(c) < 85 ? "#2a2a33" : lum(c) < 170 ? "#7a7a86" : "#d6d6de")));
+  const muddy = grid.map((r) => r.map((c) => (c === null ? null : hexOf(mix(rgbOf(c), [122, 122, 134], 0.55)))));
+  const a = hexGridToSprite(three(grid)), m = hexGridToSprite(muddy), m3 = hexGridToSprite(three(muddy));
+  add("values-3", "La escena final de P8-01 reducida a tres valores (80×48): cada color pasa a oscuro, medio o claro según su luminancia (cortes en 85 y 170 sobre 255). Se ve qué zonas se separan solo por valor.", ["valor", "escena"], a.pal, a.rows);
+  add("values-muddy", "Error: la misma escena con todos los colores mezclados al 55 % con un gris medio. Los tonos siguen ahí, pero los oscuros se aclaran y los claros se apagan: todo queda en valores medios.", ["valor", "escena", "error"], m.pal, m.rows);
+  add("values-muddy-3", "La escena «embarrada» reducida a los mismos tres valores: casi todo cae en el valor medio. Sin oscuros ni claros, nada se separa.", ["valor", "escena", "error"], m3.pal, m3.rows);
+}
+
 // ---------- escribir y validar
 let bad = 0;
 for (const s of out) {

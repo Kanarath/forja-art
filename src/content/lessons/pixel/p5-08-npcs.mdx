@@ -1,0 +1,264 @@
+---
+id: p5-08
+discipline: pixel
+level: 5
+order: 8
+title: "NPCs: aldeanos a partir de un personaje base"
+summary: "Puebla una aldea a partir de tu héroe: cambia primero la silueta (accesorios, proporción, pelo, objetos) y después el color, y conserva cabeza, contorno y estilo comunes."
+duration: 40
+status: borrador
+prerequisites: [p5-01, p5-07]
+fundamentals: [f02, f09]
+objectives:
+  - "Reutilizar un personaje base para hacer varios NPCs del mismo mundo"
+  - "Cambiar primero la silueta con accesorios, objetos en la mano, proporción, pelo y barba"
+  - "Decidir qué se queda igual en todos: cabeza, ojos, contorno, piel y estilo"
+  - "Dar color a cada aldeano con una paleta común del pueblo, reservando el color del héroe"
+  - "Comprobar en silueta y en grises que ningún aldeano se confunde con otro"
+tools: [aseprite]
+piece:
+  name: "Cuatro aldeanos hechos a partir de tu héroe de P5-01, cada uno con su propia silueta"
+  canvas: "16x24"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [aldeanos]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Vas a forjar **los vecinos de tu héroe**: cuatro aldeanos para poblar un pueblo. No empiezas de cero. Partes del héroe de [P5-01](/forja-art/pixel/p5-01/) y lo conviertes en otras personas.
+
+<Sprite name="hero-chibi" scale={10} caption="hero-chibi · El personaje base, 16×24: cabeza de 11 filas, ojos de 2 px, túnica azul, cinturón, pantalón y botas" />
+
+<Sprite name="npc-lineup" scale={6} caption="npc-lineup · Los cuatro aldeanos hechos a partir de él: anciano, mercader, niño y guardia. La misma cabeza y el mismo contorno; cada uno con su forma" />
+
+Míralos de lejos. Son **del mismo mundo**, porque comparten cabeza, ojos, piel y contorno. Y a la vez **no se confunden entre ellos**, porque cada uno tiene una silueta distinta. Eso es lo que buscas.
+</Block>
+
+<Block kind="concepto">
+### Un personaje base, muchos vecinos
+
+Un pueblo necesita mucha gente y tú tienes 2–4 horas a la semana. Dibujar cada NPC desde cero es lento y, además, peligroso: cada uno acaba con una cabeza, un contorno y unas proporciones algo distintas, y el pueblo parece hecho por cinco artistas.
+
+La solución es la misma que en Blender con una **malla base**: no modelas cada personaje desde un cubo, partes de un cuerpo que ya funciona y cambias lo que hace falta.
+
+<Why title="Por qué reutilizar no es hacer trampa">
+Lo que compartan todos los NPCs es lo que dice «este es el estilo del juego». Si todos tienen la cabeza de 11 filas, los ojos de 2 px y el mismo contorno violeta casi negro (`#1b1030`), el jugador los lee como habitantes del mismo sitio. La reutilización no solo ahorra tiempo: **da coherencia**.
+</Why>
+
+### Qué se queda igual
+
+En los cuatro aldeanos del ejemplo no cambian:
+
+- **La cabeza**: la misma forma redonda y los ojos de 2 px en el mismo sitio. El niño también: su cabeza es la del héroe píxel a píxel, solo con otro color de pelo.
+- **El contorno**: 1 px, siempre el mismo `#1b1030`.
+- **La piel, el pantalón y las botas**: los mismos colores que el héroe.
+- **La luz**: el claro del pelo y del casco está arriba a la izquierda, como en el héroe.
+
+### Qué cambia, y en qué orden
+
+**Primero la silueta. Después el color.** En [F02-01](/forja-art/fundamentos/f02-01/) viste que un personaje se reconoce antes por su contorno que por sus colores. Por eso el orden importa: si dos NPCs tienen la misma silueta, el color no los salva.
+
+Tienes cuatro palancas para cambiar la silueta:
+
+1. **Algo en la cabeza**: un sombrero, un casco, una capucha.
+2. **Algo en la mano**: un bastón, una lanza, una cesta.
+3. **La proporción**: más bajo, más ancho, otra longitud de cuerpo.
+4. **El pelo y la barba**: a veces cambian el contorno; a veces solo cambian dónde está la mancha clara.
+
+Mira cómo usa cada aldeano esas palancas:
+
+<Sprite name="npc-elder" scale={10} caption="npc-elder · Anciano: pelo gris, barba blanca desde las mejillas hasta el cuello de la túnica, túnica morada con faja oscura y un bastón marrón de 1 px a la derecha, con un pomo dorado a la altura del pelo" />
+
+<Sprite name="npc-merchant" scale={10} caption="npc-merchant · Mercader: sombrero con copa, una banda con 2 px rojos y un ala de 14 px; asoma el pelo castaño del héroe. Túnica verde y delantal crema de 3 filas" />
+
+<Sprite name="npc-kid" scale={10} caption="npc-kid · Niño: la cabeza del héroe con el pelo rojo y el cuerpo 3 filas más corto (7 en lugar de 10). Túnica amarilla. Mide 18 px de alto en vez de 21" />
+
+<Sprite name="npc-guard" scale={10} caption="npc-guard · Guardia: el casco de P5-07, túnica roja y una lanza con punta de 3 px que sube 3 filas por encima del casco" />
+
+Cuenta lo que hace cada uno con la silueta:
+
+- **El anciano** mide lo mismo que el héroe (21 px), pero el bastón le añade un palo vertical a la derecha. La barba **no cambia el contorno**: queda dentro de la cara.
+- **El mercader** sube 3 filas. Donde la cabeza del héroe se estrecha en cúpula (8 y 10 px de ancho), el ala mide 14: la parte de arriba deja de ser redonda y se vuelve plana y ancha.
+- **El niño** es más bajo: 18 px en lugar de 21. La cabeza no encoge; encoge el cuerpo. Por eso la cabeza ocupa más parte del total y se lee más joven (es la proporción chibi de P5-01 llevada más lejos).
+- **El guardia** sube 3 filas con la cresta del casco y la punta de la lanza. Su silueta **acaba en punta**.
+
+<Why title="Formas que cuentan quién es (f09)">
+En [F09-01](/forja-art/fundamentos/f09-01/) viste que la forma dice el carácter. Aquí pasa lo mismo a pequeña escala: el bastón dice «mayor», el ala ancha dice «sombra, camino, mercado», el cuerpo corto dice «niño», la punta de la lanza dice «cuidado». Antes de elegir un color, el jugador ya sabe a quién tiene delante.
+</Why>
+
+### Pruébalo: en negro
+
+<Sprite name="npc-lineup" view="silhouette" scale={6} caption="npc-lineup en silueta: cuatro contornos distintos. Palo a la derecha, tejado plano, cuerpo bajo, palo con punta" />
+
+Fíjate en el anciano y el guardia. Los dos llevan un palo vertical en la misma columna. Lo que los separa es **hasta dónde llega**: el bastón acaba a la altura del pelo y la lanza pasa por encima del casco con su punta. Si dos aldeanos llevan el mismo tipo de objeto, haz que se diferencien en tamaño o en forma.
+
+<SilhouetteLab sprites="hero-chibi,npc-elder,npc-merchant,npc-kid,npc-guard" title="¿Distingues al héroe y a cada aldeano solo por el contorno?" />
+
+Pon el laboratorio a 1× y tapa los nombres. Si aciertas los cinco, las siluetas funcionan. Más tarde podrás subir aquí tus propios aldeanos.
+
+### Después, el color: la paleta del pueblo
+
+Con la silueta resuelta, el color termina de separarlos. Cada aldeano tiene **un color propio de túnica** (morado, verde, amarillo, rojo) y casi todo lo demás sale de una paleta compartida:
+
+- El gris claro y el gris medio del pelo del anciano son los mismos del casco del guardia (`#c9d1dc` y `#8f9bab`).
+- El rojo `#c2413b` está en la banda del sombrero del mercader, en el pelo del niño y en la túnica del guardia.
+- El ocre del pomo del bastón (`#c98a2a`) es la sombra de la túnica del niño.
+
+Repetir colores entre personajes es lo que viste con la armonía en F04: pocos colores, bien repartidos, hacen que el pueblo parezca **un sitio**, no una mezcla.
+
+<Tip title="Reserva el color del héroe">
+Ningún aldeano lleva el azul de la túnica del héroe (`#3b6fd1`). Así, en una plaza llena de gente, el jugador encuentra a su personaje de un vistazo. Decide qué color es «del protagonista» y no se lo des a nadie más.
+</Tip>
+
+### Pelo y barba: la mancha de valor
+
+La barba del anciano no toca el contorno, pero sí cambia algo importante: **dónde está la mancha clara**. Míralo en grises.
+
+<Sprite name="npc-lineup" view="gray" scale={6} caption="npc-lineup en grises: la barba blanca del anciano y el delantal crema del mercader son los colores más claros del grupo; el sombrero y el casco cambian el valor de la parte de arriba" />
+
+Cuando el contorno ya no da más de sí (dos aldeanos de la misma altura y sin objetos), mueve la mancha clara: barba, delantal, un pañuelo. Es la segunda señal después de la silueta, y funciona aunque el jugador no distinga bien los tonos (lo viste en F01: el valor antes que el tono).
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Prepara la base y decide los papeles">
+1. Abre tu héroe de P5-01 (o copia `hero-chibi` píxel a píxel en un lienzo de 16×24 con <Keys k="Ctrl+N" />).
+2. Guárdalo con *File → Save As* como `aldea-base.aseprite`. No lo vas a tocar más.
+3. Activa *View → Grid*.
+4. En un papel, apunta cuatro aldeanos y, para cada uno, **una palanca de silueta** y **un color**. Por ejemplo: anciano → bastón y barba, morado; mercader → sombrero ancho, verde; niño → cuerpo corto, amarillo; guardia → casco y lanza, rojo.
+
+<Why>
+Si decides la silueta en el papel, no caes en la trampa de abrir la paleta y empezar a cambiar túnicas. Cada aldeano necesita **una idea de forma** antes de un color.
+</Why>
+
+<Tip>
+Usa palancas distintas para cada uno. Si dos aldeanos usan «algo en la mano», que uno sea corto y el otro largo, o que uno acabe en bola y el otro en punta.
+</Tip>
+</Step>
+
+<Step n={2} title="Una copia por aldeano">
+1. Con la base abierta, *File → Save As* → `npc-anciano.aseprite`.
+2. Vuelve a abrir `aldea-base.aseprite` y repite con `npc-mercader`, `npc-nino` y `npc-guardia`.
+3. Antes de dibujar, toma con el cuentagotas (<Keys k="I" />) el color del contorno del héroe. Es el único color de línea que vas a usar.
+
+<Warn>
+No toques la cabeza ni los ojos en ninguna copia. Son el sello del estilo. Si cambias la cara de uno, ese aldeano parecerá de otro juego.
+</Warn>
+</Step>
+
+<Step n={3} title="La silueta primero, solo con el contorno">
+1. Lápiz (<Keys k="B" />) con *Pixel-perfect* y el color del contorno.
+2. **Anciano:** traza un bastón de 1 px de ancho junto a su mano derecha, del suelo hasta la altura del pelo, y un pomo arriba.
+3. **Mercader:** sobre la cabeza, una copa de 8 px de ancho y, debajo, un ala más ancha que la cúpula de la cabeza. Borra con la goma (<Keys k="E" />) el pelo que quede tapado.
+4. **Guardia:** el casco de P5-07 (cópialo de tu capa `casco` o dibújalo igual) y una lanza que pase por encima de la cabeza con una punta.
+5. **Niño:** selecciona la cabeza con la selección rectangular (<Keys k="M" />) y arrástrala 3 filas hacia abajo. Debajo vuelve a dibujar un cuerpo más corto: túnica, brazos, cinturón, pantalón, una fila de piernas y botas.
+
+<Why>
+Solo con la línea ya ves si la forma funciona. El color vendrá después, pero no puede arreglar una silueta que no se distingue.
+</Why>
+
+<Tip>
+En el niño, la cabeza **no encoge**. Lo que hace que parezca más joven es que la cabeza ocupa más parte del cuerpo. Si encoges la cabeza, los ojos de 2 px dejan de caber.
+</Tip>
+</Step>
+
+<Step n={4} title="Comprueba la silueta antes de pintar">
+1. Exporta cada aldeano con *File → Export → Export As*, a 1× (sin Resize): `anciano-1x.png`, etc.
+2. Súbelos al laboratorio de siluetas del bloque de concepto (botón «+ Tu PNG») junto al héroe.
+3. Ponlo a 1× y en negro. ¿Distingues los cinco? ¿Alguno se parece demasiado al héroe?
+
+<Warn>
+Si dos se confunden, no lo arregles con color: **exagera la diferencia de forma**. Alarga la lanza, ensancha el ala, acorta más el cuerpo. Vuelve a exportar y comprueba otra vez.
+</Warn>
+</Step>
+
+<Step n={5} title="Ahora el color, con la paleta del pueblo">
+1. Rellena la túnica de cada aldeano con su color con el cubo (<Keys k="G" />): base, y una sombra a la derecha, como la túnica del héroe.
+2. Pinta lo nuevo: el pelo gris y la barba, el bastón, el sombrero, el delantal, la lanza.
+3. Antes de inventar un color, mira si ya existe en otro aldeano. Reutiliza: el gris del pelo para el metal, el rojo del sombrero para el pelo del niño…
+4. No uses el color de la túnica del héroe en ningún aldeano.
+
+<Why>
+La paleta compartida es lo que convierte cuatro dibujos en un pueblo. Cada color nuevo que añades es un color más que el jugador tiene que encajar.
+</Why>
+</Step>
+
+<Step n={6} title="Grises y exportación">
+1. Exporta cada aldeano otra vez a 1× y súbelo al Inspector del bloque de calidad. Míralo en la vista de grises.
+2. Busca la mancha clara de cada uno: ¿está en sitios distintos? (barba, delantal, casco…)
+3. Exporta los cuatro con *File → Export → Export As* y **Resize** al 800 % para enseñarlos. Guarda con <Keys k="Ctrl+S" />.
+
+<Tip>
+Si quieres la foto de grupo, crea un lienzo de 70×24 (<Keys k="Ctrl+N" />) y coloca los cuatro con 2 px de separación, como en `npc-lineup`.
+</Tip>
+</Step>
+
+<Warn title="Verifica en tu versión">
+Los nombres y la posición pueden variar según la versión de Aseprite: *File → Save As*, mover una selección arrastrándola con la herramienta de selección rectangular y copiar y pegar entre archivos (desde el menú *Edit*). Si una ruta no está donde dice, búscala por su función.
+</Warn>
+</Block>
+
+<Block kind="version">
+Ahora a tu manera. Mantén la regla (silueta primero, color después, cabeza y contorno comunes) y elige un reto:
+
+- **Dos vecinos más:** una herrera con un martillo al hombro y un granjero con un sombrero de paja de otra forma que el del mercader. Ninguno puede confundirse en silueta con los cuatro anteriores.
+- **Una familia:** padre, madre y niño, los tres de la misma base. Que se lean como familia (comparten color de pelo) y como personas distintas (altura, peinado, algo en la mano).
+- **Otro pueblo:** los mismos cuatro aldeanos con otra paleta común, como en P5-04 (un pueblo de montaña, frío; un pueblo del desierto, cálido). La silueta se queda, la paleta del pueblo cambia.
+
+<Tip>
+Si haces el pueblo con otra paleta, cambia los colores **de todos a la vez** y en grises mantén las mismas manchas claras. Es un palette swap de grupo.
+</Tip>
+</Block>
+
+<Block kind="errores">
+<Mistake title="Solo recolorear: el mismo personaje cuatro veces" wrongLabel="npc-lineup-bad en silueta: cuatro contornos idénticos" rightLabel="npc-lineup en silueta: cuatro formas distintas">
+  <Sprite slot="wrong" name="npc-lineup-bad" view="silhouette" scale={4} />
+  <Sprite slot="right" name="npc-lineup" view="silhouette" scale={4} />
+
+A la izquierda, cuatro héroes donde solo ha cambiado la túnica: 32 píxeles por personaje, y todo lo demás (pelo, cinturón, piernas) es igual. En negro son **cuatro copias exactas**. Lo curioso es que usan los mismos cuatro colores de túnica que los buenos (morado, verde, amarillo, rojo): el color no era el problema, faltaba la forma. Corrígelo dándole a cada uno una palanca de silueta (algo en la cabeza, algo en la mano, otra proporción) antes de tocar la paleta.
+</Mistake>
+
+<Mistake title="Tampoco se separan en grises" wrongLabel="npc-lineup-bad en grises: solo cambia la mancha de la túnica" rightLabel="npc-lineup en grises: las manchas claras están en sitios distintos">
+  <Sprite slot="wrong" name="npc-lineup-bad" view="gray" scale={4} />
+  <Sprite slot="right" name="npc-lineup" view="gray" scale={4} />
+
+A la izquierda, las cuatro figuras tienen el pelo oscuro arriba, la cara clara en el mismo sitio y solo cambia el valor de un rectángulo en el pecho. A la derecha, la mancha clara se mueve: la barba del anciano, el delantal del mercader, la cara del niño más abajo, el casco y la punta de la lanza del guardia. Corrígelo repartiendo las zonas claras y oscuras de forma distinta en cada aldeano, no solo cambiando el tono de la ropa.
+</Mistake>
+
+<Warn title="Cambiar tanto que parecen de otro juego">
+El error contrario: a uno le haces la cabeza más pequeña, a otro ojos de 1 px, a otro un contorno negro puro. Cada uno queda bien solo, pero juntos no son del mismo mundo. Corrígelo volviendo a la lista de lo que se queda: cabeza, ojos, contorno y piel son **los mismos para todos**.
+</Warn>
+
+<Warn title="Un aldeano vestido como el héroe">
+Si un aldeano lleva la túnica azul del héroe, en una plaza llena de gente el jugador se pierde. Corrígelo reservando el color del protagonista y dándole a cada NPC uno suyo.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+Estudia los cuatro aldeanos en el inspector: compara su silueta y su vista en grises. Luego sube tus aldeanos, exportados a 1×, y revísalos igual.
+
+<Inspector sprite="npc-lineup" upload title="Los aldeanos (y los tuyos)" />
+
+<Checklist items={[
+  "Los cuatro aldeanos salen del mismo personaje base",
+  "Todos comparten la cabeza, los ojos, el contorno y la piel del héroe",
+  "Cada uno tiene una palanca de silueta propia y en negro no se confunden entre ellos ni con el héroe",
+  "He decidido la silueta antes que el color",
+  "Los colores salen de una paleta común y ningún aldeano usa el color del héroe",
+  "En grises, la mancha clara de cada uno está en un sitio distinto",
+  "He exportado cada aldeano a 1× y una versión ampliada al 800 %",
+]} />
+
+<Quiz q="Haces cuatro NPCs cambiando solo el color de la túnica del héroe. ¿Qué pasa?" options={["Se distinguen bien si los colores son muy distintos", "En silueta son idénticos: parecen el mismo personaje cuatro veces", "Parecen de otro juego"]} answer={1}>
+El ojo reconoce primero la forma. Con la misma silueta, el color solo es una etiqueta pequeña en el pecho. Cambia antes el contorno.
+</Quiz>
+
+<Quiz q="Quieres que un aldeano parezca un niño. ¿Qué cambias?" options={["Encoges todo el sprite, cabeza incluida", "Dejas la cabeza igual y acortas el cuerpo", "Le pones el pelo de otro color"]} answer={1}>
+Si la cabeza se queda igual y el cuerpo encoge, la cabeza ocupa más parte del total y se lee más joven. Si encoges la cabeza, la cara deja de caber.
+</Quiz>
+
+<Quiz q="El anciano y el guardia llevan los dos un palo en la mano derecha. ¿Cómo evitas que se confundan en silueta?" options={["Con colores distintos en el palo", "Haciendo que se diferencien en largo y en forma: bastón con pomo hasta el pelo, lanza con punta por encima del casco", "No se puede: hay que quitar uno de los dos"]} answer={1}>
+Dos objetos del mismo tipo pueden convivir si su forma es distinta. El color no cuenta en la silueta; el largo y la punta, sí.
+</Quiz>
+</Block>

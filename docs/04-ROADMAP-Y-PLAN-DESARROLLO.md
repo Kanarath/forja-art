@@ -197,6 +197,12 @@
 - **Voxel:** V4-06 Muebles a escala (un kit de taberna), V5-05 Criaturas grandes (un gólem).
 - **Arte nuevo:** derrota del slime en 6 frames y su error «a ruido», hoja de autotile de 16 piezas con su mapa (y el camino a casillas como error), el héroe de noche sin luz de borde, a contraluz y con halo, y los modelos «taberna» y «golem».
 
+**Contenido · decimoséptimo bloque: 5 lecciones más (98 en total).**
+- **Pixel:** P4-08 Objetos para recoger (flotar, brillar y desaparecer), P5-08 NPCs (aldeanos a partir de un personaje base).
+- **Fundamentos:** F01-02 Tres valores (agrupar oscuros, medios y claros).
+- **Voxel:** V3-05 Agua y cristal (una fuente con material Glass), V6-05 Piezas que se mueven (un molino).
+- **Arte nuevo:** cuatro NPCs a partir del héroe y su error de solo recolorear, la poción flotando y su recogida con la escena buena y mala, la escena final en tres valores y su versión embarrada, y los modelos «fuente» y «molino».
+
 **Fase 6 · Forge Tools (iniciada el 2026-11-10).** Tres scripts de Aseprite, la CLI `forja-vox` y la página Forge Tools con descargas y demos. Ver `forge-tools/README.md`.
 
 **Lecciones aprendidas durante la fase 1:**

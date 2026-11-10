@@ -1,0 +1,270 @@
+---
+id: f01-02
+discipline: fundamentos
+level: 1
+order: 2
+title: "Tres valores: agrupar oscuros, medios y claros"
+summary: "Reduce una imagen a oscuro, medio y claro para ver si se lee. Agrupa las zonas grandes en masas, pon el contraste máximo en el foco y evita la imagen embarrada."
+duration: 45
+status: borrador
+prerequisites: [f01-01]
+fundamentals: [f01]
+objectives:
+  - "Reducir una imagen a tres valores y ver qué zonas se separan"
+  - "Agrupar las zonas grandes en pocas masas de valor"
+  - "Poner el contraste más fuerte (claro contra oscuro) en el punto focal"
+  - "Reconocer una imagen embarrada en valores medios y corregirla"
+  - "Comprobar los tres valores en Aseprite y en un render de MagicaVoxel"
+tools: [aseprite, magicavoxel]
+piece:
+  name: "Un boceto de tres valores y la escena en color que lo respeta, más un render voxel revisado en tres valores"
+  canvas: "64x40"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [tres-valores]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+En [F01-01](/forja-art/fundamentos/f01-01/) separaste **tres valores** dentro de un objeto: sombra, medio y luz. Hoy das el salto a una **imagen entera**.
+
+Esta es la escena final del curso, la que montarás en [P8-01](/forja-art/pixel/p8-01/). Tiene 33 colores:
+
+<Sprite name="scene-final" scale={5} caption="scene-final (80×48): hierba, agua con orilla, héroe, impacto, slime, cofre, seta y roca" />
+
+Y esta es la **misma escena con solo tres valores**: cada color pasa a oscuro, medio o claro según lo claro que es.
+
+<Sprite name="values-3" scale={5} caption="values-3: oscuro, medio y claro. Sin color, sin matices… y se sigue leyendo" />
+
+Se ve la orilla, se ven los personajes y la cruz clara del impacto salta entre el héroe y el slime. Si una imagen aguanta esta prueba, se lee.
+
+Tu pieza tiene dos partes:
+
+- **Pixel**: una escena de **64×40** en Aseprite. Primero un **boceto de tres grises** con las masas y el foco. Después, el color encima, sin romper esos valores.
+- **Voxel**: un render de MagicaVoxel (el diorama del curso o un modelo tuyo) **reducido a tres valores** para comprobar que sus masas se separan.
+</Block>
+
+<Block kind="concepto">
+### La prueba de tres valores
+
+La prueba de grises de F01-01 quita el color. Esta va más lejos: **aprieta todos los grises en tres cajas**.
+
+- **Oscuro**: valor por debajo del 33 %.
+- **Medio**: entre el 33 % y el 67 %.
+- **Claro**: por encima del 67 %.
+
+En `values-3` los cortes son exactamente esos (85 y 170 sobre 255, con la misma luminancia que usa la vista Grises de la academia). El reparto de la escena queda así:
+
+- **Oscuro: 9,7 %** de los píxeles. Los contornos, el pelo y las piernas del héroe, la madera oscura del cofre y las franjas profundas del agua.
+- **Medio: 72,9 %**. Casi todo es hierba y agua.
+- **Claro: 17,4 %**. La franja de arena y espuma de la orilla, las crestas del agua, las matas, la cara del héroe, el cuerpo del slime y la cruz del impacto.
+
+<Why title="Por qué tres y no más">
+Con la vista en grises ves 256 escalones, y el ojo se pierde en los matices. Con tres cajas solo queda lo que se ve **de lejos o con los ojos entrecerrados**: qué es claro, qué es oscuro y qué es fondo. Si la imagen se entiende así, el detalle y el color ya solo suman.
+</Why>
+
+### Agrupar en masas
+
+Mira `values-3` otra vez. Casi el **70 %** de la imagen es hierba (54 % de valor en grises) y agua (40 %). En grises se distinguen por poco; en tres valores **caen las dos en medio** y serían una sola masa.
+
+Lo que las separa es la **orilla**: la arena (83 %) y la espuma (93 %) forman una franja clara que recorre todo el borde entre la tierra y el agua.
+
+<Sprite name="scene-final" scale={5} view="gray" caption="scene-final en grises: la hierba algo más clara que el agua, la orilla clara entre las dos y el impacto blanco" />
+
+De ahí sale la regla de trabajo:
+
+1. Pocas **masas grandes**, cada una en **un** valor (aquí el fondo es medio).
+2. Si dos masas grandes comparten valor, **sepáralas con un borde** de otro valor (aquí, la orilla clara).
+3. Los oscuros y los claros fuertes, **en sitios elegidos**, no repartidos por todas partes.
+
+<Why title="Masas antes que detalle">
+El ojo agrupa primero las manchas grandes y después entra en el detalle. Si las masas están claras, el detalle se coloca dentro sin estorbar. Si cada zona tiene oscuros, medios y claros mezclados, la imagen es ruido: es la roca ruidosa de F01-01 a escala de escena.
+</Why>
+
+### El foco: donde más contraste hay
+
+El ojo va a donde hay **más diferencia de valor**. En `scene-final` el píxel más claro es el **blanco del impacto** (100 %), y el impacto está entre dos masas con oscuros: el héroe (pelo y contorno) y el slime (contorno). Claro en medio, oscuros a los lados: ahí mira el ojo.
+
+En `values-3` la orilla también es clara, pero es una franja larga en el borde: enmarca. La cruz del impacto es compacta, está en el centro de la acción y tiene oscuros cerca. Eso es lo que la convierte en foco.
+
+<Tip>
+La composición entera la verás en [F07-01](/forja-art/fundamentos/f07-01/), y la luz que crea esos claros y oscuros en [F05-01](/forja-art/fundamentos/f05-01/). La prueba de tres valores es la que usarás en las dos para comprobar el resultado.
+</Tip>
+
+### La imagen «embarrada»
+
+Ahora la misma escena con todos los colores mezclados al 55 % con un gris medio. Los **tonos** siguen ahí: verde, azul, rojo, piel.
+
+<Sprite name="values-muddy" scale={5} caption="values-muddy (ERROR): los mismos 33 colores, mezclados con gris. Parece una foto con niebla" />
+
+Pero en grises el rango se ha encogido: antes iba del **8 % al 100 %**; ahora, del **30 % al 71 %**. Y en tres valores:
+
+<Sprite name="values-muddy-3" scale={5} caption="values-muddy-3: casi todo medio. Quedan los contornos, la cruz del impacto y una línea de espuma" />
+
+- **Medio: 90,7 %**.
+- **Oscuro: 5,0 %**: solo los contornos, y por los pelos (30 %).
+- **Claro: 4,3 %**: la cruz del impacto, la línea de espuma, las motas de la seta y 2 píxeles de brillo del slime, también por los pelos.
+
+La arena ha caído a medio, así que la hierba y el agua **se funden en una sola masa**. El pelo, la cara y las piernas del héroe son el mismo medio: el héroe es un dibujo de contorno vacío. El slime, el cofre y la roca, igual.
+
+<Why title="Embarrar no es oscurecer">
+Una imagen oscura puede leerse bien si conserva su orden de valores. Embarrada es otra cosa: **todo se acerca al medio**. Los oscuros se aclaran, los claros se apagan y nada destaca. Suele pasar al mezclar cada color con un gris para «armonizar», o al elegir todos los colores con el mismo valor (como la paleta mala de F04-02).
+</Why>
+</Block>
+
+<Block kind="guiada">
+### Parte 1 · Leer y pintar en tres valores (Aseprite)
+
+<Step n={1} title="Mide la escena final">
+En el Inspector, elige la vista **Grises** y pasa el ratón por la escena. Debajo verás el **valor en %** de cada píxel. Busca:
+
+- la hierba (54 %) y el agua (40 %): las dos en medio;
+- la arena de la orilla (83 %) y la espuma (93 %): claros;
+- el blanco del impacto (100 %) y el contorno (8 %): los extremos.
+
+<Inspector sprite="scene-final" title="scene-final: pasa el ratón para ver el valor" />
+
+<Why>
+Medir te entrena el ojo. Cuando sepas que «menos de un tercio» es oscuro y «más de dos tercios» es claro, harás la prueba de cabeza.
+</Why>
+</Step>
+
+<Step n={2} title="Lienzo y tres grises">
+1. <Keys k="Ctrl+N" />: 64×40. Activa *View → Grid* y amplía con la rueda.
+2. Prepara en la paleta tres grises bien separados, por ejemplo `#2b2b2b` (oscuro), `#7b7b7b` (medio) y `#d6d6d6` (claro).
+3. Decide **qué escena** vas a pintar: un personaje, un enemigo y un suelo bastan. Puedes usar la idea de `scene-final` con tus propios elementos.
+
+<Tip>
+Decide antes de pintar **qué valor será el fondo**. En `scene-final` el fondo es medio y el foco claro. Otra opción igual de válida: fondo oscuro y personajes claros.
+</Tip>
+</Step>
+
+<Step n={3} title="Boceto de masas">
+1. Con la selección rectangular (<Keys k="M" />) y el cubo (<Keys k="G" />), rellena las **masas grandes**: suelo, agua o cielo. Cada una, un solo gris.
+2. Si dos masas grandes tienen el mismo gris, dibuja **un borde** de otro valor entre ellas, como la orilla.
+3. Con el lápiz (<Keys k="B" />), pon las siluetas de los personajes con manchas simples. Sin detalle.
+4. Coloca el **foco**: el claro más compacto junto a los oscuros más fuertes, en el sitio de la acción.
+
+<Why>
+Con tres grises no puedes esconder un problema con un color bonito. Si el boceto no funciona, la escena en color tampoco funcionará.
+</Why>
+
+<Warn>
+No metas el tercer valor «por si acaso» en todas partes. Si cada masa lleva claros y oscuros sueltos, vuelves al ruido. Cada masa, **un** valor; las excepciones, solo en el foco.
+</Warn>
+</Step>
+
+<Step n={4} title="Color encima, respetando el boceto">
+1. Crea una capa nueva encima del boceto (*Layer → New Layer*) y llama «valores» a la capa del boceto.
+2. Pinta el color en la capa nueva. Para cada zona, elige un color cuyo valor caiga **en la misma caja** que el gris de debajo. Usa el cuentagotas (<Keys k="I" />) para repetir colores y no colar tonos casi iguales.
+3. Oculta y muestra la capa de color con el **ojo** del panel de capas para comparar.
+4. Guarda con <Keys k="Ctrl+S" />.
+
+<Tip>
+Un truco para mirar en grises mientras pintas: una capa arriba del todo rellena de gris con el modo de fusión **Saturation** (o **Color**) quita la saturación de lo que hay debajo. Ocúltala con el ojo para volver al color. Verifica en tu versión que tu Aseprite tiene esos modos en las propiedades de la capa.
+</Tip>
+</Step>
+
+<Step n={5} title="Reduce tu escena a tres valores">
+1. Guarda una copia con *File → Save As* (por ejemplo `escena-3valores.aseprite`). Trabaja **solo en la copia**.
+2. Aplana o fusiona las capas si tu versión lo pide, y pasa a grises con *Sprite → Color Mode → Grayscale*.
+3. Deja en la paleta solo los tres grises del paso 2 y convierte con *Sprite → Color Mode → Indexed*, **sin dithering**. Cada gris va al más cercano: los cortes salen casi en el 33 % y el 67 %, como en `values-3`.
+4. Compara la copia con tu boceto. ¿Las masas son las mismas? ¿El foco sigue siendo el claro con oscuros al lado?
+
+<Warn title="Verifica en tu versión">
+*Sprite → Color Mode → Grayscale* e *Indexed* existen, pero las opciones de la conversión (paleta de destino, dithering) y cómo se edita la paleta en modo Grayscale pueden variar entre versiones. Si la conversión no usa tus tres grises, haz la prueba a mano: mira la copia en grises y pinta encima, en una capa nueva, las tres cajas con tus grises. Aseprite y el Inspector calculan el gris con fórmulas que pueden diferir un poco: fíjate en las diferencias grandes.
+</Warn>
+</Step>
+
+<Step n={6} title="Comprueba en el Inspector">
+Exporta la escena **en color** a 1× con *File → Export → Export As* y súbela. Pon la vista **Grises** y pasa el ratón por cada masa: ¿cae donde la querías (por debajo del 33 %, entre 33 y 67 %, por encima del 67 %)?
+
+<Inspector upload title="Tu escena: mide sus valores" />
+
+Si una masa cae en la caja equivocada, vuelve al color y súbele o bájale el valor, no la saturación.
+</Step>
+
+### Parte 2 · Tres valores en voxel (MagicaVoxel)
+
+<Step n={7} title="Render del diorama en tres valores">
+1. Mira el diorama del curso y descarga su `.vox` desde el visor (o usa un modelo tuyo).
+
+<VoxViewer model="diorama" stage={2} title="Diorama: ¿en qué valor cae cada masa?" />
+
+2. Antes de renderizar, piensa en sus colores de paleta: la hierba cae en **medio** (62 %), el revoco de la casa en **claro** (87 %) y las vigas y el agua en **oscuro** (27 % y 29 %).
+3. Ábrelo en MagicaVoxel, gira la cámara con el botón derecho hasta un encuadre que te guste y pulsa *Render* arriba. Guarda la imagen como PNG.
+4. Abre el PNG en Aseprite y haz la misma reducción del paso 5 en una copia.
+5. Busca: ¿la casa se separa de la hierba? ¿El agua es una mancha oscura clara de leer o se funde con la tierra del corte lateral?
+
+<Why>
+En voxel la luz del render cambia el valor de cada cara ([F05-01](/forja-art/fundamentos/f05-01/)): una pared clara que mira hacia la sombra puede caer a medio, y una hierba media iluminada de lleno puede subir a claro. Por eso compruebas **el render**, no solo la paleta.
+</Why>
+
+<Tip>
+El Inspector solo admite imágenes de hasta 256×256 px y pocos colores, y un render tiene miles. Si quieres medirlo ahí, reduce la imagen en Aseprite (*Sprite → Sprite Size*) hasta que quepa y súbela **después** de convertirla a tus tres grises. Para esta prueba sí vale escalar: no es la pieza, es una comprobación.
+</Tip>
+
+<Warn title="Verifica en tu versión">
+Los nombres del modo Render, de sus ajustes de resolución y del botón para guardar la imagen pueden cambiar entre versiones de MagicaVoxel: búscalos por su función. No damos por hecho que tu versión tenga una vista en blanco y negro: la comprobación segura es guardar el render y revisarlo en Aseprite.
+</Warn>
+</Step>
+</Block>
+
+<Block kind="version">
+Hazlo a tu manera. Elige un reto:
+
+- **Al revés**: la misma escena con el fondo **oscuro** y los personajes claros. ¿Dónde pones ahora el foco? (Pista: un claro aún más compacto, o un oscuro sobre un claro.)
+- **Un valor manda**: reparte tu escena para que **un** valor ocupe más de la mitad, otro un trozo y el tercero solo el foco. Mídelo en el Inspector.
+- **Del boceto al voxel**: usa tu boceto de tres grises como plano para pintar un modelo de MagicaVoxel. Renderízalo y compara su reducción con el boceto.
+
+**Prueba de lejos.** Mira tu escena en el Inspector a tamaño real (1×) y aléjate de la pantalla. Si a dos metros sigues viendo dónde está el foco, las masas funcionan.
+</Block>
+
+<Block kind="errores">
+<Mistake title="La imagen embarrada" wrongLabel="values-muddy-3" rightLabel="values-3">
+  <Sprite slot="wrong" name="values-muddy-3" scale={4} />
+  <Sprite slot="right" name="values-3" scale={4} />
+
+La versión embarrada tiene los mismos colores, mezclados con gris: un 90,7 % de medio. La hierba y el agua son una sola masa y los personajes son contornos vacíos. **Corrección**: devuelve los extremos. Oscurece las sombras y los pelos, aclara las caras, la orilla y el foco, y comprueba con la reducción que vuelven a aparecer las tres cajas.
+</Mistake>
+
+<Mistake title="Todo con el mismo contraste: el foco no manda" wrongLabel="scene-flat en grises" rightLabel="scene-focus en grises">
+  <Sprite slot="wrong" name="scene-flat" scale={4} view="gray" />
+  <Sprite slot="right" name="scene-focus" scale={4} view="gray" />
+
+En `scene-flat` la hierba es media (54 %) y cada elemento lleva su contorno oscuro y sus claros por igual: el ojo salta de uno a otro. En `scene-focus` la hierba es una masa **oscura** (29 %), y los claros más grandes son la cara del héroe (79 %) y el slime (72 %). Las rocas y las setas de las esquinas tienen algún claro, pero pequeño. **Corrección**: una masa de fondo en un valor y el contraste fuerte solo donde está la historia. Lo trabajarás a fondo en [F07-01](/forja-art/fundamentos/f07-01/).
+</Mistake>
+
+<Warn title="Error típico: arreglar el embarrado con saturación">
+La escena se ve apagada y subes la saturación. Ahora es más colorida, pero en grises sigue igual de plana: la saturación no cambia de caja ningún píxel. **Corrección**: cambia el **valor** (más claro o más oscuro), y comprueba con la reducción a tres valores.
+</Warn>
+
+<Warn title="Error típico: tres valores, pero salpicados">
+Tienes oscuro, medio y claro, pero repartidos en píxeles sueltos por toda la escena. La reducción parece confeti y no hay masas. **Corrección**: cada zona grande en un solo valor; los cambios de valor, en los bordes entre masas y en el foco. Es la roca ruidosa de [F01-01](/forja-art/fundamentos/f01-01/) a escala de escena.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+<Checklist items={[
+  "Mi boceto de 64×40 usa solo tres grises y tiene pocas masas grandes",
+  "Las masas grandes que comparten valor están separadas por un borde de otro valor",
+  "El foco es el claro más compacto con oscuros al lado (o al revés), en el sitio de la acción",
+  "Mi escena en color, reducida a tres valores, se parece a mi boceto",
+  "En el Inspector, cada masa cae en la caja de valor que yo quería",
+  "He reducido a tres valores un render de MagicaVoxel y sus masas se separan",
+  "He guardado el boceto, la escena en color, la copia en tres valores, el .vox y el render",
+]} />
+
+<Quiz q="Reduces tu escena a tres valores y el 90 % de los píxeles cae en medio. ¿Qué pasa?" options={["Nada: el medio es el color real de las cosas", "La escena está embarrada: le faltan oscuros y claros que separen las masas y marquen el foco", "Tiene demasiados colores"]} answer={1}>
+Es lo que le pasa a `values-muddy-3`: los tonos siguen ahí, pero todo se ha acercado al medio. Devuelve los extremos donde hacen falta.
+</Quiz>
+
+<Quiz q="En scene-final, la hierba y el agua caen las dos en valor medio. ¿Qué evita que se fundan en una masa?" options={["El tono: una es verde y la otra azul", "La franja clara de arena y espuma de la orilla", "El contorno negro del agua"]} answer={1}>
+En tres valores el tono desaparece. Lo que separa las dos masas es el borde de otro valor: la orilla clara (83 % la arena, 93 % la espuma).
+</Quiz>
+
+<Quiz q="¿Dónde pondrías el punto focal de una escena de fondo medio?" options={["Donde haya más detalle, aunque sea del mismo valor que el fondo", "En el claro más compacto con oscuros al lado, en el sitio de la acción", "Repartido: un poco de contraste en cada elemento"]} answer={1}>
+El ojo va a donde hay más diferencia de valor. En `scene-final`, el blanco del impacto entre el héroe y el slime.
+</Quiz>
+</Block>
