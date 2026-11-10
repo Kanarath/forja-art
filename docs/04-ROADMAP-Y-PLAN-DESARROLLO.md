@@ -5,7 +5,7 @@
 
 ## Estado (2026-11-06)
 
-**Fase 1 · Foundation: completada**, a falta de la publicación en GitHub Pages: está bloqueada por un bloqueo de facturación de la cuenta de GitHub. Hay un ticket abierto con soporte y el workflow está listo. La revisión visual se hizo junto con la de la fase 2 (ver abajo).
+**Fase 1 · Foundation: completada**, a falta de la publicación en GitHub Pages: está bloqueada por un bloqueo de facturación de la cuenta de GitHub. Hay un ticket abierto con soporte. El 2026-11-10 se desactivó GitHub Actions en el repo y se quitó el workflow: ahora se publica con `npm run deploy` (build local → rama `gh-pages`). La revisión visual se hizo junto con la de la fase 2 (ver abajo).
 
 | Tarea | Estado | Commit |
 |---|---|---|

@@ -14,7 +14,8 @@
     "test": "node --test tests/",
     "validate": "npm run assets && node tools/validate.mjs",
     "check": "npm test && npm run validate",
-    "assets": "node tools/build-sprites.mjs && node tools/build-vox.mjs"
+    "assets": "node tools/build-sprites.mjs && node tools/build-vox.mjs",
+    "deploy": "node tools/deploy.mjs"
   },
   "dependencies": {
     "@astrojs/mdx": "8.1.3",

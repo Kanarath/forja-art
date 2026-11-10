@@ -25,12 +25,13 @@ npm run build    # genera dist/
 npm run preview  # sirve dist/ en local
 npm test         # tests: progreso, logros, zip, .vox, sprites, rampas, dithering, luz y contraste WCAG
 npm run validate # compila también los borradores y revisa enlaces, alt, accesibilidad y tamaños
-npm run check    # test + validate: lo mismo que hace GitHub Actions antes de publicar
+npm run check    # test + validate: se ejecuta antes de publicar
+npm run deploy   # check + build y sube dist/ a la rama gh-pages (añade -- --drafts para incluir borradores)
 ```
 
 ## Despliegue
 
-Cada push a `main` ejecuta [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml): primero **tests y validación**; si pasan, construye con Astro y publica en GitHub Pages. En los pull requests solo se comprueba, no se publica.
+El repo **no usa GitHub Actions** (están desactivadas). Se publica desde tu ordenador con `npm run deploy`: pasa los tests y la validación, construye con Astro y sube el resultado a la rama `gh-pages`. En GitHub, Pages está en «Deploy from a branch: `gh-pages` / (root)» y solo sirve esos archivos ya hechos. Si la comprobación falla, no se sube nada.
 
 ## Añadir una lección
 

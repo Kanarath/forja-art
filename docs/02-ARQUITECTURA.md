@@ -14,7 +14,7 @@
 | Progreso / XP | **localStorage** (JSON pequeño, versionado) | Síncrono y simple | — |
 | Portfolio | **IndexedDB** (envoltorio mínimo propio o `idb-keyval`, ~1 KB) | Guarda imágenes (Blob) sin el límite de unos 5 MB de localStorage | Subir al repo (descartado: lo quieres privado) |
 | Copia de seguridad | Exportar/importar `.zip` (`fflate`, ~8 KB) | No perder el portfolio si se borra el navegador | — |
-| Deploy | **GitHub Actions** → GitHub Pages (`withastro/action`) | Build + publicación automática en cada push a `main` | Publicar la rama directamente (no hay build) |
+| Deploy | **`npm run deploy`** (local) → rama `gh-pages` → GitHub Pages | Build en local y publicación de los archivos ya hechos, sin GitHub Actions (desactivadas en el repo) | GitHub Actions: descartado, no hace falta CI para un sitio estático personal |
 | Tests | Vitest (lógica: XP, almacenamiento, parsers) + validador de contenido | Barato y útil | E2E pesado (más adelante, si hace falta) |
 
 **Dependencias de ejecución previstas:** `three`, `fflate`. Nada más.
@@ -23,7 +23,7 @@
 
 ```
 forja-art/
-├─ .github/workflows/deploy.yml     build + deploy a Pages
+├─ tools/deploy.mjs                 check + build y sube dist/ a la rama gh-pages
 ├─ astro.config.mjs                 site: kanarath.github.io, base: /forja-art
 ├─ src/
 │  ├─ content.config.ts             esquemas Zod de todas las colecciones
@@ -135,8 +135,8 @@ Añadir una lección = **crear un archivo `.mdx`**. Añadir una especialidad nue
 ## 7. Despliegue
 
 - `main` → GitHub Action → build Astro → `actions/deploy-pages`.
-- Pages configurado con «Source: GitHub Actions».
-- El workflow también ejecuta `validate-content` y `check-assets`: **si una lección no pasa, no se despliega**.
+- Pages configurado con «Deploy from a branch: `gh-pages` / (root)», con `.nojekyll`. GitHub Actions está desactivado en el repo.
+- `npm run deploy` ejecuta antes `npm run check`: **si una lección no pasa, no se despliega**.
 
 ## 8. Previsión para Forge Tools (fase 6, no se construye ahora)
 
