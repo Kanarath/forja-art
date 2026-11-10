@@ -1,0 +1,43 @@
+{
+  "name": "form-square",
+  "description": "Criatura cuadrado (24×24): un bloque de 20×20 en azules que apoya entero en el suelo, cejas rectas, ojos pequeños y una boca recta. Ancho y estable: se lee fuerte y fiable.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "personaje",
+    "forma"
+  ],
+  "palette": {
+    "a": "#1b1030",
+    "b": "#8fa8d8",
+    "c": "#5c7ab8",
+    "d": "#3a5288",
+    "e": "#ffffff"
+  },
+  "rows": [
+    "........................",
+    "........................",
+    "........................",
+    "..aaaaaaaaaaaaaaaaaaaa..",
+    "..abccccccccccccccccda..",
+    "..abccccccccccccccccda..",
+    "..abccccccccccccccccda..",
+    "..abccccccccccccccccda..",
+    "..abcaaaaaccccaaaaacda..",
+    "..abccccccccccccccccda..",
+    "..abcceaccccccceacccda..",
+    "..abccaacccccccaacccda..",
+    "..abccccccccccccccccda..",
+    "..abccccccccccccccccda..",
+    "..abccccccccccccccccda..",
+    "..abccccccccccccccccda..",
+    "..abcccccaaaaaacccccda..",
+    "..abccccccccccccccccda..",
+    "..abccccccccccccccccda..",
+    "..abccccccccccccccccda..",
+    "..adddddddddddddddddda..",
+    "..adddddddddddddddddda..",
+    "..aaaaaaaaaaaaaaaaaaaa..",
+    "........................"
+  ]
+}

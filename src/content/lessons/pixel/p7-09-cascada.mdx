@@ -1,0 +1,303 @@
+---
+id: p7-09
+discipline: pixel
+level: 7
+order: 9
+title: "Cascadas: agua que cae en bucle"
+summary: "Agua que cae en bucle: chorros con la cabeza clara, una fase por columna, velocidades que dividen el periodo, el borde que se curva y espuma que tapa el choque con la poza."
+duration: 45
+status: borrador
+objectives:
+  - "Dibujar chorros claros con la cabeza más clara y darle a cada columna su propia fase"
+  - "Elegir velocidades que dividan el periodo para que el bucle cierre sin llegar a la mitad (4 frames: 4 px con periodo 16, 6 px con periodo 24)"
+  - "Hacer que el centro caiga más rápido que los lados"
+  - "Resolver los dos bordes de la cascada: el labio de arriba, donde el agua se curva, y la espuma que tapa el choque con la poza"
+  - "Separar agua y roca con bordes oscuros"
+prerequisites: [p7-02, p7-08]
+fundamentals: [f01]
+tools: [aseprite]
+piece:
+  name: "Cascada de 32×48 entre dos paredes de roca, con chorros a dos velocidades, labio, espuma y salpicaduras, en un bucle de 4 frames exportado como spritesheet"
+  canvas: "32x48"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [cascada]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+El agua de [P7-02](/forja-art/pixel/p7-02/) se mece en el sitio. Hoy el agua **cae**.
+
+Vas a forjar una **cascada de 32×48**: agua que baja entre dos paredes de roca, se curva en el borde de arriba y revienta en espuma al llegar a la poza. Son 4 frames en bucle. Dale a *Reproducir*:
+
+<Animator sprites={["waterfall-1", "waterfall-2", "waterfall-3", "waterfall-4"]} durations={[100, 100, 100, 100]} />
+
+Fíjate en cuatro cosas:
+
+- El agua está hecha de **chorros claros** que bajan, y cada chorro tiene la **cabeza** (su píxel de abajo) casi blanca.
+- Los chorros **no van en fila**: cada columna tiene los suyos a otra altura.
+- El **centro cae más rápido** que los lados.
+- Abajo, la **espuma** cambia en cada frame y tapa el choque con la poza. No hay una línea recta donde el agua «se corta».
+
+<Sprite name="waterfall-1" scale={8} caption="waterfall-1: la cascada entre dos paredes de roca en lajas. Arriba, el labio; abajo, la espuma y la poza" />
+</Block>
+
+<Block kind="concepto">
+### Anatomía de una cascada
+
+De arriba abajo, `waterfall-1` tiene cuatro zonas:
+
+1. **El labio** (filas 3 a 5). El agua pasa por encima de la roca y se curva: una fila de azul medio, una de azul claro y una tercera clara con un brillo casi blanco cada 4 píxeles, que avanza 1 píxel por frame y cierra el bucle.
+2. **La caída** (12 columnas de agua). Un azul base con chorros claros que bajan.
+3. **El choque** (filas 35 a 40). Una mancha de espuma blanca y casi blanca que se sale un poco por los lados, sobre la roca.
+4. **La poza** (6 filas de agua, más ancha que la caída), con ondas claras que avanzan 1 píxel por frame cada 4 píxeles y cierran el bucle, y la orilla de roca debajo.
+
+A los lados, dos paredes de roca en lajas: una grieta oscura entre laja y laja, y un canto claro arriba de cada una.
+
+### Chorros con cabeza
+
+Cada columna del centro tiene chorros de **3 a 6 píxeles** de azul claro (`#6fb8ff`), y el último píxel de cada chorro, el de abajo, es casi blanco (`#d8f0ff`).
+
+<Why>
+Lo que va delante en un movimiento es lo que el ojo sigue. La cabeza clara abajo es como la punta de una flecha: dice **hacia dónde va** el chorro. Además, en el agua real el frente de cada chorro es el que rompe y se llena de aire, y el aire se ve blanco.
+</Why>
+
+Entre los chorros quedan unas **motas de azul medio** (`#3f8fe0`) repartidas en diagonal. Esas no se mueven: rompen la base plana, igual que las franjas quietas del agua de P7-02.
+
+### Una fase por columna
+
+Cada columna repite su chorro cada cierto número de píxeles de alto (su **periodo**: 16 en los lados, 24 en el centro), pero cada una **empieza a otra altura** y tiene su propio largo. Así nunca hay dos columnas vecinas iguales.
+
+Es la misma idea que la hierba de [P7-08](/forja-art/pixel/p7-08/): todas hacen lo mismo, pero no a la vez. Allí el desfase va ordenado para formar una ola. Aquí es **desordenado a propósito**: el agua que cae no forma olas, se rompe en hilos.
+
+<Why>
+Si todos los chorros están a la misma altura, el ojo ve **una franja horizontal** que baja, no muchos hilos de agua. El desfase rompe esa línea y el ojo lee volumen y caos.
+</Why>
+
+### Velocidades que cierran el bucle
+
+Ahora la cuenta. En `waterfall` hay dos velocidades:
+
+- Las **cuatro columnas de los lados** con chorros bajan **4 píxeles** por frame.
+- Las **seis columnas del centro** bajan **6**.
+
+En los lados el chorro se repite cada **16** píxeles; en el centro, cada **24**. Con 4 frames:
+
+- Lados: 4 × 4 = **16**. Una vuelta exacta a su periodo.
+- Centro: 4 × 6 = **24**. Una vuelta exacta al suyo.
+
+Al volver del frame 4 al 1, cada chorro está justo donde le toca. Entre dos frames cualesquiera cambian entre **208 y 219 píxeles**, también entre el 4 y el 1: no hay tirón.
+
+<Why>
+Es la regla de P7-02 aplicada a la caída: un bucle cierra cuando el desplazamiento total es un **múltiplo exacto del periodo**. Con periodo 16 y 4 frames, la velocidad por frame tiene que ser 4, 8, 12 o 16. Haz la cuenta **antes** de dibujar.
+</Why>
+
+Pero no todas sirven. Con periodo 16:
+
+- **16**: vuelve al mismo sitio en cada frame: el agua parece quieta.
+- **12**: bajar 12 es lo mismo, a la vista, que **subir 4**: el agua sube.
+- **8**: es justo **medio periodo**. El frame 3 sería idéntico al 1 y el 4 al 2: la columna solo tiene dos posiciones y no dice si sube o baja. Vibra.
+
+Así que, con periodo 16 y 4 frames, solo **4** se lee bien. La regla: elige una velocidad que **divida el periodo** (para que cierre) y que **no llegue a la mitad** del periodo (para que se lea hacia abajo).
+
+¿Y si quieres que el centro vaya más rápido? **Alarga su periodo.** Con periodo 24, 6 píxeles por frame cierran (6 × 4 = 24) y son solo un cuarto del periodo, lejos de la mitad (12). Por eso en `waterfall` los chorros del centro están más separados: es el precio de ir más deprisa.
+
+<Tip>
+Por qué el centro va más rápido: en una cascada real, el agua del centro es la más gruesa y la que menos roza con la roca. Cae más deprisa. Dos velocidades bastan para que la cascada deje de parecer una cinta.
+</Tip>
+
+### Bordes oscuros entre agua y roca
+
+Mira la línea donde se tocan agua y roca. Hay **dos columnas oscuras**: la de la roca, en su tono más oscuro (`#3c3a4e`), y la del agua, en un azul profundo (`#1f4f9a`) sin chorros. Por esa columna de agua no pasa nada: es la sombra que hace la propia pared.
+
+<Sprite name="waterfall-1" scale={8} view="gray" caption="En grises: la roca y la base del agua tienen valores parecidos. Lo que las separa son las dos columnas oscuras; lo que dice «agua» son los chorros claros y la espuma" />
+
+<Why>
+Es el principio de **valor** (F01). La roca de las paredes y el azul base del agua están cerca en grises. Sin una línea oscura entre ellos, el borde de la cascada se emborrona. La línea oscura funciona como el contorno de un sprite: separa dos masas.
+</Why>
+
+### Los dos extremos: labio y espuma
+
+Una cascada tiene dos sitios difíciles: donde **empieza** y donde **acaba**.
+
+- **Arriba**, el agua no aparece de la nada: pasa por encima de la roca. La fila de azul medio que pisa la roca y las dos filas claras debajo dibujan la curva: el agua se dobla hacia ti y le da la luz.
+- **Abajo**, el agua choca con la poza. Ese choque es lo más difícil de dibujar bien, así que **no lo dibujes**: tápalo. La espuma de `waterfall` va de la fila 35 a la 40, se sale 2 píxeles por cada lado de la caída y cambia de forma en cada frame. Unas **salpicaduras** sueltas sobre la roca de los lados suben 1 píxel por frame.
+
+<Why>
+La espuma hace dos trabajos. Esconde la línea donde el agua vertical se encuentra con la horizontal, que dibujada siempre parece un corte. Y es **lo más claro y lo que más cambia** de la cascada: lleva la mirada abajo, al choque, que es donde está la fuerza. Que cambie en cada frame es justo lo que quieres aquí: la espuma hierve de verdad.
+</Why>
+
+### El error: la persiana
+
+Ahora la misma cascada mal animada:
+
+<Animator sprites={["waterfall-bad-1", "waterfall-bad-2", "waterfall-bad-3", "waterfall-bad-4"]} durations={[100, 100, 100, 100]} />
+
+En `waterfall-bad` hay tres errores juntos:
+
+- **Rayas iguales en fase.** Rayas claras de 4 píxeles en una columna sí y otra no, **todas a la misma altura**. Bajan juntas: parece una **persiana**, no agua.
+- **Un bucle que no cierra.** Bajan 1 píxel por frame. En 4 frames suman 4, no 16: al volver al frame 1 las rayas **suben 3 píxeles de golpe**. Entre frames cambian 24 o 30 píxeles; del 4 al 1, **78**.
+- **Sin espuma.** El agua entra en la poza en una línea recta, como cortada con tijera. Tampoco hay columnas oscuras de agua junto a la roca, ni brillo en el labio.
+
+### Cómo llega al juego
+
+En Godot hay dos caminos, como con la hierba:
+
+- **Sprite animado.** La cascada entera como un **AnimatedSprite2D**. A 100 ms por frame, la velocidad es 1000 ÷ 100 = **10 FPS**, con bucle. Lo verás en [P9-01](/forja-art/pixel/p9-01/).
+- **Tiles animados.** 32×48 son 2 × 3 tiles de 16×16. Cada tile puede ser un tile animado del **TileSet**, con sus 4 frames. Como todos los cortes comparten el mismo bucle, la cascada sigue encajando.
+
+<Warn title="Verifica en tu versión">
+Las opciones de animación de los tiles en el TileSet de Godot (número de frames, columnas y duración) pueden cambiar de nombre o de sitio entre versiones. Usa Godot 4.3 o superior.
+</Warn>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Lienzo, roca y paleta">
+1. <Keys k="Ctrl+N" />: **32×48**. Activa *View → Grid*.
+2. Pinta dos paredes de roca a los lados y deja en medio un hueco de **12 columnas** (en el ejemplo, de la columna 10 a la 21, contando desde 0). Abajo, deja las filas de la poza, más anchas que la caída, y debajo, roca de orilla.
+3. Prepara los azules. Sirven los del ejemplo: profundo `#1f4f9a`, base `#2a6fc9`, medio `#3f8fe0`, claro `#6fb8ff`, casi blanco `#d8f0ff` y blanco `#ffffff`.
+
+<Tip>
+Si ya tienes la roca de una lección anterior, úsala. Lo importante de hoy es el agua; la roca es el marco.
+</Tip>
+</Step>
+
+<Step n={2} title="Base y bordes oscuros">
+1. Rellena el hueco con la base usando el cubo (<Keys k="G" />).
+2. Con el lápiz (<Keys k="B" />) y *Pixel-perfect* activo, pinta **la primera y la última columna del agua** en azul profundo, de arriba abajo.
+3. Pinta la columna de roca que toca el agua con el tono más oscuro de la roca.
+4. Añade unas pocas motas de azul medio sueltas por la base. Estas no se moverán.
+
+<Why>
+Haz los bordes antes que los chorros. Sin ellos no puedes juzgar si el agua se separa de la roca, y son lo único que no se toca en ningún frame.
+</Why>
+</Step>
+
+<Step n={3} title="Planifica fases y velocidades">
+Antes de dibujar un solo chorro, apunta en un papel una fila por columna con chorros:
+
+- su **velocidad** y su **periodo**: 4 píxeles y periodo 16 en las de los lados; 6 píxeles y periodo 24 en las del centro;
+- su **altura de salida** en el frame 1: un número menor que su periodo, distinto en cada columna y sin orden;
+- su **largo**: de 3 a 6 píxeles.
+
+Comprueba la cuenta: velocidad × 4 frames tiene que dar el periodo de esa columna (16 o 24), y la velocidad tiene que quedar por debajo de la mitad del periodo (8 o 12).
+
+<Why>
+Con la tabla, cada frame sale solo: cada chorro baja su velocidad y, si se pasa del fondo, el trozo que sobra vuelve a entrar un periodo más arriba (16 o 24 píxeles) en la misma columna. Si improvisas frame a frame, el bucle no cierra.
+</Why>
+</Step>
+
+<Step n={4} title="Frame 1: chorros con cabeza">
+Con el lápiz, pinta los chorros de cada columna según tu tabla: el cuerpo en azul claro y **el píxel de abajo en casi blanco**. Repite cada chorro **cada periodo** en su columna (cada 16 filas en los lados, cada 24 en el centro), hasta llegar a la espuma.
+
+Guarda con <Keys k="Ctrl+S" /> como `cascada.aseprite`.
+
+<Warn>
+Si dos columnas vecinas tienen la misma altura y el mismo largo, ya tienes un trozo de persiana. Cambia la altura de una.
+</Warn>
+</Step>
+
+<Step n={5} title="El labio y la espuma">
+1. **Labio:** en la fila donde el agua pisa la roca, una fila de azul medio a todo lo ancho. Debajo, una fila de azul claro y otra clara con un brillo casi blanco cada pocos píxeles.
+2. **Espuma:** en las 3 filas antes de la poza y las 3 primeras de la poza, una mancha de blanco y casi blanco **irregular**, que se salga 1–2 píxeles por los lados de la caída.
+3. **Salpicaduras:** dos o cuatro píxeles casi blancos sueltos sobre la roca, a los lados de la espuma.
+
+<Tip>
+Pon la espuma y las salpicaduras en **otra capa** encima del agua. Así puedes redibujarlas en cada frame sin tocar los chorros.
+</Tip>
+</Step>
+
+<Step n={6} title="Frames 2, 3 y 4 con onion skin">
+1. Añade un frame nuevo desde el menú *Frame*, como copia del anterior.
+2. Activa el **onion skin** en la línea de tiempo.
+3. Baja cada chorro su velocidad: los de los lados 4 píxeles; los del centro, 6. Lo que salga por abajo entra por arriba, en la misma columna.
+4. Redibuja la espuma con otra forma y sube cada salpicadura 1 píxel.
+5. Repite hasta tener 4 frames.
+
+<Tip>
+Para bajar una columna entera, selecciónala con la selección rectangular (<Keys k="M" />), 1 píxel de ancho, y muévela. Después recoloca a mano el trozo que se ha salido por abajo.
+</Tip>
+</Step>
+
+<Step n={7} title="Timing, prueba y exportación">
+1. Pon los 4 frames a **100 ms** (clic derecho sobre el frame, *Frame Properties*) y reproduce varias vueltas.
+2. ¿Hay tirón al volver del frame 4 al 1? Algún chorro no suma su periodo (16 o 24). Revisa la tabla.
+3. ¿Ves alguna franja horizontal que baja entera? Desfasa esas columnas.
+4. *File → Export Sprite Sheet*: los 4 frames en una fila, PNG a 1×. Apunta las duraciones (4 × 100 ms).
+5. Para enseñarlo, exporta un GIF ampliado con *File → Export → Export As* y **Resize** al 400 % o más.
+
+<Why>
+En el brillo de [P4-03](/forja-art/pixel/p4-03/) jugabas con duraciones distintas: una pausa larga y un destello rápido. Aquí todos los frames duran lo mismo, porque el agua cae sin pausas: lo que cambia la sensación de velocidad son los **píxeles por frame**, no la duración. Si alargas los frames a 200 ms, la cascada se vuelve un goteo.
+</Why>
+</Step>
+
+<Warn title="Verifica en tu versión">
+Los nombres y la posición pueden variar según la versión de Aseprite: la creación de frames y capas, *Frame Properties*, el botón de onion skin y las opciones de *Export Sprite Sheet*. Si no encuentras algo, búscalo por nombre en los menús.
+</Warn>
+</Block>
+
+<Block kind="version">
+Ahora a tu manera. Mantén las reglas: chorros con cabeza, una fase por columna, velocidades que cierran el bucle, bordes oscuros y espuma en el choque. Elige uno:
+
+- **Cascada de lava:** rojos oscuros y naranjas, con la cabeza amarilla. Más lenta: 4 píxeles en todas las columnas y 150 ms por frame. En lugar de espuma, humo oscuro y unas chispas.
+- **Cascada en dos saltos:** una repisa de roca a media altura. Arriba un labio, en la repisa una espuma pequeña, y debajo un segundo salto más ancho que acaba en la poza.
+- **Cascada larga:** periodo de 32 píxeles y 8 frames. Ahora puedes usar velocidades de 4 y 8 en los lados y 12 en el centro (8 × 4 = 32, 8 × 8 = 64, 8 × 12 = 96). Haz la cuenta antes y comprueba que ninguna pasa de medio periodo.
+</Block>
+
+<Block kind="errores">
+<Mistake title="La persiana" wrongLabel="Rayas iguales, todas a la misma altura" rightLabel="Chorros con su fase y su largo">
+  <Sprite slot="wrong" name="waterfall-bad-1" scale={6} />
+  <Sprite slot="right" name="waterfall-1" scale={6} />
+
+A la izquierda, rayas de 4 píxeles en columnas alternas, todas a la misma altura: al bajar juntas, el ojo ve una persiana. A la derecha, cada columna tiene sus chorros a otra altura y con otro largo, y la cabeza clara marca la dirección. **Arréglalo:** dale a cada columna una altura de salida distinta y varía el largo de 3 a 6 píxeles.
+</Mistake>
+
+<Mistake title="El bucle que no cierra" wrongLabel="1 px por frame en 4 frames" rightLabel="4 px (periodo 16) y 6 px (periodo 24)">
+  <p slot="wrong">Las rayas bajan 1 píxel por frame. En 4 frames suman 4, y el periodo es 16: al volver al frame 1 suben 3 píxeles de golpe. En cada vuelta, un tirón hacia arriba.</p>
+  <p slot="right">Los lados bajan 4 (suman 16, su periodo) y el centro 6 (suman 24, el suyo). Cada columna da una vuelta exacta: el paso del frame 4 al 1 es igual que los demás.</p>
+
+**Arréglalo:** elige la velocidad dividiendo el periodo entre el número de frames (16 ÷ 4 = 4; 24 ÷ 4 = 6). Si quieres más velocidad, alarga el periodo en lugar de pasar de medio periodo.
+</Mistake>
+
+<Mistake title="Sin espuma" wrongLabel="El agua entra cortada" rightLabel="La espuma tapa el choque">
+  <Sprite slot="wrong" name="waterfall-bad-4" scale={6} />
+  <Sprite slot="right" name="waterfall-4" scale={6} />
+
+A la izquierda, la caída llega a la poza en una línea recta y la poza sigue lisa: parece que alguien ha recortado el agua. A la derecha, una mancha de espuma que cambia en cada frame se come la línea del choque y se sale un poco sobre la roca. **Arréglalo:** pinta la espuma por encima y por debajo de la línea de la poza y redibújala en cada frame.
+</Mistake>
+
+<Warn title="Agua pegada a la roca">
+Si el azul base toca directamente la roca, en grises se funden: la roca y el agua tienen valores parecidos. Pon una columna oscura de agua y otra de roca en el borde, como en `waterfall-1`. En `waterfall-bad` no hay columna oscura de agua, y el borde se lee peor.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+Sube **uno de tus frames a 1×** y revísalo con la rejilla y la vista de grises: el agua tiene que separarse de la roca por los bordes oscuros y la espuma tiene que ser lo más claro.
+
+<Inspector upload title="Revisa un frame de tu cascada" />
+
+<Checklist items={[
+  "Mi cascada mide 32×48 y tiene 4 frames",
+  "Cada chorro tiene la cabeza, el píxel de abajo, más clara que el cuerpo",
+  "Cada columna tiene su altura de salida: no hay franjas horizontales que bajen enteras",
+  "Cada velocidad × 4 frames da el periodo de su columna, ninguna llega a medio periodo y no hay tirón del frame 4 al 1",
+  "El centro cae más rápido que los lados",
+  "Arriba hay un labio donde el agua se curva sobre la roca",
+  "La espuma tapa el choque con la poza y cambia en cada frame",
+  "Una línea oscura separa agua y roca a los dos lados",
+  "Exporté la spritesheet en una fila a 1×, apunté las duraciones y guardé el .aseprite",
+]} />
+
+<Quiz q="Periodo de 16 píxeles y 4 frames. ¿Qué velocidad hace que el bucle no cierre?" options={["4 píxeles por frame", "8 píxeles por frame", "5 píxeles por frame"]} answer={2}>
+5 × 4 = 20, que no es múltiplo de 16: al volver al frame 1 los chorros saltan 4 píxeles. Con 4 (suma 16) cada chorro vuelve a su sitio. Con 8 también cierra (suma 32), pero es medio periodo y la columna vibra en vez de caer.
+</Quiz>
+
+<Quiz q="¿Por qué no usar 12 píxeles por frame con periodo 16?" options={["Porque bajar 12 se ve igual que subir 4: el agua parece que sube", "Porque el bucle no cierra", "Porque 12 no se puede dibujar en Aseprite"]} answer={0}>
+El bucle sí cierra (12 × 4 = 48, tres periodos), pero cada chorro aparece más cerca de 4 píxeles por encima que de 12 por debajo, y el ojo une lo más cercano. Más de medio periodo por frame se lee al revés.
+</Quiz>
+
+<Quiz q="¿Para qué sirve la espuma en el choque con la poza?" options={["Para gastar el blanco de la paleta", "Para tapar la línea donde el agua vertical se encuentra con la horizontal y llevar la mirada al choque", "Para que el bucle cierre"]} answer={1}>
+La línea del choque dibujada parece un corte. La espuma la esconde y, como es lo más claro y lo que más cambia, marca dónde está la fuerza del agua.
+</Quiz>
+</Block>

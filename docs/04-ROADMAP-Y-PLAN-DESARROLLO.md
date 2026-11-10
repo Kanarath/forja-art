@@ -209,6 +209,12 @@
 - **Voxel:** V5-06 Caras voxel (expresiones con pocos vóxels), V7-05 Cuevas (vaciar una masa de roca).
 - **Arte nuevo:** el retrato de P5-05 alegre, enfadado, sorprendido y parpadeando, su versión «fuera de modelo» y dos cuadros de diálogo; un prado al viento en 4 frames y su error; tres pinos y tres filas (monótona, caótica y con ritmo), y los modelos «caras» y «cueva».
 
+**Contenido · decimonoveno bloque: 5 lecciones más (108 en total).**
+- **Pixel:** P4-06 Tela y estandartes (pliegues como rampas), P7-09 Cascadas (agua que cae en bucle).
+- **Fundamentos:** F09-02 Lenguaje de formas (círculo, cuadrado, triángulo).
+- **Voxel:** V1-03 Seleccionar, mover, rotar y duplicar (valla modular), V6-06 Rocas (de cajas a rocas).
+- **Arte nuevo:** un estandarte con pliegues, sus errores plano y a rayas y su bucle al viento; una cascada en 4 frames y su error «persiana»; tres criaturas círculo, cuadrado y triángulo y su error de cuerpos iguales, y los modelos «valla» y «rocas».
+
 **Fase 6 · Forge Tools (iniciada el 2026-11-10).** Tres scripts de Aseprite, la CLI `forja-vox` y la página Forge Tools con descargas y demos. Ver `forge-tools/README.md`.
 
 **Lecciones aprendidas durante la fase 1:**

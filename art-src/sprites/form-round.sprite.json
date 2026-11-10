@@ -1,0 +1,44 @@
+{
+  "name": "form-round",
+  "description": "Criatura círculo (24×24): un cuerpo redondo en tres tonos cálidos, ojos grandes con brillo y separados, una sonrisa pequeña y mejillas rosas. Sin esquinas ni puntas: se lee amable.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "personaje",
+    "forma"
+  ],
+  "palette": {
+    "a": "#1b1030",
+    "b": "#ffc2a8",
+    "c": "#f29b7a",
+    "d": "#c96a52",
+    "e": "#ffffff",
+    "f": "#e8606a"
+  },
+  "rows": [
+    "........................",
+    "........................",
+    "........................",
+    "........aaaaaaaa........",
+    "......aabbccccccaa......",
+    ".....abbcccccccccca.....",
+    "....abbcccccccccccca....",
+    "...abbcccccccccccccca...",
+    "...abccccccccccccccca...",
+    "..abbcccccccccccccccda..",
+    "..abccceaccccceaccccda..",
+    "..abcccaacccccaaccccda..",
+    "..abcccaacccccaaccccda..",
+    "..abccccccccccccccccda..",
+    "..abcffccccccccccffcda..",
+    "..abccccccaccacccccdda..",
+    "..abcccccccaaccccccdda..",
+    "...accccccccccccccdda...",
+    "...adccccccccccccddda...",
+    "....addccccccccdddda....",
+    ".....adddddddddddda.....",
+    "......aaddddddddaa......",
+    "........aaaaaaaa........",
+    "........................"
+  ]
+}

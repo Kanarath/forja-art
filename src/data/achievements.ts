@@ -110,5 +110,10 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   { id: "ritmo", name: "Ritmo", description: "Una fila de elementos que repite un patrón con variación, ni monótona ni caótica (F07-02).", color: "#3fbf7f" },
   { id: "caras", name: "Caras voxel", description: "Un personaje voxel con expresiones hechas con muy pocos vóxels (V5-06).", color: "#f29b9b" },
   { id: "cueva", name: "Cueva", description: "Una cueva voxel vaciada en una masa de roca, con cristales que la iluminan (V7-05).", color: "#c08aff" },
+  { id: "estandarte", name: "Estandarte", description: "Una tela colgada con pliegues que son rampas y un emblema que los sigue (P4-06).", color: "#d8343f" },
+  { id: "cascada", name: "Cascada", description: "Una cascada en bucle con chorros a distintas velocidades y espuma en la poza (P7-09).", color: "#6fb8ff" },
+  { id: "formas", name: "Lenguaje de formas", description: "Tres personajes que se distinguen por su forma base: círculo, cuadrado y triángulo (F09-02).", color: "#f29b7a" },
+  { id: "valla", name: "Valla modular", description: "Una valla hecha duplicando, moviendo y girando una sola pieza, con variaciones (V1-03).", color: "#d08a50" },
+  { id: "rocas", name: "Rocas", description: "Un grupo de rocas voxel de tres tamaños, con facetas y color según la orientación (V6-06).", color: "#9aa3b5" },
   { id: "forma-primero", name: "Forma antes que detalle", description: "Un modelo voxel con su blockout guardado como primera versión (V2-01).", color: "#38e1ff" },
 ];

@@ -1,0 +1,44 @@
+{
+  "name": "form-triangle",
+  "description": "Criatura triángulo (24×24): un cuerpo en punta hacia arriba, con dos púas a cada lado que suben en diagonal hacia fuera, en morados, ojos rasgados amarillos y una boca con dos colmillos. Puntas y diagonales: se lee peligrosa.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "personaje",
+    "forma"
+  ],
+  "palette": {
+    "a": "#1b1030",
+    "b": "#b87ad8",
+    "c": "#7a3a9a",
+    "d": "#4e2066",
+    "e": "#ffe58a",
+    "f": "#ffffff"
+  },
+  "rows": [
+    "........................",
+    "........................",
+    "...........aa...........",
+    "...........aa...........",
+    "..........abba..........",
+    "..........abca..........",
+    ".........abbcca.........",
+    "...a.....abccca.....a...",
+    "....a...abbcccca...a....",
+    "....aa..abccccca..aa....",
+    "....abaabbccccccaada....",
+    ".....acccccccccccda.....",
+    ".....abccccccccccda.....",
+    ".....abcaccccccacda.....",
+    ".....abceaecceaecca.....",
+    "a....abccccccccccca....a",
+    "aa..abbcccccccccccca..aa",
+    "aba.abccccccccccccca.ada",
+    ".acabbccaaaaaaaaccccada.",
+    ".abccccccfccccfcccccdda.",
+    ".adddddddddddddddddddda.",
+    "..adddddddddddddddddda..",
+    ".aaaaaaaaaaaaaaaaaaaaaa.",
+    "........................"
+  ]
+}

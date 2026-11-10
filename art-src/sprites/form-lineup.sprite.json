@@ -1,0 +1,51 @@
+{
+  "name": "form-lineup",
+  "description": "Las tres criaturas en fila (80×24): círculo, cuadrado y triángulo. En silueta siguen siendo tres personajes distintos, y cada forma dice algo antes que la cara.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "personaje",
+    "forma"
+  ],
+  "palette": {
+    "a": "#1b1030",
+    "b": "#ffc2a8",
+    "c": "#f29b7a",
+    "d": "#8fa8d8",
+    "e": "#5c7ab8",
+    "f": "#3a5288",
+    "g": "#b87ad8",
+    "h": "#7a3a9a",
+    "i": "#c96a52",
+    "j": "#ffffff",
+    "k": "#4e2066",
+    "l": "#e8606a",
+    "m": "#ffe58a"
+  },
+  "rows": [
+    "................................................................................",
+    "................................................................................",
+    "...................................................................aa...........",
+    "........aaaaaaaa..............aaaaaaaaaaaaaaaaaaaa.................aa...........",
+    "......aabbccccccaa............adeeeeeeeeeeeeeeeefa................agga..........",
+    ".....abbcccccccccca...........adeeeeeeeeeeeeeeeefa................agha..........",
+    "....abbcccccccccccca..........adeeeeeeeeeeeeeeeefa...............agghha.........",
+    "...abbcccccccccccccca.........adeeeeeeeeeeeeeeeefa.........a.....aghhha.....a...",
+    "...abccccccccccccccca.........adeaaaaaeeeeaaaaaefa..........a...agghhhha...a....",
+    "..abbcccccccccccccccia........adeeeeeeeeeeeeeeeefa..........aa..aghhhhha..aa....",
+    "..abcccjacccccjaccccia........adeejaeeeeeeejaeeefa..........agaagghhhhhhaaka....",
+    "..abcccaacccccaaccccia........adeeaaeeeeeeeaaeeefa...........ahhhhhhhhhhhka.....",
+    "..abcccaacccccaaccccia........adeeeeeeeeeeeeeeeefa...........aghhhhhhhhhhka.....",
+    "..abccccccccccccccccia........adeeeeeeeeeeeeeeeefa...........aghahhhhhhahka.....",
+    "..abcllccccccccccllcia........adeeeeeeeeeeeeeeeefa...........aghmamhhmamhha.....",
+    "..abccccccaccaccccciia........adeeeeeeeeeeeeeeeefa......a....aghhhhhhhhhhha....a",
+    "..abcccccccaacccccciia........adeeeeeaaaaaaeeeeefa......aa..agghhhhhhhhhhhha..aa",
+    "...acccccccccccccciia.........adeeeeeeeeeeeeeeeefa......aga.aghhhhhhhhhhhhha.aka",
+    "...aicccccccccccciiia.........adeeeeeeeeeeeeeeeefa.......ahagghhaaaaaaaahhhhaka.",
+    "....aiicccccccciiiia..........adeeeeeeeeeeeeeeeefa.......aghhhhhhjhhhhjhhhhhkka.",
+    ".....aiiiiiiiiiiiia...........affffffffffffffffffa.......akkkkkkkkkkkkkkkkkkkka.",
+    "......aaiiiiiiiiaa............affffffffffffffffffa........akkkkkkkkkkkkkkkkkka..",
+    "........aaaaaaaa..............aaaaaaaaaaaaaaaaaaaa.......aaaaaaaaaaaaaaaaaaaaaa.",
+    "................................................................................"
+  ]
+}

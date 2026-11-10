@@ -1851,6 +1851,197 @@ function pineSprite(h, { snow = false } = {}) {
   add("rhythm-good", "Ritmo: siete pinos en dos grupos de grande-mediano-pequeño, separados por un hueco más ancho, y un mediano al final. Se repite un patrón (el ojo lo reconoce) con variación dentro (no aburre).", ["ritmo", "composición"], rhythm.pal, rhythm.rows);
 }
 
+
+// ---------- tela: un estandarte colgado de una barra; los pliegues son rampas que van y vienen (24×34)
+{
+  const O = "#1b1030";
+  const RED = ["#6a1428", "#9c2234", "#d8343f", "#f0707a"]; // de sombra a luz
+  const GOLDC = ["#8a5a1a", "#c98a2a", "#f2c14e", "#ffe58a"];
+  const POLE = { l: "#d08a50", d: "#6b3d2e" };
+  const X0 = 3, X1 = 20, TOP = 3, HEM = 28, CX = 11.5;
+  // mode: "folds" (pliegues de verdad), "flat" (error: un solo color), "stripes" (error: rayas de igual ancho, borde recto)
+  const banner = (mode, phase = 0) => {
+    const px = Array.from({ length: 34 }, () => Array(24).fill(null));
+    const fold = (x, y = TOP + 12) => { const spread = mode === "folds" ? 0.88 + ((y - TOP) / 25) * 0.24 : 1; return Math.cos((((x - CX) / spread + CX - X0) / 6) * 2 * Math.PI - phase); }; // tres pliegues que se abren al caer
+    const bottom = (x) => {
+      const notch = Math.max(0, 4 - Math.abs(x - CX) + 0.5); // cola de golondrina en el centro
+      const wave = mode === "folds" ? Math.round(1.4 * fold(x, HEM)) : 0; // el bajo sube y baja con los pliegues
+      return HEM + wave - Math.round(notch);
+    };
+    const tone = (x, y) => {
+      if (mode === "flat") return 2;
+      if (mode === "stripes") return Math.floor((x - X0) / 3) % 2 ? 1 : 3;
+      const amp = Math.min(1, (y - TOP) / 8); // junto a la barra la tela está sujeta: casi no hay pliegue
+      const s = fold(x, y) * amp - (y - TOP) * 0.012; // abajo, un poco más oscuro
+      return s > 0.55 ? 3 : s > -0.25 ? 2 : s > -0.75 ? 1 : 0;
+    };
+    const inEmblem = (x, y) => Math.abs(x - CX) + Math.abs(y - 14) <= 4.5; // un rombo dorado
+    for (let x = X0; x <= X1; x++) for (let y = TOP; y <= bottom(x); y++) {
+      const t = tone(x, y);
+      px[y][x] = inEmblem(x, y) ? GOLDC[mode === "flat" ? 2 : mode === "stripes" ? (t === 3 ? 2 : 1) : t] : RED[t];
+    }
+    // contorno por fuera de la tela
+    const filled = px.map((r) => r.map(Boolean));
+    for (let y = 0; y < 34; y++) for (let x = 0; x < 24; x++) if (!filled[y][x] && [[1, 0], [-1, 0], [0, 1], [0, -1]].some(([a, b]) => filled[y + b]?.[x + a])) px[y][x] = O;
+    // barra de madera con pomos
+    for (let x = 0; x <= 23; x++) { px[1][x] = x === 0 || x === 23 ? O : POLE.l; px[2][x] = x === 0 || x === 23 ? O : POLE.d; px[0][x] = O; px[3][x] = px[3][x] === O || x < X0 || x > X1 ? (x === 0 || x === 23 ? null : O) : px[3][x]; }
+    px[0][0] = null; px[0][23] = null;
+    return px;
+  };
+  const g = (m, p) => hexGridToSprite(banner(m, p));
+  const f = g("folds", 0), fl = g("flat", 0), st = g("stripes", 0);
+  add("banner-folds", "Estandarte rojo colgado de una barra de madera (24×34) con tres pliegues: cada pliegue es una rampa de cuatro rojos que va de la luz a la sombra y vuelve, y los pliegues se abren un poco al caer (más estrechos arriba que abajo). Junto a la barra la tela está sujeta y casi no hay pliegue; el bajo sube y baja con los pliegues y acaba en cola de golondrina. El rombo dorado se sombrea con los mismos pliegues: está pintado en la tela.", ["material", "tela"], f.pal, f.rows);
+  add("banner-flat", "Error: el mismo estandarte con un solo rojo y el rombo de un solo dorado. El bajo es recto (salvo la cola de golondrina). Parece una lámina de plástico, no tela.", ["material", "tela", "error"], fl.pal, fl.rows);
+  add("banner-stripes", "Error: los «pliegues» como rayas de 3 px que alternan claro y oscuro de arriba abajo, iguales junto a la barra y en el bajo, con el bajo recto. Se lee como una tela a rayas, no como una tela con pliegues.", ["material", "tela", "error"], st.pal, st.rows);
+  const wave = fixedFrames([0, 1, 2, 3, 4, 5].map((k) => banner("folds", (k * Math.PI) / 3)));
+  const WD = [
+    "Estandarte al viento, frame 1 de 6: el estandarte de los pliegues tal cual.",
+    "Frame 2: los pliegues se desplazan 1 px hacia la derecha (un sexto de pliegue); el bajo ondula con ellos.",
+    "Frame 3: 2 px.",
+    "Frame 4: 3 px, medio pliegue: donde había luz ahora hay sombra.",
+    "Frame 5: 4 px.",
+    "Frame 6: 5 px. Después vuelve al frame 1 (6 px, un pliegue entero) y el bucle no salta: la onda recorre la tela.",
+  ];
+  wave.forEach((w, i) => add(`banner-wave-${i + 1}`, WD[i], ["material", "tela", "animación"], w.pal, w.rows));
+}
+
+// ---------- cascada: agua que cae entre dos paredes de roca y espuma en la poza (32×48)
+{
+  const O = "#1b1030";
+  const RK = ["#3c3a4e", "#5c5872", "#7d7896", "#a29dba"];
+  const W = { d: "#1f4f9a", b: "#2a6fc9", m: "#3f8fe0", l: "#6fb8ff", w: "#d8f0ff", f: "#ffffff" };
+  const FX0 = 10, FX1 = 21, LIP = 4, POOL = 38;
+  const h = (a, b) => (((a * 73856093) ^ (b * 19349663)) >>> 0) % 100;
+  const frame = (t, bad = false) => {
+    const px = Array.from({ length: 48 }, () => Array(32).fill(null));
+    // roca: dos paredes y la orilla de la poza, con hiladas y grietas
+    for (let y = 0; y < 48; y++) for (let x = 0; x < 32; x++) {
+      const wall = x < FX0 || x > FX1 || y < LIP;
+      const bank = y >= POOL + 6 || ((x < 4 || x > 27) && y >= POOL);
+      if (!wall && !bank) continue;
+      const edge = Math.min(Math.abs(x - (FX0 - 1)), Math.abs(x - (FX1 + 1)));
+      // roca en lajas irregulares (celdas de Voronoi): grieta oscura entre lajas, canto claro arriba de cada una
+      const cellOf = (px_, py_) => { let best = [1e9, 1e9, -1]; for (let gy = -1; gy <= 9; gy++) for (let gx = -1; gx <= 5; gx++) { const sx = gx * 7 + (h(gx, gy) % 6), sy = gy * 6 + (h(gy, gx + 50) % 5); const d = Math.hypot(px_ - sx, (py_ - sy) * 1.3); if (d < best[0]) best = [d, best[0], gx * 100 + gy]; else if (d < best[1]) best[1] = d; } return best; };
+      const [d1, d2, id] = cellOf(x, y);
+      let k = h(id, 3) % 3 === 0 ? 1 : 2;
+      if (cellOf(x, y - 1)[2] !== id || cellOf(x - 1, y)[2] !== id) k = 3;
+      if (d2 - d1 < 1.1) k = 0;
+      if (wall && !bank && edge === 0 && y >= LIP) k = 0; // borde oscuro junto al agua
+      px[y][x] = RK[k];
+    }
+    // agua que cae: cada columna con su fase; el centro cae el doble de rápido que los lados
+    for (let x = FX0; x <= FX1; x++) {
+      const side = x === FX0 || x === FX1;
+      const fast = !bad && x > FX0 + 2 && x < FX1 - 2;
+      const speed = bad ? 1 : fast ? 6 : 4, period = fast ? 24 : 16; // 4 frames × 6 = 24 y 4 × 4 = 16: los dos bucles cierran
+      const off = bad ? 0 : h(x, 7) % period, len = bad ? 4 : 3 + (h(x, 3) % 4);
+      for (let y = LIP; y < POOL; y++) {
+        const p = (((y - off - t * speed) % period) + period) % period;
+        let c = side ? W.d : W.b;
+        if (bad) c = p < len && x % 2 === 0 ? W.l : W.b;
+        else if (!side && p < len) c = p === len - 1 ? W.w : W.l; // la cabeza de cada chorro, más clara
+        else if (!side && (x + y) % 7 === 0) c = W.m;
+        px[y][x] = c;
+      }
+    }
+    // el borde de arriba: el agua se curva sobre la roca
+    for (let x = FX0; x <= FX1; x++) { px[LIP - 1][x] = W.m; px[LIP][x] = W.l; if (!bad) px[LIP + 1][x] = (x + t) % 4 ? W.l : W.w; }
+    // la poza
+    for (let y = POOL; y < POOL + 6; y++) for (let x = 4; x <= 27; x++) px[y][x] = (y - POOL) % 3 === 2 && (x + y + (bad ? 0 : t)) % 4 === 0 ? W.l : y === POOL + 5 ? W.d : W.b;
+    if (!bad) {
+      // espuma donde cae: manchas blancas que cambian cada frame
+      for (let y = POOL - 3; y <= POOL + 2; y++) for (let x = FX0 - 2; x <= FX1 + 2; x++) {
+        const d = Math.abs(y - POOL) + (x < FX0 || x > FX1 ? 2 : 0);
+        if (h(x + t * 5, y + t * 11) < 70 - d * 18) px[y][x] = h(x, y + t) < 40 ? W.f : W.w;
+      }
+      // salpicaduras sueltas que suben
+      for (const [x, y] of [[8, POOL - 5], [23, POOL - 4], [6, POOL - 2], [25, POOL - 6]]) { const yy = y - ((t + x) % 4); if (px[yy]?.[x] !== undefined) px[yy][x] = W.w; }
+    }
+    // contorno arriba del todo
+    for (let x = 0; x < 32; x++) px[0][x] = O;
+    return px;
+  };
+  const good = fixedFrames([0, 1, 2, 3].map((t) => frame(t)));
+  const GD = [
+    "Cascada, frame 1 de 4 (32×48): el agua cae entre dos paredes de roca y se curva en el borde de arriba. Cada columna tiene chorros claros de 3 a 6 px con la cabeza casi blanca, y cada columna lleva su propia fase. Abajo, la espuma tapa el choque con la poza.",
+    "Frame 2: los chorros de los lados han bajado 4 px; los del centro, 6. La espuma cambia de forma.",
+    "Frame 3: otros 4 y 6 px. Las salpicaduras sueltas suben 1 px por frame.",
+    "Frame 4: el último. Los chorros de los lados se repiten cada 16 px y los del centro cada 24: al volver al frame 1 el bucle no salta.",
+  ];
+  good.forEach((f, i) => add(`waterfall-${i + 1}`, GD[i], ["agua", "tile", "animación"], f.pal, f.rows));
+  const bad = fixedFrames([0, 1, 2, 3].map((t) => frame(t, true)));
+  const BD = [
+    "Error, frame 1: la cascada con rayas claras de 4 px en una columna sí y otra no, todas a la misma altura, y sin espuma: el agua entra en la poza como si la cortaran con tijera.",
+    "Error, frame 2: todas las rayas bajan 1 px a la vez.",
+    "Error, frame 3: otro píxel, todas juntas. Parece una persiana que baja, no agua.",
+    "Error, frame 4: y otro. Con 1 px por frame y 4 frames el bucle no cierra: al volver al frame 1, las rayas suben 3 px de golpe.",
+  ];
+  bad.forEach((f, i) => add(`waterfall-bad-${i + 1}`, BD[i], ["agua", "tile", "animación", "error"], f.pal, f.rows));
+}
+
+// ---------- lenguaje de formas: círculo, cuadrado y triángulo (24×24 cada criatura)
+{
+  const O = "#1b1030";
+  const creature = (inside, pal, eyes) => {
+    const px = Array.from({ length: 24 }, () => Array(24).fill(null));
+    const In = (x, y) => x >= 0 && y >= 0 && x < 24 && y < 24 && inside(x, y);
+    for (let y = 0; y < 24; y++) for (let x = 0; x < 24; x++) {
+      if (!In(x, y)) continue;
+      const border = [[1, 0], [-1, 0], [0, 1], [0, -1]].some(([a, b]) => !In(x + a, y + b));
+      if (border) { px[y][x] = O; continue; }
+      const shadow = !In(x + 2, y + 2) || !In(x + 1, y + 3); // abajo a la derecha, lejos de la luz
+      const light = !In(x - 1, y - 1) || !In(x - 2, y - 1);
+      px[y][x] = shadow ? pal.d : light ? pal.l : pal.m;
+    }
+    eyes(px);
+    return px;
+  };
+  // círculo: amable. Ojos grandes y separados, sonrisa pequeña, mejillas
+  const round = creature((x, y) => Math.hypot(x - 11.5, y - 12.5) <= 10.3, { l: "#ffc2a8", m: "#f29b7a", d: "#c96a52" }, (px) => {
+    for (const ex of [7, 14]) { px[10][ex] = O; px[10][ex + 1] = O; px[11][ex] = O; px[11][ex + 1] = O; px[12][ex] = O; px[12][ex + 1] = O; px[10][ex] = "#ffffff"; }
+    px[15][10] = O; px[16][11] = O; px[16][12] = O; px[15][13] = O; // sonrisa
+    px[14][5] = "#e8606a"; px[14][6] = "#e8606a"; px[14][17] = "#e8606a"; px[14][18] = "#e8606a"; // mejillas
+  });
+  // cuadrado: fuerte, estable. Cuerpo ancho que apoya en el suelo, cejas rectas, boca recta
+  const square = creature((x, y) => x >= 2 && x <= 21 && y >= 3 && y <= 22, { l: "#8fa8d8", m: "#5c7ab8", d: "#3a5288" }, (px) => {
+    for (let x = 5; x <= 9; x++) px[8][x] = O; for (let x = 14; x <= 18; x++) px[8][x] = O; // cejas rectas
+    for (const ex of [6, 15]) { px[10][ex] = O; px[10][ex + 1] = O; px[11][ex] = O; px[11][ex + 1] = O; px[10][ex] = "#ffffff"; }
+    for (let x = 9; x <= 14; x++) px[16][x] = O; // boca recta
+  });
+  // triángulo: peligro. Punta arriba, pinchos a los lados, ojos rasgados, colmillos
+  const tri = creature((x, y) => {
+    const half = (y - 1) * 0.5; // se ensancha hacia abajo
+    const dx = Math.abs(x - 11.5);
+    // dos púas por lado: nacen del borde y suben en diagonal hacia fuera (1 px arriba por cada px afuera)
+    const spike = [11, 18].some((y0) => { const k = dx - (y0 - 1) * 0.5; const c = Math.ceil(k); return k > 0 && k <= 4 && y >= y0 - c && y <= y0 - c + (8 - 2 * c); }); // cuña: gruesa en la base, fina en la punta
+    return y >= 1 && y <= 22 && (dx <= half || spike);
+  }, { l: "#b87ad8", m: "#7a3a9a", d: "#4e2066" }, (px) => {
+    px[13][8] = O; px[14][9] = O; px[14][10] = "#ffe58a"; px[14][8] = "#ffe58a"; // ojo izquierdo rasgado, hacia el centro
+    px[13][15] = O; px[14][14] = O; px[14][13] = "#ffe58a"; px[14][15] = "#ffe58a";
+    for (let x = 8; x <= 15; x++) px[18][x] = O; px[19][9] = "#ffffff"; px[19][14] = "#ffffff"; // boca y colmillos
+  });
+  const one = (n, d, px) => { const s = hexGridToSprite(px); add(n, d, ["personaje", "forma"], s.pal, s.rows); };
+  one("form-round", "Criatura círculo (24×24): un cuerpo redondo en tres tonos cálidos, ojos grandes con brillo y separados, una sonrisa pequeña y mejillas rosas. Sin esquinas ni puntas: se lee amable.", round);
+  one("form-square", "Criatura cuadrado (24×24): un bloque de 20×20 en azules que apoya entero en el suelo, cejas rectas, ojos pequeños y una boca recta. Ancho y estable: se lee fuerte y fiable.", square);
+  one("form-triangle", "Criatura triángulo (24×24): un cuerpo en punta hacia arriba, con dos púas a cada lado que suben en diagonal hacia fuera, en morados, ojos rasgados amarillos y una boca con dos colmillos. Puntas y diagonales: se lee peligrosa.", tri);
+  const lineup = (list) => { const px = Array.from({ length: 24 }, () => Array(80).fill(null)); list.forEach((g, i) => g.forEach((r, y) => r.forEach((c, x) => { if (c) px[y][i * 28 + x] = c; }))); return hexGridToSprite(px); };
+  const L = lineup([round, square, tri]);
+  add("form-lineup", "Las tres criaturas en fila (80×24): círculo, cuadrado y triángulo. En silueta siguen siendo tres personajes distintos, y cada forma dice algo antes que la cara.", ["personaje", "forma"], L.pal, L.rows);
+  // error: las tres con el mismo cuerpo redondo; solo cambian el color y la cara
+  const sameSq = creature((x, y) => Math.hypot(x - 11.5, y - 12.5) <= 10.3, { l: "#8fa8d8", m: "#5c7ab8", d: "#3a5288" }, (px) => {
+    for (let x = 6; x <= 9; x++) px[8][x] = O; for (let x = 14; x <= 17; x++) px[8][x] = O;
+    for (const ex of [7, 14]) { px[10][ex] = O; px[10][ex + 1] = O; px[11][ex] = O; px[11][ex + 1] = O; px[10][ex] = "#ffffff"; }
+    for (let x = 9; x <= 14; x++) px[16][x] = O;
+  });
+  const sameTri = creature((x, y) => Math.hypot(x - 11.5, y - 12.5) <= 10.3, { l: "#b87ad8", m: "#7a3a9a", d: "#4e2066" }, (px) => {
+    px[10][8] = O; px[11][9] = O; px[11][10] = "#ffe58a"; px[11][8] = "#ffe58a";
+    px[10][15] = O; px[11][14] = O; px[11][13] = "#ffe58a"; px[11][15] = "#ffe58a";
+    for (let x = 8; x <= 15; x++) px[16][x] = O; px[17][9] = "#ffffff"; px[17][14] = "#ffffff";
+  });
+  const B = lineup([round, sameSq, sameTri]);
+  add("form-lineup-same", "Error: las tres criaturas con el mismo cuerpo redondo; solo cambian el color y la cara (la azul con cejas rectas, la morada con ojos rasgados y colmillos). En silueta son tres círculos iguales, y la «peligrosa» sigue pareciendo un peluche.", ["personaje", "forma", "error"], B.pal, B.rows);
+}
+
 // ---------- escribir y validar
 let bad = 0;
 for (const s of out) {

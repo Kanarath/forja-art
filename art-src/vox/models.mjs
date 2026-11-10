@@ -916,7 +916,83 @@ const caveFinal = [
   ...[[12, 9], [13, 9], [14, 9], [13, 10]].map(([x, y]) => ({ x, y, z: 0, c: "#2a6fc9" })), // charco bajo la estalactita más larga (gotea)
 ];
 
+
+// ---------- VALLA: una pieza que se duplica y se gira 90° (seleccionar, mover, rotar, duplicar)
+const dedupe = (vox) => [...new Map(vox.map((v) => [`${v.x},${v.y},${v.z}`, v])).values()]; // si dos vóxels coinciden, gana el último
+const fencePost = (h = 7) => [...box(0, 0, 0, 1, 1, h - 1, WOOD.dark), ...box(0, 0, h, 1, 1, h, WOOD.mid)]; // poste de 2×2 con la cabeza más clara
+const fenceModule = (h = 7) => [...fencePost(h), ...box(2, 0, 2, 7, 0, 2, WOOD.light), ...box(2, 0, 5, 7, 0, 5, WOOD.light)]; // poste + dos travesaños de 6
+const rotZ = (vox) => vox.map((v) => ({ ...v, x: -v.y, y: v.x })); // giro de 90° alrededor del eje Z
+const fenceOne = fenceModule();
+const fenceRow = dedupe([0, 8, 16, 24].flatMap((x) => move(fenceModule(), x, 0, 0)).concat(move(fencePost(), 32, 0, 0)));
+const fenceTurn = (mods) => dedupe([
+  ...[0, 8, 16].flatMap((x) => move(mods(x / 8), x, 0, 0)),
+  ...[0, 8].flatMap((y, i) => move(rotZ(mods(3 + i)), 25, y, 0)), // el mismo módulo girado 90°: los travesaños van ahora a lo largo de Y
+  ...move(fencePost(), 24, 16, 0),
+]);
+const fenceCorner = fenceTurn(() => fenceModule());
+const fenceVaried = (() => {
+  const H = [7, 8, 6, 7, 8]; // alturas de poste distintas
+  const v = fenceTurn((i) => fenceModule(H[i])).filter((q) => !(q.y === 0 && q.z === 5 && q.x >= 11 && q.x <= 13)); // un travesaño roto
+  v.push(...box(11, -2, 0, 13, -2, 0, WOOD.light)); // el trozo roto, en el suelo
+  v.push(...box(18, 0, 2, 23, 0, 2, null).map((q) => ({ ...q, c: q.x % 2 ? "#a89880" : "#968670" }))); // una tabla cambiada, de madera vieja y gris
+  for (const [x, y] of [[0, -1], [1, 2], [8, -1], [17, 2], [24, -1], [26, 9], [23, 8], [26, 15]]) v.push({ x, y, z: 0, c: LEAF.mid }, { x, y, z: 1, c: LEAF.light }); // hierba al pie de los postes
+  v.push({ x: 5, y: -1, z: 0, c: LEAF.dark }, { x: 5, y: -1, z: 1, c: "#ffd36e" }); // una flor
+  v.push(...box(29, 4, 0, 30, 5, 0, STONE.dark), { x: 29, y: 4, z: 1, c: STONE.light }); // una piedra
+  return dedupe(v);
+})();
+
+// ---------- ROCAS: de cajas a rocas (facetas, tres tamaños, color por orientación)
+const RK = { l: "#b0abc4", m: "#8a8698", d: "#64607a", dd: "#45425a" };
+const ROCKS = [
+  { b: [0, 0, 0, 9, 7, 7], cut: [3, 2, 1, 3, 2, 1, 2, 3] }, // grande
+  { b: [9, 2, 0, 14, 6, 4], cut: [1, 2, 2, 1, 1, 2, 1, 1] }, // mediana, apoyada en la grande
+  { b: [-4, 5, 0, -2, 7, 2], cut: [1, 1, 0, 1, 1, 0, 1, 1] }, // pequeña, separada
+];
+const rockBlocks = dedupe(ROCKS.flatMap(({ b }) => box(...b, RK.m)));
+const facet = ({ b: [x0, y0, z0, x1, y1, z1], cut: [a, bb, c, d, e, f, g, hh] }) => box(x0, y0, z0, x1, y1, z1, RK.m).filter((v) => {
+  const top = z1 - v.z; // distancia al techo
+  // aristas de arriba cortadas en bisel, cada una con su ancho (no todas iguales: así no parece una caja con chaflán)
+  if (v.x - x0 + top < a || x1 - v.x + top < bb || v.y - y0 + top < c || y1 - v.y + top < d) return false;
+  // esquinas verticales, también desiguales
+  if (v.x - x0 + v.y - y0 < e || x1 - v.x + v.y - y0 < f || v.x - x0 + y1 - v.y < g || x1 - v.x + y1 - v.y < hh) return false;
+  return true;
+});
+const rockFacets = dedupe([...ROCKS.flatMap(facet), ...box(3, 1, 8, 5, 4, 8, RK.m).filter((v) => v.x - 3 + v.y - 1 > 0)]); // un saliente arriba: el techo no es plano
+// grietas: tramos de 2–3 vóxels en zigzag por las caras que se ven, por debajo de los biseles
+const CRACKS = new Set([[2, 0, 4], [3, 0, 5], [6, 0, 4], [7, 0, 3], [6, 0, 2], [9, 1, 4], [9, 2, 3], [9, 1, 2], [13, 3, 2], [13, 3, 1], [14, 4, 0]].map((p) => p.join(","))); // dos en el frente de la grande, una en su lado derecho y otra en el de la mediana
+const rockDetail = (() => {
+  const s = new Set(rockFacets.map((v) => `${v.x},${v.y},${v.z}`));
+  const has = (x, y, z) => s.has(`${x},${y},${z}`);
+  const v = rockFacets.map((q) => {
+    const up = !has(q.x, q.y, q.z + 1), front = !has(q.x, q.y - 1, q.z), right = !has(q.x + 1, q.y, q.z);
+    let c = up ? RK.l : front ? RK.m : right ? "#76728a" : RK.d; // la luz viene de arriba y un poco de delante
+    if (!up && (front || right) && CRACKS.has(`${q.x},${q.y},${q.z}`)) c = RK.dd; // grietas: líneas cortas en las caras que se ven
+    if (up && q.z >= 2 && rnoise(q.x, q.y, q.z) < 40) c = (q.x + q.y) % 3 ? "#6f9a5c" : "#557a48"; // musgo apagado arriba, donde llueve
+    return { ...q, c };
+  });
+  for (const [x, y] of [[-1, 1], [11, -1], [15, 3], [3, -1], [-3, 4]]) v.push({ x, y, z: 0, c: RK.m }); // piedrecitas sueltas
+  for (const [x, y, t] of [[-1, -1, 1], [0, -1, 0], [7, -1, 0], [13, 7, 1], [-1, 6, 0], [15, 1, 0], [15, 2, 1]]) { v.push({ x, y, z: 0, c: LEAF.dark }); if (t) v.push({ x, y, z: 1, c: LEAF.mid }); } // matas de hierba al pie, bajas
+  return dedupe(v);
+})();
+
 export const MODELS = {
+  valla: {
+    description: "Valla: una pieza que se duplica, se mueve y se gira",
+    stages: [
+      { label: "Una pieza", note: "El módulo de la valla: un poste de 2×2 y 8 de alto con la cabeza más clara, y dos travesaños de 6 a z=2 y z=5. Mide 8 de largo justo: el poste de la copia siguiente cierra los travesaños.", voxels: fenceOne },
+      { label: "Duplicada", note: "La pieza duplicada cuatro veces, cada copia movida 8 vóxels en X, y un poste suelto al final para cerrar. 34 de largo sin dibujar nada nuevo.", voxels: fenceRow },
+      { label: "Esquina", note: "Tres copias a lo largo de X y dos más giradas 90° alrededor del eje Z, a lo largo de Y. Girar 90° es exacto en vóxels: la pieza no se deforma.", voxels: fenceCorner },
+      { label: "Variada", note: "Las mismas copias con pequeños cambios: postes de 7, 8 y 9 de alto, un travesaño roto con el trozo en el suelo, una tabla cambiada de madera vieja y gris, hierba al pie de los postes, una flor y una piedra. Ya no se ve que es la misma pieza repetida.", voxels: fenceVaried },
+    ],
+  },
+  rocas: {
+    description: "Rocas: de tres cajas a un grupo de rocas",
+    stages: [
+      { label: "Cajas", note: "Tres cajas de tres tamaños: una grande de 10×8×8, una mediana de 6×5×5 apoyada en ella y una pequeña de 3×3×3 algo separada. El grupo ya funciona por tamaños antes de tener forma de roca.", voxels: rockBlocks },
+      { label: "Facetas", note: "Cada caja con las aristas de arriba y las esquinas verticales cortadas en bisel, cada una con un ancho distinto (de 0 a 3), y un saliente encima de la grande. Ya no son cajas, y tampoco bolas: las rocas tienen caras planas.", voxels: rockFacets },
+      { label: "Color y detalle", note: "El color sale de hacia dónde mira cada cara: lo de arriba, claro; el frente, medio; el lado derecho, más oscuro, y lo de detrás, el más oscuro de todos. Unas grietas oscuras, musgo a manchas solo en lo alto, piedrecitas sueltas y hierba al pie.", voxels: rockDetail },
+    ],
+  },
   caras: {
     description: "Caras voxel: el chibi con expresiones de pocos vóxels",
     stages: [

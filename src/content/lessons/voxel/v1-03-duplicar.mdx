@@ -1,0 +1,232 @@
+---
+id: v1-03
+discipline: voxel
+level: 1
+order: 3
+title: "Seleccionar, mover, rotar y duplicar"
+summary: "Diseña una pieza que encaje, duplícala y muévela un número exacto de vóxels, gírala 90° para la esquina y varía las copias: una valla que no parece repetida."
+duration: 40
+status: borrador
+prerequisites: [v1-02]
+fundamentals: [f02]
+objectives:
+  - "Diseñar un módulo que mida justo el paso de repetición"
+  - "Seleccionar vóxels, duplicarlos y moverlos un número exacto de vóxels"
+  - "Girar una pieza 90° para hacer una esquina sin deformarla"
+  - "Elegir entre copiar dentro de un modelo o duplicar modelos en el modo World"
+  - "Variar las copias para que no se note la repetición"
+tools: [magicavoxel]
+piece:
+  name: "Valla con esquina y variaciones"
+  canvas: "32x24x10"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [valla]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Hoy forjas **una valla de madera con esquina**. Mide 26 vóxels a lo largo de X y 18 a lo largo de Y. Tiene cinco tramos y seis postes.
+
+Lo bueno: solo dibujas **un tramo**. El resto son copias movidas y giradas. Al final retocas cada copia para que la valla parezca hecha a mano y no clonada.
+
+<VoxViewer model="valla" stage={3} title="Tu pieza: la valla con esquina, ya variada" />
+
+Pulsa las etapas del visor de una en una: **1 · Una pieza** es lo único que modelas a mano. Las etapas 2 y 3 son copias. La 4 es la misma esquina con retoques.
+</Block>
+
+<Block kind="concepto">
+En Blender duplicas un objeto y lo mueves 2 metros, o usas un modificador *Array*. En voxel la idea es la misma, pero la unidad es el **vóxel**: mueves una copia **8 vóxels**, ni 7,5 ni «a ojo».
+
+### 1. El módulo mide justo el paso
+
+Mira la pieza base de la valla:
+
+<VoxViewer model="valla" stage={0} title="El módulo: un poste y dos travesaños, 8 de largo" />
+
+- **Poste** de 2×2 y 8 de alto: 7 vóxels de madera oscura y la cabeza, arriba, más clara.
+- **Dos travesaños** de 6 vóxels de largo, en la tercera y la sexta capa contando desde el suelo (z=2 y z=5). Salen de la fila delantera del poste.
+- **Largo total: 8.** 2 del poste + 6 de travesaño.
+
+El travesaño termina **en el aire**, justo donde empieza el siguiente poste. Por eso el **paso de repetición** es 8: cada copia se mueve 8 vóxels y su poste cierra los travesaños de la anterior. Sin huecos y sin vóxels encima de otros.
+
+<Why title="Por qué el tramo no lleva dos postes">
+Si el módulo tuviera un poste en cada extremo, al juntar dos copias saldrían **dos postes pegados** en cada unión. Un módulo que se repite lleva **solo una** de las dos piezas de unión. La otra se la pone el vecino.
+</Why>
+
+### 2. N tramos, N + 1 postes
+
+Cuatro tramos seguidos miden 4 × 8 = 32. El último travesaño queda colgando. Le falta **un poste suelto** al final: 32 + 2 = **34** de largo. Es la etapa 2 del visor de arriba.
+
+Es el «problema del poste de la valla» y te lo encontrarás siempre: 4 tramos piden 5 postes; 10 baldosas de suelo, 11 juntas.
+
+### 3. Girar 90° es exacto; 45°, no
+
+Para la esquina, giras el módulo **90° alrededor del eje Z** (el vertical). Lo que iba a lo largo de X pasa a ir a lo largo de Y. Cada vóxel cae en otra casilla de la rejilla: **la pieza no se deforma**. Lo ves en la etapa 3 del visor: tres tramos en X y dos girados en Y.
+
+A 45° no hay casilla donde caer. Un travesaño recto de 6 en diagonal se convierte en una escalera y mide otra cosa. En voxel, el giro de 45° **se redibuja**: lo verás con las aspas del molino en [V6-05](/forja-art/voxel/v6-05/).
+
+<Why title="Girar mueve la pieza">
+Una pieza gira **alrededor de un punto**. Después del giro casi nunca queda donde la quieres: puede salir desplazada un vóxel o al otro lado del pivote. No te fíes de dónde queda. **Recolócala contando**: el poste de la copia girada tiene que ocupar justo la esquina.
+</Why>
+
+### 4. Dos caminos en MagicaVoxel
+
+- **A · Dentro de un modelo.** Todo vive en un solo modelo. Seleccionas los vóxels del tramo, los copias y mueves la copia. Al final tienes **un único objeto**.
+- **B · En el modo World.** El tramo es un **modelo aparte** de 8×2×8. En World duplicas el modelo entero y mueves la copia. Al final tienes **varios modelos** en la escena.
+
+**Para esta valla te recomiendo el camino A.** Es un solo objeto: se exporta y se coloca de una vez. Vas a retocar cada copia (un poste más alto, un travesaño roto), y eso se hace directamente sobre los vóxels. Y todo queda en la misma rejilla, así que contar 8 casillas es fácil.
+
+El camino B brilla cuando las piezas **tienen que seguir separadas**: módulos que reutilizas en varias casas ([V6-01](/forja-art/voxel/v6-01/)) o piezas que se mueven, como las aspas del molino ([V6-05](/forja-art/voxel/v6-05/)). Aquí lo usarás como plan B si tu versión no gira selecciones.
+
+<Why title="Repetir sin que se note">
+La repetición da **orden y ritmo**: el ojo entiende la valla de un vistazo. La repetición **exacta**, en cambio, delata la máquina: cinco tramos idénticos parecen un «copiar y pegar». La solución no es dibujar cada tramo distinto. Es **repetir la estructura** (el paso, la altura de los travesaños) y **variar los detalles** (alturas de poste, una tabla rota, hierba). Es el mismo principio que el ritmo de [F07-02](/forja-art/fundamentos/f07-02/): orden con variación.
+</Why>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Prepara el modelo y dibuja el módulo">
+1. Crea un modelo y ponle de tamaño **32 24 10** en los campos de tamaño (como en [V1-01](/forja-art/voxel/v1-01/)). Cabe la esquina de 26×18×8 y queda margen para la hierba y los trozos del suelo.
+2. Modo **Attach**, pincel **Box**, marrón oscuro de la **paleta**. En una esquina del suelo, dejando 2 o 3 vóxels de margen delante, levanta el poste: **2×2 y 7 de alto**.
+3. Encima, un vóxel por columna en un marrón medio: la **cabeza** del poste. Ya mide 8.
+4. Marrón claro, pincel **Line** o **Voxel**: los dos **travesaños de 6**, en la tercera y la sexta capa, en la fila delantera del poste (la que da al exterior).
+5. Cuenta: del borde del poste al final del travesaño, **8 vóxels**. Compáralo con la etapa 1 del visor.
+
+<Why>
+Todo lo que viene después depende de esta medida. Si el tramo mide 9, cada copia dejará un hueco. Si mide 7, el poste de la copia se comerá el último vóxel del travesaño. **Mídelo ahora**, cuando arreglarlo cuesta un vóxel.
+</Why>
+</Step>
+
+<Step n={2} title="Selecciona el tramo">
+1. Busca la herramienta de **selección** (*Select*). En la barra de modos aparece junto a **Attach**, **Erase** y **Paint**, o como un modo aparte, según la versión.
+2. Con la selección en forma de caja, abarca el tramo entero: poste, cabeza y los dos travesaños.
+3. Gira la cámara con el **botón derecho** y comprueba que está todo marcado. Si falta un vóxel, la copia saldrá sin él.
+
+<Tip>
+Seleccionar no cambia nada: solo dice al programa **a qué vóxels** afectará la próxima operación. Es como el modo edición de Blender con unas caras marcadas.
+</Tip>
+
+<Warn>
+Si después de seleccionar pintas o borras, solo afectará a lo seleccionado. Cuando termines de copiar, **quita la selección** antes de seguir modelando, o te volverás loco preguntándote por qué el pincel «no hace nada».
+</Warn>
+</Step>
+
+<Step n={3} title="Duplica y mueve exactamente 8">
+1. **Copia** la selección y **pega** la copia (con las opciones de copiar y pegar de tu versión).
+2. **Mueve** la copia **8 vóxels** a lo largo de X. Cuenta las casillas de la rejilla, no arrastres a ojo.
+3. Comprueba la unión: el poste de la copia **toca** el final del travesaño anterior. Sin hueco y sin pisarlo.
+4. Repite hasta tener **tres tramos** seguidos: 24 de largo.
+
+Si te equivocas, deshaz con <Keys k="Ctrl+Z" /> y vuelve a mover.
+
+<Tip title="La valla recta del visor">
+La etapa 2 del visor tiene cuatro tramos y un poste suelto: 34 de largo. Para la esquina bastan tres tramos en X.
+</Tip>
+</Step>
+
+<Step n={4} title="Gira una copia 90° para la esquina">
+1. Selecciona otra vez **un solo tramo**, cópialo y pega la copia.
+2. Gírala **90° alrededor del eje Z** con las operaciones de girar de la parte de arriba del lienzo o del panel de edición.
+3. Ahora sus travesaños van a lo largo de Y. Muévela hasta que su **poste** quede pegado al final del tercer tramo: ese poste **es la esquina** y cierra los travesaños que venían por X.
+4. Comprueba que los travesaños nuevos van por **fuera** del cercado, igual que los de X.
+5. Copia este tramo girado y muévelo **8 vóxels en Y**. Termina con **un poste suelto**: 2 tramos en Y + 1 poste = 18 de largo.
+
+Compáralo con la etapa 3 del visor: 26 en X y 18 en Y.
+
+<Why>
+Después de girar, la copia casi nunca cae en su sitio (el giro tiene un pivote). Por eso no buscas «la posición correcta» en ningún campo: **mueves hasta que el poste encaja** y lo compruebas mirando desde arriba.
+</Why>
+
+<Tip title="Plan B: el modo World">
+Si tu versión no deja girar una selección, haz el giro con modelos: copia el tramo a un **modelo nuevo** de 8×2×8, pasa al modo **World**, duplica ese modelo, gíralo 90° y colócalo en la esquina. Es el camino B del concepto, el mismo de [V6-01](/forja-art/voxel/v6-01/).
+</Tip>
+</Step>
+
+<Step n={5} title="Varía las copias">
+Ahora rompe la repetición. Cambia **detalles**, nunca el paso ni la altura de los travesaños:
+
+1. **Alturas de poste.** Sube un poste un vóxel (Attach encima, y pinta con **Paint** de oscuro la antigua cabeza) y baja otro uno (**Erase** en la cabeza y **Paint** del vóxel de debajo con el color de cabeza). En el visor quedan postes de 7, 8 y 9.
+2. **Un travesaño roto.** Con **Erase**, quita 3 vóxels seguidos del travesaño de arriba de un tramo. Deja el trozo (3 vóxels) tirado en el suelo delante de la valla.
+3. **Una tabla cambiada.** Con **Paint**, repinta un travesaño de abajo con dos tonos de **madera vieja y gris**, alternos: se lee como otra madera, una tabla puesta después.
+4. **Vida al pie.** Matas de hierba de 2 vóxels junto a algunos postes, una flor y una piedra.
+
+<Why>
+Cada cambio toca **pocos vóxels** y no mueve ninguna unión. La valla sigue encajando, pero el ojo ya no ve cinco clones: ve una valla con historia.
+</Why>
+</Step>
+
+<Step n={6} title="Revisa, guarda y renderiza">
+1. Mira la valla **desde arriba**: los postes deben estar alineados y la esquina, en ángulo recto.
+2. Mírala a la altura del suelo: ningún travesaño flota ni atraviesa un poste.
+3. Guarda el `.vox` y haz un **Render** con la esquina hacia la cámara.
+</Step>
+
+<Warn title="Verifica en tu versión">
+MagicaVoxel cambia mucho entre versiones en esta parte. Comprueba en la tuya: dónde está la herramienta de **selección** (*Select*) y qué formas de selección tiene; cómo se **copia, pega y mueve** una selección (arrastrando con una herramienta de mover, con botones o con el teclado) y si se puede mover **de vóxel en vóxel**; si los botones de **girar** y **voltear** de la parte de arriba del lienzo actúan sobre la selección o sobre el modelo entero, y alrededor de qué punto giran; y, en el modo **World**, cómo se duplica, se gira y se mueve un modelo. Pasa el ratón por encima de los iconos para ver su nombre. Si <Keys k="Ctrl+Z" /> no deshace en tu versión, busca el botón de deshacer.
+</Warn>
+</Block>
+
+<Block kind="version">
+Ahora con tu propio módulo. Elige **un** reto:
+
+- **Cercado cerrado:** cuatro lados con giros de 90°, 180° y 270°. Cuenta los postes antes de empezar: ¿cuántos necesitas si cada lado tiene 3 tramos?
+- **Valla con puerta:** un tramo sin travesaños, flanqueado por dos postes más altos, y una puerta como pieza aparte (en World, si la quieres abrir luego).
+- **Otro módulo:** una empalizada de troncos de paso 3, o un muro bajo de piedra de paso 4. Diseña primero el módulo para que encaje y **después** duplica.
+
+Sea cual sea, al final aplica **al menos tres variaciones** distintas que no toquen las uniones.
+</Block>
+
+<Block kind="errores">
+<Mistake title="Copias idénticas" wrongLabel="Cinco clones" rightLabel="Misma estructura, detalles distintos">
+  <VoxViewer slot="wrong" model="valla" stage={2} title="La esquina recién duplicada" />
+  <VoxViewer slot="right" model="valla" stage={3} title="La misma esquina, variada" />
+
+La valla de la izquierda está **bien construida**: encaja, gira y mide lo que debe. Pero los cinco tramos son iguales vóxel a vóxel y se nota. Arreglo: no la rehagas. Cambia unos pocos vóxels por tramo: alturas de poste, una tabla rota o cambiada, hierba al pie. La estructura (paso de 8, travesaños a la misma altura) se queda igual.
+</Mistake>
+
+<Mistake title="Un módulo que no mide el paso" wrongLabel="Tramo de 9 (o de 7)" rightLabel="Tramo de 8 con paso de 8">
+  <p slot="wrong">El travesaño mide 7 y el tramo, 9. Mueves las copias 8 «porque el poste mide 2 y el travesaño 6» y cada poste se mete en el último vóxel del travesaño anterior. Y si mueves cada copia «a ojo», unas uniones tienen hueco y otras no.</p>
+  <p slot="right">Poste de 2 + travesaño de 6 = 8. Cada copia se mueve 8 y su poste cierra el travesaño anterior. Una sola medida para todo.</p>
+
+Arreglo: corrige **el módulo** antes de duplicar, nunca las copias una a una. Si ya duplicaste, borra las copias, arregla el original y vuelve a copiar.
+</Mistake>
+
+<Mistake title="Girar 45° para una esquina en diagonal" wrongLabel="Travesaño girado 45°" rightLabel="Esquina a 90° (o diagonal redibujada)">
+  <p slot="wrong">Intentas poner un tramo en diagonal girándolo 45°. Los vóxels no tienen casilla donde caer: el travesaño se vuelve una escalera dentada que ni siquiera mide 6 y ya no encaja con el poste.</p>
+  <p slot="right">Las esquinas se hacen a 90°: exacto, sin deformar. Si de verdad quieres una diagonal, la dibujas a mano como escalera 1:1 y la tratas como otro módulo.</p>
+
+Lo mismo pasa con las aspas del molino de [V6-05](/forja-art/voxel/v6-05/): la pose a 45° se redibuja.
+</Mistake>
+
+<Warn title="Error típico: olvidar el último poste">
+Tres tramos no son tres postes y tres travesaños «completos»: el último travesaño se queda al aire. N tramos piden **N + 1 postes**. Pon un poste suelto al final de cada tramo recto que no acabe en esquina (en la esquina, el poste lo pone la copia girada).
+</Warn>
+</Block>
+
+<Block kind="calidad">
+<Checklist items={[
+  "Mi módulo mide 8 de largo: poste de 2 y travesaños de 6",
+  "Cada copia está movida exactamente 8 vóxels: sin huecos ni postes dobles",
+  "La esquina está hecha con una copia girada 90° y su poste cierra los travesaños",
+  "Cada tramo recto termina en un poste suelto (N tramos, N + 1 postes)",
+  "He variado detalles (postes, una tabla, hierba) sin tocar las uniones",
+  "He guardado el .vox y un render con la esquina hacia la cámara",
+]} />
+
+<Quiz q="Tu tramo mide 8 vóxels (poste de 2 y travesaño de 6). ¿Cuánto mueves cada copia?" options={["6, lo que mide el travesaño", "8, lo que mide el tramo entero", "10, para dejar sitio al poste siguiente"]} answer={1}>
+El paso de repetición es el largo del módulo: 8. El poste de la copia cae justo donde termina el travesaño de la anterior.
+</Quiz>
+
+<Quiz q="Quieres una valla recta de 4 tramos. ¿Cuántos postes necesitas?" options={["4", "5", "8"]} answer={1}>
+Cada tramo trae su poste, pero el último travesaño se queda al aire: hace falta un poste suelto más. 4 × 8 + 2 = 34 vóxels de largo.
+</Quiz>
+
+<Quiz q="¿Por qué la esquina se hace girando 90° y no 45°?" options={["Porque a 90° cada vóxel cae en otra casilla de la rejilla y la pieza no se deforma", "Porque MagicaVoxel renderiza más rápido las piezas rectas", "Porque a 45° la pieza pesa el doble"]} answer={0}>
+Un giro de 90° solo cambia los ejes: X pasa a Y. A 45° los vóxels no tienen casilla donde caer y la pieza hay que redibujarla.
+</Quiz>
+
+<Quiz q="Vas a hacer una valla y luego retocar cada tramo. ¿Qué camino te conviene?" options={["Dentro de un modelo: seleccionar, copiar y mover vóxels", "Un modelo por tramo en el modo World, siempre", "Dibujar cada tramo a mano desde cero"]} answer={0}>
+Es un solo objeto y los retoques se hacen sobre los vóxels. El modo World conviene cuando las piezas tienen que seguir separadas: módulos reutilizables (V6-01) o piezas que se mueven (V6-05).
+</Quiz>
+</Block>

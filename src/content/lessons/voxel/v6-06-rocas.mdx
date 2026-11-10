@@ -1,0 +1,289 @@
+---
+id: v6-06
+discipline: voxel
+level: 6
+order: 6
+title: "Rocas: de cajas a rocas"
+summary: "Modela un grupo de tres rocas de tamaños distintos con caras planas y biseles desiguales, píntalas según hacia dónde mira cada cara y asiéntalas en el suelo con musgo y hierba."
+duration: 40
+status: borrador
+prerequisites: [v6-02, v3-01]
+fundamentals: [f02, f07]
+objectives:
+  - "Componer las rocas como un grupo de tres tamaños: grande, mediana apoyada y pequeña separada"
+  - "Pasar de la caja a la roca con biseles de anchos distintos y un techo irregular, sin caer en la bola lisa"
+  - "Pintar el color según la orientación de cada cara: arriba claro, frente medio, lados oscuros"
+  - "Poner el musgo solo donde llueve y asentar la roca con piedrecitas y hierba al pie"
+tools: [magicavoxel]
+piece:
+  name: "Tu grupo de tres rocas con facetas, color por orientación, musgo arriba y hierba al pie, con render"
+  canvas: "20x10x10"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [rocas]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Las rocas están en todas las escenas: junto al camino, al pie de un árbol, en la orilla de un río. Hoy forjas **un grupo de rocas** que no parezca ni un montón de cajas ni un puñado de bolas.
+
+<VoxViewer model="rocas" stage={2} title="Tu pieza: tres rocas con facetas, color por cara, musgo y hierba" />
+
+Gíralo y recorre las tres etapas:
+
+1. **Cajas:** tres cajas de tres tamaños. Todavía no son rocas, pero el grupo ya funciona.
+2. **Facetas:** las mismas cajas con las aristas cortadas en bisel, cada una con un ancho distinto, y un saliente encima de la grande.
+3. **Color y detalle:** cada cara pintada según hacia dónde mira, unas grietas, musgo solo arriba, piedrecitas y hierba al pie.
+
+La idea de la lección cabe en una frase: **una roca es una caja con caras planas cortadas de forma desigual, y su color sale de hacia dónde mira cada cara.**
+
+Tu pieza final: **tu propio grupo de tres rocas** en un lienzo de 20×10×10, con las facetas, el color por orientación, musgo arriba, hierba al pie y un render.
+</Block>
+
+<Block kind="concepto">
+### 1. Primero el grupo: tres tamaños
+
+Antes de cortar nada, decide **cuántas rocas y de qué tamaño**. Es lo de [Ritmo y repetición (F07-02)](/forja-art/fundamentos/f07-02/): grande, mediano y pequeño, nunca tres iguales.
+
+<VoxViewer model="rocas" stage={0} title="Cajas: grande, mediana apoyada y pequeña separada" />
+
+Mide las cajas con el visor:
+
+- **Grande:** 10×8 de planta y 8 de alto. Es la que manda.
+- **Mediana:** 6×5 y 5 de alto, **apoyada** contra el lado derecho de la grande. Comparten la columna de vóxels donde se tocan.
+- **Pequeña:** 3×3×3, a la izquierda y algo atrás, con **un vóxel de aire** entre ella y la grande.
+
+El grupo entero ocupa **19×8×8**. De alto, 8, 5 y 3: la mediana mide algo más de la mitad que la grande y la pequeña, poco más de un tercio. Los saltos de tamaño son claros.
+
+<Why title="Por qué un grupo y no una roca">
+Una roca sola es un objeto. Tres rocas de tamaños distintos son **un sitio**: se leen como algo que cayó, se partió o lo dejó el río. La grande y la mediana juntas forman una masa; la pequeña, separada, la equilibra y deja un hueco para que el ojo descanse. Es la misma regla de los grupos de [la vegetación (V6-04)](/forja-art/voxel/v6-04/).
+</Why>
+
+<Tip>
+Decide los tamaños en cajas, como el blockout de [V2-01](/forja-art/voxel/v2-01/). Si el grupo no funciona con cajas, no lo arreglarán las facetas.
+</Tip>
+
+### 2. Facetas: biseles desiguales
+
+Ahora la parte que convierte una caja en una roca: **cortar las aristas**.
+
+<VoxViewer model="rocas" stage={1} title="Facetas: cada arista con su propio bisel" />
+
+Cada caja pierde dos tipos de aristas:
+
+- **Las aristas de arriba**, las cuatro que rodean el techo, cortadas en **escalera 1:1**: es el chaflán escalonado de [V2-02](/forja-art/voxel/v2-02/).
+- **Las esquinas verticales**, las cuatro que van del suelo al techo, cortadas igual pero vistas desde arriba.
+
+La clave está en el **ancho** de cada corte. En el modelo, cada arista tiene el suyo, de 0 a 3 vóxels:
+
+| Roca | Arriba izq. | Arriba der. | Arriba frente | Arriba detrás | Esquinas (frente-izq., frente-der., detrás-izq., detrás-der.) |
+|---|---|---|---|---|---|
+| Grande | 3 | 2 | 1 | 3 | 2, 1, 2, 3 |
+| Mediana | 1 | 2 | 2 | 1 | 1, 2, 1, 1 |
+| Pequeña | 1 | 1 | 0 | 1 | 1, 0, 1, 1 |
+
+Un ancho de 1 quita solo la fila de la arista; uno de 3, una escalera de tres peldaños. Un 0 deja la arista viva.
+
+<Why title="Por qué desiguales">
+Si cortas todas las aristas con el mismo ancho, el ojo reconoce enseguida **una caja con chaflán**: un objeto fabricado, como el carro de [V4-03](/forja-art/voxel/v4-03/). Las rocas se parten por donde quieren. Un corte ancho junto a uno estrecho y una arista sin cortar dicen «esto se rompió», no «esto se fresó».
+</Why>
+
+**El techo, irregular.** Encima de la grande hay un **saliente** de 3×4 en la capa 8, con una esquina quitada: 11 vóxels apoyados en la mitad izquierda del techo, sin colgar sobre ningún hueco. Así el techo no es un plano y la roca gana una capa de altura: la grande mide **9 de alto** con el saliente.
+
+Al cortar, el grupo pasa de 792 a **569 vóxels**: casi un tercio fuera.
+
+### 3. Ni caja ni bola
+
+Hay dos formas de equivocarse con una roca, y están en los dos extremos:
+
+- **La caja:** aristas vivas, techo plano. Parece un sillar de cantería o un bloque de construcción.
+- **La bola:** un elipsoide liso. Parece una patata, un huevo o una nube gris.
+
+Esta es la roca de [V3-01](/forja-art/voxel/v3-01/), que estaba pensada para practicar rampas, no forma:
+
+<VoxViewer model="roca" stage={1} title="La roca de V3-01: un elipsoide de 11×9×7 coloreado por altura" />
+
+Gírala junto a las facetas. La de V3-01 es **redonda por todas partes**: ninguna cara plana, ninguna arista. Se lee blanda. Las facetas tienen **caras planas y cambios de dirección bruscos**: se leen duras. Es [el lenguaje de formas (F09-02)](/forja-art/fundamentos/f09-02/), con la silueta de [F02-01](/forja-art/fundamentos/f02-01/): lo cuadrado y anguloso pesa y es duro; lo redondo es blando.
+
+<Why title="Formas orgánicas, pero duras">
+En [V2-03](/forja-art/voxel/v2-03/) aprendiste que lo orgánico no es una bola: son masas de tamaños distintos que se desplazan. Una roca es orgánica en **el reparto** (grupos, tamaños, cortes desiguales) pero dura en **la superficie** (caras planas). En Blender lo harías igual: un cubo con biseles y cortes, no una esfera con ruido.
+</Why>
+
+### 4. El color sale de la orientación
+
+Vuelve al primer visor, a **Color y detalle**. La roca de V3-01 se pintaba **por altura**: más clara cuanto más arriba, en bandas horizontales. Aquí el color depende de **hacia dónde mira cada cara**:
+
+| Cara | Color | Valor (0–255) |
+|---|---|---|
+| Arriba | `#b0abc4` | 175 |
+| Frente | `#8a8698` | 137 |
+| Lado derecho | `#76728a` | 118 |
+| Lado izquierdo y detrás | `#64607a` | 100 |
+| Grietas | `#45425a` | 70 |
+
+La luz viene de arriba y un poco de delante. Lo que mira al cielo recibe más; lo que mira al frente, algo menos; los lados y la espalda, lo mínimo.
+
+<Why title="Por qué por orientación y no por altura">
+Con color por altura, una cara de arriba y una cara lateral **a la misma altura** tienen el mismo color: la arista desaparece y la roca vuelve a parecer una bola. Con color por orientación, cada cambio de dirección es **un cambio de valor**: las facetas se leen aunque el visor no tenga sombras. Es la regla de la caja isométrica de [F08-01](/forja-art/fundamentos/f08-01/) y de `forja-vox render`: un tono por cada cara visible.
+</Why>
+
+<Warn title="Un vóxel, un color">
+En una arista, el mismo vóxel tiene la cara de arriba y la del frente al aire, pero **solo puede tener un color**. En el modelo gana **arriba**: por eso cada peldaño de un bisel tiene el borde claro. Al pintar, pinta primero los lados y el frente y **lo último, arriba**.
+</Warn>
+
+### 5. Detalle que asienta la roca
+
+El detalle no es decoración: cuenta **dónde está la roca** y cuánto tiempo lleva ahí.
+
+- **Musgo, solo arriba.** Dos verdes apagados, `#6f9a5c` y `#557a48`, a manchas en las caras de arriba de las tres rocas, de la capa 2 hacia arriba: 34 de los 95 vóxels que miran al cielo (28 en la grande, 4 en la mediana y 2 en la pequeña). Ni un vóxel en los lados ni en el frente. El musgo crece **donde llueve y se queda la humedad**, no en los lados.
+- **Grietas.** El gris más oscuro, `#45425a`, en **tramos cortos que bajan en diagonal**. En el modelo hay cuatro: dos en el frente de la grande (uno de 2 vóxels y otro de 3 que zigzaguea) y dos de 3 vóxels en zigzag en el lado derecho, uno en la grande y otro en la mediana, sobre el bisel de la esquina de delante. 11 vóxels en total, todos a la vista. Una línea corta se lee como grieta; un vóxel suelto, como una mancha.
+- **Piedrecitas.** Cinco vóxels sueltos de gris medio en el suelo, alrededor del grupo. Son trozos que se han caído.
+- **Hierba al pie.** Siete matas de 1 o 2 vóxels (`#2a8a5c` y `#3fbf7f`) pegadas a la base. Esconden la línea recta donde la roca toca el suelo.
+
+<Why title="Por qué al pie">
+Sin nada en la base, la roca parece **posada** encima del suelo, como si la hubieran dejado caer en un editor. La hierba y las piedras cruzan esa línea: la roca **está enterrada**. Es la misma idea que la sombra de contacto de [P7-05](/forja-art/pixel/p7-05/) y que las matas entre las piedras del [terreno (V6-02)](/forja-art/voxel/v6-02/).
+</Why>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="La paleta y las tres cajas">
+1. Crea un modelo nuevo de **20×10×10**. Guarda el archivo como `rocas_v1.vox`.
+2. En la **paleta** de la izquierda, prepara una fila de piedra de oscuro a claro: `#45425a`, `#64607a`, `#76728a`, `#8a8698` y `#b0abc4`. En otra fila, el musgo `#557a48` y `#6f9a5c` y la hierba `#2a8a5c` y `#3fbf7f`.
+3. Elige el gris medio `#8a8698`. En modo **Attach**, con el pincel **Box**, levanta la caja grande de **10×8×8**.
+4. Pegada a su derecha, la mediana de **6×5×5**, un poco hacia atrás.
+5. A la izquierda, con un vóxel de aire, la pequeña de **3×3×3**, hacia atrás.
+
+<Tip>
+Gira la cámara (botón derecho) y mira el grupo desde arriba. Si las tres cajas forman una fila recta, mueve la pequeña hacia atrás: un triángulo de masas se ve más natural que una fila.
+</Tip>
+</Step>
+
+<Step n={2} title="Biseles en las aristas de arriba">
+1. Pasa a modo **Erase** con el pincel **Voxel**.
+2. Empieza por la grande. En la arista de arriba a la izquierda, borra la fila de vóxels de la esquina a lo largo de toda la arista. Es un bisel de 1.
+3. Para un bisel de 3, borra después la fila de al lado en la capa de arriba y la de debajo en el lado, y repite una vez más: tres peldaños en escalera 1:1.
+4. Haz cada arista con su ancho. Usa la tabla del concepto o, mejor, **decide los tuyos**: al menos un corte ancho, uno estrecho y una arista sin cortar por roca.
+
+<Tip>
+Si tu versión deja usar **Box** en modo **Erase**, puedes borrar una fila entera de una vez arrastrando a lo largo de la arista. Es más rápido y la fila sale recta.
+</Tip>
+
+<Why>
+Los biseles en escalera 1:1 son la diagonal limpia del pixel art en 3D. Un peldaño de 2:1 en una arista también vale, pero si mezclas pendientes sin orden la roca se ve mordida.
+</Why>
+</Step>
+
+<Step n={3} title="Las esquinas verticales">
+1. Sigue en **Erase**. Mira la roca **desde arriba**.
+2. En cada esquina de la planta, borra en todas las capas la columna de la esquina (bisel de 1), o una escalera de 2 o 3 columnas.
+3. Otra vez, **anchos distintos**: en el modelo, la grande tiene 2, 1, 2 y 3.
+4. Haz lo mismo en la mediana y en la pequeña. En la pequeña, uno o dos vóxels por esquina bastan.
+
+<Warn>
+No cortes tanto que la planta se vuelva un círculo: eso es la roca-bola por otro camino. Si al mirar desde arriba ves un octógono regular, deja una esquina sin cortar.
+</Warn>
+</Step>
+
+<Step n={4} title="Un techo que no sea plano">
+1. Vuelve a **Attach** con el gris medio.
+2. Encima de la grande, añade un **saliente** de unos 3×4 y 1 de alto, desplazado hacia un lado. Quítale una esquina.
+3. Gira la cámara a ras de suelo: el perfil de arriba tiene que subir y bajar, no ser una línea recta.
+
+<Why>
+El techo es lo primero que se ve desde una cámara de juego, que casi siempre mira desde arriba. Un techo plano delata la caja aunque las aristas estén cortadas.
+</Why>
+</Step>
+
+<Step n={5} title="Pinta según la orientación">
+1. Pasa a modo **Paint**. Elige el pincel **Face**: pinta toda una cara conectada de una vez.
+2. Pinta **las caras de detrás y de la izquierda** con `#64607a`.
+3. Pinta **las caras de la derecha** con `#76728a`.
+4. Deja **el frente** en el gris medio `#8a8698`, o repásalo si lo has manchado.
+5. **Lo último, arriba:** pinta cada cara que mira al cielo con `#b0abc4`, peldaño a peldaño. Si **Face** se te queda corto en las escaleras, cambia a **Voxel**.
+6. Gira la roca: cada vez que una cara cambia de dirección, tiene que cambiar de valor.
+
+<Why>
+Pintar arriba al final hace que el claro gane en las aristas, como en el modelo. Cada peldaño de un bisel queda con su borde claro y la escalera se lee como forma, no como ruido.
+</Why>
+</Step>
+
+<Step n={6} title="Grietas, musgo, piedrecitas y hierba">
+1. Con **Paint** y **Voxel**, dibuja dos o tres **grietas** en `#45425a`: líneas cortas en el frente y en los lados, siguiendo una faceta.
+2. Pinta **musgo** a manchas en `#6f9a5c` y `#557a48`, **solo en las caras de arriba**. Deja piedra clara entre las manchas.
+3. En **Attach** con **Voxel**, pon **cuatro o cinco piedrecitas** de un vóxel en el suelo, alrededor del grupo.
+4. Pon **hierba al pie**: matas de 1 o 2 vóxels pegadas a la base, con `#2a8a5c` abajo y `#3fbf7f` en la punta. Unas cuantas, no un anillo.
+5. Pulsa **Render** y guarda la imagen.
+
+<Tip>
+Compara el render con el visor de la academia: en el render la luz ya marca las caras, pero el color por orientación sigue sumando. Si quitas el color del frente y los lados, la roca se aplana en el visor del editor y en Godot.
+</Tip>
+</Step>
+
+<Warn title="Verifica en tu versión">
+Los nombres y la posición de los modos (**Attach**, **Erase**, **Paint**) y de los pinceles (**Voxel**, **Face**, **Box**) pueden cambiar entre versiones de MagicaVoxel. Comprueba sobre todo: si **Box** funciona en modo **Erase** para borrar una fila entera; qué cubre exactamente **Face** en modo **Paint** (si pinta solo la cara plana conectada o todos los vóxels del mismo color que se tocan); y dónde está el botón para guardar la imagen del **Render**.
+</Warn>
+</Block>
+
+<Block kind="version">
+Ahora, **tu** grupo de rocas. Misma receta: tres tamaños, biseles desiguales, techo irregular, color por orientación y detalle al pie. Elige un reto:
+
+- **Rocas de río:** las mismas tres rocas junto a un agua como la de [V6-03](/forja-art/voxel/v6-03/). Biseles más anchos en la cara que mira al agua (el río las gasta) y musgo en el lado húmedo de arriba.
+- **Peñasco con lajas:** una roca grande partida en dos o tres lajas inclinadas, con una grieta que las separa, y la mediana y la pequeña al pie como trozos caídos.
+- **Kit de rocas:** cuatro rocas sueltas de tamaños distintos, cada una con sus cortes, para colocarlas en grupos en el [terreno (V6-02)](/forja-art/voxel/v6-02/) o en el [diorama (V7-01)](/forja-art/voxel/v7-01/). Gíralas 90° para esconder la repetición.
+
+Antes de darla por buena, mira tu grupo **a ras de suelo** y **desde arriba**: ¿hay tres tamaños claros? ¿Algún techo es plano? ¿Cada cara tiene el valor de su orientación?
+</Block>
+
+<Block kind="errores">
+<Mistake title="La roca-caja" wrongLabel="Aristas vivas, techo plano" rightLabel="Biseles desiguales y saliente">
+  <p slot="wrong">Una caja gris con las aristas enteras y el techo plano. Aunque la pintes bien, se lee como un sillar de cantería o un bloque de construcción. O peor: todas las aristas cortadas con el mismo bisel de 1, y parece una caja de madera con los cantos lijados.</p>
+  <p slot="right">Las mismas cajas con biseles de 0 a 3, distintos en cada arista, y un saliente que rompe el techo. Las caras siguen siendo planas, pero los cortes no siguen ninguna regla de fábrica.</p>
+
+**Corrección:** en cada roca, al menos un corte ancho, uno estrecho y una arista viva. Y nunca un techo plano entero.
+</Mistake>
+
+<Mistake title="La roca-bola" wrongLabel="Elipsoide liso" rightLabel="Caras planas">
+  <p slot="wrong">Una esfera o un elipsoide, como la roca de V3-01. No tiene ni una cara plana ni una arista: se lee blanda, como una patata o una nube. Si además la pintas por altura, no hay ningún cambio de valor brusco y el volumen solo existe en el render.</p>
+  <p slot="right">Una caja recortada: caras planas que cambian de dirección de golpe. Cada dirección tiene su color, y cada arista es un cambio de valor que el ojo lee como piedra dura.</p>
+
+**Corrección:** parte siempre de una caja y quita, no de una esfera y añade ruido. Y pinta por orientación, no por altura.
+</Mistake>
+
+<Warn title="Error típico: todas del mismo tamaño">
+Tres rocas iguales, o casi, a la misma distancia. Es el ritmo monótono de F07-02: parece un catálogo de rocas, no un sitio. **Corrección:** grande, mediana y pequeña con saltos claros (en el modelo, 8, 5 y 3 de alto), dos juntas y una separada.
+</Warn>
+
+<Warn title="Error típico: musgo por todas partes">
+Musgo en los lados, en el frente y hasta en la base, en manchas repartidas por igual. La roca parece enferma o pintada con una textura de ruido, y el musgo deja de contar nada. **Corrección:** musgo solo en las caras de arriba, donde se queda el agua de la lluvia, y con piedra a la vista entre las manchas.
+</Warn>
+
+<Warn title="Error típico: la roca posada">
+Las rocas acaban en una línea recta sobre el suelo, sin nada alrededor. Parecen dejadas caer encima del terreno. **Corrección:** piedrecitas sueltas y matas de hierba pegadas a la base, unas pocas, para que la roca parezca enterrada.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+<Checklist items={[
+  "Mi grupo tiene tres rocas de tamaños claramente distintos: dos juntas y una separada",
+  "Cada roca tiene biseles de anchos distintos, con al menos un corte ancho, uno estrecho y una arista viva",
+  "Ninguna roca tiene el techo plano entero",
+  "Las caras son planas: no hay ninguna roca redonda como una bola",
+  "El color depende de la orientación: arriba claro, frente medio y lados y espalda más oscuros",
+  "El musgo está solo en las caras de arriba, con piedra a la vista entre las manchas",
+  "Hay piedrecitas y hierba al pie, y la roca no parece posada",
+  "He guardado rocas_v1.vox y un render en mi portfolio",
+]} />
+
+<Quiz q="¿Por qué los biseles de la roca tienen anchos distintos en cada arista?" options={["Para gastar menos vóxels", "Porque con el mismo ancho en todas parece una caja con chaflán fabricada, no una piedra partida", "Porque MagicaVoxel no deja cortar dos aristas igual"]} answer={1}>
+Un chaflán igual en todas las aristas es una señal de objeto fabricado. Las rocas se rompen por donde quieren: un corte ancho, uno estrecho y una arista viva se leen como piedra.
+</Quiz>
+
+<Quiz q="Una cara de arriba y una cara lateral están a la misma altura. Con color por altura, ¿qué pasa?" options={["Tienen el mismo color y la arista entre ellas desaparece", "La lateral queda más clara", "Nada: el color por altura marca las aristas"]} answer={0}>
+El color por altura pinta bandas horizontales: dos caras a la misma altura reciben el mismo tono. Con color por orientación, cada cambio de dirección es un cambio de valor y la arista se ve.
+</Quiz>
+
+<Quiz q="¿Dónde pones el musgo?" options={["Repartido por todas las caras para que se vea vieja", "Solo en la base, donde toca el suelo", "En las caras de arriba, donde se queda el agua de la lluvia"]} answer={2}>
+El musgo crece donde hay humedad que se queda. En una roca al aire, eso es arriba. Repartido por todas partes deja de contar nada y parece una textura de ruido.
+</Quiz>
+</Block>

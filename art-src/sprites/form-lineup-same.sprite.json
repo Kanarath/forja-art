@@ -1,0 +1,52 @@
+{
+  "name": "form-lineup-same",
+  "description": "Error: las tres criaturas con el mismo cuerpo redondo; solo cambian el color y la cara (la azul con cejas rectas, la morada con ojos rasgados y colmillos). En silueta son tres círculos iguales, y la «peligrosa» sigue pareciendo un peluche.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "personaje",
+    "forma",
+    "error"
+  ],
+  "palette": {
+    "a": "#1b1030",
+    "b": "#ffc2a8",
+    "c": "#f29b7a",
+    "d": "#8fa8d8",
+    "e": "#5c7ab8",
+    "f": "#b87ad8",
+    "g": "#7a3a9a",
+    "h": "#c96a52",
+    "i": "#3a5288",
+    "j": "#4e2066",
+    "k": "#ffffff",
+    "l": "#ffe58a",
+    "m": "#e8606a"
+  },
+  "rows": [
+    "................................................................................",
+    "................................................................................",
+    "................................................................................",
+    "........aaaaaaaa....................aaaaaaaa....................aaaaaaaa........",
+    "......aabbccccccaa................aaddeeeeeeaa................aaffggggggaa......",
+    ".....abbcccccccccca..............addeeeeeeeeeea..............affgggggggggga.....",
+    "....abbcccccccccccca............addeeeeeeeeeeeea............affgggggggggggga....",
+    "...abbcccccccccccccca..........addeeeeeeeeeeeeeea..........affgggggggggggggga...",
+    "...abccccccccccccccca..........adeaaaaeeeeaaaaeea..........afggggggggggggggga...",
+    "..abbcccccccccccccccha........addeeeeeeeeeeeeeeeia........affgggggggggggggggja..",
+    "..abccckaccccckaccccha........adeeekaeeeeekaeeeeia........afggggaggggggaggggja..",
+    "..abcccaacccccaaccccha........adeeeaaeeeeeaaeeeeia........afgggglalgglalggggja..",
+    "..abcccaacccccaaccccha........adeeeeeeeeeeeeeeeeia........afggggggggggggggggja..",
+    "..abccccccccccccccccha........adeeeeeeeeeeeeeeeeia........afggggggggggggggggja..",
+    "..abcmmccccccccccmmcha........adeeeeeeeeeeeeeeeeia........afggggggggggggggggja..",
+    "..abccccccaccaccccchha........adeeeeeeeeeeeeeeeiia........afgggggggggggggggjja..",
+    "..abcccccccaacccccchha........adeeeeeaaaaaaeeeeiia........afggggaaaaaaaagggjja..",
+    "...acccccccccccccchha..........aeeeeeeeeeeeeeeiia..........agggggkggggkgggjja...",
+    "...ahcccccccccccchhha..........aieeeeeeeeeeeeiiia..........ajggggggggggggjjja...",
+    "....ahhcccccccchhhha............aiieeeeeeeeiiiia............ajjggggggggjjjja....",
+    ".....ahhhhhhhhhhhha..............aiiiiiiiiiiiia..............ajjjjjjjjjjjja.....",
+    "......aahhhhhhhhaa................aaiiiiiiiiaa................aajjjjjjjjaa......",
+    "........aaaaaaaa....................aaaaaaaa....................aaaaaaaa........",
+    "................................................................................"
+  ]
+}

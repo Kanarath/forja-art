@@ -1,0 +1,269 @@
+---
+id: f09-02
+discipline: fundamentos
+level: 9
+order: 2
+title: "Lenguaje de formas: círculo, cuadrado, triángulo"
+summary: "Círculo, cuadrado y triángulo dicen amable, fuerte o peligroso antes que la cara o el color. Diseña con una forma que manda y compruébalo en silueta, en pixel y en voxel."
+duration: 45
+status: borrador
+prerequisites: [f09-01, f02-01]
+fundamentals: [f09, f02]
+objectives:
+  - "Asociar cada forma base con lo que comunica: círculo amable, cuadrado fuerte, triángulo peligroso"
+  - "Diseñar un personaje con una forma dominante y formas secundarias que no la contradicen"
+  - "Comprobar en silueta que la forma dice lo mismo que la cara y el color"
+  - "Llevar una forma dominante a una criatura voxel y revisarla desde varias cámaras"
+tools: [aseprite, magicavoxel]
+piece:
+  name: "Tres criaturas de 24×24 (círculo, cuadrado y triángulo) en una fila de 80×24, y una criatura voxel con una forma dominante"
+  canvas: "80x24"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [formas]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+En [F02-01](/forja-art/fundamentos/f02-01/) viste que tres siluetas simples dicen «amable», «estable» y «peligroso». En [F09-01](/forja-art/fundamentos/f09-01/) diseñaste un personaje por capas. Hoy juntas las dos ideas: **tres personajes que se distinguen por su forma base**, antes de mirarles la cara.
+
+Tu pieza:
+
+- en Aseprite, una fila de **80×24** con tres criaturas de 24×24: una redonda, una cuadrada y una en punta;
+- en MagicaVoxel, **una criatura** con una forma que manda: redonda, cúbica o en punta.
+
+<Sprite name="form-lineup" scale={5} caption="form-lineup (80×24): círculo, cuadrado y triángulo. Antes de leer las caras ya sabes quién es quién" />
+
+Tápales la cara con el dedo. ¿Sigues sabiendo cuál te abrazaría, cuál aguantaría un golpe y cuál te lo daría?
+</Block>
+
+<Block kind="concepto">
+### Tres formas, tres mensajes
+
+<Sprite name="form-round" scale={8} caption="form-round: círculo. Amable, blando, seguro" />
+<Sprite name="form-square" scale={8} caption="form-square: cuadrado. Fuerte, estable, fiable" />
+<Sprite name="form-triangle" scale={8} caption="form-triangle: triángulo. Peligro, dinamismo" />
+
+- **Círculo**: no tiene esquinas ni puntas. No puede hacerte daño. Se lee **amable, blando, joven**. Es el slime, la mascota, el aldeano bonachón.
+- **Cuadrado**: lados rectos y una base ancha. No se cae. Se lee **fuerte, estable, fiable**, y también pesado y terco. Es el guardia, el herrero, el gólem.
+- **Triángulo**: puntas y diagonales. Corta, pincha, se mueve. Se lee **peligroso, rápido, astuto**. Es el murciélago, el villano, la espina.
+
+En [P5-03](/forja-art/pixel/p5-03/) ya lo aplicaste a criaturas: redondo para lo amable, picos para la amenaza. Hoy das un paso más: el cuadrado, la mezcla de formas y por qué la cara no basta.
+
+<Why title="Por qué la forma se lee primero">
+De lejos, o en un juego en movimiento, el ojo no tiene tiempo para la cara: solo capta la **masa**. Es la segunda capa de lectura de [F09-01](/forja-art/fundamentos/f09-01/), justo después de la silueta. Y el cerebro asocia formas con experiencias: lo redondo es blando al tacto (un cojín, una fruta); lo cuadrado aguanta peso (un bloque, una pared); lo puntiagudo duele (un diente, una espina).
+</Why>
+
+### Mira cómo están hechas
+
+Las tres criaturas apoyan en la misma fila (la 22) y comparten contorno oscuro y luz arriba a la izquierda. Solo cambia la forma, y todo lo demás la acompaña.
+
+**El círculo.** Un disco de 20×20. Sus filas miden 8, 12, 14, 16, 18, 18 y luego 20 durante ocho filas, y bajan igual: tramos que crecen y decrecen con orden, como en `circle-clean`. Ojos **grandes** (2×3 px, con un píxel blanco de brillo) y separados, una sonrisa de 4 px y dos mejillas rosas de 2 px. Colores cálidos y claros.
+
+**El cuadrado.** Un bloque de 20×20 que ocupa **toda** su caja: 400 píxeles de 400. Apoya entero en el suelo. Cejas rectas de 5 px, ojos **pequeños** de 2×2 y una boca recta de 6 px. Azules de valor medio.
+
+**El triángulo.** Una punta de 2 px que, en sus ocho primeras filas, se ensancha 1 px por lado cada 2 filas: una pendiente 2:1 limpia. A cada lado salen **dos púas en cuña** que suben en diagonal hacia fuera, 1 px arriba por cada píxel hacia fuera (45°): gruesas donde nacen del cuerpo y de 1 px en la punta. Las de arriba acaban en la fila 7; las de abajo, en la fila 15, tocando los bordes del lienzo. Ojos rasgados (un píxel oscuro entre dos amarillos y, encima, otro oscuro que baja hacia el centro, como un ceño) y una boca de 8 px con dos colmillos blancos. Morados oscuros.
+
+<Why title="Por qué el resto acompaña">
+Fíjate en el valor (míralo en grises más abajo): el círculo es el más claro, el cuadrado medio y el triángulo el más oscuro. Los ojos repiten la forma: grandes y blandos, pequeños y cuadrados, rasgados en diagonal. Cara y color **refuerzan** lo que la forma ya dijo. No lo inventan.
+</Why>
+
+<Sprite name="form-lineup" scale={4} view="gray" caption="En grises: claro, medio y oscuro. El valor sigue a la forma" />
+
+### Una forma manda; las otras acompañan
+
+Casi ningún personaje es una forma pura. Lo normal es **mezclar**, pero con una **dominante**:
+
+- **Una forma manda**: la masa más grande, la que ves de lejos.
+- **Otra acompaña**: más pequeña, matiza el carácter.
+- **Un acento**, si hace falta: un detalle que da la sorpresa.
+
+Ya lo has visto en el curso:
+
+- El triángulo de hoy no es solo puntas: abajo tiene **una base plana y ancha** (las tres últimas filas miden 22, 20 y 22). Manda el triángulo, pero la base le da aplomo: no es un pincho que se cae, es algo que **se planta** y amenaza.
+- El héroe chibi es una **cabeza redonda** sobre un cuerpo de **bloques**: amable y fiable a la vez.
+- El gólem de [V5-05](/forja-art/voxel/v5-05/) será todo **cajas**: piernas, torso, hombros y puños. La cabeza es pequeña. Manda el cuadrado y por eso pesa.
+
+<Why title="Por qué una dominante">
+Si mezclas las tres formas a partes iguales, cada una dice una cosa y el personaje no dice ninguna. Es como el ritmo de [F07-02](/forja-art/fundamentos/f07-02/): uno manda, otro acompaña, otro rellena. Sin jerarquía, ruido.
+</Why>
+
+### La cara no salva una forma que dice lo contrario
+
+<Sprite name="form-lineup-same" scale={5} caption="form-lineup-same: el mismo cuerpo redondo tres veces. Solo cambian el color y la cara" />
+
+Aquí la criatura azul tiene las cejas rectas y la morada tiene ojos rasgados y colmillos. Pero sus cuerpos son **el mismo círculo**. La «peligrosa» parece un peluche enfadado. Y en silueta:
+
+<Sprite name="form-lineup-same" scale={4} view="silhouette" caption="En negro: tres círculos idénticos, 332 píxeles cada uno" />
+<Sprite name="form-lineup" scale={4} view="silhouette" caption="La fila buena en negro: tres personajes distintos" />
+
+En la fila buena, las tres siluetas no se parecen en nada: el círculo llena 332 píxeles de su caja de 20×20, el cuadrado los 400 y el triángulo solo 286 de una caja de 24×21 (las púas llegan a los bordes, pero llena poco más de la mitad de su caja). Son tres masas distintas antes de cualquier detalle.
+
+<Why title="Por qué no basta con la cara">
+La cara es la **última** capa de lectura. Si la forma dice «blando» y la cara dice «peligro», el jugador recibe un mensaje confuso: un villano que no da miedo, o un guardia que no inspira confianza. Puedes usar ese choque a propósito (un monstruo redondo y adorable que resulta traicionero), pero entonces es una sorpresa calculada, no un descuido.
+</Why>
+
+### En voxel: la forma también manda
+
+En voxel todo son cubos, así que lo **cuadrado** sale solo. Lo redondo y lo puntiagudo hay que **construirlo** con escalones.
+
+<VoxViewer model="slime-voxel" stage={0} title="Redondo: la cúpula del slime, baja y ancha. Sin ojos ya se lee blanda" />
+
+<VoxViewer model="golem" stage={0} title="Cuadrado: el gólem por masas. Once cajas en un gris; ya se lee pesado" />
+
+<VoxViewer model="murcielago" stage={1} title="Triángulo: las alas del murciélago terminan en punta y suben hasta la muñeca" />
+
+Gira los tres con el ratón. La forma dominante se mantiene desde casi cualquier cámara: la cúpula sigue siendo blanda, las cajas siguen pesando y las alas siguen siendo puntas. Desde arriba, el murciélago es una línea de alas: su amenaza depende de la cámara (lo verás en [V5-03](/forja-art/voxel/v5-03/)).
+</Block>
+
+<Block kind="guiada">
+### Parte 1 · Aseprite
+
+<Step n={1} title="Lienzo y ranuras">
+1. <Keys k="Ctrl+N" />: lienzo de **80×24**, fondo transparente.
+2. *View → Grid* y amplía con la rueda.
+3. Reserva tres ranuras de 24 columnas: la primera empieza en la columna 0, la segunda en la 28 y la tercera en la 56. Son las de `form-lineup`.
+4. El suelo de las tres es la **fila 22** (la penúltima). Todas apoyan ahí.
+
+<Tip>
+Un suelo común es lo que permite comparar: si una criatura flota, parece más ligera de lo que es.
+</Tip>
+</Step>
+
+<Step n={2} title="Tres siluetas en negro">
+Antes de un solo color, solo masas negras. Lápiz (<Keys k="B" />) con **Pixel-perfect** y relleno con <Keys k="G" />.
+
+1. **Círculo**: unos 20 de ancho y 20 de alto. Traza el contorno con tramos ordenados: 8, 12, 14, 16, 18, 18 y ocho filas de 20, y luego al revés.
+2. **Cuadrado**: con <Keys k="M" /> selecciona un rectángulo de 20×20 y rellénalo con <Keys k="G" />. Sin redondear nada.
+3. **Triángulo**: una punta de 2 px arriba y cada lado 1 px más ancho cada 2 filas. Añade una o dos púas por lado que suban en diagonal hacia fuera: gruesas donde salen del cuerpo, de 1 px en la punta. Dale una base ancha.
+
+<Why>
+En negro no hay cara ni color que te engañen. Si las tres siluetas no dicen ya «amable», «fuerte» y «peligroso», el resto no lo arreglará.
+</Why>
+</Step>
+
+<Step n={3} title="Prueba de silueta a 1×">
+1. Guarda (<Keys k="Ctrl+S" />) y exporta a 1× con *File → Export → Export As*.
+2. Sube el PNG al laboratorio y míralo **en negro y a 1×**. Compáralo con las tres criaturas de la lección.
+
+<SilhouetteLab sprites="form-round,form-square,form-triangle" title="Tus tres siluetas frente a círculo, cuadrado y triángulo" />
+
+Pregúntate: ¿alguna de mis tres se parece a otra? ¿Mi triángulo tiene puntas que se ven a 1×, o es una gota?
+
+<Warn>
+Si tu triángulo tiene la punta de 1 px, a 1× desaparece y se lee como una gota redonda. Dale al menos 2 px de punta, como `form-triangle`.
+</Warn>
+</Step>
+
+<Step n={4} title="Color y valor que siguen a la forma">
+1. Rellena cada silueta con **tres tonos** (luz, medio y sombra) y deja un contorno oscuro de 1 px.
+2. Luz arriba a la izquierda y sombra abajo a la derecha, en las tres por igual.
+3. Elige el valor por carácter: el redondo **claro y cálido**, el cuadrado **medio**, el triángulo **oscuro**.
+4. Usa el cuentagotas (<Keys k="I" />) para repetir colores exactos.
+
+<Tip>
+No es una regla fija: un villano puede ser claro. Pero si es tu primera vez, que el valor apoye a la forma y verás la diferencia enseguida.
+</Tip>
+</Step>
+
+<Step n={5} title="La cara, lo último">
+1. **Redondo**: ojos grandes (2×3) con un píxel de brillo, separados, y una sonrisa pequeña.
+2. **Cuadrado**: cejas rectas, ojos de 2×2, boca recta. Todo horizontal.
+3. **Triángulo**: ojos en diagonal hacia el centro (el ceño) y colmillos.
+4. Exporta con *File → Export → Export As* y **Resize** 400 % para tu portfolio.
+
+<Why>
+Cada cara repite la geometría de su cuerpo: curvas, horizontales o diagonales. Así la cara confirma la forma en vez de discutirle.
+</Why>
+</Step>
+
+### Parte 2 · MagicaVoxel
+
+<Step n={6} title="Elige la forma que manda">
+Parte del chibi que hiciste en [F09-01](/forja-art/fundamentos/f09-01/) (el mismo que posarás en [V5-01](/forja-art/voxel/v5-01/)) o de una criatura nueva. Escribe una frase: «manda el círculo, acompaña el cuadrado» (o la que elijas).
+
+1. Modo *Attach* y pincel *Box*: bloquea la masa principal **en un solo color**.
+2. **Redondo**: apila capas que se estrechan arriba y abajo (como la cúpula del slime). Con *Erase* y pincel *Voxel*, quita las esquinas de cada capa.
+3. **Cuadrado**: cajas anchas y una base que apoya entera. No quites esquinas.
+4. **Triángulo**: capas que se estrechan hacia una punta, o piezas finas que acaban en 1 o 2 vóxels (orejas, cuernos, púas, alas).
+5. Activa *Mirror* en X si la criatura es simétrica.
+
+<Why>
+Primero la masa en un color, como en pixel primero la silueta en negro. Si el bloque gris no dice el carácter, los ojos tampoco lo harán.
+</Why>
+</Step>
+
+<Step n={7} title="Gira, pinta y renderiza">
+1. Gira con el **botón derecho**: de frente, de lado y en diagonal desde arriba. ¿La forma dominante se mantiene?
+2. Modo *Paint*: color con el valor que acompaña a la forma (claro para lo redondo, oscuro para lo puntiagudo).
+3. Modo *Attach*: la cara, con la misma geometría que el cuerpo.
+4. Pulsa *Render* y guarda una imagen desde la cámara de tu juego.
+
+<Warn title="Verifica en tu versión">
+Los nombres de modos, pinceles, el botón *Mirror* y el panel de render de MagicaVoxel pueden variar entre versiones. En Aseprite, que el cubo de pintura respete la selección rectangular también depende de la versión: si no lo hace, rellena el cuadrado con el lápiz.
+</Warn>
+</Step>
+</Block>
+
+<Block kind="version">
+Ahora, a tu manera. Elige un reto:
+
+- **La misma criatura, tres veces**: un mismo bicho (una rana, un cuervo, un champiñón) en versión redonda, cuadrada y triangular. ¿Cuál es la mascota, cuál el guardián y cuál el enemigo?
+- **El traidor**: un personaje redondo y adorable que en realidad es el villano. Deja que la forma diga «amable» y esconde **un solo acento** triangular (un colmillo, una sombra en punta en los ojos). Decide tú cuándo se nota.
+- **Un trío de aldeanos**: como los NPCs de [P5-08](/forja-art/pixel/p5-08/), pero cada uno con una forma dominante distinta a partir del mismo personaje base.
+
+**Prueba de la dominante.** En una frase por personaje: «manda el ___, acompaña el ___». Si no sabes cuál manda, el jugador tampoco lo sabrá.
+</Block>
+
+<Block kind="errores">
+<Mistake title="Confiar en la cara y el color" wrongLabel="Mismo cuerpo" rightLabel="Tres formas">
+  <Sprite slot="wrong" name="form-lineup-same" scale={4} />
+  <Sprite slot="right" name="form-lineup" scale={4} />
+
+Tres cuerpos redondos con cejas rectas, ojos rasgados y colmillos pintados encima. El color y la cara cambian, pero la forma dice «amable» las tres veces. **Corrección**: cambia primero la masa (el bloque, la punta) y deja la cara para el final.
+</Mistake>
+
+<Mistake title="Juzgar la forma en color" wrongLabel="En color parece que funciona" rightLabel="En negro, la verdad">
+  <Sprite slot="wrong" name="form-lineup-same" scale={4} />
+  <Sprite slot="right" name="form-lineup-same" scale={4} view="silhouette" />
+
+En color, la azul y la morada parecen distintas de la naranja. En negro son **tres círculos idénticos**, píxel a píxel. **Corrección**: revisa siempre en silueta, y a 1×, antes de dar el diseño por bueno.
+</Mistake>
+
+<Warn title="Error: las tres formas a partes iguales">
+Una cabeza triangular, un cuerpo redondo y unas piernas cuadradas del mismo tamaño. Cada parte dice algo distinto y el personaje no dice nada. **Corrección**: elige una dominante, agrándala, y reduce las otras a acompañamiento o acento.
+</Warn>
+
+<Warn title="Error: en voxel, todo acaba siendo cubo">
+Si bloqueas con cajas y no quitas esquinas, tu criatura «redonda» se lee cuadrada, y tu «triángulo» es una escalera gorda. **Corrección**: para lo redondo, capas que se estrechan y esquinas borradas; para lo puntiagudo, que la punta acabe de verdad en 1 o 2 vóxels.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+Sube tu fila **a 1×** y revísala en silueta y en grises.
+
+<Inspector upload title="Comprueba tus tres criaturas" />
+
+<Checklist items={[
+  "Mis tres criaturas se distinguen en negro y a 1×, sin mirar la cara",
+  "Cada una tiene una forma que manda, y sé decir cuál",
+  "Las tres apoyan en el mismo suelo y comparten luz y contorno",
+  "El valor y los colores acompañan a la forma, no la contradicen",
+  "La cara repite la geometría del cuerpo: curvas, rectas o diagonales",
+  "El triángulo tiene puntas que se ven a 1×",
+  "Mi criatura voxel conserva su forma dominante de frente, de lado y desde arriba",
+]} />
+
+<Quiz q="Pintas colmillos y ojos rasgados a una criatura redonda. ¿Qué lee el jugador?" options={["Peligro, porque la cara lo dice", "Algo confuso: la forma dice «amable» y la cara, «peligro»", "Nada: la cara no se ve"]} answer={1}>
+La forma se lee antes que la cara. Si se contradicen, el mensaje se mezcla: es lo que pasa en form-lineup-same. Si quieres peligro, empieza por la masa.
+</Quiz>
+
+<Quiz q="¿Qué forma conviene que domine en un guardián pesado como el gólem?" options={["El círculo", "El cuadrado", "El triángulo"]} answer={1}>
+Lados rectos y base ancha: no se cae, aguanta. El gólem de V5-05 es todo cajas con la cabeza pequeña.
+</Quiz>
+
+<Quiz q="¿Por qué en voxel lo redondo cuesta más que lo cuadrado?" options={["Porque MagicaVoxel no tiene círculos", "Porque todo son cubos: la curva hay que construirla con capas que se estrechan", "Porque lo redondo usa más colores"]} answer={1}>
+Con cubos, lo cuadrado sale solo. La curva (y la punta) son escalones que tienes que decidir tú, como la cúpula del slime.
+</Quiz>
+</Block>

@@ -1,0 +1,273 @@
+---
+id: p4-06
+discipline: pixel
+level: 4
+order: 6
+title: "Tela y estandartes: pliegues que son rampas"
+summary: "Un pliegue es una rampa que va de la luz a la sombra y vuelve. Nace junto a la barra, se abre al caer, ondula el bajo y sombrea el emblema. Después, la onda recorre la tela en 6 frames."
+duration: 45
+status: borrador
+objectives:
+  - "Leer un pliegue como una rampa que va de la luz a la sombra y vuelve"
+  - "Hacer nacer los pliegues junto a la barra y abrirlos al caer"
+  - "Ondular el bajo de la tela con los pliegues"
+  - "Sombrear un emblema pintado en la tela con los mismos pliegues"
+  - "Animar un bucle al viento de 6 frames desplazando los pliegues 1 px por frame"
+prerequisites: [p4-01, p3-02]
+fundamentals: [f01]
+tools: [aseprite]
+piece:
+  name: "Un estandarte de 24×34 colgado de su barra, con pliegues, emblema y un bucle al viento de 6 frames"
+  canvas: "24x34"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [estandarte]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Vas a forjar **un estandarte**: una tela roja colgada de una barra de madera, con tres pliegues, un rombo dorado pintado y un bucle al viento.
+
+<Sprite name="banner-folds" scale={10} caption="banner-folds · 24×34. Una barra de madera y una tela de 18 px de ancho con tres pliegues. Cada pliegue pasa por cuatro rojos y vuelve. El bajo sube y baja con ellos y acaba en cola de golondrina" />
+
+Dale a *Reproducir*. Son 6 frames: los pliegues se desplazan 1 px a la derecha en cada uno y la onda recorre la tela.
+
+<Animator sprites={["banner-wave-1", "banner-wave-2", "banner-wave-3", "banner-wave-4", "banner-wave-5", "banner-wave-6"]} durations={[120, 120, 120, 120, 120, 120]} />
+</Block>
+
+<Block kind="concepto">
+### La tela es un material (P4-01)
+
+En [P4-01](/forja-art/pixel/p4-01/) viste que el material es **cómo responde a la luz**. La tela es mate: no tiene brillo especular, no tiene blanco. Lo que la delata es otra cosa: **la forma que hace al colgar**. Una tela nunca es un plano. Se dobla, y cada doblez es una superficie curva que primero mira a la luz y luego se aparta de ella.
+
+<Sprite name="banner-flat" scale={8} caption="banner-flat · La misma barra, la misma silueta y el mismo rombo, con un rojo y un dorado. Parece una lámina de plástico" />
+<Sprite name="banner-folds" scale={8} caption="banner-folds · Cuatro rojos en rampa: la tela pesa y se dobla" />
+
+### Un pliegue es una rampa que va y vuelve
+
+Mira una fila de la mitad de `banner-folds` (la 14), de izquierda a derecha. Cada pliegue mide **6 px** y pasa por los cuatro rojos:
+
+| Píxel del pliegue | 1 | 2 | 3 | 4 | 5 | 6 |
+| --- | --- | --- | --- | --- | --- | --- |
+| Color | `#f0707a` | `#d8343f` | `#9c2234` | `#6a1428` | `#9c2234` | `#d8343f` |
+| Papel | cresta (luz) | medio | sombra | valle | sombra | medio |
+
+Luz, medio, sombra, el oscuro del fondo del valle, y vuelta a subir. Es una rampa de [P3-02](/forja-art/pixel/p3-02/) recorrida **de ida y de vuelta**. Tres pliegues seguidos: tres veces la misma rampa en 18 px de ancho. (Más arriba los pliegues son algo más estrechos y más abajo, algo más anchos: lo verás enseguida.)
+
+<Why title="Por qué va y vuelve">
+La cresta del pliegue sale hacia ti y recibe la luz de lleno. A los lados, la tela gira y se aparta de la luz: el valor baja. En el fondo del valle, la tela mira hacia dentro y apenas le llega luz. Al otro lado, la tela vuelve a girar hacia la luz. Es lo mismo que la bola de [P3-01](/forja-art/pixel/p3-01/), pero estirado en un cilindro tras otro.
+</Why>
+
+En valor, los cuatro rojos dan aproximadamente **40, 61, 88 y 140** (luminancia de 0 a 255). Cuatro escalones claros, sin dos iguales.
+
+<Sprite name="banner-folds" scale={8} view="gray" caption="banner-folds en grises: tres columnas claras (las crestas), tres oscuras (los valles) y los pasos intermedios. Se lee el relieve sin el color" />
+
+<Why title="Si vienes de Blender">
+Imagina un plano con un modificador de onda y un shader *toon* de cuatro bandas. La normal de cada punto decide cuánta luz recibe; las cuatro bandas son ese valor cortado en cuatro escalones. En pixel art no hay normales: los escalones los pones tú, columna a columna.
+</Why>
+
+<Tip title="La luz de este estandarte">
+La rampa es **simétrica**: la luz viene de delante. Por eso las dos laderas de cada pliegue son iguales. Con la luz de arriba a la izquierda de [P3-01](/forja-art/pixel/p3-01/), la ladera que mira a la izquierda sería más clara y la de la derecha más oscura. Lo pruebas en la versión.
+</Tip>
+
+### Dónde nace el pliegue
+
+Una tela colgada no tiene pliegues **en la barra**: allí está sujeta. El pliegue nace justo debajo y se marca al caer. Míralo fila a fila en `banner-folds`:
+
+- **Filas 3 y 4** (pegadas a la barra): todo el rojo medio. Aún no hay pliegue.
+- **Fila 5**: aparecen 2 píxeles sueltos de sombra, donde empiezan los valles.
+- **Filas 6 a 8**: la sombra crece a 1–2 px por valle, y en la fila 8 aparece la primera luz de cresta.
+- **Fila 9**: aparece el oscuro del valle. Desde aquí, la rampa completa.
+
+En 6 filas, el pliegue pasa de nada a toda su profundidad.
+
+### El pliegue se abre al caer
+
+La barra sujeta la tela en un ancho fijo; por debajo, la tela cae libre y los pliegues se abren como un abanico suave. En `banner-folds` se nota en dos cosas:
+
+- **Los pliegues de los lados se separan del centro.** El valle de la derecha está en la columna 18 en la mitad de la tela y se va a las columnas 18–19 abajo; el de la izquierda pasa de la 5 a la 5–6. El del centro se queda en su sitio (la columna 12).
+- **Los valles se ensanchan.** El oscuro del valle central mide 1 px hasta la fila 19, 2 px en las filas 20 y 21 y 3 px en las 22 y 23. La tela, abajo, pesa más y se aleja más de la luz.
+
+Es un cambio pequeño: menos de un píxel y medio de arriba abajo. Pero basta para que las líneas de los pliegues no sean paralelas, y eso es lo que separa una tela de unas rayas.
+
+<Sprite name="banner-stripes" scale={8} caption="banner-stripes (ERROR) · Las rayas empiezan en la fila 3, pegadas a la barra, y no cambian hasta el bajo. Se leen como una tela estampada a rayas, no como una tela que se dobla" />
+
+### El bajo sigue los pliegues
+
+El borde de abajo es la sección de la tela: dibuja el perfil de los pliegues. En `banner-folds`, a los lados de la cola de golondrina:
+
+- bajo la cresta de cada lado (las columnas 3 y 16), la tela llega **a la fila 29**;
+- bajo el valle de cada lado, se queda **en la 27**.
+
+Junto a la cola, el recorte manda y el bajo sube hacia el centro.
+
+Dos filas de diferencia. Parece poco, pero es lo que dice «esto tiene volumen» en el contorno, que es lo que más se lee a 1×. En `banner-flat` y `banner-stripes`, el bajo es recto: los lados de la cola acaban en la misma fila, la 28.
+
+### Lo pintado en la tela se dobla con ella
+
+El rombo dorado mide **10 px de ancho y 9 de alto** (filas 10 a 18). No es una pieza pegada encima: está **pintado** en la tela. Así que se sombrea con los mismos pliegues. Cada rojo tiene su dorado:
+
+| Rojo de la tela | `#f0707a` | `#d8343f` | `#9c2234` | `#6a1428` |
+| --- | --- | --- | --- | --- |
+| Dorado del rombo | `#ffe58a` | `#f2c14e` | `#c98a2a` | `#8a5a1a` |
+
+En la fila 14, el rombo tiene dos columnas del dorado más claro (sobre las crestas) y una del más oscuro (en el valle del centro).
+
+<Why title="El emblema siempre por encima del rojo">
+En valor, los dorados dan aproximadamente **96, 144, 195 y 228**. Cada dorado es más claro que el rojo de su misma columna: incluso el dorado del valle (96) es más claro que el rojo medio (88). Por eso el rombo se lee entero, en la luz y en la sombra. La tela manda en la forma; el emblema, en el dibujo.
+</Why>
+
+### Al viento: la onda recorre la tela (P4-03)
+
+En [P4-03](/forja-art/pixel/p4-03/) el brillo recorría la gema y la gema no se movía. Aquí pasa lo mismo: **la barra y el rombo no se mueven**. Lo que se desplaza son los pliegues. Cada frame, la onda avanza **1 px hacia la derecha**, un sexto de pliegue:
+
+| Frame | Desplazamiento | Qué pasa |
+| --- | --- | --- |
+| 1 | 0 px | El estandarte tal cual. |
+| 2 | 1 px | Las crestas y los valles, una columna a la derecha. |
+| 3 | 2 px | |
+| 4 | 3 px | Medio pliegue: donde había luz, ahora hay sombra. |
+| 5 | 4 px | |
+| 6 | 5 px | Después, el frame 1: 6 px, un pliegue entero. Sin salto. |
+
+Seis pasos de 1 px suman los 6 px del pliegue, y la tela tiene un dibujo que se repite cada pliegue: por eso el bucle cierra. El bajo cambia en cada frame, porque sigue a las crestas, y el rombo cambia de sombreado sin moverse.
+
+<Sprite name="banner-wave-4" scale={8} caption="banner-wave-4 · Medio pliegue: las crestas están donde en el frame 1 había valles. El rombo no se ha movido, pero ahora tiene el dorado oscuro en los lados y el claro en el centro" />
+
+<Why title="Por qué 1 px por frame">
+Un píxel es el paso más pequeño que existe. Si el pliegue mide 6 px y avanzas 1 px por frame, cada frame tiene la rampa completa, con sus cuatro rojos, y el ojo sigue la onda sin dudas. Si avanzas pasos que no son píxeles enteros (1,5 px, por ejemplo), la cresta cae entre dos píxeles: se pinta doble, se pierde algún tono y los frames no se parecen entre sí. Regla práctica: elige un número de frames que divida el ancho del pliegue en píxeles enteros. Es la misma idea que el bucle del agua de [P7-02](/forja-art/pixel/p7-02/).
+</Why>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Lienzo, barra y silueta plana">
+<Keys k="Ctrl+N" />: **24×34**, fondo transparente. Activa *View → Grid*.
+
+1. Con el lápiz (<Keys k="B" />, *Pixel-perfect* activado), pinta la barra en las filas de arriba: una fila de contorno, una de madera clara, una de madera oscura, y contorno en los extremos.
+2. Debajo, la tela: un rectángulo de **18 px de ancho** que empieza justo bajo la barra. Rellénalo con el cubo (<Keys k="G" />) en un rojo medio.
+3. Abajo del todo, recorta una cola de golondrina en el centro y pon el contorno oscuro alrededor.
+
+<Why>
+Esto es `banner-flat`: la silueta sin pliegues. Empezar plano te deja comprobar la forma antes de doblarla.
+</Why>
+</Step>
+
+<Step n={2} title="La rampa de cuatro rojos">
+Prepara **cuatro rojos**: luz, medio (el de la silueta), sombra y el oscuro del valle. Mira que los cuatro se separen en grises, como en [P3-02](/forja-art/pixel/p3-02/).
+
+<Tip>
+Si quieres hue shifting, el oscuro puede tirar al violeta y la luz al rosa. Pero primero el valor: cuatro escalones distintos.
+</Tip>
+</Step>
+
+<Step n={3} title="Los pliegues, columna a columna">
+Elige dónde van las **crestas**: una cada 6 px. En la parte de abajo de la tela, pinta columnas verticales con la rampa completa: luz, medio, sombra, valle, sombra, medio. Y otra vez.
+
+<Warn>
+No pintes rayas de dos colores (claro, oscuro, claro, oscuro). Sin los tonos intermedios no hay curva: hay un estampado.
+</Warn>
+</Step>
+
+<Step n={4} title="El nacimiento y el bajo">
+1. **Arriba**, junto a la barra, borra el pliegue: deja 2 filas de rojo medio. Debajo, haz que aparezca poco a poco: primero 1 px de sombra en el valle, luego 3, luego la luz de la cresta y, al final, el oscuro del valle. Unas 6 filas de transición.
+2. **Abajo**, haz que el bajo siga los pliegues: alarga 1 fila la tela bajo las crestas y súbela 1 fila bajo los valles. Rehaz el contorno.
+3. En las últimas filas, ensancha el oscuro del valle a 3 px.
+
+<Why>
+El pliegue sale de un punto fijo (la barra) y gana profundidad al caer. Si empieza ya marcado en la barra, la tela parece pegada a un cartón ondulado.
+</Why>
+</Step>
+
+<Step n={5} title="El emblema pintado">
+Dibuja tu emblema, por ejemplo un rombo de 10×9 en el centro. Prepara **cuatro dorados**, uno por cada rojo, y sustituye cada píxel del emblema por el dorado que corresponde al rojo que tenía debajo. Usa el cuentagotas (<Keys k="I" />) para leer qué rojo hay en cada columna.
+
+<Tip>
+Comprueba en grises que cada dorado es más claro que su rojo. Si el dorado del valle se funde con la tela, el emblema se corta en dos.
+</Tip>
+</Step>
+
+<Step n={6} title="Al viento: 6 frames">
+Abre la línea de tiempo (*Timeline*) y duplica el frame hasta tener **6** (uno por cada píxel del pliegue). Clic derecho sobre cada frame, *Frame Properties*: **120 ms** cada uno. Activa el onion skin.
+
+1. **Frame 4** primero: desplaza los pliegues **medio pliegue** (3 px) a la derecha. Donde había cresta, valle. Repinta las columnas; la barra y el contorno del emblema no se tocan.
+2. **Frames 2, 3, 5 y 6**: 1, 2, 4 y 5 px. Cada uno, una columna más a la derecha que el anterior.
+3. En cada frame, rehaz el bajo para que siga a las crestas nuevas, y repinta el emblema con los dorados que tocan.
+
+Reproduce: la onda tiene que avanzar siempre hacia el mismo lado, y del frame 6 al 1 no debe notarse el salto.
+
+<Why>
+Empezar por el frame 4 es lo más fácil: es el negativo del 1. Con los dos extremos claros, los intermedios salen solos: el onion skin te enseña el anterior para que avances justo 1 px.
+</Why>
+</Step>
+
+<Step n={7} title="Guardar y exportar">
+Guarda con <Keys k="Ctrl+S" />. Exporta la tela quieta con *File → Export → Export As* y **Resize** al 400 %, y el bucle con *File → Export Sprite Sheet*, en una fila, PNG a 1×.
+</Step>
+
+<Warn title="Verifica en tu versión">
+Los nombres y la posición pueden variar según la versión de Aseprite: el panel *Timeline*, cómo se duplica un frame, *Frame Properties* (clic derecho sobre el frame), el botón de onion skin y las opciones de *Export Sprite Sheet*. Si una ruta no está donde dice, búscala por su función.
+</Warn>
+</Block>
+
+<Block kind="version">
+Ahora a tu manera. Mantén las reglas: el pliegue es una rampa que va y vuelve, nace bajo la barra, el bajo lo sigue y el emblema se dobla con la tela. Elige uno:
+
+- **Luz de lado:** la luz de arriba a la izquierda de P3-01. Haz la ladera izquierda de cada pliegue más corta y clara, y la derecha más larga y oscura. ¿Sigue leyéndose el relieve?
+- **Más abanico:** en `banner-folds` los pliegues se abren poco (menos de un píxel y medio) y los tres son casi iguales. Exagéralo: estrechos y juntos bajo la barra, mucho más anchos en el bajo, y cada uno de un ancho distinto. Una tela real nunca repite el mismo pliegue tres veces.
+- **Otra tela:** una capa, una cortina o una vela de barco (la del modelo voxel del barco). Busca dónde está sujeta: de ahí nacen los pliegues.
+</Block>
+
+<Block kind="errores">
+<Mistake title="Tela plana" wrongLabel="banner-flat: un rojo, bajo recto" rightLabel="banner-folds: rampa y bajo ondulado">
+  <Sprite slot="wrong" name="banner-flat" scale={8} view="gray" />
+  <Sprite slot="right" name="banner-folds" scale={8} view="gray" />
+
+En grises se ve aún mejor. A la izquierda, la tela es un solo gris y el rombo otro: no hay forma, solo una silueta recortada. A la derecha, las crestas, los valles y el bajo dibujan el volumen. **Arréglalo:** cuatro valores en rampa, pliegues que nacen bajo la barra y un bajo que sube y baja con ellos.
+</Mistake>
+
+<Mistake title="Pliegues como rayas" wrongLabel="banner-stripes: dos tonos en bandas de 3 px" rightLabel="banner-folds: luz, medio, sombra, valle y vuelta">
+  <Sprite slot="wrong" name="banner-stripes" scale={8} />
+  <Sprite slot="right" name="banner-folds" scale={8} />
+
+A la izquierda, bandas de 3 px que saltan del rojo claro al de sombra **sin nada en medio**, iguales desde la barra hasta el bajo, con el bajo recto y el rombo a rayas también. El ojo no ve curvas: ve una tela estampada. **Arréglalo:** mete los tonos intermedios para que cada pliegue sea una rampa, haz que nazca bajo la barra y deja que el bajo lo siga.
+</Mistake>
+
+<Mistake title="Viento en dos frames" wrongLabel="Solo los frames 1 y 4" rightLabel="banner-wave-2: el paso de 1 px">
+  <Animator slot="wrong" sprites={["banner-wave-1", "banner-wave-4"]} durations={[360, 360]} />
+  <Sprite slot="right" name="banner-wave-2" scale={8} />
+
+Reproduce la de la izquierda. Del frame 1 al 4 hay medio pliegue: la luz y la sombra se cambian de sitio. El ojo no sabe hacia dónde va la onda, así que la tela **parpadea**. **Arréglalo:** mete los pasos de 1 px (los frames 2, 3, 5 y 6) para que la onda tenga dirección.
+</Mistake>
+
+<Warn title="El emblema pegado encima">
+Si pintas el emblema de un solo dorado sobre una tela con pliegues, parece una pegatina sobre la tela, no un dibujo en ella. Y si lo mueves con la onda al animar, parece que resbala. El emblema se queda en su sitio y solo cambia de sombreado.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+Juzga tu estandarte **a 1×**, en color y **en grises**, quieto y en movimiento.
+
+<Checklist items={[
+  "Uso cuatro rojos con cuatro valores distintos en grises",
+  "Cada pliegue va de la luz a la sombra y vuelve, con los tonos intermedios",
+  "Junto a la barra no hay pliegue; aparece al caer, en unas pocas filas",
+  "El bajo sube y baja con los pliegues: más largo bajo las crestas",
+  "El emblema se sombrea con los mismos pliegues y es más claro que el rojo en todas las columnas",
+  "En el bucle, la barra y el emblema no se mueven; la onda avanza siempre hacia el mismo lado",
+  "Al volver al frame 1 no hay salto",
+  "He exportado la tela al 400 % y la spritesheet a 1×",
+]} />
+
+<Quiz q="¿Qué es un pliegue en pixel art?" options={["Una raya oscura sobre la tela", "Una rampa que va de la luz a la sombra y vuelve", "Un contorno dentro de la tela"]} answer={1}>
+La cresta recibe la luz, las laderas se apartan de ella y el valle queda en sombra; luego la tela vuelve a girar hacia la luz. Sin los tonos intermedios, el pliegue se convierte en una raya.
+</Quiz>
+
+<Quiz q="¿Dónde casi no hay pliegue en un estandarte colgado?" options={["En el bajo", "Junto a la barra, donde está sujeta", "En el centro de la tela"]} answer={1}>
+La barra sujeta la tela. El pliegue nace justo debajo y gana profundidad al caer; en el bajo es donde más se nota.
+</Quiz>
+
+<Quiz q="Al animar el viento, ¿qué se mueve?" options={["Toda la tela, barra incluida", "Los pliegues y el bajo; el emblema solo cambia de sombreado", "Solo el emblema"]} answer={1}>
+La onda recorre la tela 1 px por frame. La barra y el emblema se quedan en su sitio: el emblema está pintado en la tela y se sombrea con el pliegue que pasa por debajo.
+</Quiz>
+</Block>
