@@ -1036,7 +1036,111 @@ const henFinal = (() => {
   return dedupe(v);
 })();
 
+
+// ---------- RANA: una pose agazapada (mira hacia +X; patas plegadas, ojos encima de la cabeza)
+const ell = (cx, cy, cz, rx, ry, rz, c) => { const v = []; for (let x = Math.floor(cx - rx); x <= Math.ceil(cx + rx); x++) for (let y = Math.floor(cy - ry); y <= Math.ceil(cy + ry); y++) for (let z = Math.floor(cz - rz); z <= Math.ceil(cz + rz); z++) if (((x - cx) / rx) ** 2 + ((y - cy) / ry) ** 2 + ((z - cz) / rz) ** 2 <= 1) v.push({ x, y, z, c }); return v; };
+const bx = (x0, y0, z0, x1, y1, z1, c) => box(Math.min(x0, x1), Math.min(y0, y1), Math.min(z0, z1), Math.max(x0, x1), Math.max(y0, y1), Math.max(z0, z1), c); // caja con las esquinas en cualquier orden
+const FROG = { g: "#5cb840", l: "#a8e070", d: "#3f8a30", s: "#2f6a28", b: "#e8e0a0", B: "#c9c080", y: "#ffd36e", Y: "#fff3c4", e: "#1b1030", m: "#1f4f2a" };
+const frogBlock = [
+  ...bx(-4, -3, 1, 1, 3, 5, FROG.g), // cuerpo
+  ...bx(2, -3, 2, 5, 3, 5, FROG.g), // cabeza, tan ancha como el cuerpo
+  ...[-1, 1].flatMap((s) => [
+    ...bx(3, s * 2, 6, 4, s * 3, 7, FROG.g), // ojos encima de la cabeza
+    ...bx(-4, s * 4, 0, 0, s * 5, 2, FROG.g), // pata de atrás plegada, a cada lado
+    ...bx(3, s * 2, 0, 3, s * 2, 1, FROG.g), // pata de delante
+  ]),
+];
+const frogForm = dedupe([
+  ...ell(-0.5, 0, 3.4, 4.6, 3.4, 2.6, FROG.g), // cuerpo en gota: alto delante, bajo detrás
+  ...ell(3, 0, 4, 2.6, 3.2, 2.1, FROG.g), // cabeza ancha y plana
+  ...[-1, 1].flatMap((s) => [
+    ...bx(3, s * 2, 6, 4, s * 3, 7, FROG.g).filter((v) => !(v.z === 7 && v.x === 3 && Math.abs(v.y) === 3)), // ojos saltones, sin la esquina de detrás
+    ...ell(-2, s * 3.8, 2, 2.6, 1.3, 1.6, FROG.g), // muslo plegado
+    ...bx(-1, s * 4, 0, 2, s * 4, 0, FROG.g), { x: 3, y: s * 4, z: 0, c: FROG.g }, { x: 3, y: s * 5, z: 0, c: FROG.g }, // pie largo hacia delante y dos dedos
+    ...bx(3, s * 2, 0, 3, s * 2, 2, FROG.g), { x: 4, y: s * 2, z: 0, c: FROG.g }, { x: 4, y: s * 3, z: 0, c: FROG.g }, // brazo fino y dedos abiertos
+  ]),
+].filter((v) => v.z >= 0));
+const frogFinal = (() => {
+  const s = new Set(frogForm.map((v) => `${v.x},${v.y},${v.z}`));
+  const has = (x, y, z) => s.has(`${x},${y},${z}`);
+  const v = frogForm.map((q) => {
+    const eye = q.z >= 6 && q.x >= 3 && Math.abs(q.y) >= 2;
+    if (eye) return { ...q, c: q.x === 4 && Math.abs(q.y) === 3 && q.z === 6 ? FROG.e : q.z === 7 ? FROG.Y : FROG.y }; // ojo dorado con la pupila hacia fuera
+    const top = !has(q.x, q.y, q.z + 1);
+    if (q.x >= 2 && q.z === 3 && [[1, 0], [0, 1], [0, -1]].some(([dx, dy]) => !has(q.x + dx, q.y + dy, q.z))) return { ...q, c: FROG.m }; // la boca: una línea que rodea la cabeza por fuera
+    if (q.x >= 3 && q.z <= 1 && Math.abs(q.y) >= 2) return { ...q, c: FROG.d }; // brazos y dedos, verdes
+    if ((q.x >= 3 && q.z <= 2 && Math.abs(q.y) <= 2) || (q.z <= 1 && Math.abs(q.y) <= 2 && q.x >= -3)) return { ...q, c: q.z <= 1 ? FROG.B : FROG.b }; // garganta y tripa claras
+    if (top && q.z >= 5 && rnoise(q.x, q.y, 3) < 22) return { ...q, c: FROG.s }; // manchas en el lomo
+    if (top) return { ...q, c: q.z >= 5 ? FROG.l : FROG.g };
+    if (Math.abs(q.y) >= 4 && q.z <= 1) return { ...q, c: FROG.d }; // pies, más oscuros
+    return { ...q, c: q.z <= 2 ? FROG.d : FROG.g };
+  }).map((q) => ({ ...q, z: q.z + 1 }));
+  // nenúfar debajo, con su muesca, y agua alrededor
+  const PAD = ["#1f5a4a", "#2f7a5a"]; // el nenúfar, más azulado y oscuro que la rana: así se separan
+  const notch = (p) => { const a = Math.atan2(p.y, p.x); return a > 2.6 || a < -2.9; };
+  for (const p of disc(6.5, null)) if (!notch(p)) v.push({ x: p.x, y: p.y, z: 0, c: p.x * p.x + p.y * p.y > 5.5 * 5.5 || (p.x + 2 * p.y) % 5 === 0 ? PAD[0] : PAD[1] });
+  for (const p of disc(9.5, null)) if ((p.x * p.x + p.y * p.y > 6.5 * 6.5 || notch(p)) && !(p.x > 6 && p.y > 4)) v.push({ x: p.x, y: p.y, z: 0, c: (p.x * 3 + p.y) % 7 === 0 ? WATER.light : (p.x + p.y) % 2 ? WATER.mid : WATER.deep });
+  v.push({ x: -8, y: -3, z: 0, c: PAD[1] }, { x: -7, y: -3, z: 0, c: PAD[1] }, { x: -8, y: -2, z: 0, c: PAD[0] }, { x: -7, y: -4, z: 0, c: PAD[1] }, { x: -7, y: -3, z: 1, c: "#ffb3c8" }); // otro nenúfar pequeño con flor
+  return dedupe(v);
+})();
+
+// ---------- PUESTO DE MERCADO: mostrador, toldo a rayas con caída y mercancía
+const AWN = { r: "#c2413b", R: "#9c2f2c", w: "#f4ecdc", W: "#d8ccb4" };
+const awningZ = (y) => 13 + Math.floor((y + 3) / 3); // 12 filas en 4 escalones iguales de 3: z=13 delante, z=16 detrás
+const stallCounter = [...box(1, 1, 0, 12, 4, 3, WOOD.mid).map((v) => ({ ...v, c: v.x % 3 === 0 ? WOOD.dark : WOOD.mid })), ...box(0, 0, 4, 13, 5, 4, WOOD.light)]; // tablas verticales y una tapa que sobresale
+const stallPosts = [...[1, 12].flatMap((x) => [...box(x, 1, 5, x, 1, awningZ(1) - 1, WOOD.dark), ...box(x, 8, 0, x, 8, awningZ(8) - 1, WOOD.dark)])];
+const stallBlock = [...box(1, 1, 0, 12, 4, 4, WOOD.mid), ...[1, 12].flatMap((x) => [...box(x, 1, 5, x, 1, 15, WOOD.dark), ...box(x, 8, 0, x, 8, 15, WOOD.dark)]), ...box(0, -3, 16, 13, 8, 16, AWN.w)]; // mostrador, postes y un toldo plano
+const stallAwning = (() => {
+  const v = [];
+  for (let y = -3; y <= 8; y++) for (let x = 0; x <= 13; x++) { const red = Math.floor(x / 2) % 2 === 0; v.push({ x, y, z: awningZ(y), c: red ? (y >= 6 ? AWN.R : AWN.r) : y >= 6 ? AWN.W : AWN.w }); } // rayas a lo largo de la caída; atrás, más oscuro
+  for (let x = 0; x <= 13; x++) if (Math.floor(x / 2) % 2 === 0) v.push({ x, y: -3, z: awningZ(-3) - 1, c: AWN.R }); // festón: cuelga una raya sí y otra no
+  return v;
+})();
+const stallStructure = dedupe([...stallCounter, ...stallPosts, ...stallAwning]);
+const FRUIT = [["#d8343f", "#ff8a7a"], ["#f2a83a", "#ffd36e"], ["#4caf50", "#8fd86a"]];
+const crate = (x0, [c, hi]) => {
+  const v = [];
+  for (let x = x0; x <= x0 + 3; x++) for (let y = 1; y <= 4; y++) {
+    const rim = x === x0 || x === x0 + 3 || y === 1 || y === 4;
+    v.push({ x, y, z: 5, c: WOOD.dark });
+    v.push({ x, y, z: 6, c: rim ? (y === 1 ? WOOD.light : WOOD.mid) : rnoise(x, y, 4) < 30 ? hi : c }); // borde de la caja y fruta dentro
+  }
+  v.push({ x: x0 + 1, y: 2, z: 7, c }, { x: x0 + 2, y: 3, z: 7, c: hi }); // un montón que sobresale
+  return v;
+};
+const sack = (x, y, h) => [...ell(x, y, h / 2, 1.3, 1.3, h / 2 + 0.3, "#c9b07a").filter((v) => v.z >= 0).map((v) => ({ ...v, c: v.x < x || v.y < y ? "#e8d49a" : "#c9b07a" })), { x, y, z: h + 1, c: "#8a6a3a" }];
+const stallFinal = (() => {
+  const v = [
+    ...stallStructure,
+    ...crate(1, FRUIT[0]), ...crate(5, FRUIT[1]), ...crate(9, FRUIT[2]),
+    ...box(5, -3, 7, 8, -3, 8, "#e8d49a"), ...box(6, -3, 9, 6, -3, 12, WOOD.dark), ...box(7, -3, 9, 7, -3, 12, WOOD.dark), // cartel colgado del toldo con dos cuerdas
+    { x: 6, y: -3, z: 7, c: "#d8343f" }, { x: 7, y: -3, z: 7, c: "#d8343f" }, { x: 6, y: -3, z: 8, c: "#d8343f" }, { x: 7, y: -3, z: 8, c: "#4caf50" }, // con una manzana pintada
+    ...sack(-1, 2, 3), ...sack(-1, 5, 2), // sacos al pie
+    ...[0, 1, 2, 3, 4].flatMap((z) => disc(1.6, null).map((p) => ({ x: p.x + 15, y: p.y + 3, z, c: z === 1 || z === 3 ? METAL.dark : z === 4 ? WOOD.light : WOOD.mid }))), // barril con dos aros
+    ...box(14, -1, 0, 16, 0, 0, "#a0703a"), { x: 15, y: -1, z: 1, c: "#d8343f" }, { x: 14, y: 0, z: 1, c: "#d8343f" }, { x: 16, y: -1, z: 1, c: "#f2a83a" }, // cesta en el suelo
+    { x: 4, y: -1, z: 0, c: "#d8343f" }, // una manzana que se ha caído
+  ].map((q) => ({ ...q, z: q.z + 1 }));
+  for (let x = -3; x <= 17; x++) for (let y = -4; y <= 9; y++) v.push({ x, y, z: 0, c: (x + 2 * y) % 5 === 0 || rnoise(x, y, 8) < 15 ? "#7d8698" : (x + y) % 2 ? "#9aa3b5" : "#8a93a5" }); // suelo de adoquines
+  return dedupe(v);
+})();
+
 export const MODELS = {
+  rana: {
+    description: "Rana: una pose agazapada",
+    stages: [
+      { label: "Masas", note: "Cajas: un cuerpo de 6×7×5, una cabeza igual de ancha delante, dos ojos de 2×2×2 encima de la cabeza, las patas de atrás plegadas a los lados y dos patas de delante de 1 vóxel. Mira hacia +X.", voxels: frogBlock },
+      { label: "Forma", note: "El cuerpo pasa a ser una gota, alta delante y baja detrás; la cabeza es ancha y plana. Los muslos plegados abultan a los lados y los pies largos salen hacia delante, pegados al suelo. Los brazos son finos, con los dedos abiertos. Todo el peso cae entre los cuatro apoyos.", voxels: frogForm },
+      { label: "Color y detalle", note: "Lomo verde con la parte de arriba más clara y manchas oscuras; garganta y tripa crema; una línea oscura de boca que rodea la cabeza; ojos dorados con la pupila hacia fuera. Debajo, un nenúfar con su muesca, agua alrededor y otro nenúfar pequeño con una flor.", voxels: frogFinal },
+    ],
+  },
+  mercado: {
+    description: "Puesto de mercado: mostrador, toldo y mercancía",
+    stages: [
+      { label: "Blockout", note: "Un mostrador de 12×4×5, cuatro postes y un toldo plano de 14×12 a z=16. Ya se lee la escala: el mostrador llega a la cintura de un personaje y el toldo queda por encima de su cabeza.", voxels: stallBlock },
+      { label: "Toldo", note: "El toldo baja de z=16 detrás a z=13 delante en cuatro escalones iguales de 3 filas, con rayas rojas y crema de 2 vóxels a lo largo de la caída y un festón que cuelga una raya sí y otra no. Atrás, las rayas se oscurecen. El mostrador tiene tablas verticales y una tapa que sobresale.", voxels: stallStructure },
+      { label: "Mercancía", note: "Tres cajas sobre el mostrador con manzanas, naranjas y peras, cada una con un montón que sobresale; un cartel colgado del toldo con una manzana pintada; sacos al pie, un barril con dos aros, una cesta, una manzana caída y suelo de adoquines.", voxels: stallFinal },
+    ],
+  },
   pozo: {
     description: "Pozo: círculos y cilindros en una rejilla",
     stages: [

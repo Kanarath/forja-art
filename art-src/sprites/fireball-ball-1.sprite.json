@@ -1,0 +1,32 @@
+{
+  "name": "fireball-ball-1",
+  "description": "ERROR: bola de fuego sin estela, frame 1 (24×12): un círculo con la misma rampa, centrado. No dice hacia dónde va.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "vfx",
+    "animación",
+    "proyectil",
+    "error"
+  ],
+  "palette": {
+    "a": "#d8642a",
+    "b": "#f2a83a",
+    "c": "#ffe58a",
+    "d": "#fff8e0"
+  },
+  "rows": [
+    "........................",
+    "........................",
+    "...........aaa..........",
+    ".........abbbbba........",
+    ".........abcccba........",
+    ".........bcdddcb........",
+    ".........bcdddcb........",
+    ".........abcccba........",
+    ".........abbbbba........",
+    "...........aaa..........",
+    "........................",
+    "........................"
+  ]
+}

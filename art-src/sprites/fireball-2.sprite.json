@@ -1,0 +1,32 @@
+{
+  "name": "fireball-2",
+  "description": "Bola de fuego, frame 2: el núcleo no se mueve; la onda de la estela avanza un cuarto de vuelta y las chispas cambian de sitio.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "vfx",
+    "animación",
+    "proyectil"
+  ],
+  "palette": {
+    "a": "#f2a83a",
+    "b": "#d8642a",
+    "c": "#a8321e",
+    "d": "#ffe58a",
+    "e": "#fff8e0"
+  },
+  "rows": [
+    "........................",
+    "........................",
+    "...............bbabb....",
+    "..a.........cbaaadaab...",
+    "...........aadddddddab..",
+    "..aabbaabbaddeeeeeedab..",
+    ".......adddddddeeeedab..",
+    "........bbaaaaadddddab..",
+    ".............bbaadaab...",
+    "...............bbabb....",
+    "........................",
+    "........................"
+  ]
+}

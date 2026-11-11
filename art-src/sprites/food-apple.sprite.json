@@ -1,0 +1,43 @@
+{
+  "name": "food-apple",
+  "description": "Manzana (16×16): rampa de cuatro rojos con la luz arriba a la izquierda, un brillo blanco de 2 px pequeño y duro (piel lisa y brillante), la muesca de arriba de donde sale el rabo y una hoja.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "objeto",
+    "icono",
+    "comida",
+    "material"
+  ],
+  "palette": {
+    "a": "#1b1030",
+    "b": "#4caf50",
+    "c": "#6b3d2e",
+    "d": "#8fd86a",
+    "e": "#ff8a7a",
+    "f": "#3b2418",
+    "g": "#e04a4a",
+    "h": "#ffffff",
+    "i": "#ffd0c8",
+    "j": "#b02a3a",
+    "k": "#6e1a2a"
+  },
+  "rows": [
+    "..........a.....",
+    "........aaba....",
+    ".......acbda....",
+    ".....aaacaba....",
+    "....aeefagga....",
+    "...ahieegggga...",
+    "..aeheeggggjja..",
+    ".aeeeeggggjjjja.",
+    ".aeeeggggjjjjka.",
+    ".aeeggggjjjjkka.",
+    ".aegggjjjjjkkka.",
+    ".agggjjjjjkkkka.",
+    "..agjjjjjkkkka..",
+    "...ajjjjkkkka...",
+    "....ajkkkkka....",
+    ".....aaaaaa....."
+  ]
+}

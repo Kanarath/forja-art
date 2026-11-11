@@ -1,0 +1,251 @@
+---
+id: f01-03
+discipline: fundamentos
+level: 1
+order: 3
+title: "Bordes: duros, suaves y perdidos"
+summary: "Un borde es un cambio de valor. Si es brusco, el borde es duro y llama la vista; si tiene un paso intermedio, es suave; si los dos lados tienen el mismo valor, se pierde. Repártelos con intención."
+duration: 40
+status: borrador
+prerequisites: [f01-02]
+fundamentals: [f01]
+objectives:
+  - "Explicar un borde como un cambio de valor: duro, suave o perdido"
+  - "Hacer un borde duro con un salto de valor o un contorno, y uno suave con un píxel intermedio"
+  - "Perder un borde a propósito juntando dos zonas del mismo valor, como un objeto y su sombra"
+  - "Reservar los bordes duros para lo importante y suavizar o perder el resto"
+  - "Reconocer los bordes de un render de MagicaVoxel: luz por caras, AO y contorno"
+tools: [aseprite, magicavoxel]
+piece:
+  name: "Una escena de 48×32 con cielo, un elemento lejano y un objeto con su sombra, con los tres tipos de borde repartidos, más un render voxel revisado por bordes"
+  canvas: "48x32"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [bordes]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+En [F01-01](/forja-art/fundamentos/f01-01/) y [F01-02](/forja-art/fundamentos/f01-02/) trabajaste el **valor** de las masas. Hoy miras **dónde se tocan**: los bordes.
+
+Esta escena tiene cielo, una nube, una colina lejana y una roca con su sombra. Cada cosa lleva **un tipo de borde distinto**:
+
+<Sprite name="edges-good" scale={8} caption="edges-good (48×32): nube suave, colina casi perdida, roca con contorno duro, abierto donde se funde con su sombra" />
+
+- La **nube** tiene un borde **suave**: un píxel a medio camino entre su blanco y el cielo.
+- La **colina** del fondo tiene casi el mismo valor que el cielo: su borde **casi se pierde**.
+- La **roca** lleva contorno oscuro alrededor (borde **duro**), salvo en un sitio: donde toca su sombra proyectada no lleva **ninguno** y se funde con ella (borde **perdido**).
+
+Resultado: el ojo va a la roca. Lo demás acompaña.
+
+Tu pieza tiene dos partes:
+
+- **Pixel**: una escena de **48×32** en Aseprite con cielo, algo lejano y un objeto principal con su sombra. Los tres tipos de borde, cada uno donde toca.
+- **Voxel**: un render de MagicaVoxel revisado **por bordes**: dónde son duros, dónde suaves y dónde se pierden.
+</Block>
+
+<Block kind="concepto">
+### Un borde es un cambio de valor
+
+Donde una zona termina y empieza otra hay un borde. Lo que lo hace fuerte o débil es **cuánto cambia el valor** al cruzarlo.
+
+- **Duro**: el valor salta de golpe, sin pasos intermedios. O hay un contorno oscuro entre las dos zonas.
+- **Suave**: entre las dos zonas hay uno o más píxeles con un valor **intermedio**.
+- **Perdido**: las dos zonas tienen **el mismo valor** (o casi). El borde desaparece y el ojo las lee como una sola masa.
+
+<Why title="Por qué importa">
+El ojo va a donde hay **más contraste**, y un borde duro es contraste concentrado en una línea. Si todos los bordes son duros, todo pide atención a la vez. Si todos son suaves, nada se lee firme. Repartirlos es decidir qué mira el espectador primero. Es la misma idea del foco de [F07-01](/forja-art/fundamentos/f07-01/), a escala de borde.
+</Why>
+
+### Los números de `edges-good`
+
+Valores en grises, con la misma fórmula que la vista Grises de la academia:
+
+- **Nube**: blanco al **100 %**, con la parte de abajo al **89 %**. El cielo va del **75 %** arriba al **82 %** en la franja media. Los píxeles del borde están justo en medio: **88 %** contra el cielo de arriba, **91 %** y **85 %** contra la franja media. Eso es un borde suave.
+- **Colina**: **78 %**, contra un cielo del **82 %** por encima y del **89 %** a su lado. Unos pocos puntos de diferencia y sin contorno: casi perdido. Por eso se queda **atrás**.
+- **Roca**: cuatro tonos, del **68 %** (luz, arriba a la izquierda) al **26 %** (sombra, abajo a la derecha). El contorno es casi negro, **8 %**, y rodea la roca por todas partes menos donde toca su sombra, abajo a la derecha. La sombra proyectada en la hierba está al **28 %**: casi lo mismo que el tono más oscuro de la roca. Ahí no hay contorno, y la roca y su sombra son una sola mancha.
+
+<Sprite name="edges-good" scale={8} view="gray" caption="edges-good en grises: el contorno duro alrededor de la roca; abajo a la derecha, sin contorno, la roca y su sombra se funden" />
+
+Fíjate en el detalle de abajo: donde el tono más oscuro (26 %) toca la sombra (28 %), el borde **desaparece**. Un poco más a la izquierda, la parte baja de la roca es más clara (39 % y 53 %) y el borde vuelve a notarse un poco, sin contorno. Un borde perdido no es un corte: se va perdiendo.
+
+<Why title="Por qué perder el borde de la sombra">
+La roca **descansa** sobre su sombra. Si las separas con una línea, la sombra parece un objeto aparte (o un agujero). Si las juntas por el valor, la roca se apoya en el suelo y además ganas un contraste: el lado de la luz, con su borde duro, destaca más porque el otro lado calla.
+</Why>
+
+### Cómo se hace cada uno en pixel art
+
+- **Duro**: dos valores muy separados uno junto al otro, o un contorno de 1 px. Es lo que hiciste en [P2-03](/forja-art/pixel/p2-03/).
+- **Suave**: un píxel de un color **a medio camino** entre las dos zonas. Es el mismo truco que el **antialiasing selectivo** de P2-03, pero usado para ablandar, no para alisar un escalón.
+- **Perdido**: pinta las dos zonas con colores del **mismo valor** (o casi), aunque el tono sea distinto. Sin contorno entre ellas.
+
+<Tip>
+No hace falta que un borde perdido use **el mismo color**. En `edges-good` la sombra es un verde grisáceo y la roca es violácea: tonos distintos, valor casi igual. En grises se funden; en color se sigue entendiendo qué es cada cosa.
+</Tip>
+
+### En voxel, el borde lo hace el render
+
+En MagicaVoxel no pintas los bordes píxel a píxel. Salen de cómo se ve el modelo:
+
+- **La luz por caras**: dos caras que miran a sitios distintos reciben luz distinta. La arista entre la cara de arriba y la de un lado es un borde duro.
+- **El AO** (oclusión ambiental) oscurece los rincones y el pie de los objetos: ablanda la unión con el suelo, como la sombra de la roca. Lo pintaste a mano en [V3-04](/forja-art/voxel/v3-04/).
+- **El fondo**: la silueta del modelo es duro o perdido según el valor del fondo que elijas.
+- **El acabado del render**: el bloom y la profundidad de campo de [V8-01](/forja-art/voxel/v8-01/) **suavizan** bordes. Con moderación.
+
+<Why title="La misma regla en los dos mundos">
+Pixel o voxel, el ojo hace lo mismo: va al borde de más contraste. En pixel lo decides píxel a píxel; en voxel, con los colores de la paleta, la luz y el fondo del render.
+</Why>
+</Block>
+
+<Block kind="guiada">
+### Parte 1 · Repartir bordes (Aseprite)
+
+<Step n={1} title="Mira los bordes de cerca">
+En el Inspector, amplía la escena y pasa de la vista **Normal** a **Grises**. Pasa el ratón y mide:
+
+- el borde de la nube: blanco, el píxel intermedio y el cielo;
+- la colina y el cielo de al lado;
+- el contorno de la roca por arriba y su lado oscuro contra la sombra.
+
+<Inspector sprite="edges-good" title="edges-good: mide el valor a los dos lados de cada borde" />
+
+<Why>
+Un borde se juzga **comparando los dos lados**. Un 26 % junto a un 28 % no se ve; un 8 % junto a un 53 % salta a la vista.
+</Why>
+</Step>
+
+<Step n={2} title="Lienzo y masas">
+1. <Keys k="Ctrl+N" />: 48×32. Activa *View → Grid* y amplía con la rueda.
+2. Con la selección rectangular (<Keys k="M" />) y el cubo (<Keys k="G" />), rellena el **cielo** (dos o tres franjas, más claro junto al horizonte) y el **suelo**.
+3. Con el lápiz (<Keys k="B" />), pinta la masa de algo **lejano** (colina, montaña, bosque) y la del **objeto principal** (roca, cofre, personaje). Todavía sin contorno.
+
+<Tip>
+Activa la casilla *Pixel-perfect* de la barra del lápiz para que los trazos no engorden en las diagonales.
+</Tip>
+</Step>
+
+<Step n={3} title="El elemento lejano: casi perdido">
+1. Elige para la colina un color de valor **muy cercano** al cielo que la rodea. Puede ser más azul o más gris, pero no mucho más oscuro.
+2. Sin contorno.
+3. Comprueba en grises: pasa a *Sprite → Color Mode → Grayscale*, mira y deshaz con <Keys k="Ctrl+Z" />.
+
+<Why>
+Lo lejano se acerca al valor del cielo (la perspectiva atmosférica de [F08-01](/forja-art/fundamentos/f08-01/)). Un borde casi perdido lo manda **atrás**; un contorno lo traería delante.
+</Why>
+</Step>
+
+<Step n={4} title="Una nube con borde suave">
+1. Pinta la nube en blanco o casi blanco.
+2. Crea en la paleta un color **a medio camino** entre la nube y el cielo. Si el cielo cambia de franja, haz uno para cada franja.
+3. Con el lápiz, pon ese color en los píxeles del cielo que tocan la nube por fuera: una sola fila alrededor.
+
+<Warn>
+Un solo píxel intermedio basta. Si pones dos o tres anillos, la nube se emborrona y pierde la forma.
+</Warn>
+</Step>
+
+<Step n={5} title="El objeto: duro en la luz, perdido en la sombra">
+1. Sombrea el objeto con 3 o 4 tonos: claro donde da la luz, oscuro en el lado contrario.
+2. Pinta su **sombra proyectada** en el suelo, hacia el lado contrario a la luz. Dale un valor **muy cercano** al tono más oscuro del objeto.
+3. Pon el contorno oscuro alrededor del objeto **salvo** donde toca su sombra: ahí, **ninguno**.
+4. Usa el cuentagotas (<Keys k="I" />) para repetir colores y no colar tonos casi iguales.
+5. Guarda con <Keys k="Ctrl+S" />.
+
+<Why>
+El borde más duro de la escena tiene que estar en el objeto principal. Si la nube o la colina tienen un borde más duro que él, el ojo se va allí.
+</Why>
+</Step>
+
+<Step n={6} title="Comprueba tu escena">
+Exporta a 1× con *File → Export → Export As* (sin *Resize*) y súbela al Inspector. En **Grises**, revisa:
+
+- ¿El borde más duro está en tu objeto principal?
+- ¿El elemento lejano casi desaparece?
+- ¿El objeto y su sombra se leen como una sola mancha por el lado oscuro?
+
+<Inspector upload title="Tu escena: compara el valor a los dos lados de cada borde" />
+
+Si un borde que querías perdido se nota, acerca los valores. Si uno que querías duro no salta, sepáralos o añade el contorno.
+</Step>
+
+### Parte 2 · Bordes en voxel (MagicaVoxel)
+
+<Step n={7} title="Lee los bordes de un render">
+1. Mira las rocas de [V6-06](/forja-art/voxel/v6-06/) y descarga su `.vox` desde el visor (o usa un modelo tuyo).
+
+<VoxViewer model="rocas" stage={2} title="Rocas: arriba claro, frente medio, lado derecho más oscuro" />
+
+2. Ábrelo en MagicaVoxel, gira la cámara con el botón derecho y pulsa *Render* arriba.
+3. Busca los tres tipos de borde: la arista entre la cara de arriba y las de los lados (duro), el pie de las rocas contra el suelo (suave, por la sombra y el AO) y la silueta contra el fondo.
+4. Cambia el **color del fondo** del render a uno de valor parecido a las rocas y luego a uno muy distinto. Observa cómo la silueta pasa de perdida a dura.
+5. Guarda las dos imágenes y compáralas en Aseprite en grises.
+
+<Tip>
+La herramienta `forja-vox` de las [Forge Tools](/forja-art/tools/) hace una hoja isométrica sin luz de render: cada cubo con tres tonos fijos (arriba al 100 %, izquierda al 78 %, derecha al 60 %). Con la opción `--outline` añade un contorno de 1 px **solo por fuera de la silueta**: los bordes de dentro los siguen haciendo los tres tonos. Pruébala con y sin contorno y compara.
+</Tip>
+
+<Warn title="Verifica en tu versión">
+Los nombres de los ajustes del modo Render (color del fondo, sol, bloom, profundidad de campo, resolución y el botón de guardar la imagen) cambian entre versiones de MagicaVoxel. Búscalos por su función. No damos por hecho que tu versión tenga una opción para dibujar contornos en el render: la comprobación segura es guardar la imagen y revisarla en Aseprite.
+</Warn>
+</Step>
+</Block>
+
+<Block kind="version">
+Hazlo a tu manera. Elige un reto:
+
+- **Otro foco**: la misma escena, pero el borde más duro está en el elemento lejano (por ejemplo, un castillo oscuro contra un cielo claro) y el objeto de delante se suaviza. ¿Dónde mira ahora el ojo?
+- **Contraluz**: el sol detrás del objeto. Ahora el lado oscuro es el de delante: ¿dónde va el borde duro y dónde el perdido? (Pista: [F05-02](/forja-art/fundamentos/f05-02/).)
+- **Voxel con intención**: elige el fondo y la luz de un render para que la silueta de tu modelo sea dura solo por un lado y se pierda por el otro.
+
+**Prueba de los ojos entrecerrados.** Mira tu escena a 1× y entrecierra los ojos. Los bordes duros siguen ahí; los suaves y los perdidos desaparecen. Si lo que queda es lo importante, funciona.
+</Block>
+
+<Block kind="errores">
+<Mistake title="Todos los bordes duros" wrongLabel="edges-hard" rightLabel="edges-good">
+  <Sprite slot="wrong" name="edges-hard" scale={5} />
+  <Sprite slot="right" name="edges-good" scale={5} />
+
+En `edges-hard` la nube, la colina, la roca y hasta la sombra llevan contorno de 1 px: 152 píxeles de contorno, frente a 25 en la buena. La nube parece un objeto sólido, la colina se viene delante y la sombra parece un **agujero** en la hierba. Todo pide atención a la vez. **Corrección**: el contorno, solo en el objeto principal, y abierto donde toca su sombra. A la nube, un píxel intermedio; a la colina y a la sombra, ninguno.
+</Mistake>
+
+<Mistake title="Todos los bordes suaves" wrongLabel="edges-soft" rightLabel="edges-good">
+  <Sprite slot="wrong" name="edges-soft" scale={5} />
+  <Sprite slot="right" name="edges-good" scale={5} />
+
+En `edges-soft` todo lleva el borde a medio camino y la roca está emborronada también por dentro. No queda ningún contorno, y la escena pasa de 17 colores a 51. La roca parece una **esponja** o una nube gris: sin un solo borde duro, nada se lee como sólido ni como importante. **Corrección**: devuelve al objeto principal su contorno duro (abierto donde toca su sombra) y deja el sombreado por dentro en pocos tonos limpios.
+</Mistake>
+
+<Warn title="Error típico: el contorno entre el objeto y su sombra">
+Por costumbre, cierras el contorno alrededor de todo el objeto, también por abajo, donde toca su sombra. La sombra queda separada y el objeto parece flotar o estar pegado encima. **Corrección**: abre el contorno en el lado de la sombra y acerca el valor del tono más oscuro del objeto al de la sombra.
+</Warn>
+
+<Warn title="Error típico: suavizar al exportar">
+Escalas la imagen con suavizado (o la ves en un programa que filtra) y todos los bordes se vuelven suaves a la vez: es `edges-soft` sin quererlo. **Corrección**: exporta siempre con escalas enteras y sin suavizado (*Resize* en *Export As*), y decide tú qué bordes se suavizan.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+<Checklist items={[
+  "Mi escena de 48×32 tiene cielo, algo lejano y un objeto principal con su sombra",
+  "El borde más duro de la escena está en el objeto principal, por el lado de la luz",
+  "El elemento lejano tiene un valor muy cercano al cielo y no lleva contorno",
+  "Hay al menos un borde suave hecho con un solo píxel intermedio",
+  "Mi objeto y su sombra se funden por el lado oscuro, sin contorno entre ellos",
+  "He comprobado los valores a los dos lados de cada borde en el Inspector",
+  "He revisado un render de MagicaVoxel buscando bordes duros, suaves y perdidos",
+  "He guardado el .aseprite, el PNG a 1× y los renders",
+]} />
+
+<Quiz q="¿Qué hace que un borde sea «perdido»?" options={["Que no tenga contorno, aunque los dos lados tengan valores muy distintos", "Que los dos lados tengan el mismo valor (o casi), aunque el tono sea distinto", "Que el borde esté borroso, con varios píxeles intermedios"]} answer={1}>
+Sin contorno pero con un salto grande de valor, el borde sigue siendo duro. Con píxeles intermedios es suave. Perdido es cuando el valor no cambia: en `edges-good`, la roca al 26 % contra su sombra al 28 %.
+</Quiz>
+
+<Quiz q="En edges-hard, la colina lejana lleva contorno. ¿Qué efecto tiene?" options={["Se queda atrás, más lejana", "Se viene delante y compite con la roca", "Ninguno: la colina ya tenía un valor muy distinto del cielo"]} answer={1}>
+La colina tiene casi el valor del cielo (78 % contra 82–89 %). Eso la manda atrás. El contorno casi negro le da un borde duro y la trae delante.
+</Quiz>
+
+<Quiz q="Quieres que la vista vaya al cofre de tu escena. ¿Qué haces con los bordes?" options={["Contorno duro en todo, para que se vea todo bien", "Borde duro en el cofre por el lado de la luz; suaves o perdidos en el fondo y en la sombra", "Bordes suaves en todo, para que quede más pictórico"]} answer={1}>
+El ojo va al borde de más contraste. Resérvalo para el cofre y calla lo demás.
+</Quiz>
+</Block>

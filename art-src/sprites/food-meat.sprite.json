@@ -1,0 +1,41 @@
+{
+  "name": "food-meat",
+  "description": "Carne (16×16): un muslo en gota inclinada con rampa de marrones rojizos, un brillo de grasa blando (crema, no blanco), marcas de parrilla y el hueso crema que sale abajo a la derecha con su cabeza en dos bultos.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "objeto",
+    "icono",
+    "comida",
+    "material"
+  ],
+  "palette": {
+    "a": "#1b1030",
+    "b": "#e8925a",
+    "c": "#c2602e",
+    "d": "#ffd0a0",
+    "e": "#8e3a24",
+    "f": "#5a1f1a",
+    "g": "#f4ecdc",
+    "h": "#c9bfa8",
+    "i": "#ffffff"
+  },
+  "rows": [
+    "................",
+    "....aaaa........",
+    "...abbbbaa......",
+    "..abbbbccca.....",
+    ".abbddccceea....",
+    ".abbbccceeeea...",
+    ".abbccceefefa...",
+    ".abccceeeeffa...",
+    ".accceeeffffa...",
+    "..aceefeffffa...",
+    "...aeeeffffgaaa.",
+    "....aaffffghgiga",
+    "......aaaaaaggha",
+    "...........agha.",
+    "............aha.",
+    ".............a.."
+  ]
+}

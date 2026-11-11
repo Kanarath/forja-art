@@ -1,0 +1,32 @@
+{
+  "name": "fireball-4",
+  "description": "Bola de fuego, frame 4: el último cuarto; enlaza con el frame 1 sin salto.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "vfx",
+    "animación",
+    "proyectil"
+  ],
+  "palette": {
+    "a": "#f2a83a",
+    "b": "#d8642a",
+    "c": "#a8321e",
+    "d": "#ffe58a",
+    "e": "#fff8e0"
+  },
+  "rows": [
+    "........................",
+    "........................",
+    "...............bbabb....",
+    ".............bbaadaab...",
+    "........baaaaaadddddab..",
+    ".......adddddddeeeedab..",
+    "...bbaabbaaddeeeeeedab..",
+    "..........cbadddddddab..",
+    "..d.........bbaaadaab...",
+    "..............bbbabb....",
+    "........................",
+    "........................"
+  ]
+}

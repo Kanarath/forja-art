@@ -1,0 +1,32 @@
+{
+  "name": "fireball-sheet",
+  "description": "Los cuatro frames de la bola de fuego en fila (102×12). El núcleo está en la misma columna en todos; lo que cambia es la estela y las chispas. El movimiento por la pantalla lo pone el juego.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "vfx",
+    "animación",
+    "proyectil"
+  ],
+  "palette": {
+    "a": "#f2a83a",
+    "b": "#d8642a",
+    "c": "#a8321e",
+    "d": "#ffe58a",
+    "e": "#fff8e0"
+  },
+  "rows": [
+    "......................................................................................................",
+    "......................................................................................................",
+    "....a..........bbabb.....................bbabb......a..............bbabb.....................bbabb....",
+    ".............caaadaab.......a.........cbaaadaab.................bbaaadaab..................bbaadaab...",
+    "....a.bb..bbaaddddddab...............aadddddddab....a........baaaaddddddab............baaaaaadddddab..",
+    ".....aaadaaaddeeeeedab......aabbaabbaddeeeeeedab.......bb...aaddddeeeeedab...........adddddddeeeedab..",
+    "....b...baddddeeeeedab...........adddddddeeeedab.........aaadaaaddeeeeedab.......bbaabbaaddeeeeeedab..",
+    "d.........aaaaddddddab............bbaaaaadddddab........d..cbb.caaddddddab..............cbadddddddab..",
+    "...........bcbbaadaab..................bbaadaab..................baaadaab.......d.........bbaaadaab...",
+    "...............bbabb.....................bbabb.....................bbabb....................bbbabb....",
+    "......................................................................................................",
+    "......................................................................................................"
+  ]
+}

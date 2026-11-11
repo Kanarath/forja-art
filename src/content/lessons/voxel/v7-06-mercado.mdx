@@ -1,0 +1,282 @@
+---
+id: v7-06
+discipline: voxel
+level: 7
+order: 6
+title: "Puestos de mercado: un decorado con toldo"
+summary: "Forja un puesto de mercado: un mostrador medido contra tu personaje, un toldo a rayas que cae en escalones regulares, mercancía repetida con variación y detalles que dicen quién vende ahí."
+duration: 45
+status: borrador
+prerequisites: [v7-01, v4-06]
+fundamentals: [f08, f07, f10]
+objectives:
+  - "Medir el mostrador y el toldo contra el personaje: cintura, manos y cabeza"
+  - "Inclinar el toldo en escalones regulares, eligiendo un fondo y una caída que se dividan bien"
+  - "Pintar las rayas a lo largo de la caída y un festón que rompa el borde recto"
+  - "Repetir la mercancía duplicando piezas y variar el contenido para que no sea un catálogo"
+  - "Contar quién vive ahí con detalles: cartel, sacos, una manzana caída"
+tools: [magicavoxel]
+piece:
+  name: "Tu puesto de mercado con mostrador, toldo a rayas en escalones, tres o más cajas de mercancía variada y un render"
+  canvas: "unos 21x14x18"
+xp: { concept: 10, guided: 20, piece: 65 }
+achievements: [mercado]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Hoy forjas un **puesto de mercado**: un mostrador de madera, un toldo a rayas que cae hacia el cliente y la mercancía encima. Es un **decorado**: una pieza pensada para verse de frente, al fondo de una plaza o de tu [diorama (V7-01)](/forja-art/voxel/v7-01/).
+
+<VoxViewer model="mercado" stage={2} title="Tu pieza: el puesto de fruta, con su toldo y su mercancía" />
+
+Gira el visor y recorre las tres etapas:
+
+1. **Blockout:** el mostrador, cuatro postes y un toldo plano.
+2. **Toldo:** el toldo cae en escalones, con rayas y festón; el mostrador gana tablas y una tapa.
+3. **Mercancía:** tres cajas de fruta, un cartel, sacos, un barril, una cesta, una manzana caída y el suelo de adoquines.
+
+El frente del puesto mira hacia **-Y**: por ahí cuelgan el festón y el cartel, y por ahí llegaría el cliente.
+
+Tu pieza final: **tu propio puesto**, de unos 21×14 de suelo y 18 de alto, con un mostrador medido contra tu personaje, un toldo a rayas en **escalones regulares**, **al menos tres cajas** de mercancía que no sean idénticas, **dos o tres detalles** que cuenten quién vende ahí y **un render**.
+</Block>
+
+<Block kind="concepto">
+### 1. La escala: el mostrador contra el cuerpo
+
+<VoxViewer model="mercado" stage={0} title="Blockout: mostrador, cuatro postes y un toldo plano" />
+
+El blockout tiene tres piezas:
+
+- **Mostrador:** una caja de **12×4×5** (x de 1 a 12, y de 1 a 4, capas 0 a 4).
+- **Cuatro postes** de madera oscura, en x = 1 y x = 12. Los dos de delante (y = 1) salen **de encima del mostrador** (capas 5 a 15); los dos de atrás (y = 8) salen del suelo (capas 0 a 15).
+- **Toldo plano** de **14×12** (x de 0 a 13, y de -3 a 8) en la capa 16, apoyado justo encima de los postes. Sobresale 1 vóxel por cada lado del mostrador y 3 por delante de la tapa.
+
+La pieza entera mide **14×12 y 17 de alto** (capas 0 a 16).
+
+Ahora compáralo con el chibi de [V5-01](/forja-art/voxel/v5-01/), la misma regla que en [la taberna (V4-06)](/forja-art/voxel/v4-06/): 15 de alto, **cinturón en z 3**, **manos en z 3–5**, ojos en z 9–10 y lo alto de la cabeza en z 14.
+
+| Pieza | Medida (sin el suelo) | Contra qué se mide |
+|---|---|---|
+| **Tapa del mostrador** | z 4 | Entre el **cinturón** y las **manos**: un vóxel por debajo de la mesa de la taberna (z 5). Se apoyan las manos y se ve la fruta |
+| **Hueco detrás del mostrador** | 2 filas (y 6 y 7), entre la tapa y los postes de atrás | Sitio para el **vendedor**, de pie y de cara al cliente |
+| **Festón y borde delantero del toldo** | z 12 y z 13 | El **pelo** del chibi, lo alto de la cabeza (z 14 es lo más alto) |
+| **Escalón de atrás del toldo** | z 16 | **2 por encima** de la cabeza: el vendedor cabe de pie debajo |
+
+<Why title="¿Por qué el mostrador más bajo que la mesa?">
+En una mesa se apoya un plato; en un mostrador se **enseña** la mercancía. Una capa más abajo, la fruta queda bajo la mirada del cliente, no a la altura de su barbilla. Es la regla de [F08-02](/forja-art/fundamentos/f08-02/): cada medida sale de un uso del cuerpo.
+</Why>
+
+<Warn title="Mide el toldo contra la cabeza">
+Detrás, donde está el vendedor, el toldo pasa por encima de la cabeza del chibi con 2 de margen. Delante, el borde baja hasta la altura del pelo: el cliente se queda **fuera** del toldo, frente al mostrador, y no pasa por debajo. Para un decorado visto de frente funciona. El hueco de 2 filas del vendedor también es justo: es un decorado, no un interior. Si en tu escena el cliente tiene que pasar bajo el toldo, **súbelo** hasta que el borde delantero quede al menos 1 vóxel por encima de lo alto de la cabeza de tu personaje. Si el vendedor tiene que moverse detrás, deja el hueco tan profundo como su cuerpo.
+</Warn>
+
+### 2. El toldo: una pendiente en escalones
+
+<VoxViewer model="mercado" stage={1} title="Toldo: cae en escalones, con rayas y festón" />
+
+En la etapa **Toldo**, la lámina de 14×12 deja de ser plana: **cae de z 16 detrás (y = 8) a z 13 delante (y = -3)**. Son **4 niveles** en **12 filas** de fondo. Gíralo de lado y cuenta las filas de cada escalón, de delante a atrás:
+
+- **z 13:** 3 filas (y -3 a -1).
+- **z 14:** 3 filas (y 0 a 2).
+- **z 15:** 3 filas (y 3 a 5).
+- **z 16:** 3 filas (y 6 a 8).
+
+Es lo que viste en [V2-02](/forja-art/voxel/v2-02/): una rampa recta es un **tramo constante**. Aquí todos los tramos son de **3**: baja 1 capa cada 3 filas, como una pendiente 3:1 del pixel art. De lado se lee una rampa recta, sin rellanos.
+
+El truco está en elegir el fondo **antes**: 12 filas entre 4 niveles da exacto. Con 11 o 13 filas, algún escalón tendría una fila de más o de menos. Otras combinaciones que salen exactas:
+
+| Fondo del toldo | Niveles | Tramo |
+|---|---|---|
+| 12 filas | 4 | **3, 3, 3, 3** |
+| 9 filas | 3 | **3, 3, 3** |
+| 8 filas | 4 | **2, 2, 2, 2** (más empinado) |
+
+<Why title="¿Por qué cae hacia delante?">
+Por la función y por la lectura. Un toldo inclinado echa el agua hacia fuera y da sombra al mostrador. Y en la imagen, la caída **señala el frente**: aunque gires el puesto, sabes en un segundo por dónde se compra. Un toldo plano se lee como una tapa.
+</Why>
+
+### 3. Rayas, festón y sombra
+
+Fíjate en el color del toldo:
+
+- **Rayas de 2 vóxels a lo largo de la caída**, rojo `#c2413b` y crema `#f4ecdc`. En 14 de ancho caben **4 rayas rojas y 3 crema**: empieza y acaba en rojo, así el toldo es simétrico.
+- **Atrás, más oscuro:** las 3 últimas filas (y 6 a 8), justo el escalón más alto, pasan a `#9c2f2c` y `#d8ccb4`. Es la parte que queda más lejos y bajo la sombra de la propia lona.
+- **El festón:** un vóxel rojo oscuro que cuelga bajo el borde delantero (y = -3, z 12), **una raya sí y otra no**: solo bajo las rojas (x 0–1, 4–5, 8–9 y 12–13). El borde deja de ser una línea recta.
+
+<Why title="Rayas a lo largo, no de lado">
+Las rayas que bajan por la caída **cruzan** cada escalón y lo dibujan: en el perfil se ve la escalera roja y crema. Si las pusieras de lado a lado, cada raya caería dentro de un escalón y la pendiente se volvería invisible. Las rayas son el dibujo; el escalón, la forma.
+</Why>
+
+El mostrador también cambia en esta etapa:
+
+- **Cuerpo de 12×4×4** (capas 0 a 3) en madera media, con **una tabla oscura cada 3 columnas** (x 3, 6, 9 y 12): son las tablas verticales.
+- **Tapa de 14×6** en madera clara (capa 4), que **sobresale 1 vóxel** por cada lado. La línea de luz de la tapa separa el mostrador de lo que va encima.
+
+### 4. Repetir con variación
+
+En la etapa **Mercancía** hay **tres cajas** de 4×4 sobre el mostrador. Son la misma pieza duplicada: fondo de madera oscura, un borde con el canto delantero más claro y la fruta dentro. Cambia lo que contienen:
+
+- **Manzanas** rojas (`#d8343f`), **naranjas** (`#f2a83a`) y **peras** verdes (`#4caf50`), cada una con su tono claro salpicado.
+- Cada caja tiene **un montón** de 2 vóxels que sobresale, en un sitio distinto de la caja.
+
+<Sprite name="rhythm-good" scale={4} caption="F07-02: en pixel art, el mismo principio. Repetición con orden y variación: se lee como un grupo, no como una fila de copias" />
+
+<Why title="La misma caja, distinta fruta">
+Duplicar ([V1-03](/forja-art/voxel/v1-03/)) garantiza que las tres cajas midan igual y se lean como un **puesto ordenado**. Cambiar el color del contenido rompe la monotonía de [F07-02](/forja-art/fundamentos/f07-02/) sin romper la estructura. Cambias **una** cosa por copia, como el barril bajo de la taberna.
+</Why>
+
+### 5. Quién vive ahí
+
+El resto de detalles cuenta una historia, como en [F10-01](/forja-art/fundamentos/f10-01/):
+
+- **Un cartel** de 4×2 colgado del borde delantero del toldo con dos cuerdas oscuras de 4 vóxels, marco crema y **una manzana pintada** (3 vóxels rojos y 1 verde): aquí se vende fruta, sin escribir nada.
+- **Dos sacos** al pie del mostrador, a la izquierda, uno más alto que otro, con la boca atada en marrón oscuro y la cara de la luz más clara.
+- **Un barril** de 3×3 y 5 de alto a la derecha, con dos aros de hierro y la tapa clara: la reserva.
+- **Una cesta** de 3×2 en el suelo con dos manzanas y una naranja.
+- **Una manzana caída** delante del mostrador.
+- **Suelo de adoquines** de 21×14 en tres grises. En esta etapa todo sube 1 capa para apoyarse en él: la pieza terminada mide **21×14 y 18 de alto**.
+
+<Why title="La manzana caída">
+Las cajas dicen «se vende fruta». La manzana en el suelo dice **«hoy ha habido gente»**: alguien ha cogido fruta con prisa, o se ha caído al reponer. Un solo vóxel fuera de su sitio da vida a toda la pieza. Es la misma idea del charco bajo la estalactita en [la cueva (V7-05)](/forja-art/voxel/v7-05/).
+</Why>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="El personaje y el blockout">
+1. Abre una escena nueva y mete a tu personaje como primer modelo, igual que en la taberna. Apunta sus alturas: cinturón, manos, ojos y lo alto de la cabeza.
+2. Crea un modelo nuevo de unos **14×12 y 17 de alto** junto a él (ajusta el alto a tu personaje). Guárdalo como `mercado_v1.vox`.
+3. Modo **Attach**, pincel **Box**: el mostrador, una caja de unos 12×4, con la tapa **entre el cinturón y las manos** de tu personaje.
+4. Cuatro postes de 1×1 en madera oscura: dos delante, encima del mostrador, y dos atrás, desde el suelo, **separados del mostrador** lo que necesite el vendedor para estar de pie.
+5. Un toldo plano provisional encima de los postes, por encima de la cabeza de tu personaje, 1 vóxel por fuera del mostrador a los lados y 3 por delante.
+
+<Why>
+El blockout responde a una sola pregunta: ¿mide bien contra el personaje? En el modo **World**, pon los dos modelos de lado. Si la tapa le llega al pecho o a las rodillas, corrígelo ahora, antes de pintar una sola raya.
+</Why>
+</Step>
+
+<Step n={2} title="Decide la caída del toldo">
+1. Decide la **altura de delante**: si alguien tiene que pasar debajo, por encima de la cabeza de tu personaje.
+2. Decide **cuántos niveles** tiene (en el modelo, 4: cae 3 capas) y **cuántas filas de fondo** (en el modelo, 12).
+3. Haz la división: filas entre niveles. Si no sale exacto, cambia el fondo 1 o 2 filas hasta que salga (12 filas en 4 niveles = tramos de 3).
+4. Apúntalo en un papel: «nivel 1, filas tal a tal; nivel 2…».
+
+<Tip>
+Es el mismo cálculo de las pendientes del pixel art: una 3:1 son tramos de 3. Si cada nivel tiene las mismas filas, la rampa se lee recta desde cualquier lado.
+</Tip>
+</Step>
+
+<Step n={3} title="Construye el toldo en escalones">
+1. Con **Erase** y **Box**, borra el toldo plano.
+2. Modo **Attach**, pincel **Box**, en rojo: construye **cada nivel como una lámina** de 1 vóxel de grosor, del ancho completo y con las filas que apuntaste. Empieza por el de atrás, el más alto.
+3. Baja una capa por nivel hacia delante. Cada lámina toca a la anterior por la esquina: el toldo no tiene huecos vistos desde arriba.
+4. Alarga los postes con **Attach** y el pincel **Voxel** hasta tocar el toldo por debajo.
+
+<Warn>
+Gira el modelo de lado antes de seguir. Si un nivel tiene una fila más que los otros, se nota como un rellano. Arréglalo ahora: con las rayas pintadas cuesta más verlo.
+</Warn>
+</Step>
+
+<Step n={4} title="Rayas, festón y mostrador">
+1. Modo **Paint**, pincel **Box**: pinta rayas de 2 vóxels **a lo largo de la caída**, alternando rojo y crema. Ajusta el ancho del toldo para que empiece y acabe con el mismo color.
+2. Pinta el escalón de atrás con un rojo y un crema más oscuros.
+3. Modo **Attach**, pincel **Voxel**, rojo oscuro: cuelga un vóxel bajo el borde delantero, **solo bajo las rayas rojas**. Es el festón.
+4. En el mostrador: **Paint** en madera oscura, una columna de cada tres (las tablas). Con **Attach** y madera clara, una tapa 1 vóxel más grande por cada lado.
+</Step>
+
+<Step n={5} title="Una caja, duplicada y variada">
+1. Modelo nuevo de 4×4×3: fondo de madera oscura, borde de madera media con el canto delantero en madera clara, y dentro una capa de fruta en dos tonos.
+2. Añade un **montón** de 2 vóxels que sobresalga.
+3. En **World**, **duplica** la caja dos veces y ponlas sobre el mostrador, en fila.
+4. En cada copia, con **Paint**, cambia la fruta de color y mueve el montón a otro sitio.
+
+<Why>
+Tres cajas iguales son una fila de copias; tres cajas distintas en todo, un desorden. La misma caja con otro contenido da las dos cosas: orden y variedad.
+</Why>
+</Step>
+
+<Step n={6} title="Los detalles que cuentan">
+1. **Cartel:** una placa de 4×2 crema colgada del borde delantero con dos cuerdas de 1 vóxel. Pinta dentro el símbolo de lo que vendes (una manzana, un pez, una hogaza).
+2. **Al pie:** dos sacos de alturas distintas con la boca atada, y un barril o una cesta.
+3. **Algo fuera de su sitio:** una fruta caída, un saco abierto, una caja vacía.
+4. **Suelo:** adoquines en tres grises bajo todo el puesto. Sube el puesto 1 capa para apoyarlo.
+5. Guarda `mercado_v1.vox`.
+
+<Tip>
+Antes de añadir un detalle, pregúntate qué cuenta. Si no dice nada de quién vende o de qué ha pasado, sobra.
+</Tip>
+</Step>
+
+<Step n={7} title="Render de frente">
+1. Pulsa **Render**. Coloca la cámara **de frente y algo desde arriba**, para que se vean la caída del toldo, el cartel y la fruta.
+2. Busca una luz que ilumine la mercancía y deje la parte de atrás del toldo en sombra.
+3. Comprueba en pequeño: ¿se lee que es un puesto de fruta? ¿Se ve la pendiente del toldo?
+4. Guarda la imagen y `mercado_v1.vox` en tu portfolio.
+</Step>
+
+<Warn title="Verifica en tu versión">
+Los nombres de los modos **Attach**, **Erase** y **Paint**, de los pinceles **Voxel** y **Box**, el modo **World** y cómo se **duplica** y se mueve un modelo en él pueden variar entre versiones de MagicaVoxel. En el modo **Render**, los ajustes de la luz y de la cámara y el botón para guardar la imagen cambian de nombre y de sitio: búscalos por su función.
+</Warn>
+
+<Inspector upload title="Sube tu render: ¿se lee el puesto a 1×?" />
+</Block>
+
+<Block kind="version">
+Forja **tu** puesto con la misma receta: medir, toldo en escalones regulares, rayas a lo largo de la caída, mercancía repetida con variación y detalles con historia. Elige un reto:
+
+- **El pescadero:** toldo azul y blanco, cajas con hielo (un azul muy claro) y peces de 1×3, un cubo con agua y una gaviota posada en el poste.
+- **La calle del mercado:** tres puestos seguidos que comparten el mostrador y los postes, pero cambian el color del toldo, la caída (uno más empinado) y la mercancía. El reto es el ritmo de F07-02.
+- **El puesto cerrado:** el mismo puesto al final del día: el toldo recogido (más corto), las cajas vacías o tapadas con una lona, y una sola caja olvidada.
+
+Antes de darlo por bueno, míralo de lado: ¿los escalones del toldo tienen todos las mismas filas?
+</Block>
+
+<Block kind="errores">
+<Mistake title="El toldo plano" wrongLabel="Una tapa" rightLabel="Una lona que cae">
+  <p slot="wrong">El toldo es una lámina horizontal del mismo color. Desde delante y desde atrás se ve igual: parece la tapa de una caja, y no se sabe por dónde se compra.</p>
+  <p slot="right">El toldo cae hacia el cliente en escalones, con rayas que bajan por la caída y un festón en el borde: la forma señala el frente.</p>
+
+Compara las etapas «Blockout» y «Toldo» del visor. **Corrección:** decide cuántas capas cae y rehaz el toldo nivel a nivel, del más alto atrás al más bajo delante.
+</Mistake>
+
+<Mistake title="Escalones irregulares" wrongLabel="Tramos 1, 4, 2, 4" rightLabel="Tramos 3, 3, 3, 3">
+  <p slot="wrong">Cada nivel del toldo se ha puesto «a ojo»: uno de 1 fila, otro de 4, otro de 2. De lado se ven rellanos y saltos: el toldo parece abollado, como una línea con jaggies.</p>
+  <p slot="right">El fondo se ha elegido para que la división salga exacta: 12 filas en 4 niveles, tramos de 3. De lado, una rampa recta.</p>
+
+Es el error de [V2-02](/forja-art/voxel/v2-02/). Pasa casi siempre por elegir el fondo sin pensar: con 11 filas y 4 niveles no hay reparto igual. El toldo del curso tiene 12 filas justo por eso. **Corrección:** haz la cuenta antes de colocar el primer vóxel y, si no sale exacta, cambia el fondo, no los escalones.
+</Mistake>
+
+<Warn title="Error típico: tres cajas idénticas">
+Las tres cajas con la misma fruta y el montón en el mismo sitio. Se lee como copia y pega, no como un puesto. **Corrección:** duplica la caja, pero cambia en cada copia el color de la fruta y dónde sobresale el montón. Una cosa por copia basta.
+</Warn>
+
+<Warn title="Error típico: el toldo a la altura de la cara">
+Un toldo bonito que queda a la altura de los ojos de tu personaje, también detrás del mostrador. El vendedor no cabe de pie y el puesto parece de juguete. **Corrección:** mídelo con el personaje en la escena. Donde haya alguien debajo, el toldo va por encima de su cabeza, como el escalón de atrás del curso (2 por encima del chibi). Delante puede bajar hasta la altura del pelo si el cliente se queda fuera; si tiene que pasar por debajo, súbelo también.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+<Checklist items={[
+  "Mi personaje está en la escena y la tapa del mostrador queda entre su cinturón y sus manos",
+  "Decidí si el toldo es solo decorado o si alguien pasa debajo, y lo medí contra la cabeza",
+  "El toldo cae hacia delante y todos sus escalones tienen las mismas filas",
+  "Las rayas van a lo largo de la caída y el toldo empieza y acaba con el mismo color",
+  "El borde delantero tiene festón y la parte de atrás del toldo es más oscura",
+  "Las cajas son la misma pieza duplicada y cada una cambia algo",
+  "Hay al menos dos detalles que cuentan quién vende o qué ha pasado",
+  "He guardado mercado_v1.vox y un render de frente en mi portfolio",
+]} />
+
+<Quiz q="Tu toldo tiene 4 niveles y quieres escalones regulares. ¿Qué fondo eliges?" options={["11 filas", "12 filas", "13 filas"]} answer={1}>
+12 entre 4 niveles da tramos de 3 exactos. Con 11 o 13, algún nivel tiene una fila de más o de menos y aparece un rellano.
+</Quiz>
+
+<Quiz q="¿Por qué las rayas del toldo van a lo largo de la caída?" options={["Porque así se pinta más rápido", "Porque cruzan cada escalón y dibujan la pendiente", "Porque MagicaVoxel no deja pintar en la otra dirección"]} answer={1}>
+Las rayas que bajan por la lona atraviesan todos los niveles y, de lado, dibujan la escalera. De lado a lado, cada raya cae dentro de un escalón y la pendiente desaparece.
+</Quiz>
+
+<Quiz q="Las tres cajas de fruta del modelo, ¿cómo se han hecho?" options={["Una caja duplicada, cambiando la fruta y el montón de cada copia", "Tres cajas modeladas por separado y distintas en todo", "Una caja duplicada sin cambiar nada"]} answer={0}>
+Duplicar mantiene la misma medida y el orden; cambiar una cosa por copia rompe la monotonía. Es repetición con variación.
+</Quiz>
+</Block>

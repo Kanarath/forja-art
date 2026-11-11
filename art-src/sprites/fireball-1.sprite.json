@@ -1,0 +1,32 @@
+{
+  "name": "fireball-1",
+  "description": "Bola de fuego, frame 1 de 4 (24×12): el núcleo blanco y amarillo, a la derecha, es media bola de borde limpio; detrás sale una estela que se estrecha, pasa a naranja y rojo y ondula. Chispas sueltas al final.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "vfx",
+    "animación",
+    "proyectil"
+  ],
+  "palette": {
+    "a": "#f2a83a",
+    "b": "#d8642a",
+    "c": "#a8321e",
+    "d": "#ffe58a",
+    "e": "#fff8e0"
+  },
+  "rows": [
+    "........................",
+    "........................",
+    "....a..........bbabb....",
+    ".............caaadaab...",
+    "....a.bb..bbaaddddddab..",
+    ".....aaadaaaddeeeeedab..",
+    "....b...baddddeeeeedab..",
+    "d.........aaaaddddddab..",
+    "...........bcbbaadaab...",
+    "...............bbabb....",
+    "........................",
+    "........................"
+  ]
+}

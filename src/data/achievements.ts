@@ -120,5 +120,10 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   { id: "saturacion", name: "Saturación y foco", description: "Una escena con el color fuerte solo en el punto de interés (F03-03).", color: "#ff4fa3" },
   { id: "pozo", name: "Pozo", description: "Un pozo voxel con un brocal redondo de diámetro impar, tejado y cubo (V2-05).", color: "#7d8698" },
   { id: "gallina", name: "Gallina", description: "Un animal voxel de dos patas: masas, forma y detalle (V5-07).", color: "#f4ecdc" },
+  { id: "comida", name: "Comida", description: "Cuatro consumibles de 16×16 que se leen por el material: manzana, pan, queso y carne (P4-10).", color: "#e04a4a" },
+  { id: "bola-fuego", name: "Bola de fuego", description: "Un proyectil en bucle de 4 frames con núcleo fijo y estela que dice la dirección (P6-10).", color: "#f2a83a" },
+  { id: "bordes", name: "Bordes", description: "Repartir bordes duros, suaves y perdidos en una escena (F01-03).", color: "#b0abc4" },
+  { id: "rana", name: "Rana", description: "Una rana voxel agazapada sobre un nenúfar: masas, forma y detalle (V5-08).", color: "#5cb840" },
+  { id: "mercado", name: "Mercado", description: "Un puesto de mercado voxel con toldo a rayas y mercancía (V7-06).", color: "#c2413b" },
   { id: "forma-primero", name: "Forma antes que detalle", description: "Un modelo voxel con su blockout guardado como primera versión (V2-01).", color: "#38e1ff" },
 ];

@@ -1,0 +1,284 @@
+---
+id: v5-08
+discipline: voxel
+level: 5
+order: 8
+title: "Poses agazapadas: una rana"
+summary: "Un animal que no está de pie: patas plegadas, el peso pegado al suelo y los ojos en lo más alto. La pose está en la forma, y el color separa a la rana del nenúfar en el que se sienta."
+duration: 40
+status: borrador
+prerequisites: [v5-07, v2-05]
+fundamentals: [f02, f09]
+objectives:
+  - "Entender que una pose agazapada se construye con la forma: patas plegadas, cuerpo bajo y ojos arriba"
+  - "Plegar una pata en zigzag: el muslo hacia atrás y el pie largo hacia delante, pegado al suelo"
+  - "Repartir el peso entre cuatro apoyos cercanos y bajos, y comprobarlo de perfil"
+  - "Separar el personaje del soporte con valor y tono: rana verde lima, nenúfar más oscuro y azulado"
+  - "Construir el soporte con los círculos de V2-05: un nenúfar con muesca y agua alrededor"
+tools: [magicavoxel]
+piece:
+  name: "Tu propio animal agazapado (rana, sapo, gato tumbado, conejo…) sobre su soporte, en tres pasos: masas, forma, y color y detalle"
+  canvas: "19x19x10"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [rana]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+La oveja de [V5-04](/forja-art/voxel/v5-04/) estaba de pie sobre cuatro columnas. La gallina de [V5-07](/forja-art/voxel/v5-07/), sobre dos. Hoy forjas un animal que **no está de pie**: está agazapado, con las patas dobladas debajo y el peso casi en el suelo. Una rana sobre un nenúfar.
+
+<VoxViewer model="rana" stage={2} title="Tu pieza: una rana agazapada sobre un nenúfar" />
+
+Gírala de perfil, de frente y desde arriba. No hay ni una pata recta. Y aun así no parece aplastada ni rota: parece **a punto de saltar**.
+
+Recorre las tres etapas: **Masas**, **Forma** y **Color y detalle**.
+
+Tu pieza final: **tu propio animal agazapado** (la rana, un sapo, un gato tumbado, un conejo…) sobre su soporte, hecho en esos tres pasos, con Mirror en Y, y un render.
+</Block>
+
+<Block kind="concepto">
+### 1. Las masas: cajas que ya están sentadas
+
+<VoxViewer model="rana" stage={0} title="Masas: cuerpo, cabeza, ojos y patas plegadas" />
+
+La etapa **Masas** son solo cajas, todas del mismo verde. La rana mira hacia **+X**, como la oveja y la gallina:
+
+- **Cuerpo:** una caja de **6 de largo, 7 de ancho y 5 de alto**, de la capa **1** a la **5**. No toca el suelo: lo sostienen las patas.
+- **Cabeza:** delante, **igual de ancha que el cuerpo** (7), de 4 de largo y 4 de alto (capas 2 a 5). No hay cuello.
+- **Ojos:** dos cajas de **2×2×2** **encima** de la cabeza (capas 6 y 7), una a cada lado.
+- **Patas de atrás:** dos cajas de 5 de largo, 2 de ancho y 3 de alto (capas 0 a 2), pegadas a los costados del cuerpo, en la mitad de atrás.
+- **Patas de delante:** dos columnas de **1×1** y 2 de alto bajo la cabeza.
+
+En total, 10 de largo, 11 de ancho y solo **8 de alto**. Es más ancha que alta.
+
+<Why title="Por qué la pose se decide en las masas">
+La oveja medía 17 de largo y 12 de alto; la gallina, 12 y 12. La rana, 10 de largo y 8 de alto, y de esos 8, los dos de arriba son los ojos. Antes de redondear nada, las proporciones ya dicen «agachada»: **ancha, baja y con lo más alto en los ojos**. Si en este paso la caja del cuerpo fuera alta o las patas fueran columnas, ningún detalle posterior la sentaría.
+</Why>
+
+### 2. La pata plegada: un zigzag
+
+<VoxViewer model="rana" stage={1} title="Forma: cuerpo en gota, cabeza plana, muslos plegados y pies largos" />
+
+Pasa a **Forma** y mira de perfil una pata de atrás. Ya no es una caja: son **dos piezas que van en sentidos contrarios**.
+
+- **Muslo:** un bulto redondo a cada lado, centrado atrás (hacia **−2** en X), de las capas **1 a 3**. No toca el suelo.
+- **Pie:** una tira de 1 de ancho pegada al suelo (capa 0) que va **hacia delante**, de **−1 a +3** en X, y acaba en dos dedos.
+
+La pierna sale de la cadera **hacia atrás** (el muslo) y vuelve **hacia delante** (el pie). Es un zigzag: la pata está doblada sobre sí misma, como un muelle comprimido.
+
+<Why title="Por qué el zigzag dice «a punto de saltar»">
+Una pata recta es una columna: sostiene, pero no hace nada. Una pata **plegada** guarda el movimiento: el ojo entiende que puede estirarse de golpe. Es la misma idea que la anticipación del slime en [P6-03](/forja-art/pixel/p6-03/): el cuerpo se encoge antes de saltar. Aquí no hay animación, pero la pose congela ese instante. Y cuanto más largo es el pie que vuelve hacia delante, más claro se lee el pliegue.
+</Why>
+
+### 3. El peso: abajo y entre cuatro apoyos
+
+En la etapa **Forma**, la capa 0 (lo que toca el suelo) son solo 18 vóxels: los dos pies largos y las dos manos con sus dedos. Van de **−1 a +4** en X y de **−5 a +5** en Y: un rectángulo de apoyos.
+
+- Si haces la media de la posición en X de todos los vóxels de la rana, sale **+0,2**: dentro de ese rectángulo, entre los pies y las manos.
+- El cuerpo baja hasta la capa **1**: la tripa queda **a un vóxel del suelo**.
+
+<Why title="Por qué aquí el equilibrio es fácil y la gallina era difícil">
+La gallina tenía **un** punto de apoyo y había que equilibrar cabeza y cola encima. La rana tiene **cuatro apoyos repartidos** y el cuerpo casi tocando el suelo: el centro de masas cae dentro de la base con margen. Una pose agazapada **se lee estable** por eso: el peso está bajo y la base es ancha. Si subes el cuerpo o juntas los apoyos, la misma rana parece de pie o a punto de volcar.
+</Why>
+
+<Tip>
+Mira la rana de frente: la parte más ancha (los muslos, 11 de ancho) está **abajo**, y se estrecha hacia el lomo. Es un triángulo apoyado en su base, la forma más estable de [F09-02](/forja-art/fundamentos/f09-02/).
+</Tip>
+
+### 4. La forma: una gota, una cabeza plana y ojos saltones
+
+Compara **Forma** con **Masas** (de 402 vóxels se pasa a 286):
+
+- **Cuerpo:** la caja pasa a ser una **gota**: más alta delante, hacia la cabeza, y más baja detrás. En la capa 5, el lomo ya solo tiene 5 de ancho.
+- **Cabeza:** **ancha y plana**, sin cuello: sigue el cuerpo sin muesca, como en una rana de verdad.
+- **Ojos:** siguen siendo dos bultos de 2×2×2 encima de la cabeza, pero cada uno pierde **la esquina de arriba de detrás**: quedan 7 vóxels por ojo y se leen redondeados.
+- **Brazos:** finos, una columna de 1×1 y 3 de alto bajo la cabeza, con **dos dedos abiertos** en el suelo, hacia delante y hacia fuera.
+
+<Why title="Por qué los ojos van encima y no delante">
+La rana vive con el cuerpo en el agua y los ojos fuera: los tiene **en lo alto de la cabeza**. Es el rasgo que dice la especie antes que el color. Además, en una pose baja, lo más alto del modelo es lo primero que se mira: si lo más alto son los ojos, la mirada del espectador va directa a la cara. El chibi de [V5-01](/forja-art/voxel/v5-01/) tenía los ojos en la cara; en la rana, ponerlos ahí la convierte en un muñeco.
+</Why>
+
+### 5. Separar la rana del soporte
+
+Pasa a **Color y detalle**. La rana sube un vóxel y debajo aparece el **nenúfar**, con agua alrededor. Ahora hay dos verdes tocándose, y tienen que leerse como dos cosas.
+
+<VoxViewer model="rana" stage={2} title="Color y detalle: la rana verde lima sobre un nenúfar más oscuro y azulado" />
+
+- **La rana** es **verde lima**, un verde hacia el amarillo: el lomo, claro, y los costados un paso más oscuros. Su verde principal tiene un valor de unos 140 sobre 255, y el lomo claro, unos 195.
+- **El nenúfar** es **verde azulado** y más oscuro: sus dos tonos rondan los 70 y los 95.
+
+Los separan **dos cosas a la vez**: el **valor** (la rana, más clara) y el **tono** (amarillento contra azulado).
+
+<Why title="Por qué hacen falta las dos">
+Mira la parte de abajo de los costados de la rana: es su verde oscuro, de unos 105 de valor, casi igual que el verde claro del nenúfar (unos 95). Justo ahí, donde la rana toca el soporte, el valor **no** basta. Lo que la separa en ese borde es el **tono**: un verde amarillo contra un verde azul. Es la temperatura de [F03-01](/forja-art/fundamentos/f03-01/): lo cálido avanza, lo frío se queda atrás. Si pintas los dos del mismo verde, la rana se hunde en la hoja; si solo cambias el valor, el borde de abajo se funde.
+</Why>
+
+<Tip>
+Prueba de grises sin salir de MagicaVoxel: haz un render y míralo en el Inspector de la academia con la vista de grises, o simplemente entorna los ojos. La rana tiene que ser **la mancha más clara** sobre la hoja.
+</Tip>
+
+### 6. El color y los detalles de la rana
+
+En la rana hay **10 colores**, pero casi todo es verde:
+
+- **Lomo:** lo que mira hacia arriba en la parte alta, en el verde más claro (28 vóxels), con **10 manchas** oscuras sueltas encima.
+- **Costados:** el verde principal arriba y el verde oscuro abajo, en las dos capas más bajas: el AO pintado de [V3-01](/forja-art/voxel/v3-01/). Los pies y los brazos, también oscuros.
+- **Garganta y tripa:** una fila crema de 5 vóxels bajo la barbilla, y 8 vóxels de un crema más apagado debajo del cuerpo (se ven si bajas la cámara).
+- **Boca:** una línea de **9 vóxels** muy oscuros que **rodea el morro por fuera**, en una sola capa (la capa 4, a media altura de la cabeza): 3 en la punta y 3 en cada costado, hacia atrás. Es una línea de color: no quita ni añade vóxels.
+- **Ojos:** cada uno con 3 vóxels dorados, 3 dorados claros encima y **1 pupila** casi negra en la esquina de delante y de fuera.
+
+<Why title="Por qué tan pocos">
+Igual que en la gallina: la especie la dicen los ojos arriba, la cabeza plana sin cuello y las patas plegadas. El color solo confirma. El dorado de los ojos es el color más claro y cálido de la rana, y está en lo más alto: refuerza adonde ya va la mirada.
+</Why>
+
+### 7. El soporte: círculos de V2-05
+
+El nenúfar es un **disco de radio 6,5** (13 de diámetro, impar, con vóxel central), como los círculos limpios del pozo de [V2-05](/forja-art/voxel/v2-05/). Le falta una **muesca**: una cuña de 17 vóxels que va del centro al borde, por detrás de la rana. Tiene el borde y unas venas en el verde más oscuro.
+
+Alrededor, el agua es otro disco, de radio **9,5** (19 de diámetro) en tres azules, al que le falta una esquina. Y a la izquierda, un **nenúfar pequeño** de 4 vóxels con una flor rosa encima. Todo el conjunto mide **19×19** de planta y 9 de alto.
+
+<Why title="Por qué la muesca">
+Un disco perfecto se lee como un plato. La muesca es el rasgo que dice «nenúfar», con muy pocos vóxels, igual que la cresta dice «gallina». Y el nenúfar pequeño con la flor repite la forma grande a otro tamaño: es el ritmo grande y pequeño de [F07-02](/forja-art/fundamentos/f07-02/).
+</Why>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Elige el animal y prepara la paleta">
+1. Decide tu animal agazapado y escribe en una línea **qué dice la pose**: «ancha, baja, patas en zigzag, ojos en lo más alto».
+2. Crea un modelo nuevo de **19×19×10** (largo, ancho y alto). Ancho **impar**: hay columna central para la boca y el centro del nenúfar.
+3. En la **paleta** de la izquierda, en una fila: tres verdes de la rana hacia el amarillo (claro, medio y oscuro), uno muy oscuro para las manchas y la boca, dos cremas, dos dorados y un casi negro para los ojos. En otra fila, el soporte: dos verdes **azulados y más oscuros** y tres azules para el agua.
+
+<Why>
+Las dos familias, separadas desde el principio: la de la rana hacia el amarillo y la del nenúfar hacia el azul. Si las eliges juntas, acabarás usando el mismo verde en las dos.
+</Why>
+</Step>
+
+<Step n={2} title="Masas: cuerpo, cabeza y ojos">
+1. Activa el botón **Mirror Y** (en la barra de pinceles). Gira la cámara con el **botón derecho** hasta ver el modelo de frente y comprueba que el reflejo cae en la columna central.
+2. Modo **Attach**, pincel **Box**, verde medio: el cuerpo, una caja de unos **6×7×5**, **un vóxel por encima del suelo**. Deja sitio por debajo del modelo para el nenúfar (o haz la rana primero y súbela después).
+3. Delante, la cabeza, igual de ancha y un poco más baja, pegada al cuerpo.
+4. Encima de la cabeza, un ojo de **2×2×2** a un lado. Mirror pone el otro.
+
+<Tip>
+Compara con la etapa **Masas** del visor. Mueve **Capas** para ver que el cuerpo empieza en la capa 1 y que nada del cuerpo toca la capa 0.
+</Tip>
+</Step>
+
+<Step n={3} title="Masas: las patas plegadas">
+1. Mismo verde, pincel **Box**: a un costado del cuerpo, en la mitad de atrás, una caja de unos **5×2×3** que llegue al suelo. Mirror pone la otra.
+2. Bajo la cabeza, un brazo de **1×1** y 2 de alto.
+3. Gira de **perfil**: la rana es más ancha que alta y lo más alto son los ojos.
+4. Gira de **frente**: lo más ancho está abajo.
+5. Guarda como `agazapado_masas.vox`.
+
+<Why>
+Las patas, en este paso, son solo un volumen que dice «aquí hay mucha pierna doblada». El zigzag se dibuja en el paso siguiente, cuando quitas material.
+</Why>
+</Step>
+
+<Step n={4} title="Forma: la gota, la cabeza plana y el zigzag">
+1. Con **Mirror Y** encendido, modo **Erase**, pincel **Voxel**: redondea el cuerpo hasta una **gota**, quitando más detrás y arriba que delante.
+2. Cabeza: quita las esquinas de arriba para que quede **plana y ancha**, y que pase al cuerpo sin muesca de cuello.
+3. Ojos: quita la esquina de arriba de detrás de cada uno.
+4. Pata de atrás: borra la caja y rehazla en dos piezas. Modo **Attach**: un **muslo** redondo en el costado, de la capa 1 a la 3, hacia atrás; y un **pie** de 1 de ancho en la capa 0 que vaya **hacia delante** desde debajo del muslo, con un dedo al final.
+5. Brazo: alárgalo a 3 de alto y añade **dos dedos** en el suelo, uno hacia delante y otro hacia fuera.
+6. De perfil: ¿se ve el zigzag (muslo atrás, pie delante)? ¿La tripa queda a un vóxel del suelo?
+
+<Warn>
+Si el muslo toca el suelo en toda su longitud, la pata deja de leerse plegada: parece un tronco tumbado. Deja el muslo **en el aire** y que solo el pie apoye.
+</Warn>
+</Step>
+
+<Step n={5} title="Color: lomo, costados, tripa, boca y ojos">
+1. Modo **Paint**, verde claro: lo que mira hacia arriba en la parte alta del lomo y la cabeza.
+2. Verde oscuro: las **dos capas de abajo** de los costados, los pies y los brazos.
+3. Muy oscuro: unas manchas sueltas en el lomo, **sin simetría** (apaga Mirror para eso), y la **boca**: con Mirror encendido, una línea en una sola capa, a media altura de la cabeza, que recorra la punta del morro y siga unos 3 vóxels por cada costado hacia atrás. Pinta solo los vóxels de fuera, los que se ven.
+4. Crema: una fila bajo la barbilla y la tripa por debajo.
+5. Ojos: dorado, dorado claro arriba y **una pupila** casi negra en la esquina de delante y de fuera.
+
+<Why>
+No añades ni quitas un vóxel. La pose ya funciona; el color solo hace el lomo más claro (le da la luz) y los costados de abajo más oscuros (el suelo los tapa). Las manchas, sin simetría: así parecen piel y no un estampado.
+</Why>
+</Step>
+
+<Step n={6} title="El nenúfar, el agua y el render">
+1. Sube la rana un vóxel si no lo hiciste (o empieza el soporte en la capa 0 si ya dejaste el hueco).
+2. En la capa 0, con el verde azulado claro: un **disco de 13 de diámetro** con el centro bajo la rana. Hazlo como en [V2-05](/forja-art/voxel/v2-05/): diámetro impar y sin vóxeles sueltos en las puntas.
+3. Modo **Erase**: corta una **cuña** del centro al borde, por detrás de la rana. Pinta el borde del disco y unas venas en el verde azulado oscuro.
+4. Alrededor, el agua en azules, hasta 19 de diámetro. Apaga Mirror y añade un nenúfar pequeño a un lado con una flor.
+5. Guarda como `agazapado_v1.vox`. Pulsa **Render** arriba, elige una cámara en diagonal desde arriba donde se vean los ojos y un costado, y guarda la imagen.
+
+<Tip>
+Aleja la cámara con la rueda del ratón hasta que la rana sea pequeña, como en un juego. Lo último que se debe perder es la mancha clara de la rana sobre la hoja oscura y los dos ojos arriba. Si se funde con el nenúfar, oscurece y azula el nenúfar; no le pongas contorno a la rana.
+</Tip>
+</Step>
+
+<Warn title="Verifica en tu versión">
+Los nombres y la posición de **Mirror Y**, **Attach** / **Erase** / **Paint**, los pinceles **Voxel** y **Box** y los campos de tamaño del modelo pueden variar entre versiones de MagicaVoxel. Comprueba también qué eje es cada **Mirror** en tu versión (en el modelo del curso la rana mira hacia +X y el espejo es en Y) y cómo refleja con un ancho impar: el reflejo debe caer en la columna central.
+</Warn>
+</Block>
+
+<Block kind="version">
+Ahora, **tu** animal agazapado. Misma receta: proporciones anchas y bajas, patas en zigzag, peso a un vóxel del suelo entre apoyos repartidos, lo más alto en lo que quieres que se mire, y un soporte que se separe en valor y tono. Elige un reto:
+
+- **Un sapo:** la misma pose, pero más pesado. Cuerpo más ancho y redondo, patas más cortas, piel marrón con verrugas de 1 vóxel en un tono un paso más claro. Ponlo sobre una piedra gris: la separación será sobre todo de **tono** (marrón cálido contra gris frío).
+- **Un gato tumbado:** las patas de delante plegadas **hacia dentro** bajo el pecho y la cola rodeando el cuerpo. Lo más alto son las orejas. Sobre un cojín de un color que no compita con el pelaje.
+- **Un conejo agazapado:** cuerpo en gota, patas de atrás muy largas pegadas al suelo (el pie del conejo es largo como el de la rana) y las orejas tumbadas sobre el lomo. Sobre hierba: el conejo, claro; la hierba, más oscura y fría.
+
+**Prueba final:** haz un render de tu animal y del de la rana a la misma distancia, pequeños, y míralos en grises. ¿Se separan los dos de su soporte?
+</Block>
+
+<Block kind="errores">
+<Mistake title="Patas rectas: la rana de pie" wrongLabel="Patas de columna, cuerpo alto" rightLabel="Patas en zigzag, cuerpo bajo">
+  <p slot="wrong">Copias las patas de la oveja: cuatro columnas rectas y el cuerpo subido 4 o 5 vóxels. La rana se lee de pie, como una mesa verde con ojos, y pierde toda la tensión.</p>
+  <p slot="right">El muslo plegado a los lados, en el aire, y el pie largo volviendo hacia delante pegado al suelo. El cuerpo a un vóxel del suelo.</p>
+
+La pose no está en el color ni en la cara: está en la forma de las patas. **Corrección:** baja el cuerpo hasta la capa 1 y rehaz cada pata de atrás como dos piezas en sentidos contrarios. Comprueba de perfil que se ve el zigzag.
+</Mistake>
+
+<Mistake title="Verde sobre verde" wrongLabel="Rana y nenúfar del mismo verde" rightLabel="Lima sobre verde azulado oscuro">
+  <p slot="wrong">Pintas el nenúfar con los mismos verdes que la rana. En el render, la rana se hunde en la hoja: solo se ven dos ojos flotando sobre una mancha verde.</p>
+  <p slot="right">La rana en verdes hacia el amarillo y más claros; el nenúfar en verdes hacia el azul y más oscuros. Se separan en valor y, donde el valor se acerca (abajo de los costados), en tono.</p>
+
+Un personaje sobre su soporte es un problema de figura y fondo, como en [F07-01](/forja-art/fundamentos/f07-01/). **Corrección:** decide primero quién es la figura (la rana) y empuja el soporte hacia atrás: más oscuro y más frío. No pongas contorno a la rana para arreglarlo; separa con el color.
+</Mistake>
+
+<Mistake title="Ojos en la cara" wrongLabel="Ojos delante, como un chibi" rightLabel="Ojos encima de la cabeza">
+  <p slot="wrong">Pones los ojos en la cara delantera de la cabeza, mirando al frente, como en el chibi de V5-01. La rana parece un muñeco o un pez, y lo más alto del modelo pasa a ser el lomo.</p>
+  <p slot="right">Dos bultos de 2×2×2 encima de la cabeza, a los lados, con la pupila hacia fuera. Son lo más alto de la rana y lo primero que se mira.</p>
+
+Los ojos dicen la especie antes que el color. **Corrección:** súbelos encima de la cabeza y deja la cara delantera lisa, solo con la línea de la boca que rodea el morro.
+</Mistake>
+
+<Warn title="Error típico: el muslo apoyado">
+Haces el muslo tocando el suelo en toda su longitud, sin pie. De lejos, la pata parece un tronco tumbado junto al cuerpo. **Corrección:** el muslo, en el aire (capas 1 a 3); solo el pie, largo y fino, toca el suelo.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+<Checklist items={[
+  "Mi animal es más ancho que alto, y lo más alto es lo que quiero que se mire (los ojos, las orejas)",
+  "Las patas de atrás van en zigzag: el muslo hacia atrás y en el aire, el pie hacia delante en el suelo",
+  "El cuerpo queda a un vóxel del suelo y el peso cae entre los apoyos",
+  "De frente, lo más ancho está abajo",
+  "El soporte es más oscuro y de otro tono que el animal",
+  "Donde el animal toca el soporte, se separan aunque el valor se acerque",
+  "Las manchas están sueltas y sin simetría",
+  "El soporte usa un círculo limpio de diámetro impar, con un rasgo que lo identifica",
+  "He guardado agazapado_v1.vox y un render en mi portfolio",
+]} />
+
+<Quiz q="Tu rana parece de pie, no agazapada. ¿Qué cambias primero?" options={["Le pongo los ojos más grandes", "Bajo el cuerpo hasta casi el suelo y pliego las patas en zigzag: muslo atrás, pie delante", "La pinto de un verde más oscuro"]} answer={1}>
+La pose está en la forma: el cuerpo bajo y las patas plegadas. El color y los ojos no la cambian.
+</Quiz>
+
+<Quiz q="Donde la rana toca el nenúfar, su verde oscuro tiene casi el mismo valor que el verde claro de la hoja. ¿Qué la separa ahí?" options={["El tono: la rana es verde hacia el amarillo y el nenúfar, verde hacia el azul", "Nada: hay que ponerle un contorno negro", "El tamaño de los vóxels"]} answer={0}>
+Cuando el valor se acerca, el tono hace el trabajo. Por eso el soporte va más oscuro y más frío a la vez.
+</Quiz>
+
+<Quiz q="¿Por qué una pose agazapada se lee estable y la gallina necesitaba equilibrar cabeza y cola?" options={["Porque la rana es más pequeña", "Porque la rana tiene el peso bajo y cuatro apoyos repartidos; la gallina, un solo punto de apoyo bajo un cuerpo alto", "Porque la rana no tiene cola"]} answer={1}>
+Peso bajo y base ancha: el centro de masas cae dentro de los apoyos con margen. La gallina tenía que ponerlo justo encima de un punto.
+</Quiz>
+</Block>

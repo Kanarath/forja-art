@@ -1,0 +1,248 @@
+---
+id: p4-10
+discipline: pixel
+level: 4
+order: 10
+title: "Comida: consumibles que se leen por el material"
+summary: "Una manzana, un pan, un queso y un muslo de 16×16 con la misma luz y el mismo contorno: los distingue cómo responde su superficie. Brillo duro, corteza mate, huecos con luz y grasa blanda."
+duration: 40
+status: borrador
+objectives:
+  - "Hacer que un consumible se reconozca por su material y no solo por su color"
+  - "Elegir el brillo según la superficie: pequeño y blanco si es lisa, ninguno si es mate, blando y crema si es grasa"
+  - "Pintar huecos (agujeros, cortes) con el borde de arriba en sombra y la pared de abajo iluminada"
+  - "Mantener un set coherente: misma luz, mismo contorno y un detalle que diga qué es cada objeto"
+  - "Comprobar en grises que cada comida conserva su rampa y no se aplana"
+prerequisites: [p4-01, p4-02]
+fundamentals: [f06, f01, f05]
+tools: [aseprite]
+piece:
+  name: "Cuatro consumibles de 16×16 en fila, cada uno de un material distinto"
+  canvas: "70x16"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [comida]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Vas a forjar **cuatro consumibles de 16×16**: los objetos que el jugador recoge para curarse. Tienen que leerse de un vistazo en el inventario y, sobre todo, tienen que **parecer de comer**.
+
+<Sprite name="food-set" scale={6} caption="food-set · Manzana, pan, queso y muslo. Misma luz arriba a la izquierda y el mismo contorno. Cada uno se reconoce por cómo responde su superficie a la luz" />
+
+Y esto es lo que **no** vas a hacer:
+
+<Sprite name="food-flat" scale={6} caption="food-flat (ERROR) · Las mismas formas con un color plano por zona. La manzana podría ser una pelota, el pan una piedra, el queso un cartón y el muslo una porra" />
+
+Las siluetas son idénticas. Lo único que cambia es el material. Y con él, las ganas de comérselo.
+</Block>
+
+<Block kind="concepto">
+### El material es la respuesta a la luz
+
+En [P4-01](/forja-art/pixel/p4-01/) pintaste la misma bola en metal, piedra, madera y cristal. Aquí es lo mismo con formas distintas: la luz viene siempre de arriba a la izquierda, como en [P3-01](/forja-art/pixel/p3-01/), y lo que cambia es **cómo la devuelve cada superficie**.
+
+Abrí los cuatro sprites píxel a píxel. Las luminancias van de 0 (negro) a 255 (blanco):
+
+| | Manzana | Pan | Queso | Muslo |
+| --- | --- | --- | --- | --- |
+| Rampa del relleno | 4 rojos: 171, 119, 84, 53 | 4 marrones: 199, 159, 114, 71 | 3 caras: 226, 194, 157 | 4 marrones rojizos: 165, 120, 81, 48 |
+| Brillo | 2 px blancos (255) y 1 rosa pálido | ninguno | ninguno | 2 px crema (217) |
+| Lo que dice qué es | rabo, muesca y hoja | 3 cortes con miga clara y 3 poros | agujeros con luz dentro | hueso crema y marcas de parrilla |
+| Colores (con el contorno) | 11 | 6 | 7 | 9 |
+
+<Sprite name="food-apple" scale={10} caption="food-apple · Piel lisa: rampa de cuatro rojos y un brillo blanco de 2 px pegado al contorno, arriba a la izquierda. La muesca de arriba, el rabo marrón y una hoja de dos verdes" />
+
+**La manzana es lisa.** Una superficie lisa refleja la fuente de luz como un punto: pequeño, blanco y con bordes duros. El salto es grande: del blanco (255) al rojo más claro (171) hay 84 puntos de luminancia, con un solo píxel rosa de transición.
+
+<Sprite name="food-bread" scale={10} caption="food-bread · Corteza mate: cuatro marrones dorados, sin un solo píxel blanco. Tres cortes en diagonal de 3 px donde asoma la miga crema, con píxeles oscuros debajo, y tres poros en el marrón más oscuro. La base es una fila entera del marrón más oscuro: apoya en la mesa" />
+
+**El pan es mate.** La corteza dispersa la luz: la rampa pasa de claro a oscuro sin ningún brillo. El tono más claro del pan (241) no es un brillo: es la **miga** que asoma en los cortes. Es otro material, no la luz.
+
+<Sprite name="food-cheese" scale={10} caption="food-cheese · Una cuña con tres caras de valor distinto. Dos agujeros de 2×2 en la cara de delante, oscuros con el píxel de abajo a la derecha iluminado, y tres agujeros de 1 px" />
+
+**El queso es un bloque con huecos.** Tres caras planas: arriba la más clara (226), delante media (194) y la corteza del lado derecho y de abajo la más oscura (157). El borde de la cara de arriba sube casi todo en escalones de 3 px: una pendiente 3:1.
+
+Los agujeros son el truco. Mira uno de 2×2: tres píxeles oscuros (121) y uno, el de abajo a la derecha, claro (213). Ese píxel es **más claro que la propia cara** (194).
+
+<Why title="Por qué el hueco tiene luz abajo a la derecha">
+Un agujero es una cavidad. El borde de arriba a la izquierda tapa la luz: ahí hay sombra. La pared de abajo a la derecha mira hacia la luz: le da de lleno. Si pintas el agujero todo oscuro, se lee como una **mancha** encima del queso. Con ese píxel claro, se lee **hundido**. Los agujeros de 1 px no tienen sitio para la luz: por eso solo los grandes la llevan.
+</Why>
+
+<Inspector sprite="food-cheese" title="Busca los agujeros de 2×2 y su píxel iluminado" />
+
+<Sprite name="food-meat" scale={10} caption="food-meat · Un muslo en gota inclinada con cuatro marrones rojizos y un brillo de grasa de 2 px en crema, no blanco, y tres marcas de parrilla en el marrón más oscuro. El hueso sale abajo a la derecha en crema y gris, con su cabeza en dos bultos" />
+
+**El muslo es grasa.** Brilla, pero no como la manzana: el brillo es crema (217) y el salto hasta el marrón más claro (165) es de 52 puntos, no de 84. Un brillo **blando**: la superficie es húmeda y algo irregular. El único píxel blanco puro del muslo está en el **hueso**, que sí es duro y liso.
+
+<Why title="El brillo es un dato del material (F06)">
+En [F06-01](/forja-art/fundamentos/f06-01/) viste las cuatro superficies: mate, brillante, metal y cristal. Tres preguntas deciden el brillo:
+
+- **¿Hay brillo?** Mate (pan, queso): no. Liso o húmedo (manzana, grasa): sí.
+- **¿De qué color?** Blanco si la superficie es lisa y dura. Teñido del propio material si es blanda o grasienta.
+- **¿Cuánto salta?** Mucho salto, borde duro: superficie lisa. Poco salto: superficie blanda.
+</Why>
+
+### El set: lo que comparten
+
+Las cuatro son del mismo juego porque comparten lo que **no** es material:
+
+- **El contorno**: el mismo casi negro, `#1b1030`, de 1 px.
+- **La luz**: arriba a la izquierda en las cuatro. En la manzana y el muslo, el lado claro arriba a la izquierda; en el queso, la cara de arriba; en el pan, la parte alta de la hogaza.
+- **El lienzo**: 16×16, aunque cada forma lo llena a su manera (la manzana ocupa 14×16 con el contorno; el pan, 16×10; el queso, 16×12; el muslo, 15×15).
+- **Un detalle que dice qué es**: el rabo, los cortes, los agujeros, el hueso. Uno principal por objeto (como mucho, otro de apoyo: los poros, la parrilla), no cinco.
+
+<Why title="Si vienes de Blender">
+Es la diferencia entre el *roughness* bajo y el alto de un material PBR, pero pintada a mano. En pixel art no hay shader: tú decides el tamaño, el color y el salto del brillo, y ese brillo **es** el material.
+</Why>
+
+<Tip title="Relaciónalo">
+- [P4-02](/forja-art/pixel/p4-02/): un set de iconos coherente. La comida es otro set: misma luz y mismo contorno.
+- [P4-08](/forja-art/pixel/p4-08/): cualquiera de estas comidas puede flotar sobre su sombra como la poción.
+- [P4-09](/forja-art/pixel/p4-09/): allí la mejora se leía en la forma. Aquí el tipo de objeto se lee en el material.
+</Tip>
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Lienzo para cuatro consumibles">
+<Keys k="Ctrl+N" />: **70×16**, fondo transparente. Activa *View → Grid*.
+
+Cuatro zonas de 16 px separadas por 2 px vacíos: de la x = 0 a la 15, de la 18 a la 33, de la 36 a la 51 y de la 54 a la 69. Elige tus cuatro comidas: mejor si son de **materiales distintos**. Por ejemplo: una fruta lisa, algo horneado, algo con huecos y algo grasiento.
+
+<Why>
+Si eliges cuatro frutas, todas serán lisas y con brillo: el set no te obligará a pensar en el material.
+</Why>
+</Step>
+
+<Step n={2} title="Silueta y contorno">
+Con el lápiz (<Keys k="B" />) y la casilla *Pixel-perfect* activada, dibuja la silueta de cada comida en un solo color y luego su contorno de 1 px en casi negro.
+
+Dale a cada una una **forma de base distinta**: redonda, alargada y plana, en cuña, en gota. Si algo apoya en la mesa (el pan, el queso), que tenga la base plana.
+
+<Tip>
+Mira las cuatro a 1× (rueda del ratón para alejar). Si dos se confunden en negro, cambia una forma ahora, no cuando ya estén pintadas.
+</Tip>
+</Step>
+
+<Step n={3} title="Una rampa por comida, con la misma luz">
+Rellena cada silueta con su rampa de **3 o 4 tonos**: el claro arriba a la izquierda, el oscuro abajo a la derecha. Si la forma tiene caras planas (el queso), dale a cada cara un valor: arriba la más clara, delante media, el lado la más oscura.
+
+Usa el cuentagotas (<Keys k="I" />) para coger un tono que ya has puesto y el cubo de pintura (<Keys k="G" />) para rellenar zonas grandes.
+
+<Why>
+La rampa da el volumen. El brillo, que viene después, da el material. Si las mezclas desde el principio, no sabrás cuál de las dos cosas falla.
+</Why>
+</Step>
+
+<Step n={4} title="El brillo: decide por el material">
+Ahora, y solo ahora, el brillo. Comida por comida:
+
+- **Lisa y dura** (manzana, cereza, caramelo): 1 o 2 píxeles blancos arriba a la izquierda. Pequeño y con mucho salto.
+- **Grasa o húmeda** (carne, pescado, queso fundido): 2 o 3 píxeles en un tono claro **del propio material**, no blanco.
+- **Mate** (pan, galleta, patata): ningún brillo. Deja que la rampa haga el trabajo.
+
+<Warn>
+Antes de pintar un píxel blanco, pregúntate si esa superficie brilla de verdad. Un pan con brillo blanco parece de plástico.
+</Warn>
+</Step>
+
+<Step n={5} title="El detalle que dice qué es">
+Un detalle principal por comida, el que la distingue, y como mucho uno de apoyo:
+
+- **Cortes o mordiscos**: deja ver el interior en un tono más claro y pon un píxel oscuro debajo del corte, donde la corteza hace sombra.
+- **Agujeros**: oscuros, con el píxel de abajo a la derecha más claro que la superficie. Solo en los que midan 2×2 o más.
+- **Piezas de otro material**: el rabo y la hoja, el hueso. Con su propia rampa corta y la misma luz.
+- **Marcas sueltas** (poros, parrilla): dos o tres píxeles en el tono más oscuro de la rampa, separados entre sí. Si pones más, es ruido.
+
+<Why>
+El detalle hace de etiqueta. Un círculo rojo con brillo es «algo liso y rojo»; con rabo y hoja ya es una manzana.
+</Why>
+</Step>
+
+<Step n={6} title="Prueba de grises">
+*Sprite → Color Mode → Grayscale*. Mira las cuatro y deshaz con <Keys k="Ctrl+Z" />.
+
+En grises, cada comida tiene que conservar su rampa: luz arriba a la izquierda, sombra abajo a la derecha. Y los brillos tienen que seguir viéndose donde los pusiste. Si una comida se queda en una mancha de un solo gris, el material tampoco se leerá en color.
+</Step>
+
+<Step n={7} title="Guarda y exporta">
+Guarda con <Keys k="Ctrl+S" />. Exporta una copia a 1× con *File → Export → Export As* para el Inspector de abajo y otra con **Resize** al 600 % para enseñarla.
+</Step>
+
+<Warn title="Verifica en tu versión">
+Los nombres y la posición pueden variar según la versión de Aseprite: *Sprite → Color Mode → Grayscale*, el panel de paleta y las opciones de *Export As*. Si una ruta no está donde dice, búscala por su función.
+</Warn>
+</Block>
+
+<Block kind="version">
+Ahora a tu manera. Mantén la luz, el contorno y el lienzo de 16×16, y que cada objeto se lea por su material. Elige uno:
+
+- **Crudo y cocinado:** el mismo filete dos veces. Crudo: rojo húmedo con un brillo blanco pequeño. Asado: marrón, con el brillo blando de la grasa y una corteza más mate. Misma forma, otro material.
+- **Cuatro bebidas:** agua, leche, vino y miel en el mismo frasco. El frasco es el mismo cristal; lo que cambia es el líquido: transparente, opaco y mate, oscuro y brillante, espeso y dorado.
+- **Comida estropeada:** la manzana mordida (el interior claro y mate frente a la piel con brillo) y el pan duro (sin la miga clara, con grietas). Otro estado del mismo objeto, como en [P4-07](/forja-art/pixel/p4-07/).
+
+<Tip>
+Si hiciste el set de P4-02, mete una de tus comidas en él. Tiene que parecer del mismo juego.
+</Tip>
+</Block>
+
+<Block kind="errores">
+<Mistake title="Un color plano por zona" wrongLabel="food-flat: un color por zona" rightLabel="food-set: material">
+  <Sprite slot="wrong" name="food-flat" scale={4} />
+  <Sprite slot="right" name="food-set" scale={4} />
+
+A la izquierda, las cuatro comidas usan **8 colores** entre todas, contorno incluido: uno por zona. A la derecha, 29. No es que haga falta usar más colores porque sí: cada uno tiene un trabajo. Los de la rampa dan el volumen, el blanco dice «liso», la miga dice «se ha cortado», el píxel claro del agujero dice «hueco». Sin ellos, el queso es un triángulo amarillo. **Arréglalo:** una rampa de 3 o 4 tonos por comida y luego el brillo que pida su material.
+</Mistake>
+
+<Mistake title="En grises, una mancha" wrongLabel="food-flat en grises" rightLabel="food-set en grises">
+  <Sprite slot="wrong" name="food-flat" scale={4} view="gray" />
+  <Sprite slot="right" name="food-set" scale={4} view="gray" />
+
+En grises se ve el problema de verdad: la versión plana no tiene volumen. Cada comida es un recorte de un solo gris. En la buena, cada una tiene su luz arriba a la izquierda y su sombra abajo, y los brillos de la manzana y del muslo siguen ahí. El valor va antes que el tono: si no hay rampa, no hay material.
+</Mistake>
+
+<Mistake title="Textura a base de ruido" wrongLabel="rock-noisy: píxeles sueltos" rightLabel="rock-clean: grupos">
+  <Sprite slot="wrong" name="rock-noisy" scale={6} />
+  <Sprite slot="right" name="rock-clean" scale={6} />
+
+La tentación con la corteza del pan o la piel de la carne es «texturizar» con píxeles sueltos alternados. A 16×16, eso es ruido: se pierde el volumen, como en esta roca. Fíjate en que el pan del ejemplo no está texturizado: tiene tres cortes y tres poros, y el muslo, tres marcas de parrilla. Pocos píxeles, cada uno con un trabajo. Un detalle con forma vale más que veinte píxeles sueltos.
+</Mistake>
+
+<Warn title="El mismo brillo en todo">
+Un píxel blanco arriba a la izquierda en las cuatro comidas: todas parecen del mismo plástico. El brillo blanco y pequeño es para lo liso. La grasa brilla en un tono del propio material y lo mate no brilla.
+</Warn>
+
+<Warn title="Agujeros sin luz">
+Agujeros pintados solo en oscuro: el queso parece manchado, no agujereado. Pon la luz en la pared de abajo a la derecha del hueco, más clara que la superficie que lo rodea.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+Pon tus cuatro comidas en fila **a 1×** y en grises. Súbelas al Inspector.
+
+<Inspector upload title="Revisa tus cuatro consumibles" />
+
+<Checklist items={[
+  "Las cuatro tienen el mismo contorno de 1 px y la luz arriba a la izquierda",
+  "Cada una tiene su rampa de 3 o 4 tonos y en grises no se aplana",
+  "El brillo blanco y pequeño solo está en lo liso y duro",
+  "Lo grasiento brilla en un tono claro del propio material, no en blanco",
+  "Lo mate no tiene brillo",
+  "Los huecos tienen sombra arriba y luz abajo a la derecha",
+  "Cada comida tiene un detalle principal que dice qué es, sin llenarla de marcas",
+  "En negro, a 1×, no se confunden entre ellas",
+]} />
+
+<Quiz q="Dibujas un pan y una manzana con la misma luz. ¿Qué cambio dice que el pan es mate?" options={["Pintarlo en marrón", "No ponerle brillo: la rampa pasa de claro a oscuro sin ningún píxel blanco", "Ponerle un brillo blanco más grande que el de la manzana"]} answer={1}>
+Lo mate dispersa la luz: no hay reflejo de la fuente. El color dice «es marrón»; la falta de brillo dice «es corteza».
+</Quiz>
+
+<Quiz q="En el queso, un agujero de 2×2 tiene el píxel de abajo a la derecha más claro que la cara. ¿Por qué?" options={["Es un error: los agujeros son siempre oscuros", "Porque la pared de abajo a la derecha del hueco mira hacia la luz, que viene de arriba a la izquierda", "Porque es un brillo de grasa"]} answer={1}>
+El borde de arriba a la izquierda tapa la luz y la pared de enfrente la recibe. Ese píxel claro es lo que hace que el agujero se lea hundido y no como una mancha.
+</Quiz>
+
+<Quiz q="El brillo del muslo es crema y el de la manzana, blanco. ¿Qué dice esa diferencia?" options={["Nada: es solo una preferencia de color", "Que la piel de la manzana es lisa y dura, y la grasa del muslo es blanda y húmeda: menos salto, brillo teñido", "Que el muslo está más lejos de la luz"]} answer={1}>
+El tamaño, el color y el salto del brillo describen la superficie. Blanco y con mucho salto: liso. Teñido y con poco salto: blando.
+</Quiz>
+</Block>

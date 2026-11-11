@@ -1,0 +1,39 @@
+{
+  "name": "food-cheese",
+  "description": "Queso (16×16): una cuña con tres caras de valor distinto (arriba la más clara, delante media, el lado de corteza oscuro) y agujeros: oscuros arriba y con el píxel de abajo a la derecha iluminado, porque son huecos.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "objeto",
+    "icono",
+    "comida",
+    "material"
+  ],
+  "palette": {
+    "a": "#1b1030",
+    "b": "#ffe58a",
+    "c": "#d8962a",
+    "d": "#b0701a",
+    "e": "#f2c43a",
+    "f": "#ffd36e",
+    "g": "#a8661c"
+  },
+  "rows": [
+    "................",
+    "................",
+    "................",
+    "............aaa.",
+    ".........aaabbba",
+    "......aaabbbbbca",
+    "...aaabbbbbbbbca",
+    ".aabbbdbbbdbbbca",
+    "abbbbbbbbbbbbbca",
+    "aeeeeeeeddeeeeca",
+    "aeeddeeedfeeeeca",
+    "aeedfeeeeeeeeega",
+    "aeeeeeeeeeedeeca",
+    "acccccccccccccca",
+    ".aaaaaaaaaaaaaa.",
+    "................"
+  ]
+}

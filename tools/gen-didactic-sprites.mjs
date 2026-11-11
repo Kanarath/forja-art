@@ -2186,6 +2186,171 @@ function rnoiseS(x, y) { return (((x * 73856093) ^ (y * 19349663)) >>> 0) % 100;
   add("sat-gray", "La escena final sin saturación (80×48): cada color pasa al gris de su valor (luminancia), así que solo quedan valores. Sirve para comprobar que el foco no depende del color: el impacto sigue siendo lo más claro.", ["escena", "color", "saturación", "valor"], gr.pal, gr.rows);
 }
 
+
+// ---------- COMIDA: cuatro consumibles de 16×16 que se leen por el material (piel con brillo, corteza mate, agujeros, hueso)
+{
+  const N = 16;
+  const ramp = (r, lit) => (lit > 0.45 ? r[3] : lit > 0.05 ? r[2] : lit > -0.45 ? r[1] : r[0]);
+  const shade = (x, y, cx, cy, rx, ry) => -((x - cx) / rx + (y - cy) / ry) * 0.7; // luz arriba a la izquierda
+  const APPLE = ["#6e1a2a", "#b02a3a", "#e04a4a", "#ff8a7a"], BREAD = ["#6b3d1a", "#a8642a", "#d8963a", "#f2c46a"], MEAT = ["#5a1f1a", "#8e3a24", "#c2602e", "#e8925a"];
+  const CHEESE = { top: "#ffe58a", front: "#f2c43a", side: "#d8962a", hole: "#b0701a", holeLit: "#ffd36e" };
+  function apple() {
+    const px = blankGrid(N, N);
+    for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) {
+      const d = ((x - 7.5) / 6) ** 2 + ((y - 9) / 5.6) ** 2;
+      if (d > 1 || (y <= 4 && Math.abs(x - 7.5) < 1.5)) continue; // la muesca de arriba, donde nace el rabo
+      px[y][x] = ramp(APPLE, shade(x, y, 7.5, 9, 6, 5.6));
+    }
+    px[5][4] = "#ffffff"; px[6][4] = "#ffffff"; px[5][5] = "#ffd0c8"; // brillo pequeño y duro: piel lisa
+    px[2][8] = "#6b3d2e"; px[3][8] = "#6b3d2e"; px[4][7] = "#3b2418"; // rabo
+    px[2][9] = "#4caf50"; px[2][10] = "#8fd86a"; px[3][10] = "#4caf50"; px[1][10] = "#4caf50"; // hoja
+    return px;
+  }
+  function bread() {
+    const px = blankGrid(N, N);
+    for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) {
+      const d = ((x - 7.5) / 7) ** 2 + ((y - 9.5) / 4.6) ** 2;
+      if (d > 1 || y > 12) continue; // base plana: apoya en la mesa
+      px[y][x] = y === 12 ? BREAD[0] : ramp(BREAD, shade(x, y, 7.5, 9, 7, 4.6) + 0.15);
+    }
+    for (const x0 of [3, 7, 11]) for (const [dx, dy] of [[0, 0], [1, -1], [-1, 1]]) { const x = x0 + dx, y = 8 + dy; if (px[y]?.[x]) { px[y][x] = "#fff3c4"; if (px[y + 1]?.[x] && !(dx === -1)) px[y + 1][x] = BREAD[0]; } } // tres cortes en diagonal: asoma la miga
+    for (const [x, y] of [[5, 7], [9, 10], [12, 9]]) if (px[y][x]) px[y][x] = BREAD[0]; // poros de la corteza: sin brillo blanco, es mate
+    return px;
+  }
+  function cheese() {
+    const px = blankGrid(N, N);
+    for (let x = 1; x <= 13; x++) {
+      const topY = Math.round(8 - ((x - 1) * 4) / 12); // la cara de arriba sube hacia la derecha
+      for (let y = topY; y <= 8; y++) px[y][x] = CHEESE.top;
+      for (let y = 9; y <= 13; y++) px[y][x] = CHEESE.front;
+    }
+    for (let y = 4; y <= 13; y++) px[y][14] = y === 4 ? CHEESE.top : CHEESE.side; // corteza del lado
+    for (let x = 1; x <= 13; x++) px[13][x] = CHEESE.side; // corteza de abajo
+    const hole = (x, y, w) => { for (let i = 0; i < w; i++) for (let j = 0; j < w; j++) px[y + j][x + i] = i === w - 1 && j === w - 1 ? CHEESE.holeLit : CHEESE.hole; }; // el borde de arriba hace sombra; abajo a la derecha le da la luz
+    hole(3, 10, 2); hole(8, 9, 2); px[12][11] = CHEESE.hole; px[7][10] = CHEESE.hole; px[7][6] = CHEESE.hole; px[11][14] = "#a8661c";
+    return px;
+  }
+  function meat() {
+    const px = blankGrid(N, N);
+    const BONE = ["#c9bfa8", "#f4ecdc", "#ffffff"];
+    for (const [x, y] of [[10, 10], [11, 11], [12, 12], [11, 10], [12, 11], [10, 11]]) px[y][x] = BONE[x + y === 22 ? 0 : 1]; // hueso que sale abajo a la derecha
+    for (const [x, y, k] of [[13, 12, 1], [14, 12, 0], [13, 13, 0], [12, 13, 1], [13, 14, 0], [14, 11, 1], [13, 11, 2]]) px[y][x] = BONE[k]; // la cabeza del hueso, en dos bultos
+    for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) {
+      const u = (x - 6.5) * 0.8 + (y - 6.5) * 0.6, v = -(x - 6.5) * 0.6 + (y - 6.5) * 0.8; // gota inclinada
+      if ((u / 5.6) ** 2 + (v / 4.6) ** 2 > 1) continue;
+      px[y][x] = ramp(MEAT, shade(x, y, 6.5, 6.5, 5.5, 5.5));
+    }
+    px[4][4] = "#ffd0a0"; px[4][5] = "#ffd0a0"; px[5][4] = MEAT[3]; // brillo de la grasa: más blando que el de la manzana
+    for (const [x, y] of [[6, 9], [8, 8], [9, 6]]) px[y][x] = MEAT[0]; // marcas de la parrilla
+    return px;
+  }
+  const FOOD = { apple: apple(), bread: bread(), cheese: cheese(), meat: meat() };
+  const FD = {
+    apple: "Manzana (16×16): rampa de cuatro rojos con la luz arriba a la izquierda, un brillo blanco de 2 px pequeño y duro (piel lisa y brillante), la muesca de arriba de donde sale el rabo y una hoja.",
+    bread: "Pan (16×16): una hogaza de base plana en cuatro marrones dorados, tres cortes en diagonal donde asoma la miga clara y tres poros. Sin brillo blanco: la corteza es mate.",
+    cheese: "Queso (16×16): una cuña con tres caras de valor distinto (arriba la más clara, delante media, el lado de corteza oscuro) y agujeros: oscuros arriba y con el píxel de abajo a la derecha iluminado, porque son huecos.",
+    meat: "Carne (16×16): un muslo en gota inclinada con rampa de marrones rojizos, un brillo de grasa blando (crema, no blanco), marcas de parrilla y el hueso crema que sale abajo a la derecha con su cabeza en dos bultos.",
+  };
+  const out16 = {};
+  for (const k of Object.keys(FOOD)) { out16[k] = outlineLayer(FOOD[k]); const s = hexGridToSprite(out16[k]); add(`food-${k}`, FD[k], ["objeto", "icono", "comida", "material"], s.pal, s.rows); }
+  const row = (grids) => { const px = blankGrid(N * grids.length + 2 * (grids.length - 1), N); grids.forEach((g, i) => g.forEach((r, y) => r.forEach((c, x) => { if (c) px[y][i * (N + 2) + x] = c; }))); return hexGridToSprite(px); };
+  const set = row(Object.values(out16));
+  add("food-set", "Las cuatro comidas en fila (70×16): manzana, pan, queso y carne. Misma luz, mismo contorno y tamaños parecidos dentro de su casilla de 16×16: un set coherente. Cada una se distingue por el material, no solo por el color.", ["objeto", "icono", "comida", "material"], set.pal, set.rows);
+  // ERROR: las mismas formas con un color plano por zona: sin brillo, sin corteza, sin agujeros
+  const FLAT = new Map([...APPLE.map((c) => [c, APPLE[2]]), ["#ffffff", APPLE[2]], ["#ffd0c8", APPLE[2]], ...BREAD.map((c) => [c, BREAD[2]]), ["#fff3c4", BREAD[2]], ["#f8e0a0", BREAD[2]], ...Object.values(CHEESE).map((c) => [c, CHEESE.front]), ["#a8661c", CHEESE.front], ...MEAT.map((c) => [c, MEAT[2]]), ["#ffd0a0", MEAT[2]], ["#c9bfa8", "#f4ecdc"], ["#8fd86a", "#4caf50"], ["#3b2418", "#6b3d2e"]]);
+  const flat = Object.entries(FOOD).map(([k, g]) => outlineLayer(g.map((r) => r.map((c) => c && (k === "meat" && c === "#ffffff" ? "#f4ecdc" : FLAT.get(c) ?? c)))));
+  const f = row(flat);
+  add("food-flat", "ERROR: las cuatro comidas con un color plano por zona (70×16). La silueta es la misma, pero la manzana podría ser una pelota roja, el pan una piedra, el queso un trozo de cartón y la carne una porra: sin brillo, sin corteza, sin agujeros y sin volumen, el material no se lee.", ["objeto", "icono", "comida", "material", "error"], f.pal, f.rows);
+}
+
+// ---------- BOLA DE FUEGO: un proyectil en bucle de 4 frames (núcleo fijo, estela que se agita, chispas que se quedan atrás)
+{
+  const W = 24, H = 12, CX = 17, CY = 5.5, L = 17;
+  const F = { W: "#fff8e0", Y: "#ffe58a", O: "#f2a83a", R: "#d8642a", D: "#a8321e" };
+  const ramp = (k) => (k < 0.32 ? F.W : k < 0.58 ? F.Y : k < 0.82 ? F.O : k < 1 ? F.R : null);
+  function frame(t) {
+    const px = blankGrid(W, H), ph = (t * Math.PI) / 2;
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+      let k;
+      if (x >= CX) k = Math.hypot(x - CX, (y - CY) * 1.05) / 4.6; // delante: media bola, borde limpio
+      else {
+        const a = (CX - x) / L; if (a > 1) continue;
+        const cy = CY + Math.sin(x * 0.7 + ph) * 1.1 * a; // la estela ondula, más cuanto más lejos del núcleo
+        const h = 4.6 * (1 - a) ** 0.8 + Math.sin(x * 1.3 - ph) * 0.7 * a;
+        if (h <= 0.3) continue;
+        k = Math.abs(y - cy) / h + a * 0.95; // y se enfría hacia atrás
+      }
+      const c = ramp(k); if (c) px[y][x] = c;
+      if (c && k > 0.9 && x < CX - 2 && (x + y + t) % 4 === 0) px[y][x] = F.D; // borde exterior de la estela, más oscuro a trozos
+    }
+    for (let i = 0; i < 3; i++) { const x = CX - 13 - ((t + i * 2) % 4) * 2, y = Math.round(CY + [-3, 2, -1][i] + (t % 2 ? 0.4 : -0.4)); if (x >= 0 && y >= 0 && y < H && !px[y][x]) px[y][x] = i === 1 ? F.Y : F.O; } // chispas sueltas que se quedan atrás
+    return px;
+  }
+  const good = fixedFrames([0, 1, 2, 3].map(frame));
+  const GD = [
+    "Bola de fuego, frame 1 de 4 (24×12): el núcleo blanco y amarillo, a la derecha, es media bola de borde limpio; detrás sale una estela que se estrecha, pasa a naranja y rojo y ondula. Chispas sueltas al final.",
+    "Bola de fuego, frame 2: el núcleo no se mueve; la onda de la estela avanza un cuarto de vuelta y las chispas cambian de sitio.",
+    "Bola de fuego, frame 3: otro cuarto de vuelta. El borde exterior oscuro cae en otros píxeles: el fuego parpadea sin cambiar de tamaño.",
+    "Bola de fuego, frame 4: el último cuarto; enlaza con el frame 1 sin salto.",
+  ];
+  good.forEach((f, i) => add(`fireball-${i + 1}`, GD[i], ["vfx", "animación", "proyectil"], f.pal, f.rows));
+  const sheetPx = blankGrid(W * 4 + 6, H); [0, 1, 2, 3].map(frame).forEach((g, i) => g.forEach((r, y) => r.forEach((c, x) => { if (c) sheetPx[y][i * (W + 2) + x] = c; })));
+  const sh = hexGridToSprite(sheetPx);
+  add("fireball-sheet", "Los cuatro frames de la bola de fuego en fila (102×12). El núcleo está en la misma columna en todos; lo que cambia es la estela y las chispas. El movimiento por la pantalla lo pone el juego.", ["vfx", "animación", "proyectil"], sh.pal, sh.rows);
+  // ERROR: una bola redonda que solo late: sin estela no hay dirección
+  const ball = (t) => { const px = blankGrid(W, H), r = 4 + (t % 2) * 0.8; for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) { const c = ramp(Math.hypot(x - 12, y - CY) / r); if (c) px[y][x] = c; } return px; };
+  const bad = fixedFrames([0, 1, 2, 3].map(ball));
+  const BD = [
+    "ERROR: bola de fuego sin estela, frame 1 (24×12): un círculo con la misma rampa, centrado. No dice hacia dónde va.",
+    "ERROR, frame 2: el círculo crece 1 px. Es lo único que cambia.",
+    "ERROR, frame 3: vuelve al tamaño del frame 1.",
+    "ERROR, frame 4: crece otra vez. Late como un sol: igual podría ir hacia la izquierda, hacia la derecha o estar quieta.",
+  ];
+  bad.forEach((f, i) => add(`fireball-ball-${i + 1}`, BD[i], ["vfx", "animación", "proyectil", "error"], f.pal, f.rows));
+}
+
+// ---------- BORDES: duros, suaves y perdidos (cielo, nube, colina, roca y su sombra)
+{
+  const W = 48, H = 32, HOR = 18;
+  const SKY = ["#8fc8f0", "#a9d8f4", "#c8e8f8"], HILL = "#a9cfd8", GR = ["#5c9a50", "#6fae5a"], RK = ["#3e4352", "#64607a", "#8a8698", "#b0abc4"], SHADOW = "#3e4a48";
+  const cloud = (x, y) => [[10, 8, 3.6], [15, 6, 4.6], [20, 8, 3.6], [15, 9, 3.6]].some(([cx, cy, r]) => (x - cx) ** 2 + (y - cy) ** 2 <= r * r) && y <= 10;
+  const hillTop = (x) => (Math.abs(x - 37) < 15 ? Math.round(HOR - 1 - 6 * Math.sqrt(1 - ((x - 37) / 15) ** 2)) : HOR); // colina lejana, redonda
+  const rock = (x, y) => y >= 19 && y <= 25 && ((x - 34) / 7) ** 2 + ((y - 23) / 5) ** 2 <= 1;
+  const shadow = (x, y) => ((x - 39) / 7.5) ** 2 + ((y - 25.5) / 2) ** 2 <= 1 && !rock(x, y);
+  const rockShade = (x, y) => { const l = -((x - 34) / 7 + (y - 23) / 5) * 0.8; return l > 0.4 ? RK[3] : l > -0.1 ? RK[2] : l > -0.6 ? RK[1] : RK[0]; };
+  function scene(mode) {
+    const px = blankGrid(W, H);
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+      if (y < HOR) px[y][x] = y < 6 ? SKY[0] : y < 12 ? SKY[1] : SKY[2];
+      else px[y][x] = rnoiseS(x, y) < 18 ? GR[1] : GR[0];
+      if (y < HOR && y >= hillTop(x)) px[y][x] = HILL;
+      if (cloud(x, y)) px[y][x] = y >= 9 ? "#d8e4f0" : "#ffffff";
+      if (shadow(x, y)) px[y][x] = SHADOW;
+      if (rock(x, y)) px[y][x] = rockShade(x, y);
+    }
+    const ring = (inside, c) => { const pts = []; for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (!inside(x, y) && [[1, 0], [-1, 0], [0, 1], [0, -1]].some(([a, b]) => inside(x + a, y + b))) pts.push([x, y]); return pts; };
+    const soft = (inside) => ring(inside).forEach(([x, y]) => { const n = [[1, 0], [-1, 0], [0, 1], [0, -1]].find(([a, b]) => inside(x + a, y + b)); px[y][x] = hexOf(mix(rgbOf(px[y][x]), rgbOf(px[y + n[1]][x + n[0]]), 0.5)); }); // borde suave: un píxel a medio camino
+    const hard = (inside, test = () => true) => ring(inside).forEach(([x, y]) => { if (test(x, y)) px[y][x] = "#1b1030"; });
+    const hillIn = (x, y) => y < HOR && y >= hillTop(x);
+    if (mode === "good") {
+      soft(cloud); // la nube: blanda, borde a medio camino
+      hard(rock, (x, y) => !shadow(x, y)); // la roca: duro donde da la luz; donde toca su sombra, el borde se pierde
+    } else if (mode === "hard") {
+      hard(cloud); hard(hillIn); hard(rock); hard(shadow);
+    } else {
+      soft(cloud); soft(hillIn); soft(rock); soft(shadow);
+      for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (rock(x, y)) { const n = [[1, 0], [0, 1], [1, 1]].map(([a, b]) => px[y + b]?.[x + a] ?? px[y][x]); px[y][x] = hexOf(mix(rgbOf(px[y][x]), rgbOf(n[2]), 0.4)); } // también por dentro: todo emborronado
+    }
+    return px;
+  }
+  const D = {
+    good: "Bordes bien repartidos (48×32): la nube tiene un borde suave, un píxel a medio camino entre su blanco y el cielo; la colina lejana tiene casi el mismo valor que el cielo y su borde casi se pierde; la roca lleva contorno oscuro y duro donde le da la luz, y en el lado de la sombra no lleva contorno: se funde con su sombra proyectada (borde perdido). El ojo va a la roca.",
+    hard: "ERROR: todos los bordes duros (48×32). La nube, la colina, la roca y hasta la sombra llevan contorno oscuro de 1 px. La nube parece un objeto sólido, la colina se viene delante y la sombra parece un agujero: todo pide atención a la vez.",
+    soft: "ERROR: todos los bordes suaves (48×32). La roca también tiene el borde a medio camino y el interior emborronado: parece una esponja o una nube gris. Sin un solo borde duro, nada se lee como duro ni como importante.",
+  };
+  for (const m of ["good", "hard", "soft"]) { const s = hexGridToSprite(scene(m)); add(`edges-${m}`, D[m], ["fundamentos", "bordes", "valor", ...(m === "good" ? [] : ["error"])], s.pal, s.rows); }
+}
+
 // ---------- escribir y validar
 let bad = 0;
 for (const s of out) {

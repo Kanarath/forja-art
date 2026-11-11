@@ -1,0 +1,38 @@
+{
+  "name": "food-bread",
+  "description": "Pan (16×16): una hogaza de base plana en cuatro marrones dorados, tres cortes en diagonal donde asoma la miga clara y tres poros. Sin brillo blanco: la corteza es mate.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "objeto",
+    "icono",
+    "comida",
+    "material"
+  ],
+  "palette": {
+    "a": "#1b1030",
+    "b": "#f2c46a",
+    "c": "#d8963a",
+    "d": "#fff3c4",
+    "e": "#6b3d1a",
+    "f": "#a8642a"
+  },
+  "rows": [
+    "................",
+    "................",
+    "................",
+    "................",
+    ".......aa.......",
+    "...aaaabbaaaa...",
+    "..abbbbbbbccca..",
+    ".abbdebbdcccdfa.",
+    "abbdebbdeccdeffa",
+    "abdebcdecfdeefea",
+    "abbccccffeffeeea",
+    "abccccfffffeeeea",
+    ".aeeeeeeeeeeeea.",
+    "..aaaaaaaaaaaa..",
+    "................",
+    "................"
+  ]
+}

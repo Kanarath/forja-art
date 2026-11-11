@@ -1,0 +1,41 @@
+{
+  "name": "food-flat",
+  "description": "ERROR: las cuatro comidas con un color plano por zona (70×16). La silueta es la misma, pero la manzana podría ser una pelota roja, el pan una piedra, el queso un trozo de cartón y la carne una porra: sin brillo, sin corteza, sin agujeros y sin volumen, el material no se lee.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "objeto",
+    "icono",
+    "comida",
+    "material",
+    "error"
+  ],
+  "palette": {
+    "a": "#1b1030",
+    "b": "#4caf50",
+    "c": "#6b3d2e",
+    "d": "#c2602e",
+    "e": "#e04a4a",
+    "f": "#f2c43a",
+    "g": "#d8963a",
+    "h": "#f4ecdc"
+  },
+  "rows": [
+    "..........a...........................................................",
+    "........aaba..............................................aaaa........",
+    ".......acbba.............................................addddaa......",
+    ".....aaacaba....................................aaa.....addddddda.....",
+    "....aeecaeea.............aa..................aaafffa...addddddddda....",
+    "...aeeeeeeeea........aaaaggaaaa...........aaaffffffa...adddddddddda...",
+    "..aeeeeeeeeeea......agggggggggga.......aaafffffffffa...adddddddddda...",
+    ".aeeeeeeeeeeeea....agggggggggggga....aaffffffffffffa...adddddddddda...",
+    ".aeeeeeeeeeeeea...agggggggggggggga..affffffffffffffa...adddddddddda...",
+    ".aeeeeeeeeeeeea...agggggggggggggga..affffffffffffffa....addddddddda...",
+    ".aeeeeeeeeeeeea...agggggggggggggga..affffffffffffffa.....adddddddhaaa.",
+    ".aeeeeeeeeeeeea...agggggggggggggga..affffffffffffffa......aaddddhhhhha",
+    "..aeeeeeeeeeea.....agggggggggggga...affffffffffffffa........aaaaaahhha",
+    "...aeeeeeeeea.......aaaaaaaaaaaa....affffffffffffffa.............ahha.",
+    "....aeeeeeea.........................aaaaaaaaaaaaaa...............aha.",
+    ".....aaaaaa........................................................a.."
+  ]
+}

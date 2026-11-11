@@ -221,6 +221,12 @@
 - **Voxel:** V2-05 Formas redondas (un pozo), V5-07 Animales de dos patas (una gallina).
 - **Arte nuevo:** espadas de madera, hierro y legendaria y su error de recolor; la escena del árbol, el pino y la roca en primavera, verano, otoño e invierno y el error del filtro azul; la escena final con la saturación repartida, toda saturada y en gris, y los modelos «pozo» y «gallina».
 
+**Contenido · vigesimoprimer bloque: 5 lecciones más (118 en total).**
+- **Pixel:** P4-10 Comida (consumibles que se leen por el material), P6-10 Proyectiles (una bola de fuego en bucle).
+- **Fundamentos:** F01-03 Bordes duros, suaves y perdidos.
+- **Voxel:** V5-08 Poses agazapadas (una rana), V7-06 Puestos de mercado (un decorado con toldo).
+- **Arte nuevo:** manzana, pan, queso y carne y su error plano; una bola de fuego en 4 frames y su error sin estela; una escena con nube, colina y roca con los bordes bien repartidos, todos duros y todos suaves, y los modelos «rana» y «mercado».
+
 **Fase 6 · Forge Tools (iniciada el 2026-11-10).** Tres scripts de Aseprite, la CLI `forja-vox` y la página Forge Tools con descargas y demos. Ver `forge-tools/README.md`.
 
 **Lecciones aprendidas durante la fase 1:**

@@ -1,0 +1,285 @@
+---
+id: p6-10
+discipline: pixel
+level: 6
+order: 10
+title: "Proyectiles: una bola de fuego en bucle"
+summary: "Un proyectil se anima en el sitio y lo desplaza el motor. Núcleo fijo y claro delante, estela que se estrecha y se enfría detrás y un bucle de 4 frames sin salto: así dice hacia dónde va."
+duration: 40
+status: borrador
+objectives:
+  - "Separar la animación del proyectil (en el sitio) de su movimiento por la pantalla (lo pone el motor)"
+  - "Construir el proyectil en partes: núcleo claro y fijo delante, estela que se estrecha y se enfría, chispas detrás"
+  - "Hacer que la forma diga la dirección: la estela apunta hacia atrás, también en silueta"
+  - "Cerrar un bucle de 4 frames sin salto: la onda avanza un cuarto de vuelta por frame"
+  - "Animar tu proyectil en Aseprite con el núcleo y la estela en capas separadas y exportarlo como spritesheet"
+prerequisites: [p6-04, p6-01]
+fundamentals: [f02]
+tools: [aseprite]
+piece:
+  name: "Un proyectil propio de 24×12 en un bucle de 4 frames: núcleo fijo, estela que dice la dirección y chispas, exportado como spritesheet"
+  canvas: "24x12"
+xp: { concept: 10, guided: 20, piece: 60 }
+achievements: [bola-fuego]
+review:
+  examplesChecked: false
+  testedByLearner: false
+---
+
+<Block kind="pieza">
+Vas a forjar **una bola de fuego**: el proyectil que lanza un mago, una torreta o tu héroe. Cruza la pantalla en medio segundo y, en ese tiempo, el jugador tiene que leer dos cosas: **qué es** (fuego) y **hacia dónde va**.
+
+Dale a *Reproducir*. Es un bucle de 4 frames en un lienzo de 24×12:
+
+<Animator sprites={["fireball-1", "fireball-2", "fireball-3", "fireball-4"]} durations={[80, 80, 80, 80]} />
+
+Fíjate en que la bola **no avanza**. El núcleo se queda quieto a la derecha y solo se agita la estela. El viaje por la pantalla lo pondrá el juego.
+
+Tu pieza será un proyectil propio de **24×12** en un bucle de **4 frames**, exportado como spritesheet: tu bola de fuego, o una de hielo, de ácido o una flecha mágica.
+</Block>
+
+<Block kind="concepto">
+### El proyectil se anima en el sitio
+
+Estos son los cuatro frames en fila, como en un spritesheet (cada uno de 24×12, con 2 píxeles de separación):
+
+<Sprite name="fireball-sheet" scale={6} caption="fireball-sheet · Los 4 frames en fila. El núcleo está en las mismas columnas en los cuatro; solo cambian la estela y las chispas" />
+
+Compara los frames columna a columna y verás que las **7 columnas de la derecha** (de la 15 a la 21) son idénticas en los cuatro. El núcleo no se mueve ni un píxel. Todo lo que cambia está a la izquierda, en la estela.
+
+<Why title="Por qué el sprite no viaja">
+La velocidad del proyectil es **gameplay**: la ajustará el diseñador, cambiará con una mejora o con el nivel de dificultad. Si dibujas el viaje dentro del sprite, la velocidad queda «horneada» en los píxeles y pelea con la del motor. Además, un sprite que avanza dentro de su lienzo tiene que volver atrás al cerrar el bucle: salta.
+
+El reparto es limpio: **tú dibujas cómo arde; el motor decide por dónde va**. Es lo mismo que el ciclo de caminar de [P6-02](/forja-art/pixel/p6-02/): el héroe camina en el sitio y el juego lo desplaza.
+</Why>
+
+### Anatomía de una bola de fuego
+
+Mira el frame 1 de cerca:
+
+<Sprite name="fireball-1" scale={12} caption="fireball-1 · Núcleo a la derecha (blanco y amarillo), estela que se estrecha hacia la izquierda y pasa a naranja, borde rojizo y chispas sueltas al final" />
+
+Tiene cuatro partes, y cada una tiene un trabajo:
+
+1. **El núcleo**, delante: media bola de 8 píxeles de alto con el **blanco cálido** (`#fff8e0`) en el centro, rodeado de amarillo claro (`#ffe58a`). Su borde delantero es limpio y redondo: tramos de 8, 6 y 4 de alto, con orden. Es el frente del proyectil y lo más claro del sprite.
+2. **La estela**, detrás: sale del núcleo y se **estrecha** hacia la izquierda. Las columnas miden 8 de alto junto al núcleo, luego 6, 5, 4, 3, 2… hasta 1.
+3. **El enfriamiento:** a medida que la estela se aleja, el color baja por la rampa: blanco → amarillo → naranja (`#f2a83a`) → naranja rojizo (`#d8642a`). Lo caliente va delante; lo que ya se apaga, detrás.
+4. **Las chispas:** uno o dos píxeles sueltos al final de la estela, en naranja y amarillo. En cada frame **retroceden 2 píxeles** hacia la izquierda: se quedan atrás, como si la bola las fuera dejando.
+
+Solo 5 colores, y la rampa entera va del más claro al más oscuro en una dirección: de derecha a izquierda.
+
+<Why title="Por qué el núcleo es lo más claro (f01)">
+El ojo va al valor más alto. En la bola de fuego, lo más claro está **delante**: la mirada del jugador cae en el frente del proyectil, que es justo lo que le importa (dónde va a golpear). La estela, más oscura, se lee después y le cuenta de dónde viene. Compruébalo en grises:
+
+<Sprite name="fireball-1" scale={8} view="gray" caption="fireball-1 en grises · El blanco del núcleo destaca; la estela se oscurece hacia la izquierda" />
+</Why>
+
+### La estela dice la dirección
+
+Ahora mira la misma idea sin estela: un círculo con la misma rampa, centrado en el lienzo, que solo late.
+
+<Animator sprites={["fireball-ball-1", "fireball-ball-2", "fireball-ball-3", "fireball-ball-4"]} durations={[80, 80, 80, 80]} />
+
+Alterna entre dos tamaños: 7×8 píxeles (48 en total) y 9×10 (74). Es un sol, una mina, un orbe que flota. Puede ir hacia la izquierda, hacia la derecha o estar quieto: **la forma no lo dice**.
+
+<Why title="Por qué la dirección está en la silueta (f02)">
+En negro, la bola de fuego es una gota tumbada: redonda delante y afilada detrás. Esa forma **apunta**. El círculo, en cambio, es simétrico por todos lados.
+
+<Sprite name="fireball-1" scale={6} view="silhouette" caption="fireball-1 en silueta · Una gota que apunta a la derecha" />
+
+<Sprite name="fireball-ball-1" scale={6} view="silhouette" caption="fireball-ball-1 en silueta · Un círculo: no apunta a ningún sitio" />
+
+Un proyectil se ve un instante, pequeño y en movimiento. No hay tiempo para leer detalle: la dirección tiene que estar en la **silueta**, como todo lo que se lee a 1×.
+</Why>
+
+### El bucle sin salto: un cuarto de vuelta por frame
+
+La estela ondula: sube y baja como una cinta al viento, más cuanto más lejos del núcleo. En cada frame, la onda avanza **un cuarto de vuelta**. Cuatro cuartos son una vuelta entera, así que el frame que vendría después del 4 es exactamente el frame 1. El bucle cierra sin salto.
+
+<Sprite name="fireball-2" scale={8} caption="fireball-2 · La onda avanza un cuarto. El núcleo, igual" />
+
+<Sprite name="fireball-3" scale={8} caption="fireball-3 · Otro cuarto. El borde exterior más oscuro cae en otros píxeles" />
+
+<Sprite name="fireball-4" scale={8} caption="fireball-4 · El último cuarto. Lo siguiente es otra vez el frame 1" />
+
+Lo mismo vale para los detalles pequeños. Las chispas retroceden 2 píxeles por frame y, cuando salen por la izquierda del lienzo, vuelven a aparecer detrás de la cola: su recorrido también se repite cada 4 frames. Y el rojo oscuro del borde cambia de píxel en un patrón que se repite cada 4. **Todo** el sprite cierra a la vez: no hay nada que tropiece al volver al frame 1.
+
+Y algo que no se ve a simple vista: los cuatro frames tienen casi los mismos píxeles (89, 88, 90 y 89). La bola **no crece ni encoge**: el fuego se agita sin cambiar de tamaño. Si el tamaño latiera, el proyectil parecería acercarse y alejarse de la cámara.
+
+<Tip>
+El borde de la estela lleva, a trozos, un rojo más oscuro (`#a8321e`): 2 píxeles en el frame 1, 1 en el 2, 2 en el 3 y 1 en el 4, cada vez en otro sitio. Es el **parpadeo** del fuego. Parece irregular, pero se repite cada 4 frames, así que también entra en el bucle sin salto.
+</Tip>
+
+### El timing: un bucle continuo
+
+Los cuatro frames duran **80 ms**. A diferencia del impacto de [P6-04](/forja-art/pixel/p6-04/) o de la derrota de [P6-09](/forja-art/pixel/p6-09/), aquí no hay fases: no hay anticipación ni final. El fuego arde igual todo el rato, así que las duraciones son iguales.
+
+<Tip title="Experimenta en el animador">
+1. Sube los cuatro frames a 200 ms. El fuego se vuelve perezoso: parece una bandera, no una llama.
+2. Bájalos a 40 ms (el mínimo). Se vuelve nervioso: a 1× la estela es un borrón.
+3. Quita el frame 3. La onda da un salto de medio cuarto y el bucle tropieza.
+</Tip>
+
+### Y luego, el impacto
+
+Cuando la bola choca, el juego **retira el proyectil** y en su lugar reproduce un impacto una sola vez. Puedes usar el de [P6-04](/forja-art/pixel/p6-04/), que arranca con un destello:
+
+<Sprite name="vfx-hit-2" scale={8} caption="vfx-hit-2 (P6-04) · El estallido. Un impacto con el blanco y el amarillo de la bola de fuego encaja como su final natural" />
+
+Ponlo donde estaba el **núcleo**, no en el centro del lienzo: el golpe sucede en el frente del proyectil.
+</Block>
+
+<Block kind="guiada">
+<Step n={1} title="Lienzo, capas y paleta">
+1. Crea un archivo con <Keys k="Ctrl+N" />: **24×12**, fondo transparente. Activa *View → Grid*.
+2. Desde el menú *Layer*, crea una segunda capa. Renómbralas con doble clic sobre su nombre: `nucleo` (arriba) y `estela` (abajo).
+3. Prepara 5 colores en la paleta, del más claro al más oscuro: `#fff8e0`, `#ffe58a`, `#f2a83a`, `#d8642a` y `#a8321e`.
+4. Guarda con <Keys k="Ctrl+S" /> como `bola-fuego.aseprite`.
+
+<Why>
+El núcleo no cambia entre frames y la estela sí. En capas separadas, puedes redibujar la estela cuatro veces sin rozar el núcleo. Es la misma lógica que el VFX en su capa de P6-04.
+</Why>
+</Step>
+
+<Step n={2} title="El núcleo: media bola a la derecha">
+En la capa `nucleo`, con el lápiz (<Keys k="B" />) y *Pixel-perfect*:
+
+1. Deja 2 columnas libres a la derecha del lienzo. Dibuja el frente: media bola de **8 de alto**: cinco columnas de 8 y, hacia la derecha, una de 6 y otra de 4.
+2. Por fuera, una fila de naranja rojizo y naranja; dentro, amarillo; en el centro, un bloque de **blanco** de unos 5×2.
+
+<Why>
+El borde delantero es el único que tiene que ser **limpio**: es el frente, lo que va a golpear. Tramos que decrecen con orden (8, 6, 4) se leen redondos, como las curvas de [P2-01](/forja-art/pixel/p2-01/). Un frente irregular parece una roca en llamas.
+</Why>
+</Step>
+
+<Step n={3} title="La estela del frame 1">
+En la capa `estela`, dibuja la cola hacia la izquierda:
+
+1. Empieza con la altura del núcleo (8) y **estréchala** columna a columna: 6, 5, 4, 3, 2, 1. Llega a unas dos terceras partes del lienzo.
+2. Hazla **ondular**: que su centro suba y baje 1 píxel a lo largo, más hacia el final.
+3. Colorea por distancia: blanco y amarillo pegados al núcleo, naranja en el medio, naranja rojizo en el borde y al final.
+4. Pon 1 o 2 píxeles del rojo más oscuro en el borde exterior y 2 o 3 **chispas** de 1 píxel sueltas detrás de la cola.
+
+<Tip>
+Deja el centro de la estela más claro que sus bordes, como en el núcleo. Así la estela es una continuación del fuego, no una cinta plana pegada detrás.
+</Tip>
+</Step>
+
+<Step n={4} title="Cuatro frames y el núcleo fijo">
+1. Desde el menú *Frame*, añade frames hasta tener **4**. Si el frame nuevo copia el anterior, mejor: el núcleo ya estará en su sitio.
+2. Clic derecho sobre el número de cada frame, *Frame Properties*, y pon **80 ms** en los cuatro.
+3. Comprueba que el núcleo está **exactamente** en el mismo sitio en los cuatro frames.
+
+<Warn>
+Si al cambiar la estela de un frame cambian también los otros, los cels están **enlazados** (linked cels) y comparten dibujo. En la capa `nucleo` eso te conviene (el núcleo es el mismo); en la capa `estela`, no. Deshaz con <Keys k="Ctrl+Z" /> y sepáralos antes de seguir.
+</Warn>
+</Step>
+
+<Step n={5} title="Frames 2 a 4: un cuarto de vuelta cada uno">
+Activa el onion skin (el botón está en la línea de tiempo) y, en la capa `estela`:
+
+1. **Frame 2:** redibuja la estela con la onda desplazada: donde en el frame 1 subía, ahora está a media altura. Mueve las chispas.
+2. **Frame 3:** la onda, al revés que en el frame 1: donde subía, ahora baja.
+3. **Frame 4:** a media altura otra vez, pero hacia el lado contrario que en el 2.
+4. Cambia de sitio los píxeles del rojo oscuro en cada frame. Mueve cada chispa **2 píxeles hacia la izquierda** por frame; cuando salga del lienzo, haz que reaparezca detrás de la cola. Así, en el frame 4, cada chispa está a un paso de su sitio del frame 1.
+
+<Why>
+Cuatro cuartos de vuelta suman una vuelta entera: después del frame 4, el frame 1 es el siguiente paso natural. Usa el onion skin con el frame 1 visible mientras dibujas el 4: tiene que quedar «entre» el 3 y el 1.
+</Why>
+</Step>
+
+<Step n={6} title="Prueba el bucle">
+1. Reproduce (botón de *play* de la línea de tiempo) a tamaño real y ampliado. Mira solo el paso del frame 4 al 1: ¿hay un tirón?
+2. Mira solo el núcleo: no debe temblar.
+3. Mira el tamaño: ¿la bola crece y encoge? Cuenta los píxeles de la estela por encima; tienen que ser parecidos en los cuatro frames.
+4. Comprueba la silueta: rellena una copia en negro (o súbela al Inspector de la academia). Tiene que apuntar.
+</Step>
+
+<Step n={7} title="Exporta">
+1. Para enseñarlo: *File → Export → Export As*, formato **GIF**, **Resize** al 400 % o más.
+2. Para un juego: *File → Export Sprite Sheet*, los 4 frames en una fila, PNG a 1× y fondo transparente. Apunta los 80 ms.
+3. Si quieres, añade el impacto de P6-04 como otra animación del mismo archivo, con su propia etiqueta (tag).
+</Step>
+
+<Warn title="Verifica en tu versión">
+Los nombres y la posición pueden variar según la versión de Aseprite: el menú *Layer*, el doble clic para renombrar, la opción de frame nuevo del menú *Frame* (y si copia el frame actual), *Frame Properties* (clic derecho sobre el frame), el botón de onion skin, los cels enlazados (linked cels) y cómo se separan, las etiquetas (tags) y las opciones de *Export Sprite Sheet*. Si no encuentras algo, búscalo por nombre en los menús.
+</Warn>
+
+<ToolNote tool="godot">
+
+Esto es opcional; lo verás en el nivel 9 ([P9-01](/forja-art/pixel/p9-01/)). En Godot, el proyectil sería un nodo con un AnimatedSprite2D (la animación de 4 frames, con bucle) y un script que lo **desplaza** cada frame en su dirección. Como la bola está dibujada mirando a la derecha, que es el ángulo 0 en Godot, basta con girar el nodo hacia la dirección del disparo (por ejemplo, poniendo su `rotation` al ángulo del vector de dirección). Al chocar, el script lo retira y reproduce el impacto. Verifica en tu versión.
+
+</ToolNote>
+
+<Warn title="Girar pixel art">
+Girar un sprite a 90° o 180° es exacto. A cualquier otro ángulo, el motor tiene que recolocar los píxeles y el borde sale dentado. En un proyectil pequeño y rápido apenas se nota; si tu juego dispara en diagonal y se nota, dibuja una versión a 45° aparte (como las aspas del molino de [V6-05](/forja-art/voxel/v6-05/)).
+</Warn>
+</Block>
+
+<Block kind="version">
+Ahora a tu manera. Mantén el núcleo fijo y claro delante, la estela que se estrecha y apunta hacia atrás, el tamaño constante y el bucle de 4 frames que cierra. Elige uno o más:
+
+- **Otro elemento:** una bola de **hielo** (núcleo blanco, estela que se enfría hacia el azul y cristales en vez de chispas) o de **ácido** (verde, con gotas que caen en vez de chispas que se quedan). Cambia la rampa y el tipo de partícula, no la estructura.
+- **Flecha mágica:** un proyectil fino y largo, de 24×6 o menos, con una punta dura y una estela de 1–2 píxeles. ¿Cuánta estela necesitas para que siga diciendo la dirección?
+- **Proyectil enemigo:** una bola del slime rey de [P5-06](/forja-art/pixel/p5-06/), en verdes, más lenta y más grande. Prueba 120 ms por frame: ¿se lee más pesada?
+
+<Tip>
+Sea cual sea tu variante, haz la prueba de la silueta. Si en negro no sabes hacia dónde va, alarga o afila la estela antes de añadir más detalle.
+</Tip>
+</Block>
+
+<Block kind="errores">
+<Mistake title="Una bola sin dirección" wrongLabel="Un círculo que late" rightLabel="Núcleo delante, estela detrás">
+  <Animator slot="wrong" sprites={["fireball-ball-1", "fireball-ball-2", "fireball-ball-3", "fireball-ball-4"]} durations={[80, 80, 80, 80]} />
+  <Sprite slot="right" name="fireball-1" scale={8} />
+
+Reproduce la de la izquierda: un círculo centrado que alterna entre dos tamaños. Es simétrico y, encima, late: parece que se acerca y se aleja. **Arréglalo:** lleva el núcleo a un extremo, dale un frente limpio y saca por detrás una estela que se estrecha y se enfría (derecha). La forma pasa a apuntar, y el tamaño deja de cambiar.
+</Mistake>
+
+<Mistake title="Dibujar el viaje dentro del sprite" wrongLabel="La bola avanza por el lienzo" rightLabel="La bola arde en el sitio">
+  <p slot="wrong">Cada frame dibuja la bola 4 píxeles más a la derecha. Al volver al frame 1 salta hacia atrás, y en el juego su avance se suma al del motor: va a tirones y no puedes cambiar su velocidad sin redibujarla.</p>
+  <p slot="right">El núcleo está en las mismas columnas en los 4 frames; solo se mueve la estela. El motor la desplaza a la velocidad que quiera, sin saltos.</p>
+
+Corrígelo con el onion skin: el núcleo de todos los frames tiene que coincidir encima del del frame 1. Si usas una capa `nucleo` con el mismo dibujo en todos los frames, no puede fallar.
+</Mistake>
+
+<Mistake title="Un bucle con salto" wrongLabel="La onda no cierra" rightLabel="Un cuarto de vuelta por frame">
+  <p slot="wrong">Cada frame desplaza la onda un poco, pero los desplazamientos no suman una vuelta entera. Del frame 4 al 1 la estela da un tirón visible, una vez por bucle: a 80 ms, unas tres veces por segundo.</p>
+  <p slot="right">Cada frame avanza un cuarto de vuelta. Cuatro cuartos son una vuelta, y el frame 1 es el paso que sigue al 4.</p>
+
+Corrígelo dibujando el frame 4 con el onion skin del 3 y del 1 visibles: tiene que quedar a medio camino entre los dos.
+</Mistake>
+
+<Warn title="Un núcleo que tiembla o cambia de color">
+Si el núcleo se mueve un píxel o cambia de forma entre frames, el proyectil **vibra**: el frente es lo que el ojo sigue, y cualquier cambio ahí se nota. Deja que se agite la estela, que es lo que está más lejos de la mirada. El núcleo, quieto y en el valor más alto.
+</Warn>
+</Block>
+
+<Block kind="calidad">
+Juzga tu proyectil **a 1×** y a su velocidad real, en bucle durante un rato. Pregúntate: «si lo veo cruzar la pantalla, ¿sé hacia dónde va?».
+
+<Checklist items={[
+  "El proyectil se anima en el sitio: el núcleo está en las mismas columnas en los 4 frames",
+  "El núcleo es lo más claro del sprite y está delante, con un borde limpio",
+  "La estela se estrecha hacia atrás y se enfría (baja por la rampa)",
+  "En silueta, la forma apunta en la dirección del disparo",
+  "El tamaño no late: los frames tienen casi los mismos píxeles",
+  "El bucle cierra: del frame 4 al 1 no hay tirón",
+  "Las chispas o partículas se quedan detrás y su recorrido también cierra en 4 frames",
+  "Los 4 frames duran lo mismo",
+  "Núcleo y estela están en capas separadas",
+  "He exportado el spritesheet a 1× con fondo transparente y he apuntado la duración",
+]} />
+
+<Quiz q="¿Por qué el núcleo de la bola de fuego no avanza dentro de su lienzo?" options={["Para ahorrar píxeles en el spritesheet", "Porque el movimiento por la pantalla lo pone el motor: si el sprite viajara, saltaría al cerrar el bucle y pelearía con la velocidad del juego", "Porque Aseprite no permite mover dibujos entre frames"]} answer={1}>
+Tú dibujas cómo arde; el motor decide por dónde va y a qué velocidad. Así la velocidad se puede ajustar sin redibujar nada.
+</Quiz>
+
+<Quiz q="Un círculo de fuego que late y una bola con estela tienen los mismos colores. ¿Qué tiene la segunda que la primera no?" options={["Más colores en la rampa", "Un contorno negro", "Dirección: la silueta apunta, con el frente redondo y la estela afilada detrás"]} answer={2}>
+El círculo es simétrico y no dice hacia dónde va. La estela convierte la forma en una gota que apunta, y eso se lee incluso en negro.
+</Quiz>
+
+<Quiz q="La onda de la estela avanza un cuarto de vuelta en cada frame. ¿Cuántos frames necesitas para que el bucle cierre sin salto?" options={["4", "3", "5"]} answer={0}>
+Cuatro cuartos son una vuelta entera: después del frame 4, el frame 1 es el siguiente paso. Con 3 frames de un cuarto, faltaría un cuarto y la estela daría un tirón al volver.
+</Quiz>
+</Block>

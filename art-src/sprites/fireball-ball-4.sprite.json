@@ -1,0 +1,32 @@
+{
+  "name": "fireball-ball-4",
+  "description": "ERROR, frame 4: crece otra vez. Late como un sol: igual podría ir hacia la izquierda, hacia la derecha o estar quieta.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "vfx",
+    "animación",
+    "proyectil",
+    "error"
+  ],
+  "palette": {
+    "a": "#d8642a",
+    "b": "#f2a83a",
+    "c": "#ffe58a",
+    "d": "#fff8e0"
+  },
+  "rows": [
+    "........................",
+    "...........aaa..........",
+    ".........aabbbaa........",
+    "........abbcccbba.......",
+    "........abccdccba.......",
+    "........abcdddcba.......",
+    "........abcdddcba.......",
+    "........abccdccba.......",
+    "........abbcccbba.......",
+    ".........aabbbaa........",
+    "...........aaa..........",
+    "........................"
+  ]
+}

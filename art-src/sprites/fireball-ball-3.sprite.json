@@ -1,0 +1,32 @@
+{
+  "name": "fireball-ball-3",
+  "description": "ERROR, frame 3: vuelve al tamaño del frame 1.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "vfx",
+    "animación",
+    "proyectil",
+    "error"
+  ],
+  "palette": {
+    "a": "#d8642a",
+    "b": "#f2a83a",
+    "c": "#ffe58a",
+    "d": "#fff8e0"
+  },
+  "rows": [
+    "........................",
+    "........................",
+    "...........aaa..........",
+    ".........abbbbba........",
+    ".........abcccba........",
+    ".........bcdddcb........",
+    ".........bcdddcb........",
+    ".........abcccba........",
+    ".........abbbbba........",
+    "...........aaa..........",
+    "........................",
+    "........................"
+  ]
+}

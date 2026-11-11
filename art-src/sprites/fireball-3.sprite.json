@@ -1,0 +1,32 @@
+{
+  "name": "fireball-3",
+  "description": "Bola de fuego, frame 3: otro cuarto de vuelta. El borde exterior oscuro cae en otros píxeles: el fuego parpadea sin cambiar de tamaño.",
+  "license": "CC0 · creado como datos para FORJA//ART",
+  "tags": [
+    "didáctico",
+    "vfx",
+    "animación",
+    "proyectil"
+  ],
+  "palette": {
+    "a": "#f2a83a",
+    "b": "#d8642a",
+    "c": "#a8321e",
+    "d": "#ffe58a",
+    "e": "#fff8e0"
+  },
+  "rows": [
+    "........................",
+    "........................",
+    "a..............bbabb....",
+    "............bbaaadaab...",
+    "a........baaaaddddddab..",
+    "...bb...aaddddeeeeedab..",
+    ".....aaadaaaddeeeeedab..",
+    "....d..cbb.caaddddddab..",
+    ".............baaadaab...",
+    "...............bbabb....",
+    "........................",
+    "........................"
+  ]
+}
