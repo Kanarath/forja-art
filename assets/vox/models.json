@@ -1,0 +1,1685 @@
+{
+  "rana": {
+    "description": "Rana: una pose agazapada",
+    "stages": [
+      {
+        "file": "rana_1.vox",
+        "label": "Masas",
+        "note": "Cajas: un cuerpo de 6×7×5, una cabeza igual de ancha delante, dos ojos de 2×2×2 encima de la cabeza, las patas de atrás plegadas a los lados y dos patas de delante de 1 vóxel. Mira hacia +X.",
+        "size": {
+          "x": 10,
+          "y": 11,
+          "z": 8
+        },
+        "voxels": 277
+      },
+      {
+        "file": "rana_2.vox",
+        "label": "Forma",
+        "note": "El cuerpo pasa a ser una gota, alta delante y baja detrás; la cabeza es ancha y plana. Los muslos plegados abultan a los lados y los pies largos salen hacia delante, pegados al suelo. Los brazos son finos, con los dedos abiertos. Todo el peso cae entre los cuatro apoyos.",
+        "size": {
+          "x": 11,
+          "y": 11,
+          "z": 8
+        },
+        "voxels": 195
+      },
+      {
+        "file": "rana_3.vox",
+        "label": "Color y detalle",
+        "note": "Lomo verde con la parte de arriba más clara y manchas oscuras; garganta y tripa crema; una línea oscura de boca que rodea la cabeza; ojos dorados con la pupila hacia fuera. Debajo, un nenúfar con su muesca, agua alrededor y otro nenúfar pequeño con una flor.",
+        "size": {
+          "x": 19,
+          "y": 19,
+          "z": 9
+        },
+        "voxels": 486
+      }
+    ]
+  },
+  "mercado": {
+    "description": "Puesto de mercado: mostrador, toldo y mercancía",
+    "stages": [
+      {
+        "file": "mercado_1.vox",
+        "label": "Blockout",
+        "note": "Un mostrador de 12×4×5, cuatro postes y un toldo plano de 14×12 a z=16. Ya se lee la escala: el mostrador llega a la cintura de un personaje y el toldo queda por encima de su cabeza.",
+        "size": {
+          "x": 14,
+          "y": 12,
+          "z": 17
+        },
+        "voxels": 402
+      },
+      {
+        "file": "mercado_2.vox",
+        "label": "Toldo",
+        "note": "El toldo baja de z=16 detrás a z=13 delante en cuatro escalones iguales de 3 filas, con rayas rojas y crema de 2 vóxels a lo largo de la caída y un festón que cuelga una raya sí y otra no. Atrás, las rayas se oscurecen. El mostrador tiene tablas verticales y una tapa que sobresale.",
+        "size": {
+          "x": 14,
+          "y": 12,
+          "z": 17
+        },
+        "voxels": 440
+      },
+      {
+        "file": "mercado_3.vox",
+        "label": "Mercancía",
+        "note": "Tres cajas sobre el mostrador con manzanas, naranjas y peras, cada una con un montón que sobresale; un cartel colgado del toldo con una manzana pintada; sacos al pie, un barril con dos aros, una cesta, una manzana caída y suelo de adoquines.",
+        "size": {
+          "x": 21,
+          "y": 14,
+          "z": 18
+        },
+        "voxels": 823
+      }
+    ]
+  },
+  "pozo": {
+    "description": "Pozo: círculos y cilindros en una rejilla",
+    "stages": [
+      {
+        "file": "pozo_1.vox",
+        "label": "Círculos",
+        "note": "Tres discos de 1 vóxel de alto. A la izquierda, radio 4 justo: en cada punta queda un vóxel suelto. En el centro, radio 4,5 (diámetro 9): borde limpio y un vóxel en el centro. A la derecha, diámetro 8: también redondo, pero sin vóxel central.",
+        "size": {
+          "x": 31,
+          "y": 9,
+          "z": 1
+        },
+        "voxels": 170
+      },
+      {
+        "file": "pozo_2.vox",
+        "label": "Brocal",
+        "note": "El disco de diámetro 9 subido 5 de alto y vaciado por dentro con un hueco de diámetro 5: un anillo de 2 de grueso. Los sillares van en hiladas alternas, el remate es más claro y dentro hay agua 3 vóxels por debajo del borde.",
+        "size": {
+          "x": 9,
+          "y": 9,
+          "z": 5
+        },
+        "voxels": 242
+      },
+      {
+        "file": "pozo_3.vox",
+        "label": "Tejado y cubo",
+        "note": "Dos postes sobre el brocal, un torno con manivela, un tejado a dos aguas a lo largo de X, la cuerda y el cubo colgando sobre el agua. Al pie, otro cubo lleno, hierba a manchas y unas matas.",
+        "size": {
+          "x": 13,
+          "y": 11,
+          "z": 17
+        },
+        "voxels": 494
+      }
+    ]
+  },
+  "gallina": {
+    "description": "Gallina: un animal de dos patas",
+    "stages": [
+      {
+        "file": "gallina_1.vox",
+        "label": "Masas",
+        "note": "Cuatro cajas: un cuerpo de 9×7×7, una cabeza de 3×3×3 encima de la parte de delante, una cola detrás y dos patas de 1 vóxel. Mira hacia +X, como la oveja.",
+        "size": {
+          "x": 12,
+          "y": 7,
+          "z": 12
+        },
+        "voxels": 312
+      },
+      {
+        "file": "gallina_2.vox",
+        "label": "Forma",
+        "note": "El cuerpo pasa a ser un huevo tumbado, la cabeza pierde las esquinas de arriba y la cola se abre en abanico hacia atrás y hacia arriba. Las patas son finas, con un dedo delante y otro detrás: dos apoyos bastan si el cuerpo queda encima.",
+        "size": {
+          "x": 13,
+          "y": 7,
+          "z": 12
+        },
+        "voxels": 185
+      },
+      {
+        "file": "gallina_3.vox",
+        "label": "Color y detalle",
+        "note": "Plumas blancas y la tripa en sombra; un ala plegada a cada lado, con las plumas marcadas; las puntas de la cola más oscuras. Cresta roja con dos picos, pico amarillo, barbilla roja, un ojo a cada lado y grano en el suelo.",
+        "size": {
+          "x": 18,
+          "y": 7,
+          "z": 14
+        },
+        "voxels": 194
+      }
+    ]
+  },
+  "valla": {
+    "description": "Valla: una pieza que se duplica, se mueve y se gira",
+    "stages": [
+      {
+        "file": "valla_1.vox",
+        "label": "Una pieza",
+        "note": "El módulo de la valla: un poste de 2×2 y 8 de alto con la cabeza más clara, y dos travesaños de 6 a z=2 y z=5. Mide 8 de largo justo: el poste de la copia siguiente cierra los travesaños.",
+        "size": {
+          "x": 8,
+          "y": 2,
+          "z": 8
+        },
+        "voxels": 44
+      },
+      {
+        "file": "valla_2.vox",
+        "label": "Duplicada",
+        "note": "La pieza duplicada cuatro veces, cada copia movida 8 vóxels en X, y un poste suelto al final para cerrar. 34 de largo sin dibujar nada nuevo.",
+        "size": {
+          "x": 34,
+          "y": 2,
+          "z": 8
+        },
+        "voxels": 208
+      },
+      {
+        "file": "valla_3.vox",
+        "label": "Esquina",
+        "note": "Tres copias a lo largo de X y dos más giradas 90° alrededor del eje Z, a lo largo de Y. Girar 90° es exacto en vóxels: la pieza no se deforma.",
+        "size": {
+          "x": 26,
+          "y": 18,
+          "z": 8
+        },
+        "voxels": 252
+      },
+      {
+        "file": "valla_4.vox",
+        "label": "Variada",
+        "note": "Las mismas copias con pequeños cambios: postes de 7, 8 y 9 de alto, un travesaño roto con el trozo en el suelo, una tabla cambiada de madera vieja y gris, hierba al pie de los postes, una flor y una piedra. Ya no se ve que es la misma pieza repetida.",
+        "size": {
+          "x": 31,
+          "y": 20,
+          "z": 9
+        },
+        "voxels": 279
+      }
+    ]
+  },
+  "rocas": {
+    "description": "Rocas: de tres cajas a un grupo de rocas",
+    "stages": [
+      {
+        "file": "rocas_1.vox",
+        "label": "Cajas",
+        "note": "Tres cajas de tres tamaños: una grande de 10×8×8, una mediana de 6×5×5 apoyada en ella y una pequeña de 3×3×3 algo separada. El grupo ya funciona por tamaños antes de tener forma de roca.",
+        "size": {
+          "x": 19,
+          "y": 8,
+          "z": 8
+        },
+        "voxels": 447
+      },
+      {
+        "file": "rocas_2.vox",
+        "label": "Facetas",
+        "note": "Cada caja con las aristas de arriba y las esquinas verticales cortadas en bisel, cada una con un ancho distinto (de 0 a 3), y un saliente encima de la grande. Ya no son cajas, y tampoco bolas: las rocas tienen caras planas.",
+        "size": {
+          "x": 19,
+          "y": 8,
+          "z": 9
+        },
+        "voxels": 302
+      },
+      {
+        "file": "rocas_3.vox",
+        "label": "Color y detalle",
+        "note": "El color sale de hacia dónde mira cada cara: lo de arriba, claro; el frente, medio; el lado derecho, más oscuro, y lo de detrás, el más oscuro de todos. Unas grietas oscuras, musgo a manchas solo en lo alto, piedrecitas sueltas y hierba al pie.",
+        "size": {
+          "x": 20,
+          "y": 9,
+          "z": 9
+        },
+        "voxels": 317
+      }
+    ]
+  },
+  "caras": {
+    "description": "Caras voxel: el chibi con expresiones de pocos vóxels",
+    "stages": [
+      {
+        "file": "caras_1.vox",
+        "label": "Neutral",
+        "note": "El chibi de V5-01 tal cual: dos ojos de 1×2 que sobresalen 1 vóxel de la cara. Es la referencia: todo lo demás cambia solo unos pocos vóxels.",
+        "size": {
+          "x": 10,
+          "y": 9,
+          "z": 15
+        },
+        "voxels": 412
+      },
+      {
+        "file": "caras_2.vox",
+        "label": "Alegre",
+        "note": "Los ojos pasan a ser dos arcos de 3 vóxels (como ^ ^), una boca de 2 vóxels rosa oscuro y dos mejillas pintadas en la cara, sin sobresalir. Diez vóxels cambiados.",
+        "size": {
+          "x": 10,
+          "y": 9,
+          "z": 15
+        },
+        "voxels": 414
+      },
+      {
+        "file": "caras_3.vox",
+        "label": "Enfado",
+        "note": "Los mismos ojos de la neutral con dos cejas de 2 vóxels, altas por fuera y bajas por dentro, y la boca recta y oscura. Seis vóxels añadidos.",
+        "size": {
+          "x": 10,
+          "y": 9,
+          "z": 15
+        },
+        "voxels": 414
+      },
+      {
+        "file": "caras_4.vox",
+        "label": "Demasiado",
+        "note": "Error: la cara «realista» en un chibi: ojos de 2×2 con blanco e iris, cejas, una nariz que sobresale 2, labios de 4 en dos tonos y mejillas sombreadas. Con más vóxels no se lee mejor: la cara se vuelve rara y pierde el estilo.",
+        "size": {
+          "x": 10,
+          "y": 10,
+          "z": 15
+        },
+        "voxels": 418
+      }
+    ]
+  },
+  "cueva": {
+    "description": "Cueva: vaciar una masa de roca y llenarla de luz",
+    "stages": [
+      {
+        "file": "cueva_1.vox",
+        "label": "Masa",
+        "note": "Un bloque de roca de 22×16 y de 9 a 14 de alto, con la parte de arriba irregular, los bordes mordidos y estratos de piedra en dos tonos. Es la materia de la que se saca la cueva.",
+        "size": {
+          "x": 22,
+          "y": 16,
+          "z": 14
+        },
+        "voxels": 1472
+      },
+      {
+        "file": "cueva_2.vox",
+        "label": "Vaciado",
+        "note": "Se vacía una cámara redondeada dentro y una entrada en arco por delante, y se deja en corte (sin la parte derecha) para poder ver dentro, como la habitación de V7-02. El suelo de dentro pasa a tierra en dos tonos y las paredes que tocan el hueco se oscurecen: dentro llega menos luz.",
+        "size": {
+          "x": 15,
+          "y": 16,
+          "z": 14
+        },
+        "voxels": 1215
+      },
+      {
+        "file": "cueva_3.vox",
+        "label": "Cristales y luz",
+        "note": "Dos grupos de cristales que crecen del suelo, uno azul junto a la pared del fondo a la izquierda y otro morado más pequeño al fondo, junto al corte (para el material Emit), cuatro estalactitas que cuelgan del techo, un charco bajo la más larga y dos setas que brillan junto a la entrada: la luz guía hacia dentro.",
+        "size": {
+          "x": 15,
+          "y": 16,
+          "z": 14
+        },
+        "voxels": 1230
+      }
+    ]
+  },
+  "fuente": {
+    "description": "Fuente: piedra, agua con material Glass y lo que se ve a través",
+    "stages": [
+      {
+        "file": "fuente_1.vox",
+        "label": "Piedra",
+        "note": "Un estanque octogonal de 15 de ancho con un pretil de 3 de alto y remate claro, una columna central, una taza arriba y el caño. Toda la estructura en piedra, sin agua.",
+        "size": {
+          "x": 15,
+          "y": 15,
+          "z": 10
+        },
+        "voxels": 359
+      },
+      {
+        "file": "fuente_2.vox",
+        "label": "Agua",
+        "note": "Una capa de agua en el estanque, 1 vóxel por debajo del remate, con algunos vóxels más claros; agua en la taza, un chorro que sube 3 vóxels con espuma arriba y cuatro caños que caen de la taza al estanque.",
+        "size": {
+          "x": 15,
+          "y": 15,
+          "z": 13
+        },
+        "voxels": 509
+      },
+      {
+        "file": "fuente_3.vox",
+        "label": "Detalle",
+        "note": "Bajo el agua, cuatro monedas y dos piedras en el fondo: con colores opacos no se ven desde arriba; con el agua en material Glass, sí. Un nenúfar con flor, espuma donde cae el agua, musgo en la base del pretil y un empedrado alrededor.",
+        "size": {
+          "x": 17,
+          "y": 17,
+          "z": 13
+        },
+        "voxels": 559
+      }
+    ]
+  },
+  "molino": {
+    "description": "Molino: un cuerpo fijo y unas aspas que son otra pieza",
+    "stages": [
+      {
+        "file": "molino_1.vox",
+        "label": "Cuerpo",
+        "note": "Una base de piedra de 9×9×9 en hiladas, un cuerpo de tablas más estrecho (7×7×7), un tejado de cuatro escalones y el eje que sale por delante. Es la parte que nunca se mueve.",
+        "size": {
+          "x": 9,
+          "y": 10,
+          "z": 20
+        },
+        "voxels": 587
+      },
+      {
+        "file": "molino_2.vox",
+        "label": "Aspas en cruz",
+        "note": "Cuatro brazos de 9 vóxels en cruz delante de la fachada, con velas de tela y travesaños alternos, una puerta con tirador, dos ventanas y unos sacos de harina. Las aspas van en un plano propio, separadas 1 vóxel de la fachada: en MagicaVoxel serían otro modelo.",
+        "size": {
+          "x": 19,
+          "y": 11,
+          "z": 23
+        },
+        "voxels": 687
+      },
+      {
+        "file": "molino_3.vox",
+        "label": "Aspas a 45°",
+        "note": "Las mismas aspas giradas 45°, redibujadas en diagonal: los brazos quedan en escalera y las velas cambian de forma. Girar 90° es exacto en vóxels; 45° no, hay que volver a dibujar.",
+        "size": {
+          "x": 15,
+          "y": 11,
+          "z": 21
+        },
+        "voxels": 655
+      }
+    ]
+  },
+  "taberna": {
+    "description": "Taberna: un kit de muebles a la escala del personaje",
+    "stages": [
+      {
+        "file": "taberna_1.vox",
+        "label": "Kit a escala",
+        "note": "El chibi de 15 vóxels como referencia y, a su lado, el kit: una mesa de 10×6 con el tablero a 5 de alto (por las manos), una silla con el asiento a 3 y respaldo, un barril de 7 de alto (por el pecho) y una jarra de 2×2×2 con espuma y asa.",
+        "size": {
+          "x": 43,
+          "y": 9,
+          "z": 15
+        },
+        "voxels": 640
+      },
+      {
+        "file": "taberna_2.vox",
+        "label": "Sin escala",
+        "note": "Error: las mismas piezas sin medir contra el personaje. La mesa llega a la altura de los ojos, la silla es de muñecas, el barril de 14 de alto es casi tan alto como el héroe y la jarra es como media cabeza.",
+        "size": {
+          "x": 40,
+          "y": 9,
+          "z": 16
+        },
+        "voxels": 982
+      },
+      {
+        "file": "taberna_3.vox",
+        "label": "Rincón",
+        "note": "El kit montado en un rincón de taberna con suelo de tablas y paredes de piedra con zócalo de madera: la mesa con dos sillas enfrentadas, tres barriles contra la pared (uno encima, con grifo), dos jarras y una vela, un estante con botella y el chibi de pie junto a la mesa.",
+        "size": {
+          "x": 28,
+          "y": 16,
+          "z": 18
+        },
+        "voxels": 1982
+      }
+    ]
+  },
+  "golem": {
+    "description": "Gólem: una criatura grande por masas, piezas y detalle",
+    "stages": [
+      {
+        "file": "golem_1.vox",
+        "label": "Masas",
+        "note": "Once cajas en un solo gris: piernas gruesas de 4×5×8, un torso de 14×8×10, hombros enormes, brazos largos con puños de 5×6×6 que cuelgan hasta las rodillas y la cabeza pequeña y adelantada. Con las proporciones ya se lee pesado y fuerte.",
+        "size": {
+          "x": 22,
+          "y": 10,
+          "z": 24
+        },
+        "voxels": 1224
+      },
+      {
+        "file": "golem_2.vox",
+        "label": "Piezas",
+        "note": "Cada masa es un bloque de piedra con su propio gris, las esquinas de arriba desconchadas y algunas manchas oscuras. Entre brazo y puño, una junta de piedra oscura (el codo), más estrecha que el puño: se ve que el cuerpo está hecho de piedras unidas.",
+        "size": {
+          "x": 22,
+          "y": 10,
+          "z": 24
+        },
+        "voxels": 1194
+      },
+      {
+        "file": "golem_3.vox",
+        "label": "Detalle",
+        "note": "Musgo a manchas en lo que mira hacia arriba (más en hombros y cabeza, algo en los puños) y colgando por delante de los hombros, dos ojos y un núcleo de cristal en el pecho (para el material Emit), grietas que salen del núcleo y una flor en el hombro derecho: lleva mucho tiempo quieto.",
+        "size": {
+          "x": 22,
+          "y": 10,
+          "z": 24
+        },
+        "voxels": 1196
+      }
+    ]
+  },
+  "barco": {
+    "description": "Barco: casco curvo por capas, cubierta y mástil, vela y detalle",
+    "stages": [
+      {
+        "file": "barco_1.vox",
+        "label": "Casco",
+        "note": "Cuatro capas horizontales: la quilla estrecha abajo y cada capa más ancha, con la proa afilada en los últimos 6 vóxels y la popa más recta. Las tablas se leen por hiladas (cuatro hiladas en tres tonos). Vaciado por dentro: se ve con el corte por capas.",
+        "size": {
+          "x": 20,
+          "y": 7,
+          "z": 4
+        },
+        "voxels": 249
+      },
+      {
+        "file": "barco_2.vox",
+        "label": "Cubierta y mástil",
+        "note": "La cubierta con tablas transversales en dos tonos, un mástil de 14 vóxels algo desplazado hacia la popa (no parte el barco por la mitad) y un camarote en la popa con tejado rojo.",
+        "size": {
+          "x": 20,
+          "y": 7,
+          "z": 19
+        },
+        "voxels": 422
+      },
+      {
+        "file": "barco_3.vox",
+        "label": "Vela y detalle",
+        "note": "Una vela cuadrada de 9×7 colgada de la verga, perpendicular al barco, con una franja roja; un banderín arriba, el bauprés en la proa, bolardos, seis postes en la borda y un farol en el camarote.",
+        "size": {
+          "x": 22,
+          "y": 9,
+          "z": 20
+        },
+        "voxels": 503
+      }
+    ]
+  },
+  "ao": {
+    "description": "AO pintado: la habitación de V7-02 con oclusión ambiental en los colores",
+    "stages": [
+      {
+        "file": "ao_1.vox",
+        "label": "Sin AO",
+        "note": "La habitación terminada de V7-02, con colores planos: el suelo junto a las paredes y bajo los muebles es igual de claro que en medio de la sala.",
+        "size": {
+          "x": 14,
+          "y": 14,
+          "z": 11
+        },
+        "voxels": 586
+      },
+      {
+        "file": "ao_2.vox",
+        "label": "AO pintado",
+        "note": "Cada cara de arriba visible mira los 8 huecos que la rodean por encima: junto a una pared o un mueble (3 o más ocupados) se oscurece un paso (×0,82); en un rincón (5 o más), dos. Se oscurecen el pie de las paredes, los lados de la cama y el contorno de la alfombra, y llevan dos pasos los rincones entre pared y cama y entre cama y alfombra: los objetos se asientan.",
+        "size": {
+          "x": 14,
+          "y": 14,
+          "z": 11
+        },
+        "voxels": 586
+      },
+      {
+        "file": "ao_3.vox",
+        "label": "Exagerado",
+        "note": "Error: el mismo cálculo con pasos de ×0,55, umbrales más bajos y aplicado a todos los vóxels, también a las paredes. Casi todo se oscurece, los rincones son manchas negras y la habitación parece sucia, no iluminada.",
+        "size": {
+          "x": 14,
+          "y": 14,
+          "z": 11
+        },
+        "voxels": 586
+      }
+    ]
+  },
+  "oveja": {
+    "description": "Oveja: un cuadrúpedo en tres pasos",
+    "stages": [
+      {
+        "file": "oveja_1.vox",
+        "label": "Blockout",
+        "note": "Tres cajas y cuatro patas: un cuerpo de 10×6×5, una cabeza más alta delante y patas de 2×2 en las esquinas. Ya se lee como un animal de cuatro patas.",
+        "size": {
+          "x": 14,
+          "y": 6,
+          "z": 11
+        },
+        "voxels": 316
+      },
+      {
+        "file": "oveja_2.vox",
+        "label": "Lana",
+        "note": "El cuerpo se redondea y gana bultos de 1 vóxel; la lana de abajo es un tono más oscura y unos pocos vóxels oscuros salpican el resto, como huecos entre rizos. La cabeza recibe un flequillo de lana y las patas, pezuñas oscuras.",
+        "size": {
+          "x": 15,
+          "y": 8,
+          "z": 12
+        },
+        "voxels": 325
+      },
+      {
+        "file": "oveja_3.vox",
+        "label": "Cara y detalle",
+        "note": "Orejas a los lados con el interior rosado, dos ojos blancos, un hocico más claro y una cola de lana detrás. Pocos vóxels, pero son los que dicen «oveja».",
+        "size": {
+          "x": 17,
+          "y": 8,
+          "z": 12
+        },
+        "voxels": 339
+      }
+    ]
+  },
+  "mazmorra": {
+    "description": "Mazmorra: una sala de piedra en corte, con atrezo y luz de antorchas",
+    "stages": [
+      {
+        "file": "mazmorra_1.vox",
+        "label": "Sala",
+        "note": "Suelo de losas de 2×2 en dos tonos y dos paredes de sillares (fondo e izquierda), de 8 de alto, con las juntas alternas como un muro de verdad. El frente y la derecha, abiertos a la cámara.",
+        "size": {
+          "x": 16,
+          "y": 16,
+          "z": 9
+        },
+        "voxels": 504
+      },
+      {
+        "file": "mazmorra_2.vox",
+        "label": "Atrezo",
+        "note": "Un pilar de 2×2, un cofre pequeño (5×3×4) junto a la pared izquierda, dos soportes de antorcha en las paredes (aún apagados) y unas tablas rotas en el suelo.",
+        "size": {
+          "x": 16,
+          "y": 16,
+          "z": 9
+        },
+        "voxels": 594
+      },
+      {
+        "file": "mazmorra_3.vox",
+        "label": "Historia y luz",
+        "note": "Llamas en las antorchas (para el material Emit), un charco, humedad y musgo en la base de las paredes y encima del pilar, y unos huesos con un cráneo en mitad de la sala, de camino a la salida: alguien no tuvo suerte.",
+        "size": {
+          "x": 16,
+          "y": 16,
+          "z": 10
+        },
+        "voxels": 608
+      }
+    ]
+  },
+  "escudo": {
+    "description": "Escudo redondo: forma, estructura y emblema",
+    "stages": [
+      {
+        "file": "escudo_1.vox",
+        "label": "Forma",
+        "note": "Un disco de 13 de diámetro y 1 vóxel de grosor, hecho de tablas verticales de 2 en dos tonos de madera.",
+        "size": {
+          "x": 13,
+          "y": 1,
+          "z": 13
+        },
+        "voxels": 129
+      },
+      {
+        "file": "escudo_2.vox",
+        "label": "Estructura",
+        "note": "Una llanta de hierro de 1 vóxel alrededor, el umbo de metal en el centro (sobresale 2) y ocho remaches junto a la llanta, por dentro. El metal enmarca y protege: va donde el escudo recibe golpes.",
+        "size": {
+          "x": 13,
+          "y": 3,
+          "z": 13
+        },
+        "voxels": 146
+      },
+      {
+        "file": "escudo_3.vox",
+        "label": "Emblema y uso",
+        "note": "Un galón (una V invertida) pintado en rojo con la punta en crema, una mella de 2 vóxels en la llanta (arriba a la derecha), un remache que falta (abajo a la derecha) y el asa por detrás. El emblema dice de quién es; la mella, que se ha usado.",
+        "size": {
+          "x": 13,
+          "y": 6,
+          "z": 13
+        },
+        "voxels": 152
+      }
+    ]
+  },
+  "ruina": {
+    "description": "Ruinas: un pórtico de piedra intacto, roto con intención y abandonado",
+    "stages": [
+      {
+        "file": "ruina_1.vox",
+        "label": "Intacto",
+        "note": "Un pórtico sobre un suelo de losas: dos pilares con basa, fuste de 3×3 en hiladas de sillares y capitel, y un dintel que los une. Primero se construye entero: así sabes qué falta después.",
+        "size": {
+          "x": 16,
+          "y": 11,
+          "z": 14
+        },
+        "voxels": 490
+      },
+      {
+        "file": "ruina_2.vox",
+        "label": "Roto",
+        "note": "Una grieta diagonal corta el pilar derecho; sin apoyo, el dintel se parte y cae. Los trozos que faltan están en el suelo, al pie de donde cayeron. El pilar izquierdo solo tiene algún desconchón.",
+        "size": {
+          "x": 16,
+          "y": 11,
+          "z": 14
+        },
+        "voxels": 428
+      },
+      {
+        "file": "ruina_3.vox",
+        "label": "Abandonado",
+        "note": "El tiempo después de la rotura: hierba entre las losas, musgo encima del dintel y en la parte baja, una hiedra que baja por la cara de fuera del pilar y matas sueltas.",
+        "size": {
+          "x": 16,
+          "y": 11,
+          "z": 14
+        },
+        "voxels": 438
+      }
+    ]
+  },
+  "vegetacion": {
+    "description": "Kit de vegetación: piezas pequeñas y cómo repartirlas",
+    "stages": [
+      {
+        "file": "vegetacion_1.vox",
+        "label": "Piezas",
+        "note": "Ocho piezas en fila: tres arbustos de tamaños distintos (claro arriba, oscuro abajo), dos piedras con las esquinas de arriba gastadas y tres matas de hierba de 1–2 vóxels.",
+        "size": {
+          "x": 49,
+          "y": 9,
+          "z": 5
+        },
+        "voxels": 270
+      },
+      {
+        "file": "vegetacion_2.vox",
+        "label": "En rejilla",
+        "note": "Error: nueve piezas repartidas en una rejilla, a la misma distancia unas de otras. Se lee como un tablero, no como un prado: la naturaleza no reparte así.",
+        "size": {
+          "x": 24,
+          "y": 24,
+          "z": 5
+        },
+        "voxels": 860
+      },
+      {
+        "file": "vegetacion_3.vox",
+        "label": "En grupos",
+        "note": "Las piezas del kit, ahora en grupos: un arbusto grande con otros más pequeños pegados, una piedra al pie y hierba alrededor; un segundo grupo más pequeño, unas pocas matas sueltas y zonas vacías para que el ojo descanse.",
+        "size": {
+          "x": 24,
+          "y": 24,
+          "z": 6
+        },
+        "voxels": 880
+      }
+    ]
+  },
+  "puente": {
+    "description": "Puente y escaleras: conectar dos orillas a distinta altura",
+    "stages": [
+      {
+        "file": "puente_1.vox",
+        "label": "Alturas",
+        "note": "Dos orillas a distinta altura: la izquierda con el suelo 3 vóxels más alto que la derecha, y un río de 8 de ancho en medio, con el agua 1 vóxel por debajo de la orilla baja. El problema: cómo pasa alguien de un lado al otro.",
+        "size": {
+          "x": 24,
+          "y": 10,
+          "z": 5
+        },
+        "voxels": 496
+      },
+      {
+        "file": "puente_2.vox",
+        "label": "Escaleras y pila",
+        "note": "En la orilla baja, un rellano de piedra a la altura de la alta y dos peldaños de 1 de alto y 2 de fondo hasta el suelo. En mitad del río, una pila de piedra que sostendrá el tablero.",
+        "size": {
+          "x": 24,
+          "y": 10,
+          "z": 5
+        },
+        "voxels": 558
+      },
+      {
+        "file": "puente_3.vox",
+        "label": "Tablero y barandilla",
+        "note": "Tablas cruzadas en dos tonos de la orilla al rellano, vigas debajo, postes y pasamanos a los lados. El camino de la orilla alta llega al puente y una farola marca la entrada.",
+        "size": {
+          "x": 24,
+          "y": 10,
+          "z": 10
+        },
+        "voxels": 644
+      }
+    ]
+  },
+  "pocion": {
+    "description": "Poción de 8×8×8: un prop pequeño",
+    "stages": [
+      {
+        "file": "pocion_1.vox",
+        "label": "Silueta",
+        "note": "El frasco en un solo color de cristal: un cuerpo redondo de 8 de ancho, un cuello de 2×2 y el borde de la boca un poco más ancho. A esta escala, la silueta es casi todo.",
+        "size": {
+          "x": 8,
+          "y": 8,
+          "z": 7
+        },
+        "voxels": 112
+      },
+      {
+        "file": "pocion_2.vox",
+        "label": "Líquido y corcho",
+        "note": "El líquido ocupa la mitad de abajo del cuerpo (más oscuro en el fondo, más claro en la superficie) y el cristal queda arriba. Un corcho en la boca y un cordel oscuro en el cuello.",
+        "size": {
+          "x": 8,
+          "y": 8,
+          "z": 8
+        },
+        "voxels": 112
+      },
+      {
+        "file": "pocion_3.vox",
+        "label": "Detalle",
+        "note": "Una etiqueta crema de 4×2 delante con una marca de 1 vóxel, una burbuja en el líquido y un vóxel blanco de brillo arriba a la izquierda. Tres detalles de un vóxel: más, y el frasco se vuelve ruido.",
+        "size": {
+          "x": 8,
+          "y": 8,
+          "z": 8
+        },
+        "voxels": 112
+      }
+    ]
+  },
+  "cofre-viejo": {
+    "description": "Cofre viejo: el mismo prop limpio, gastado y con historia",
+    "stages": [
+      {
+        "file": "cofre-viejo_1.vox",
+        "label": "Limpio",
+        "note": "Un cofre de 12×8 de planta y 8 de alto, recién hecho: base con su borde oscuro, tapa escalonada, dos bandas de hierro y la cerradura dorada. Todo perfecto: parece de plástico.",
+        "size": {
+          "x": 12,
+          "y": 9,
+          "z": 8
+        },
+        "voxels": 358
+      },
+      {
+        "file": "cofre-viejo_2.vox",
+        "label": "Desgaste",
+        "note": "Faltan trozos en algunas aristas (desconchones), la madera se aclara en los bordes, donde más se toca, y el hierro se oxida a manchas. El desgaste va donde hay uso: bordes y esquinas, no en mitad de las caras.",
+        "size": {
+          "x": 12,
+          "y": 9,
+          "z": 8
+        },
+        "voxels": 339
+      },
+      {
+        "file": "cofre-viejo_3.vox",
+        "label": "Historia",
+        "note": "Musgo que sube desde el suelo por un lado y se queda en un rincón de la tapa, barro en la base y tres monedas caídas en el suelo, junto al lado derecho. La cerradura sigue limpia: es lo que más se toca y el punto focal.",
+        "size": {
+          "x": 15,
+          "y": 9,
+          "z": 8
+        },
+        "voxels": 342
+      }
+    ]
+  },
+  "murcielago": {
+    "description": "Murciélago: un cuerpo pequeño y alas de un vóxel de grosor",
+    "stages": [
+      {
+        "file": "murcielago_1.vox",
+        "label": "Cuerpo",
+        "note": "Un óvalo para el cuerpo y otro más pequeño para la cabeza, con dos orejas de 1 vóxel. Solo 5 vóxels de ancho: el cuerpo es pequeño para que mande el ala.",
+        "size": {
+          "x": 5,
+          "y": 5,
+          "z": 12
+        },
+        "voxels": 96
+      },
+      {
+        "file": "murcielago_2.vox",
+        "label": "Alas",
+        "note": "Cada ala es una lámina de 1 vóxel de grosor y 10 de largo, más alta en la muñeca y con el borde de abajo festoneado entre los dedos. Con Mirror en X basta con hacer una.",
+        "size": {
+          "x": 25,
+          "y": 5,
+          "z": 12
+        },
+        "voxels": 204
+      },
+      {
+        "file": "murcielago_3.vox",
+        "label": "Huesos y cara",
+        "note": "El brazo y tres dedos en un violeta casi negro recorren la membrana: le dan estructura y leen como ala aunque esté lejos. Ojos amarillos, lo más claro del modelo, dos colmillos de un crema algo más oscuro que los ojos y las garras.",
+        "size": {
+          "x": 25,
+          "y": 5,
+          "z": 13
+        },
+        "voxels": 210
+      }
+    ]
+  },
+  "arbol-organico": {
+    "description": "Árbol orgánico: tronco curvo, ramas y copa en grupos",
+    "stages": [
+      {
+        "file": "arbol-organico_1.vox",
+        "label": "Tronco curvo",
+        "note": "El tronco se desplaza como mucho un vóxel por capa, con un vóxel de escalón en cada desplazamiento para que siga unido por caras. 2×2 abajo, 1×1 arriba y raíces en la base. Nada es recto, pero nada salta.",
+        "size": {
+          "x": 4,
+          "y": 4,
+          "z": 12
+        },
+        "voxels": 41
+      },
+      {
+        "file": "arbol-organico_2.vox",
+        "label": "Ramas",
+        "note": "Tres ramas en diagonal, a alturas distintas y hacia lados distintos, construidas vóxel a vóxel (de lado y luego arriba) para que no queden unidas solo por aristas. La asimetría es lo que lo hace orgánico.",
+        "size": {
+          "x": 13,
+          "y": 8,
+          "z": 13
+        },
+        "voxels": 74
+      },
+      {
+        "file": "arbol-organico_3.vox",
+        "label": "Copa en grupos",
+        "note": "Cuatro masas de hojas de tamaños distintos al final de cada rama, con tres verdes: claro arriba, oscuro abajo. Grupos, no una bola.",
+        "size": {
+          "x": 17,
+          "y": 12,
+          "z": 15
+        },
+        "voxels": 235
+      }
+    ]
+  },
+  "habitacion": {
+    "description": "Habitación en corte: suelo, dos paredes y muebles",
+    "stages": [
+      {
+        "file": "habitacion_1.vox",
+        "label": "Caja",
+        "note": "Suelo de 14×14 con tablas en dos tonos y dos paredes (fondo e izquierda) de 10 de alto con rodapié. El frente y la derecha quedan abiertos: es un corte, como una casa de muñecas.",
+        "size": {
+          "x": 14,
+          "y": 14,
+          "z": 11
+        },
+        "voxels": 466
+      },
+      {
+        "file": "habitacion_2.vox",
+        "label": "Muebles",
+        "note": "Cama en el rincón del fondo, mesa y silla delante. Todo a la escala de una puerta de 4 vóxels: la mesa a 4 de alto, el asiento a 3.",
+        "size": {
+          "x": 14,
+          "y": 14,
+          "z": 11
+        },
+        "voxels": 554
+      },
+      {
+        "file": "habitacion_3.vox",
+        "label": "Detalle y luz",
+        "note": "Alfombra con borde, ventana con cruceta, un estante con tres libros y una vela en la mesa (llama en Emit). Los detalles dicen quién vive aquí.",
+        "size": {
+          "x": 14,
+          "y": 14,
+          "z": 11
+        },
+        "voxels": 586
+      }
+    ]
+  },
+  "slime-salto": {
+    "description": "Salto del slime en vóxels: cuatro etapas para renderizar como frames",
+    "stages": [
+      {
+        "file": "slime-salto_1.vox",
+        "label": "Reposo",
+        "note": "La cúpula de 11×11×7 de V5-01, con ojos y brillo, sobre un disco de piedra de 13×13 que comparten las cuatro etapas.",
+        "size": {
+          "x": 13,
+          "y": 13,
+          "z": 8
+        },
+        "voxels": 290
+      },
+      {
+        "file": "slime-salto_2.vox",
+        "label": "Anticipación",
+        "note": "Aplastado: 13 de ancho y 5 de alto. Ocupa casi lo mismo: el volumen se conserva, como en el sprite.",
+        "size": {
+          "x": 13,
+          "y": 13,
+          "z": 6
+        },
+        "voxels": 282
+      },
+      {
+        "file": "slime-salto_3.vox",
+        "label": "Estirado",
+        "note": "Una elipse estrecha y alta (7 de ancho, 10 de alto) separada 2 vóxels del suelo; los ojos se juntan porque la cara es más estrecha.",
+        "size": {
+          "x": 13,
+          "y": 13,
+          "z": 13
+        },
+        "voxels": 243
+      },
+      {
+        "file": "slime-salto_4.vox",
+        "label": "Punto alto",
+        "note": "Redondo otra vez (9 de ancho, 8 de alto) y 6 vóxels por encima del suelo. Renderiza las cuatro etapas con la MISMA cámara y tendrás los frames del sprite.",
+        "size": {
+          "x": 13,
+          "y": 13,
+          "z": 15
+        },
+        "voxels": 275
+      }
+    ]
+  },
+  "terreno": {
+    "description": "Terreno: terrazas, estratos y un río",
+    "stages": [
+      {
+        "file": "terreno_1.vox",
+        "label": "Terrazas",
+        "note": "Un mapa de alturas de 24×24 redondeado a escalones de 2 vóxels: dos colinas al fondo y una llanura delante. Un solo color: solo forma.",
+        "size": {
+          "x": 24,
+          "y": 24,
+          "z": 8
+        },
+        "voxels": 1298
+      },
+      {
+        "file": "terreno_2.vox",
+        "label": "Estratos",
+        "note": "El color depende de la altura: hierba arriba de cada columna, dos de tierra debajo y piedra en bandas alternas. Los cortes de las terrazas enseñan los estratos.",
+        "size": {
+          "x": 24,
+          "y": 24,
+          "z": 8
+        },
+        "voxels": 1298
+      },
+      {
+        "file": "terreno_3.vox",
+        "label": "Agua y vida",
+        "note": "Un río cruza la llanura de delante, un vóxel más bajo que la hierba, con una corriente más clara en el centro. Árboles pequeños y piedras sobre las terrazas: escala.",
+        "size": {
+          "x": 24,
+          "y": 24,
+          "z": 13
+        },
+        "voxels": 1318
+      }
+    ]
+  },
+  "carro": {
+    "description": "Carro: hard surface en vóxels",
+    "stages": [
+      {
+        "file": "carro_1.vox",
+        "label": "Blockout",
+        "note": "Una caja, cuatro ruedas de un vóxel de grosor y la lanza. Proporción y silueta, como el blockout de Blender.",
+        "size": {
+          "x": 21,
+          "y": 10,
+          "z": 8
+        },
+        "voxels": 468
+      },
+      {
+        "file": "carro_2.vox",
+        "label": "Paneles",
+        "note": "La caja se vacía (paredes de 1 vóxel), el borde superior más claro y montantes oscuros cada 4 vóxels. Ruedas con llanta de hierro, radios y buje; eje de metal.",
+        "size": {
+          "x": 22,
+          "y": 10,
+          "z": 8
+        },
+        "voxels": 438
+      },
+      {
+        "file": "carro_3.vox",
+        "label": "Herrajes",
+        "note": "Escuadras de hierro en las esquinas, remaches en los lados, un chaflán de 1 vóxel en las esquinas del borde y dos cajas de carga. El detalle mecánico va en bordes y uniones.",
+        "size": {
+          "x": 23,
+          "y": 10,
+          "z": 8
+        },
+        "voxels": 486
+      }
+    ]
+  },
+  "diorama": {
+    "description": "Diorama: una base con estratos, una escena y detalles que cuentan algo",
+    "stages": [
+      {
+        "file": "diorama_1.vox",
+        "label": "Base",
+        "note": "Un bloque de 22×22×4: piedra abajo, dos capas de tierra y la hierba arriba. El corte lateral, a la vista, ya dice «trozo de mundo».",
+        "size": {
+          "x": 22,
+          "y": 22,
+          "z": 4
+        },
+        "voxels": 1136
+      },
+      {
+        "file": "diorama_2.vox",
+        "label": "Escena",
+        "note": "La casa modular y un árbol de 8³ (el mismo de V1) sobre la base, un camino hasta la puerta y un estanque hundido un vóxel. Escala común: todo se mide con la casa.",
+        "size": {
+          "x": 22,
+          "y": 22,
+          "z": 17
+        },
+        "voxels": 1587
+      },
+      {
+        "file": "diorama_3.vox",
+        "label": "Detalle",
+        "note": "Una farola (llama en Emit), flores, una piedra, leña junto a la casa, hierba en dos tonos y el reflejo del cielo en el agua. Ningún detalle es nuevo: todos dicen que aquí vive alguien.",
+        "size": {
+          "x": 22,
+          "y": 22,
+          "z": 17
+        },
+        "voxels": 1596
+      }
+    ]
+  },
+  "chibi-pose": {
+    "description": "El chibi voxel: de la pose neutra a una pose con intención",
+    "stages": [
+      {
+        "file": "chibi-pose_1.vox",
+        "label": "Pose neutra",
+        "note": "Simétrico y de frente: sirve para modelar, pero no cuenta nada.",
+        "size": {
+          "x": 10,
+          "y": 9,
+          "z": 15
+        },
+        "voxels": 412
+      },
+      {
+        "file": "chibi-pose_2.vox",
+        "label": "Saludo",
+        "note": "Un brazo levantado y una pierna un vóxel adelante. Con cambiar dos partes, el personaje ya hace algo.",
+        "size": {
+          "x": 10,
+          "y": 9,
+          "z": 15
+        },
+        "voxels": 409
+      }
+    ]
+  },
+  "slime-voxel": {
+    "description": "Slime voxel: una criatura que se lee por su forma",
+    "stages": [
+      {
+        "file": "slime-voxel_1.vox",
+        "label": "Blockout",
+        "note": "Una cúpula: redonda, baja y ancha. Antes de los ojos ya parece blanda e inofensiva.",
+        "size": {
+          "x": 11,
+          "y": 11,
+          "z": 7
+        },
+        "voxels": 230
+      },
+      {
+        "file": "slime-voxel_2.vox",
+        "label": "Color y ojos",
+        "note": "Base oscura (AO pintado), brillo arriba a la izquierda y dos ojos de 2 vóxels en la cara frontal.",
+        "size": {
+          "x": 11,
+          "y": 11,
+          "z": 7
+        },
+        "voxels": 230
+      },
+      {
+        "file": "slime-voxel_3.vox",
+        "label": "Squash",
+        "note": "Más ancha y más baja con los mismos detalles: la pose de una criatura sin brazos es aplastarse o estirarse.",
+        "size": {
+          "x": 13,
+          "y": 13,
+          "z": 5
+        },
+        "voxels": 250
+      }
+    ]
+  },
+  "casa-modular": {
+    "description": "Casa modular: tres piezas de pared reutilizadas",
+    "stages": [
+      {
+        "file": "casa-modular_1.vox",
+        "label": "Tres módulos",
+        "note": "Pared lisa, con puerta y con ventana. Todas miden 8×1×8 y comparten zócalo, vigas y colores.",
+        "size": {
+          "x": 28,
+          "y": 1,
+          "z": 8
+        },
+        "voxels": 192
+      },
+      {
+        "file": "casa-modular_2.vox",
+        "label": "Paredes",
+        "note": "Cuatro paredes hechas con esos mismos módulos: dos ventanas laterales, la puerta delante y la lisa detrás.",
+        "size": {
+          "x": 8,
+          "y": 8,
+          "z": 8
+        },
+        "voxels": 224
+      },
+      {
+        "file": "casa-modular_3.vox",
+        "label": "Tejado",
+        "note": "Un tejado a dos aguas escalonado, un vóxel más estrecho por capa y alternando dos rojos.",
+        "size": {
+          "x": 10,
+          "y": 10,
+          "z": 13
+        },
+        "voxels": 400
+      }
+    ]
+  },
+  "kit-herrero": {
+    "description": "Kit del herrero: tres props con la misma escala y paleta",
+    "stages": [
+      {
+        "file": "kit-herrero_1.vox",
+        "label": "Yunque",
+        "note": "La pieza de referencia: cabe en 16×16×16. Hierro en tres tonos; la superficie de trabajo, la más clara.",
+        "size": {
+          "x": 14,
+          "y": 6,
+          "z": 8
+        },
+        "voxels": 282
+      },
+      {
+        "file": "kit-herrero_2.vox",
+        "label": "Martillo",
+        "note": "La misma escala (un vóxel = la misma medida) y los mismos hierros que el yunque; el mango, de la madera del kit.",
+        "size": {
+          "x": 8,
+          "y": 4,
+          "z": 13
+        },
+        "voxels": 120
+      },
+      {
+        "file": "kit-herrero_3.vox",
+        "label": "Cubo de agua",
+        "note": "Madera y aros de hierro de la misma paleta: los tres props parecen del mismo taller.",
+        "size": {
+          "x": 10,
+          "y": 10,
+          "z": 8
+        },
+        "voxels": 304
+      }
+    ]
+  },
+  "espada": {
+    "description": "Espada voxel: del blockout al detalle",
+    "stages": [
+      {
+        "file": "espada_1.vox",
+        "label": "Blockout",
+        "note": "Tres bloques: empuñadura, guarda y hoja. La proporción (hoja larga, guarda ancha) ya dice «espada».",
+        "size": {
+          "x": 6,
+          "y": 2,
+          "z": 18
+        },
+        "voxels": 80
+      },
+      {
+        "file": "espada_2.vox",
+        "label": "Guarda y pomo",
+        "note": "Guarda dorada con las puntas dobladas y un pomo: el detalle va donde mira la vista, en el centro.",
+        "size": {
+          "x": 8,
+          "y": 2,
+          "z": 18
+        },
+        "voxels": 88
+      },
+      {
+        "file": "espada_3.vox",
+        "label": "Filo y punta",
+        "note": "Un lado de la hoja más claro (el filo que recibe la luz), punta y vendaje en la empuñadura.",
+        "size": {
+          "x": 8,
+          "y": 2,
+          "z": 18
+        },
+        "voxels": 86
+      }
+    ]
+  },
+  "chibi": {
+    "description": "Personaje chibi voxel",
+    "stages": [
+      {
+        "file": "chibi_1.vox",
+        "label": "Blockout",
+        "note": "Tres bloques: cabeza grande (casi la mitad de la altura), cuerpo y piernas. Las proporciones chibi se deciden aquí.",
+        "size": {
+          "x": 8,
+          "y": 8,
+          "z": 15
+        },
+        "voxels": 400
+      },
+      {
+        "file": "chibi_2.vox",
+        "label": "Detalle",
+        "note": "Pelo, ojos de 2 vóxels, brazos, cinturón y botas: los mismos colores que el héroe chibi de pixel art.",
+        "size": {
+          "x": 10,
+          "y": 9,
+          "z": 15
+        },
+        "voxels": 412
+      }
+    ]
+  },
+  "roca": {
+    "description": "Roca: del color plano a la rampa con hue shifting",
+    "stages": [
+      {
+        "file": "roca_1.vox",
+        "label": "Un color",
+        "note": "Un solo color: la forma existe, pero en el render dependerá solo de la luz. Sin render, parece plana.",
+        "size": {
+          "x": 11,
+          "y": 9,
+          "z": 7
+        },
+        "voxels": 214
+      },
+      {
+        "file": "roca_2.vox",
+        "label": "Rampa de valor",
+        "note": "Cinco tonos de la misma piedra: más claros arriba, más oscuros abajo. Es «AO pintado»: oclusión dibujada en el color.",
+        "size": {
+          "x": 11,
+          "y": 9,
+          "z": 7
+        },
+        "voxels": 214
+      },
+      {
+        "file": "roca_3.vox",
+        "label": "Hue shifting",
+        "note": "Los mismos valores, pero las sombras giran hacia el azul y las luces hacia el ocre: la piedra parece iluminada por luz real.",
+        "size": {
+          "x": 11,
+          "y": 9,
+          "z": 7
+        },
+        "voxels": 214
+      }
+    ]
+  },
+  "farol": {
+    "description": "Farol: metal, cristal y luz",
+    "stages": [
+      {
+        "file": "farol_1.vox",
+        "label": "Estructura",
+        "note": "Hierro oscuro: base, techo y cuatro montantes. En MagicaVoxel, material Metal.",
+        "size": {
+          "x": 5,
+          "y": 5,
+          "z": 9
+        },
+        "voxels": 79
+      },
+      {
+        "file": "farol_2.vox",
+        "label": "Cristales",
+        "note": "Paneles de un azul muy claro. En MagicaVoxel, material Glass: dejan pasar la luz.",
+        "size": {
+          "x": 5,
+          "y": 5,
+          "z": 9
+        },
+        "voxels": 139
+      },
+      {
+        "file": "farol_3.vox",
+        "label": "Llama",
+        "note": "El núcleo amarillo, en material Emit: en el render ilumina el resto del farol. Aquí el cristal se ve opaco: baja «Capas» a 3 para ver la llama por dentro.",
+        "size": {
+          "x": 5,
+          "y": 5,
+          "z": 9
+        },
+        "voxels": 142
+      }
+    ]
+  },
+  "torre": {
+    "description": "Torre de piedra: del blockout al tejado escalonado",
+    "stages": [
+      {
+        "file": "torre_1.vox",
+        "label": "Blockout",
+        "note": "Dos bloques: el cuerpo y el tejado. Ya se lee «torre» por proporción, sin un solo detalle.",
+        "size": {
+          "x": 6,
+          "y": 6,
+          "z": 10
+        },
+        "voxels": 164
+      },
+      {
+        "file": "torre_2.vox",
+        "label": "Muros y ventanas",
+        "note": "Dos tonos de piedra y dos ventanas iluminadas: detalle sobre una forma que ya funcionaba.",
+        "size": {
+          "x": 6,
+          "y": 6,
+          "z": 10
+        },
+        "voxels": 164
+      },
+      {
+        "file": "torre_3.vox",
+        "label": "Tejado escalonado",
+        "note": "Cada capa del tejado se estrecha un vóxel por lado: el escalonado es la forma de hacer inclinaciones y curvas con vóxels.",
+        "size": {
+          "x": 6,
+          "y": 6,
+          "z": 10
+        },
+        "voxels": 124
+      }
+    ]
+  },
+  "barril": {
+    "description": "Barril de duelas con aros metálicos",
+    "stages": [
+      {
+        "file": "barril_1.vox",
+        "label": "Blockout",
+        "note": "Un cilindro de madera: solo la forma y la proporción.",
+        "size": {
+          "x": 7,
+          "y": 7,
+          "z": 9
+        },
+        "voxels": 186
+      },
+      {
+        "file": "barril_2.vox",
+        "label": "Aros",
+        "note": "Dos aros de metal pintados con el modo Paint sobre el mismo volumen.",
+        "size": {
+          "x": 7,
+          "y": 7,
+          "z": 9
+        },
+        "voxels": 186
+      },
+      {
+        "file": "barril_3.vox",
+        "label": "Duelas y tapa",
+        "note": "Alternar dos tonos de madera marca las duelas; la tapa más clara recibe la luz.",
+        "size": {
+          "x": 7,
+          "y": 7,
+          "z": 9
+        },
+        "voxels": 186
+      }
+    ]
+  },
+  "caja": {
+    "description": "Caja de madera 8×8×8 con marco y refuerzo",
+    "stages": [
+      {
+        "file": "caja_1.vox",
+        "label": "Cubo",
+        "note": "Un cubo de 8×8×8: la escala base de muchos props.",
+        "size": {
+          "x": 8,
+          "y": 8,
+          "z": 8
+        },
+        "voxels": 296
+      },
+      {
+        "file": "caja_2.vox",
+        "label": "Marco",
+        "note": "Las aristas más oscuras dibujan el marco y separan las caras.",
+        "size": {
+          "x": 8,
+          "y": 8,
+          "z": 8
+        },
+        "voxels": 296
+      },
+      {
+        "file": "caja_3.vox",
+        "label": "Refuerzo",
+        "note": "Una diagonal clara en las caras da lectura de «caja» a cualquier distancia.",
+        "size": {
+          "x": 8,
+          "y": 8,
+          "z": 8
+        },
+        "voxels": 296
+      }
+    ]
+  },
+  "cofre": {
+    "description": "Cofre del tesoro 10×6×7",
+    "stages": [
+      {
+        "file": "cofre_1.vox",
+        "label": "Base",
+        "note": "La caja inferior: 10×6×4.",
+        "size": {
+          "x": 10,
+          "y": 6,
+          "z": 4
+        },
+        "voxels": 176
+      },
+      {
+        "file": "cofre_2.vox",
+        "label": "Tapa",
+        "note": "La tapa curva se consigue escalonando tres capas cada vez más estrechas.",
+        "size": {
+          "x": 10,
+          "y": 6,
+          "z": 7
+        },
+        "voxels": 216
+      },
+      {
+        "file": "cofre_3.vox",
+        "label": "Bandas",
+        "note": "Dos bandas de metal rompen la superficie y dan escala.",
+        "size": {
+          "x": 10,
+          "y": 6,
+          "z": 7
+        },
+        "voxels": 216
+      },
+      {
+        "file": "cofre_4.vox",
+        "label": "Cerradura",
+        "note": "Un detalle dorado en el centro: el punto focal del prop.",
+        "size": {
+          "x": 10,
+          "y": 7,
+          "z": 7
+        },
+        "voxels": 218
+      }
+    ]
+  },
+  "primitivas": {
+    "description": "Las cuatro formas base de la construcción voxel",
+    "stages": [
+      {
+        "file": "primitivas_1.vox",
+        "label": "Cubo",
+        "note": "",
+        "size": {
+          "x": 6,
+          "y": 6,
+          "z": 6
+        },
+        "voxels": 152
+      },
+      {
+        "file": "primitivas_2.vox",
+        "label": "Esfera",
+        "note": "",
+        "size": {
+          "x": 7,
+          "y": 7,
+          "z": 7
+        },
+        "voxels": 134
+      },
+      {
+        "file": "primitivas_3.vox",
+        "label": "Cilindro",
+        "note": "",
+        "size": {
+          "x": 7,
+          "y": 7,
+          "z": 7
+        },
+        "voxels": 138
+      },
+      {
+        "file": "primitivas_4.vox",
+        "label": "Piramide",
+        "note": "",
+        "size": {
+          "x": 10,
+          "y": 10,
+          "z": 5
+        },
+        "voxels": 164
+      }
+    ]
+  },
+  "arbol": {
+    "description": "El mismo árbol a dos resoluciones",
+    "stages": [
+      {
+        "file": "arbol_1.vox",
+        "label": "8³",
+        "note": "En 8×8×8 cada vóxel es una decisión: tronco de 1 vóxel, copa redonda.",
+        "size": {
+          "x": 7,
+          "y": 7,
+          "z": 8
+        },
+        "voxels": 80
+      },
+      {
+        "file": "arbol_2.vox",
+        "label": "16³",
+        "note": "En 16×16×16 cabe volumen: luz arriba, tonos oscuros dentro de la copa.",
+        "size": {
+          "x": 12,
+          "y": 12,
+          "z": 16
+        },
+        "voxels": 368
+      }
+    ]
+  },
+  "seta": {
+    "description": "Seta modelada con simetría",
+    "stages": [
+      {
+        "file": "seta_1.vox",
+        "label": "Media seta",
+        "note": "Con el espejo (Mirror) activado basta con modelar una mitad…",
+        "size": {
+          "x": 5,
+          "y": 9,
+          "z": 8
+        },
+        "voxels": 94
+      },
+      {
+        "file": "seta_2.vox",
+        "label": "Reflejada",
+        "note": "…y el programa construye la otra. La mitad del trabajo, simetría perfecta.",
+        "size": {
+          "x": 9,
+          "y": 9,
+          "z": 8
+        },
+        "voxels": 138
+      }
+    ]
+  }
+}
